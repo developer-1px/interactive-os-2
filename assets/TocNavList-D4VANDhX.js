@@ -1,0 +1,1 @@
+import{t as e}from"./index-tEjY2jeN.js";import{t}from"./TocItem-COFcxqvI.js";import{t as n}from"./NavList-DqNEf_oy.js";var r=e();function i({data:e,onActivate:i,"aria-label":a}){return(0,r.jsx)(n,{data:e,onActivate:i,renderItem:t,"aria-label":a})}export{i as TocNavList};

@@ -1,1 +1,0 @@
-import{t as e}from"./TabList-CTJC3RvP.js";export{e as TabList};

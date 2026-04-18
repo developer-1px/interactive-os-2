@@ -1,0 +1,6140 @@
+{
+  "generated_at": "2026-04-18T03:43:38.150Z",
+  "total": 345,
+  "entries": [
+    {
+      "path": "docs/0-inbox/69-[backlog]childrenApiForStructuralComponents.md",
+      "frontmatter": {
+        "id": "0-inbox/69-[backlog]childrenApiForStructuralComponents",
+        "title": "Children API for Structural Components — 2026-03-31",
+        "status": "inbox",
+        "kind": "backlog",
+        "created": "2026-03-31",
+        "updated": "2026-03-31",
+        "topics": [
+          "0-inbox",
+          "backlog"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/78-[explain]urlSync-three-layer-problem.md",
+      "frontmatter": {
+        "id": "0-inbox/78-[explain]urlSync-three-layer-problem",
+        "title": "urlSync 보강 논의의 실제 문제 — 3층을 구별하지 못했다",
+        "status": "inbox",
+        "kind": "explain",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-04-11 맥락: viewer URL 딥링크 미작동에서 출발한 urlSync 보강 논의",
+        "topics": [
+          "0-inbox",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/79-[backlog]grid-subgrid-ax-migration.md",
+      "frontmatter": {
+        "id": "0-inbox/79-[backlog]grid-subgrid-ax-migration",
+        "title": "Grid Subgrid → ax() 축 승격 마이그레이션 — 2026-04-16",
+        "status": "inbox",
+        "kind": "backlog",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "topics": [
+          "0-inbox",
+          "backlog"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/80-[backlog]shadcn-ui-parity-checklist.md",
+      "frontmatter": {
+        "id": "0-inbox/80-[backlog]shadcn-ui-parity-checklist",
+        "title": "shadcn/ui Parity Checklist — 2026-04-16",
+        "status": "inbox",
+        "kind": "backlog",
+        "created": "2026-04-16",
+        "updated": "2026-04-16",
+        "topics": [
+          "0-inbox",
+          "backlog",
+          "placeholder"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/experiment-flatlayout-incident-gaps.md",
+      "frontmatter": {
+        "id": "0-inbox/experiment-flatlayout-incident-gaps",
+        "title": "FlatLayout 깊이 한계 실험 — incident 재현",
+        "status": "inbox",
+        "kind": "note",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "**날짜**: 2026-04-12 **목적**: FlatLayout + ui 부품 조합만으로 incident 데모를 재현하여 gap을 발견",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/explain-camera-build-process.md",
+      "frontmatter": {
+        "id": "0-inbox/explain-camera-build-process",
+        "title": "Camera 프리미티브 — 어떻게 만들었는가",
+        "status": "inbox",
+        "kind": "explain",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "작성일: 2026-04-17 맥락: ZoomPane+ZoomPanCanvas 통합 작업(commit c9460d06)의 제작 과정 해설",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/explain-camera-component.md",
+      "frontmatter": {
+        "id": "0-inbox/explain-camera-component",
+        "title": "Camera — 뷰포트 프리미티브 해설",
+        "status": "inbox",
+        "kind": "explain",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "작성일: 2026-04-17 대상: `src/interactive-os/ui/Camera.tsx` (598줄)",
+        "topics": [
+          "0-inbox",
+          "mode"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/handoff-2026-04-16-cms-llm-friendly.md",
+      "frontmatter": {
+        "id": "0-inbox/handoff-2026-04-16-cms-llm-friendly",
+        "title": "Handoff: CMS LLM 친화적 접근성 개선",
+        "status": "inbox",
+        "kind": "handoff",
+        "created": "2026-04-16",
+        "updated": "2026-04-18",
+        "summary": "LLM 브라우저 자동화 에이전트가 CMS를 효율적으로 조작할 수 있도록 aria-label, field name, breadcrumb, window.cms API 4가지를 추가했다.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-16"
+        }
+      }
+    },
+    {
+      "path": "docs/0-inbox/handoff-2026-04-16-keyline-audit.md",
+      "frontmatter": {
+        "id": "0-inbox/handoff-2026-04-16-keyline-audit",
+        "title": "Handoff: keyline audit 파이프라인 구축",
+        "status": "inbox",
+        "kind": "handoff",
+        "created": "2026-04-16",
+        "updated": "2026-04-16",
+        "summary": "keylineCheck.mjs에 --audit 모드를 추가하고 /keyline-audit 스킬을 만들어, AI가 시각적 완성도 판정 → 정적 keyline 검증 → 토큰 수정 리포트를 자율 실행하는 수렴 루프 인프라를 구축했다.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-16",
+          "consumed_by": "2026-04-16-handoff-resume",
+          "consumed_at": "2026-04-16"
+        }
+      }
+    },
+    {
+      "path": "docs/0-inbox/handoff-2026-04-17-code-viewer.md",
+      "frontmatter": {
+        "id": "0-inbox/handoff-2026-04-17-code-viewer",
+        "title": "Handoff: CodeViewer — preset 4종 + ARIA + VirtualCodeBlock 흡수",
+        "status": "inbox",
+        "kind": "handoff",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "CodeBlock → CodeViewer 원자적 rename. VirtualCodeBlock을 `virtualized` prop으로 흡수. preset 4종(presentation/doc/chat/replay)으로 용도 레시피 도입. ARIA 기본(figure + role=\"region\" 조건부). 11곳 사용처 일괄 전환. 통합 테스트 10건 신규.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-17",
+          "session_topic": "CodeViewer 대대적 개선"
+        }
+      }
+    },
+    {
+      "path": "docs/0-inbox/handoff-2026-04-17-features-pm-layer.md",
+      "frontmatter": {
+        "id": "features-pm-layer",
+        "title": "Handoff: Feature Management 뷰 + PM 레이어 신설",
+        "status": "inbox",
+        "kind": "handoff",
+        "created": "2026-04-17",
+        "updated": "2026-04-18",
+        "summary": "MEMORY가 PM 도구로 오남용되던 문제를 frontmatter DB + `/features` 뷰로 해결. PRD 🟢 8/8, UI 6버그 수정 후 브라우저 실사용 검증 완료.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-17",
+          "slug": "features-pm-layer"
+        }
+      }
+    },
+    {
+      "path": "docs/0-inbox/handoff-2026-04-17-replay-design-fix.md",
+      "frontmatter": {
+        "id": "0-inbox/handoff-2026-04-17-replay-design-fix",
+        "title": "Handoff: /replay 디자인 5 결함 수정",
+        "status": "inbox",
+        "kind": "handoff",
+        "created": "2026-04-17",
+        "updated": "2026-04-18",
+        "summary": "Shorts 스타일 /replay 뷰어의 5개 결함(사이드바·하단UI·하이라이트·scroll/zoom·search)을 수정하고 SlotCtxRegistry 누수를 리팩토링. cf10a6fa로 커밋 완료, 브라우저 시각 재확인 남음.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-17",
+          "session_id": "2026-04-17-replay-design-fix"
+        }
+      }
+    },
+    {
+      "path": "docs/0-inbox/handoff-2026-04-17-subagent-viewer.md",
+      "frontmatter": {
+        "id": "0-inbox/handoff-2026-04-17-subagent-viewer",
+        "title": "Handoff: SubAgent Viewer (Blueprint PRD 파이프라인 첫 완주)",
+        "status": "inbox",
+        "kind": "handoff",
+        "created": "2026-04-17",
+        "updated": "2026-04-18",
+        "summary": "replay/live에서 SubAgent(Task) 내부 tool 동작을 부모 옆 가로 고정폭 viewer로 띄우는 기능 구현. 동시에 /prd 스킬을 Blueprint 형식으로 재설계하고 /handoff에 A0 역PRD 감사 게이트 전면 배치.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-17",
+          "session_id": "subagent-viewer-blueprint"
+        }
+      }
+    },
+    {
+      "path": "docs/0-inbox/handoff-2026-04-18-mddb-phase1.md",
+      "frontmatter": {
+        "id": "handoff-2026-04-18-mddb-phase1",
+        "title": "mddb Phase 1 — L0 결정적 frontmatter 인프라",
+        "status": "inbox",
+        "kind": "handoff",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "discuss → prd → go 완주. 335 md 관리 인프라 착지. Phase 2·3은 별도 PRD로 대기.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/keyline-guardian-proposal.md",
+      "frontmatter": {
+        "id": "0-inbox/keyline-guardian-proposal",
+        "title": "Keyline Guardian: LLM이 keyline을 유지하면서 컴포넌트를 만들 수 있는 3층 방어 아키텍처",
+        "status": "inbox",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/mddb-audit-2026-04-18.md",
+      "frontmatter": {
+        "id": "0-inbox/mddb-audit-2026-04-18",
+        "title": "mddb 소급 설계용 docs/ 현황 감사",
+        "status": "inbox",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**날짜**: 2026-04-18 **목적**: file 기반 md DB 시스템 소급 적용 전 `docs/` 하위 현황 파악 **scope**: `docs/**/*.md` (335 파일) — `memory/`는 Claude 자동 관리 영역이라 제외",
+        "topics": [
+          "0-inbox",
+          "tag"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/minto-ai-dev-mentoring.md",
+      "frontmatter": {
+        "id": "0-inbox/minto-ai-dev-mentoring",
+        "title": "AI 시대 개발자 지망생을 위한 멘토링",
+        "status": "inbox",
+        "kind": "note",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "stage": "phase2"
+        }
+      }
+    },
+    {
+      "path": "docs/0-inbox/progress-report-2026-04-17.md",
+      "frontmatter": {
+        "id": "0-inbox/progress-report-2026-04-17",
+        "title": "Aria Progress Report — 2026-04-17",
+        "status": "inbox",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "본인 회고용 정식 보고서. 범위: 2025-10-01 ~ 2026-04-17 (약 6.5개월, 1443 커밋). 출처: `docs/PROGRESS.md`, `MEMORY.md`, `.claude/CLAUDE.md`, `docs/DESIGN.md`, `git log`, `src/` 디렉토리 스캔.",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/pyramid-ai-era-project-value.md",
+      "frontmatter": {
+        "id": "0-inbox/pyramid-ai-era-project-value",
+        "title": "AI 시대 이 프로젝트가 중요한 이유",
+        "status": "inbox",
+        "kind": "pyramid",
+        "created": "2026-04-11",
+        "updated": "2026-04-18",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/pyramid-harness-engineering-ai-era.md",
+      "frontmatter": {
+        "id": "0-inbox/pyramid-harness-engineering-ai-era",
+        "title": "AI 시대 하네스 엔지니어링 특강",
+        "status": "inbox",
+        "kind": "pyramid",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/0-inbox/role-control-task.md",
+      "frontmatter": {
+        "id": "0-inbox/role-control-task",
+        "title": "role: 'control' 축 도입 — size: 'md' 단일 크기",
+        "status": "inbox",
+        "kind": "plan",
+        "created": "2026-04-13",
+        "updated": "2026-04-13",
+        "topics": [
+          "0-inbox"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/aestheticScoring.md",
+      "frontmatter": {
+        "id": "1-projects/aestheticScoring",
+        "title": "미감 점수화 — 2축 분석과 방향 — 2026-03-25",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "topics": [
+          "1-projects",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/book/prds/book-floating-chrome-task.md",
+      "frontmatter": {
+        "id": "1-projects/book/prds/book-floating-chrome-task",
+        "title": "Book UI Floating Chrome",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/book/prds/flatlayout-pull-transition-prd.md",
+      "frontmatter": {
+        "id": "1-projects/book/prds/flatlayout-pull-transition-prd",
+        "title": "BookViewer FlatLayout Pull 전환 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Discussion: FlatLayout은 배치 엔진이지 props 운반선이 아니다. BookViewer의 `updateEntityData × 9` Push 체이닝을 제거하고, Cms가 증명한 Pull 패턴(Context + hook pull)으로 전환한다.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/book/prds/hook-catalog-book-fixes-task.md",
+      "frontmatter": {
+        "id": "1-projects/book/prds/hook-catalog-book-fixes-task",
+        "title": "Hook Catalog + Book Fixes",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-07",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/chat-perf-prd.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/chat-perf-prd",
+        "title": "Chat Performance Optimization — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-31",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 채팅 UI 퍼포먼스 병목 제거 + 스트리밍 줄바꿈 pacing",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/composer-ghost-text-prd.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/composer-ghost-text-prd",
+        "title": "Composer Ghost Text Autocomplete — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 스킬 자동완성 — `/` 타이핑 시 고스트 텍스트로 첫 매칭 스킬명 힌트, Tab으로 완성, 매칭 커맨드 하이라이트",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/md-writer-plan.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/md-writer-plan",
+        "title": "MD Writer Implementation Plan",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/md-writer-prd.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/md-writer-prd",
+        "title": "MD Writer — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: MD 파일 기반 구조적 글쓰기 + AI 보조 캔버스. 트리로 구조 편집, viewer로 산문 프리뷰, chat으로 AI 수정, 파일 양방향 동기화.",
+        "topics": [
+          "1-projects",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/streaming-text-block-prd.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/streaming-text-block-prd",
+        "title": "StreamingTextBlock — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: streamingText가 매 토큰마다 MarkdownViewer 전체 재파싱 → 끊김 발생. 줄 단위(\\n) flush + 200ms timeout fallback. 완료 후 MarkdownViewer 1회 파싱.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/writer-analyze-task.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/writer-analyze-task",
+        "title": "Writer Sentence Role Analysis",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/writer-chat-prd.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/writer-chat-prd",
+        "title": "Writer Chat Panel — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: Writer 앱에 채팅 패널을 추가하여 AI가 열린 MD 파일을 직접 수정하는 편집 경험. MD가 SSOT.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/writer-interaction-task.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/writer-interaction-task",
+        "title": "Writer 인터랙션 확장 — scope + focusHistory + writer keyMap",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/writer-multiselect-clipboard-task.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/writer-multiselect-clipboard-task",
+        "title": "Writer Multi-Select Clipboard",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/writer-tree-crud-prd.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/writer-tree-crud-prd",
+        "title": "Writer Tree CRUD 완성 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 구조적 글쓰기 트리에서 문서를 온전히 만들고 수정할 수 있는 CRUD 조작 완성. OS 기반(keyMap + command + plugin).",
+        "topics": [
+          "1-projects",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/chat/prds/writer-xray-task.md",
+      "frontmatter": {
+        "id": "1-projects/chat/prds/writer-xray-task",
+        "title": "Writer 엑스레이 — 구조 시각화 Phase 1",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/content-editing/page-selection/page-list/prd.md",
+      "frontmatter": {
+        "id": "1-projects/cms/content-editing/page-selection/page-list/prd",
+        "title": "CMS 랜딩페이지 기능 완결성 — PRD",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-06",
+        "updated": "2026-04-09",
+        "summary": "Discussion: QA 탐색에서 \"만들다 만\" 3건 발견. 콘텐츠가 아닌 기능/디자인 완결성 확보.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/content-editing/page-selection/section-load/prd.md",
+      "frontmatter": {
+        "id": "1-projects/cms/content-editing/page-selection/section-load/prd",
+        "title": "CMS 랜딩페이지 기능 완결성 — PRD",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-06",
+        "updated": "2026-04-09",
+        "summary": "Discussion: QA 탐색에서 \"만들다 만\" 3건 발견. 콘텐츠가 아닌 기능/디자인 완결성 확보.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/content-editing/page-selection/strategy.md",
+      "frontmatter": {
+        "id": "1-projects/cms/content-editing/page-selection/strategy",
+        "title": "CMS 랜딩페이지 기능 완결성 — PRD",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-06",
+        "updated": "2026-04-09",
+        "summary": "Discussion: QA 탐색에서 \"만들다 만\" 3건 발견. 콘텐츠가 아닌 기능/디자인 완결성 확보.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/prds/cms-landing-completeness-prd.md",
+      "frontmatter": {
+        "id": "1-projects/cms/prds/cms-landing-completeness-prd",
+        "title": "CMS 랜딩페이지 기능 완결성 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "summary": "Discussion: QA 탐색에서 \"만들다 만\" 3건 발견. 콘텐츠가 아닌 기능/디자인 완결성 확보.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/prds/cms-landing-responsive-prd.md",
+      "frontmatter": {
+        "id": "1-projects/cms/prds/cms-landing-responsive-prd",
+        "title": "CMS 랜딩 반응형 + 빈 상태 품질 개선 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "summary": "Discussion: CMS 랜딩이 interactive-os의 \"proof\"로서 3뷰포트에서 프로페셔널하게 보여야 하나, 모바일 프리뷰에서 반응형이 작동하지 않고 빈 콘텐츠가 노출됨",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/prds/linear-component-gap-task.md",
+      "frontmatter": {
+        "id": "1-projects/cms/prds/linear-component-gap-task",
+        "title": "Linear 벤치마크 — 컴포넌트 갭 해소",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-07",
+        "updated": "2026-04-08",
+        "summary": "프로젝트 관리 + AI 가시화 도구를 위한 ui/ 컴포넌트 확충",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/prds/linear-tokens-task.md",
+      "frontmatter": {
+        "id": "1-projects/cms/prds/linear-tokens-task",
+        "title": "Linear 실측 → tokens.css 적용",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-07",
+        "updated": "2026-04-08",
+        "summary": "DESIGN.md L-5 적용 우선순위 기반",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/prds/meta-editable-ssot-prd.md",
+      "frontmatter": {
+        "id": "1-projects/cms/prds/meta-editable-ssot-prd",
+        "title": "`.meta({ fieldType })` 편집 SSOT — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-14",
+        "updated": "2026-04-14",
+        "summary": "Discussion: CMS 캔버스에서 편집 불필요 노드까지 포커스되는 문제. `.meta({ fieldType })`를 편집 가능 여부의 단일 기준(SSOT)으로 격상하고, `isFocusable` visibility filter로 포커스 skip.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/prds/miller-columns-task.md",
+      "frontmatter": {
+        "id": "1-projects/cms/prds/miller-columns-task",
+        "title": "Miller Columns — Finder 스타일 문서 탐색기",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/prds/pipeline-dashboard-prd.md",
+      "frontmatter": {
+        "id": "1-projects/cms/prds/pipeline-dashboard-prd",
+        "title": "Pipeline Dashboard — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Discussion: 스킬 파이프라인 산출물을 트리×단계 매트릭스로 가시화하여 누락/다음 행동을 한눈에 파악. 작업 순서는 자유, 구조는 자동.",
+        "topics": [
+          "1-projects",
+          "project"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/preview-deploy/preview/strategy.md",
+      "frontmatter": {
+        "id": "1-projects/cms/preview-deploy/preview/strategy",
+        "title": "CMS 랜딩 반응형 + 빈 상태 품질 개선 — PRD",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-06",
+        "updated": "2026-04-09",
+        "summary": "Discussion: CMS 랜딩이 interactive-os의 \"proof\"로서 3뷰포트에서 프로페셔널하게 보여야 하나, 모바일 프리뷰에서 반응형이 작동하지 않고 빈 콘텐츠가 노출됨",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/preview-deploy/preview/viewport-switch/prd.md",
+      "frontmatter": {
+        "id": "1-projects/cms/preview-deploy/preview/viewport-switch/prd",
+        "title": "CMS 랜딩 반응형 + 빈 상태 품질 개선 — PRD",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-06",
+        "updated": "2026-04-09",
+        "summary": "Discussion: CMS 랜딩이 interactive-os의 \"proof\"로서 3뷰포트에서 프로페셔널하게 보여야 하나, 모바일 프리뷰에서 반응형이 작동하지 않고 빈 콘텐츠가 노출됨",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/cms/stories.md",
+      "frontmatter": {
+        "id": "1-projects/cms/stories",
+        "title": "Visual CMS — User Story Map",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-27",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/feAiUiLayer/25-[design]llmEraUiParadigms.md",
+      "frontmatter": {
+        "id": "1-projects/feAiUiLayer/25-[design]llmEraUiParadigms",
+        "title": "LLM 시대의 UI 패러다임 — 채팅을 넘어서",
+        "status": "active",
+        "kind": "design",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: 클라우드팀 FE로서 AI 기반 전사 도구를 제안하기 위해, \"LLM 시대에 UI가 어떻게 변하고 있는가\"를 조사",
+        "topics": [
+          "1-projects",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/feAiUiLayer/26-[design]generativeInteractiveUi.md",
+      "frontmatter": {
+        "id": "1-projects/feAiUiLayer/26-[design]generativeInteractiveUi",
+        "title": "Generative Interactive UI — AI가 만드는 인터랙티브 인터페이스",
+        "status": "active",
+        "kind": "design",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: 채팅 블록 UI가 미래라는 결론 도출 후, \"정적 블록을 넘어 인터랙티브 위젯을 생성하는\" 실제 사례와 기술 조사",
+        "topics": [
+          "1-projects",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/feAiUiLayer/53-[decision]feAiUiLayerStrategy.md",
+      "frontmatter": {
+        "id": "1-projects/feAiUiLayer/53-[decision]feAiUiLayerStrategy",
+        "title": "FE × AI UI Layer 전략 — 2026-03-25",
+        "status": "active",
+        "kind": "decision",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "topics": [
+          "1-projects",
+          "decision",
+          "design",
+          "p0",
+          "p1",
+          "p2"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/feAiUiLayer/README.md",
+      "frontmatter": {
+        "id": "1-projects/feAiUiLayer/README",
+        "title": "FE × AI UI Layer",
+        "status": "active",
+        "kind": "readme",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "클라우드팀 FE 성과 아이템: AI 에이전트 출력을 사람이 쓸 수 있는 UI로 바꾸는 레이어.",
+        "topics": [
+          "1-projects",
+          "decision",
+          "design",
+          "p0",
+          "p1",
+          "p2"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/features/chat-module.md",
+      "frontmatter": {
+        "id": "chat-module",
+        "title": "Agent Chat (Gen UI)",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "Anthropic Agent SDK + WebSocket 기반 채팅. Phase A는 텍스트, Phase B/C에서 tool UI·permission·인터랙티브 Gen UI 블록.",
+        "topics": [
+          "1-projects",
+          "agent-sdk",
+          "chat",
+          "gen-ui",
+          "websocket"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "name": "Agent Chat (Gen UI)",
+          "slug": "chat-module",
+          "layer": "service",
+          "maturity": 2,
+          "deps": [],
+          "routes": [
+            "/chat"
+          ],
+          "prds": [],
+          "handoffs": [],
+          "tags": [
+            "chat",
+            "gen-ui",
+            "agent-sdk",
+            "websocket"
+          ],
+          "last_touched": "2026-04-10"
+        }
+      }
+    },
+    {
+      "path": "docs/1-projects/features/flatlayout-engine.md",
+      "frontmatter": {
+        "id": "flatlayout-engine",
+        "title": "FlatLayout Engine",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "유일 레이아웃 엔진. JSX 트리 대신 flat 선언(`definePage`)으로 XY+Z 배치 소유권을 엔진에 위임. widget은 React 책임, layout은 엔진 책임으로 경계 분리.",
+        "topics": [
+          "1-projects",
+          "definepage",
+          "flatlayout",
+          "pull-model",
+          "widget"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "name": "FlatLayout Engine",
+          "slug": "flatlayout-engine",
+          "layer": "engine",
+          "maturity": 5,
+          "deps": [],
+          "routes": [],
+          "prds": [],
+          "handoffs": [],
+          "tags": [
+            "flatlayout",
+            "definePage",
+            "widget",
+            "pull-model"
+          ],
+          "last_touched": "2026-04-16"
+        }
+      }
+    },
+    {
+      "path": "docs/1-projects/features/prds/feature-mgmt-view-prd.md",
+      "frontmatter": {
+        "id": "1-projects/features/prds/feature-mgmt-view-prd",
+        "title": "Feature Management View — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "Discussion: MEMORY가 PM 도구로 오남용되는 문제를 해결하기 위해, feature의 status·lifecycle·관계를 전담하는 **PM 레이어**를 신설하고 Productboard Objectives 스타일의 조망 뷰를 제공한다.",
+        "topics": [
+          "1-projects",
+          "n"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/features/README.md",
+      "frontmatter": {
+        "id": "1-projects/features/README",
+        "title": "Features — PM Layer",
+        "status": "active",
+        "kind": "readme",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "1인 개발자용 feature 상태 DB. MEMORY(경험/원칙), PROGRESS(concept map), prds(스펙)과 별개로 **진행 상태·관계·수명주기**만 담는 얇은 레이어.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/features/visual-cms.md",
+      "frontmatter": {
+        "id": "visual-cms",
+        "title": "Visual CMS",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "랜딩 페이지 자체를 편집 대상으로 삼는 Visual CMS. Figma Slides 레이아웃 영감, 하나의 앱 = 하나의 store 원칙 준수.",
+        "topics": [
+          "1-projects",
+          "cms",
+          "flatlayout",
+          "i18n",
+          "landing"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "name": "Visual CMS",
+          "slug": "visual-cms",
+          "layer": "service",
+          "maturity": 4,
+          "deps": [
+            "flatlayout-engine"
+          ],
+          "routes": [
+            "/"
+          ],
+          "prds": [
+            "docs/1-projects/cms/prds/2026-03-24-cms-editorial-content-prd.md",
+            "docs/1-projects/cms/prds/2026-03-27-cms-image-field-prd.md",
+            "docs/1-projects/cms/prds/meta-editable-ssot-prd.md"
+          ],
+          "handoffs": [],
+          "tags": [
+            "cms",
+            "flatlayout",
+            "landing",
+            "i18n"
+          ],
+          "last_touched": "2026-04-15"
+        }
+      }
+    },
+    {
+      "path": "docs/1-projects/finder-viewer/prds/finder-viewer-prd.md",
+      "frontmatter": {
+        "id": "1-projects/finder-viewer/prds/finder-viewer-prd",
+        "title": "Finder Viewer — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-10",
+        "updated": "2026-04-10",
+        "summary": "Discussion: viewer + docs를 Finder 스타일 단일 탐색 UI로 통합. Apple 미니멀 컨셉.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/finder-viewer/prds/list-xray-prd.md",
+      "frontmatter": {
+        "id": "1-projects/finder-viewer/prds/list-xray-prd",
+        "title": "List X-ray — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "Discussion: 리스트뷰를 \"프로젝트 X-ray\"로 — TreeGrid 메타데이터 컬럼 + 정렬 + 필터",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/replay/prds/subagent-viewer-prd.md",
+      "frontmatter": {
+        "id": "1-projects/replay/prds/subagent-viewer-prd",
+        "title": "SubAgent Viewer — Blueprint",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "**Discussion**: replay/live에서 Task(Agent) tool의 내부 tool 동작이 안 보임 → SubAgent 파일을 독립 viewer에 띄우기. 연결선 없이 가로 나열 고정폭. **산출물 유형**: UI 기능 (엔진 일부 확장) **규모 추정**: 파일 3~5개 수정, 1~2개 신규",
+        "topics": [
+          "1-projects",
+          "i"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/0-discovery.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/0-discovery",
+        "title": "Viewer — Discovery",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/doc-browsing/miller-columns/discuss.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/doc-browsing/miller-columns/discuss",
+        "title": "Doc Browsing — Strategy",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/app-inspector-prd.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/app-inspector-prd",
+        "title": "App Inspector — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-03",
+        "updated": "2026-04-08",
+        "summary": "Discussion: engine.inspect()로 앱의 capability(keyMap, commands, schema, state)를 직렬화 데이터로 노출하고, devtools UI로 출력",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/inspector-aria-xray-prd.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/inspector-aria-xray-prd",
+        "title": "Inspector ARIA X-Ray — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "summary": "Discussion: OS가 생산하는 ARIA를 노드별로 x-ray — Chrome DevTools Accessibility Tree급 세밀도",
+        "topics": [
+          "1-projects",
+          "id",
+          "nodeid"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/inspector-improve-task.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/inspector-improve-task",
+        "title": "Inspector Improve — Task",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/inspector-overview-task.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/inspector-overview-task",
+        "title": "Inspector Overview 리디자인",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/inspector-redesign-prd.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/inspector-redesign-prd",
+        "title": "Inspector 리디자인 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 통합 ARIA 트리 + SplitPane + 3섹션 우측 패널 + ASCII 복사",
+        "topics": [
+          "1-projects",
+          "childrole",
+          "role"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/inspector-source-preview-prd.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/inspector-source-preview-prd",
+        "title": "Inspector Source Preview — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "summary": "Discussion: inspector lock 상태에서 모달 없이 소스코드를 즉시 확인 — 탐색 흐름 유지",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/inspector-zone-keymap-prd.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/inspector-zone-keymap-prd",
+        "title": "Inspector 새 창 + Zone 계층 KeyMap 노출 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: Inspector에서 AriaRoute 전역키만 보이고 Zone별 keyMap이 누락됨. 새 창 전용으로 전환.",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/project-viewer-improve-task.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/project-viewer-improve-task",
+        "title": "Project Viewer /improve Task",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/project-viewer-redesign-task.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/project-viewer-redesign-task",
+        "title": "Project Viewer 재설계 — 도메인 서비스 UI 언어",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/prds/project-viewer-task.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/prds/project-viewer-task",
+        "title": "Project Viewer Task",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/stories/doc-browsing/1-strategy.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/stories/doc-browsing/1-strategy",
+        "title": "Doc Browsing — Strategy",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/stories/doc-browsing/features/miller-columns/2-design.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/stories/doc-browsing/features/miller-columns/2-design",
+        "title": "Miller Columns — Design",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/stories/doc-browsing/features/miller-columns/3-spec.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/stories/doc-browsing/features/miller-columns/3-spec",
+        "title": "Miller Columns — Spec",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "1-projects"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/1-projects/viewer/stories/doc-browsing/features/miller-columns/5-review/review.md",
+      "frontmatter": {
+        "id": "1-projects/viewer/stories/doc-browsing/features/miller-columns/5-review/review",
+        "title": "Miller Columns — Design Review",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "1-projects",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/45-[decision]css-layer-protocol.md",
+      "frontmatter": {
+        "id": "2-areas/45-[decision]css-layer-protocol",
+        "title": "CSS Layer Protocol — SRP 기반 스타일링 설계문서 제안 — 2026-03-25 (v2)",
+        "status": "active",
+        "kind": "decision",
+        "created": "2026-03-24",
+        "updated": "2026-04-05",
+        "topics": [
+          "2-areas",
+          "data-aria-container",
+          "data-focused",
+          "decision",
+          "role"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/46-[explain]declarativeOcp.md",
+      "frontmatter": {
+        "id": "2-areas/46-[explain]declarativeOcp",
+        "title": "선언적 OCP — interactive-os의 확장 설계 철학",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-25",
+        "updated": "2026-03-28",
+        "summary": "작성일: 2026-03-25 맥락: CMS 전역 단축키(Cmd+\\) 설계 중 \"명령형 switch-case vs 선언적 확장\"이 쟁점이 되어, 프로젝트를 관통하는 설계 철학을 명시적으로 정립한다.",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/61-[decision]serviceUserStoryPipeline.md",
+      "frontmatter": {
+        "id": "2-areas/61-[decision]serviceUserStoryPipeline",
+        "title": "Service User Story Pipeline — 2026-03-27",
+        "status": "active",
+        "kind": "decision",
+        "created": "2026-03-27",
+        "updated": "2026-03-28",
+        "topics": [
+          "2-areas",
+          "decision"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/60-[explain]followFocusSelectionGap.md",
+      "frontmatter": {
+        "id": "2-areas/axis/60-[explain]followFocusSelectionGap",
+        "title": "followFocus Selection Gap — APG \"selection follows focus\"와 우리 구현의 구조적 불일치",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-28",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-28 맥락: APG Conformance Phase 1에서 RadioGroup, Tabs 두 패턴이 🟡 판정",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/2026-04-13-grid-cell-range-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/2026-04-13-grid-cell-range-prd",
+        "title": "Grid 2D Cell Range Selection — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Discussion: i18n 편집기에서 Shift+←/→ 미작동 발견 → grid 축 공통 미구현 확정 → 키보드 4방향 + Shift+Click + Drag로 2D 사각 셀 영역 선택을 grid 축에 주입. clipboard/Delete가 영역에 작동.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/axis-config-removal-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/axis-config-removal-prd",
+        "title": "AxisConfig 제거 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: AxisConfig 19필드가 v2 운반체 잔재. 축이 플래그를 설정하고 useAria가 해석하는 중간 해석 계층 = OCP 위반.",
+        "topics": [
+          "2-areas",
+          "expanded_id"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/axis-handlers-export-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/axis-handlers-export-prd",
+        "title": "축 handlers 정적 export — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-28",
+        "updated": "2026-04-08",
+        "summary": "Discussion: APG Grid 증거 — 같은 키(ArrowRight)가 맥락마다 다른 의미. 축이 keyMap을 소유하면 패턴이 맥락별 바인딩을 결정할 수 없다. handlers를 정적 export하여 패턴이 직접 key→handler 바인딩 구성 가능하게.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/axis-v3-architecture-plan.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/axis-v3-architecture-plan",
+        "title": "Axis v3 Architecture Implementation Plan",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-03-29",
+        "updated": "2026-04-08",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "2-areas",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/axis-v3-architecture-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/axis-v3-architecture-prd",
+        "title": "Axis v3 Architecture — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-29",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 축에서 keyMap 분리, 축=capability SSOT, 패턴=key binding, createPatternContext 해체",
+        "topics": [
+          "2-areas",
+          "nodeid"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/interactive-axis-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/interactive-axis-prd",
+        "title": "Interactive 축 도입 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "summary": "Discussion: interactive.css가 ax() 밖에서 role 셀렉터로 상태 시각을 관리 → surface와 competing → interactive 축을 ax()에 추가하여 흡수",
+        "topics": [
+          "2-areas",
+          "aria-level",
+          "aria-selected",
+          "data-aria-container"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/placement-axis-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/placement-axis-prd",
+        "title": "placement 축 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "summary": "Discussion: module.css의 position+inset 패턴을 ax() placement 축으로 흡수. 의도 기반 어휘로 배치를 선언.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/selection-neutral-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/selection-neutral-prd",
+        "title": "Selection Neutral — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: selected를 accent→neutral로 전환하여, accent 예산을 activate에 확보",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/selection-overlay-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/selection-overlay-prd",
+        "title": "SelectionOverlay — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-31",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 포커스/선택 표현을 콘텐츠에서 분리하여 독립 overlay로 전환. 범용 selection 도구.",
+        "topics": [
+          "2-areas",
+          "data-node-id",
+          "nodeidattr"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/spatial-click-handler-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/spatial-click-handler-prd",
+        "title": "Spatial Click Handler — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "summary": "Discussion: CMS가 spatial depth를 click으로 전환할 때 12줄 우회 코드가 필요. spatial plugin에 click handler가 없어서 발생.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/spatial-navigate-prd.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/spatial-navigate-prd",
+        "title": "Spatial Navigate — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 2D 공간 탐색(TV 리모컨 방향키)을 os 기본기로 승격. navigate 축에 spatial 전략 추가, DOM rect 기반 방향키 이동 + cross-boundary + sticky cursor를 os가 자동 처리.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/axis/prds/v3-migration-plan.md",
+      "frontmatter": {
+        "id": "2-areas/axis/prds/v3-migration-plan",
+        "title": "v3 Migration Plan — 2026-03-29",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-03-28",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/3layer-color-system-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/3layer-color-system-prd",
+        "title": "3층 색상 체계 (sys/brand/tone) + oklch 파생 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Discussion: accent가 focus/CTA/semantic 3역할을 겸임 → sys/brand/tone 분리. oklch h,c 2-input → 모든 상태 색상 + 전경색(흑/백) 자동 파생. `--selection` depth 토큰 폐기.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/ax-migration-phase2-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/ax-migration-phase2-prd",
+        "title": "ax() 마이그레이션 Phase 2 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-03",
+        "updated": "2026-04-08",
+        "summary": "Discussion: module.css last-mile을 줄이기 위해 새 축 발견 + surface 정합성 재스캔",
+        "topics": [
+          "2-areas",
+          "aria-disabled",
+          "prop"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/ax-padding-refactor-task.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/ax-padding-refactor-task",
+        "title": "ax() padding 축 리팩토링 — cs/pd/content 재설계",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/ax-recipe-system-task.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/ax-recipe-system-task",
+        "title": "ax() Recipe System — shadcn 자유도 원리 적용",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-07",
+        "updated": "2026-04-08",
+        "summary": "핵심: 구조 축(height/padding/font/gap)을 잠그고, 색 축만 열어서 어떤 조합이든 완성품 느낌 보장",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/chroma-ladder-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/chroma-ladder-prd",
+        "title": "Chroma Ladder — Selection 3토큰 분리 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: accent 최소화 — chroma=행동 긴급도, hue 250 고정 5단계 사다리",
+        "topics": [
+          "2-areas",
+          "aria-selected"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/css-layer-lock-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/css-layer-lock-prd",
+        "title": "CSS @layer 구조/상태 잠금 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-08",
+        "updated": "2026-04-08",
+        "summary": "Discussion: os 부품으로 조립해도 디자인 일관성이 없음 → recipe/interactive가 convention으로만 잠기고 CSS cascade에서 강제되지 않음 → @layer 도입으로 물리적 잠금",
+        "topics": [
+          "2-areas",
+          "data-focused"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/design-convergence-loop-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/design-convergence-loop-prd",
+        "title": "Design Convergence Loop — Slice 0 — Blueprint",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**Discussion**: 2026-04-18 /discuss — LLM이 1-shot으로 결함 없는 디자인을 뽑게 하려면 L1(미려 컴포넌트)+L2(레이아웃 엔진) 구축 전에 **수렴 루프 인프라**가 필요. 4번 원인(구축했는데 깨짐) = 합격선 테스트 부재. TDD 순서로 Slice 0(루프 인프라) → Slice A(Linear issue list 구현). **산출물 유형**: 엔진/인프라 (스크립트 + 테스트 파이프라인) **규모 추정**: 신규 파일 4~6개, 수정 0~2개 (기존 `scripts/design*.mjs` 재활용)",
+        "topics": [
+          "2-areas",
+          "i",
+          "p"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/design-token-3tier-auto-derivation-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/design-token-3tier-auto-derivation-prd",
+        "title": "디자인 토큰 3티어 자동 파생 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Discussion: list/tree selection이 raised로 안 보이는 문제를 추적하다, 토큰 시스템이 손 매핑 2티어(palette → role)인 게 근본 원인임을 확인. 자동 파생 3티어(palette → semantic elev → role)로 재배선.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/improve-design-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/improve-design-prd",
+        "title": "improve-design — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "summary": "Discussion: LLM이 디자인 결과물을 스스로 채점하고, ax()/ui/ 경로만으로 수정하여 9/10+ 까지 올리는 자동 루프. 해치(module.css)로 점수를 올리면 실패.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/keyline-audit-task.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/keyline-audit-task",
+        "title": "Keyline Audit 파이프라인",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-15",
+        "updated": "2026-04-15",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/keyline-structural-classification-prd.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/keyline-structural-classification-prd",
+        "title": "Keyline Structural Classification — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "Discussion: keyline 테스트 페이지를 \"LLM이 어떻게 조립해도 시각 일관성이 보장된다\"는 디자인 시스템의 자기 증명으로 고도화",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/markdown-prose-tokens-task.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/markdown-prose-tokens-task",
+        "title": "Markdown Prose 토큰 분리 및 base 정리",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/module-css-dump.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/module-css-dump",
+        "title": "module.css 전체 덤프 (2026-04-03)",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/module-css-migration.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/module-css-migration",
+        "title": "module.css → ax() 마이그레이션 트래커",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/remove-module-css-design.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/remove-module-css-design",
+        "title": "module.css 전면 제거 — ax() 디자인 언어 고도화",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/design/prds/remove-module-css-plan.md",
+      "frontmatter": {
+        "id": "2-areas/design/prds/remove-module-css-plan",
+        "title": "module.css 전면 제거 Implementation Plan",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-05",
+        "updated": "2026-04-17",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "2-areas",
+          "data-compact"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/devtools/71-[explain]inspectorBlindSpots.md",
+      "frontmatter": {
+        "id": "2-areas/devtools/71-[explain]inspectorBlindSpots",
+        "title": "Inspector Blind Spots — command/keyMap이 inspector에 도달하지 못하는 5가지 구조적 결함",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-04-05",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-04-05 맥락: inspector가 route:Writer의 Mod+\\ command를 빈칸으로 표시���는 버그를 수정하면서, 동일한 패턴의 구조적 결함이 더 있는지 전수 조사",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/devtools/prds/agent-dashboard-prd.md",
+      "frontmatter": {
+        "id": "2-areas/devtools/prds/agent-dashboard-prd",
+        "title": "Agent Dashboard — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "Discussion: Skill Kanban을 에이전트 대시보드로 재설계. 스킬 분류(Planning/Running/Done) → 사용자 관심사 분류(Waiting/Active/Done). \"각 에이전트가 지금 어디서 뭘 하고 있는지 + 산출물 확인\"이 핵심 Job.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/devtools/prds/skill-kanban-prd.md",
+      "frontmatter": {
+        "id": "2-areas/devtools/prds/skill-kanban-prd",
+        "title": "Skill Kanban — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-10",
+        "updated": "2026-04-10",
+        "summary": "Discussion: 대화 중 실행되는 스킬들을 칸반으로 실시간 시각화. 훅 기반 결정적 스크립트, AI 추론 없음, API 비용 없음.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/devtools/prds/skill-kanban-v2-prd.md",
+      "frontmatter": {
+        "id": "2-areas/devtools/prds/skill-kanban-v2-prd",
+        "title": "Skill Kanban v2 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "Discussion: 칸반 카드에서 세션의 산출물(파일)과 스킬 여정을 한눈에 보고, 카드 클릭 시 풀스크린 2패널 모달(좌=채팅, 우=파일 프리뷰)로 터미널 없이 리뷰.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/distribution/data-component-matrix.md",
+      "frontmatter": {
+        "id": "2-areas/distribution/data-component-matrix",
+        "title": "Data → Component Matrix",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "ARIA OS LLM-facing 카탈로그 SSOT. LLM이 요구사항으로부터 데이터 형태를 식별하면, 이 표가 사용할 컴포넌트를 가리킨다. aria.md(시스템 프롬프트)가 이 매트릭스를 직접 인용한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/distribution/plans/2026-04-12-single-entry-refactor.md",
+      "frontmatter": {
+        "id": "2-areas/distribution/plans/2026-04-12-single-entry-refactor",
+        "title": "Single Entry Refactor — Implementation Plan",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/distribution/prds/llm-facing-3layer-prd.md",
+      "frontmatter": {
+        "id": "2-areas/distribution/prds/llm-facing-3layer-prd",
+        "title": "LLM-facing 3층 (data/pick/place) — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Discussion: 바이브코딩 제품(v0/Bolt/Lovable/Cursor류)의 메인 UI 엔진으로 ARIA OS를 채택시키기 위한 LLM-facing 표면. LLM이 다루는 면을 데이터 정의 / 컴포넌트 선택 / FlatLayout 배치 3개로 좁히고, 엔진 내부(ax/축/플러그인/useAria)는 비노출.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/docs-infra/prds/mddb-phase1-prd.md",
+      "frontmatter": {
+        "id": "2-areas/docs-infra/prds/mddb-phase1-prd",
+        "title": "mddb Phase 1 — L0 결정적 frontmatter 인프라 Blueprint",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**Discussion**: `docs/0-inbox/mddb-audit-2026-04-18.md` + 2026-04-18 대화 **산출물 유형**: 스킬·훅 (scripts + hooks) **규모 추정**: 신규 5~7 파일, 수정 2~3 **Scope**: `docs/**/*.md` 한정 (`memory/` 제외), L0 결정적 추출 (로컬 LLM 제외)",
+        "topics": [
+          "2-areas",
+          "a",
+          "b",
+          "backlog",
+          "folder0",
+          "tag"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/18-[explain]layerDependencyViolations.md",
+      "frontmatter": {
+        "id": "2-areas/engine/18-[explain]layerDependencyViolations",
+        "title": "레이어 의존 위반 — L4 Pattern ↔ L5 Plugins 순환과 L2 Engine 점프",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-28",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-26 맥락: 도메인 개념 순서(L1→L7) 확정 후 코드 import와의 정합성 검증",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/68-[explain]engine.md",
+      "frontmatter": {
+        "id": "2-areas/engine/68-[explain]engine",
+        "title": "Engine — 빈 껍데기가 모든 인터랙션을 실행하는 방법",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-31",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-31 맥락: interactive-os의 두 번째 레이어(store → **engine** → axis)",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/75-[explain]layerV2CoreAbsorption.md",
+      "frontmatter": {
+        "id": "2-areas/engine/75-[explain]layerV2CoreAbsorption",
+        "title": "레이어 v2: core 흡수 — 구체적 변경 계획",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-26",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-26 맥락: plugins/core.ts의 commands+entities를 axis/로 이동하여 L4→L5 역참조 제거",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/command-binding-registry-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/command-binding-registry-prd",
+        "title": "Command Binding Registry — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 모든 pointer 행동에 이름 있는 커맨드 부여. useCommand 도입 + ariaRegistry 확장 + inspector 양방향 뷰.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/enforce-command-keymap-design.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/enforce-command-keymap-design",
+        "title": "Command 패턴 강제 완성 — KeyHandler 통일 설계",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "summary": "작성일: 2026-04-05 맥락: inspector가 plugin/override keyMap의 command를 표시하지 못하는 blind spot 수정",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/enforce-command-keymap-plan.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/enforce-command-keymap-plan",
+        "title": "Command 패턴 강제 완성 Implementation Plan",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/engine-handler-registry-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/engine-handler-registry-prd",
+        "title": "Engine Handler Registry (defineCommand Phase 2) — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-29",
+        "updated": "2026-04-08",
+        "summary": "Discussion: Command에서 .execute() 제거 → 순수 메시지 + engine registry lookup + .reduce() direct API + middleware getStore() 단순화",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/engine-handler-registry-remaining-failures.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/engine-handler-registry-remaining-failures",
+        "title": "Engine Handler Registry — 잔여 테스트 실패 보고",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-04-08",
+        "summary": "Phase 2 수정 후 15건 실패. Cynefin 분석 기반, 확실한 1건(use-aria-zone)은 수정 완료.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/engine-layer-hardening-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/engine-layer-hardening-prd",
+        "title": "Engine Layer Hardening — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Discussion: 3-에이전트 엔진 검토에서 도출. 레이어 의존 역전, 정확성 버그, 타입 안전성 갭 7건을 구조적으로 수정한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/engine-subscribe-task.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/engine-subscribe-task",
+        "title": "engine.subscribe — Task",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-07",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/engine-validator-clipboard-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/engine-validator-clipboard-prd",
+        "title": "Engine Validator + Clipboard NormalizedData 수렴 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-11",
+        "updated": "2026-04-12",
+        "summary": "Discussion: clipboard를 NormalizedData 연산으로 수렴시키고, validator를 engine 기본 레이어로 내려서 모든 mutation command가 자동 검증되게 한다. zod는 validator를 engine에 등록하는 플러그인 역할.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/flat-layout-engine-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/flat-layout-engine-prd",
+        "title": "FlatLayout 엔진 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-10",
+        "updated": "2026-04-10",
+        "summary": "Discussion: React JSX 중첩을 NormalizedData flat 선언으로 대체. 위젯=React 블랙박스, 레이아웃=엔진이 관리. Phase 1: PageBookViewer 전환으로 검증.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/live-session-monitor-plan.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/live-session-monitor-plan",
+        "title": "Live Session Monitor Implementation Plan",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/native-api-maximize-task.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/native-api-maximize-task",
+        "title": "Native CSS/DOM API 극대화",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/plugin-default-keymap-task.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/plugin-default-keymap-task",
+        "title": "Plugin Default KeyMap + CMS Sidebar Cleanup",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/plugin-effect-autoscroll-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/plugin-effect-autoscroll-prd",
+        "title": "Plugin Effect + Autoscroll — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-03",
+        "updated": "2026-04-08",
+        "summary": "Discussion: plugin 시스템에 effect(hook 팩토리) 레이어 추가, autoscroll을 첫 적용 사례로 구현",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/replay-edit-animation-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/replay-edit-animation-prd",
+        "title": "Session Replay Phase B+ — 편집 애니메이션 PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "summary": "Discussion: replay에서 Edit이 휙 넘어가서 뭘 수정했는지 모름 → CodeBlock 하이라이트 확장 + 파일 상태 누적 + 편집 애니메이션 시퀀스",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/scroll-plugin-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/scroll-plugin-prd",
+        "title": "Scroll Plugin — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Discussion: MD viewer에서 Space/Shift+Space로 반페이지 스크롤. scroll axis 대신 plugin으로 구현 (축 상한 P7 준수, DOM side-effect 전용)",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/session-replay-phase-a-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/session-replay-phase-a-prd",
+        "title": "Session Replay Phase A — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-01",
+        "updated": "2026-04-08",
+        "summary": "Discussion: AI 코딩 세션을 웹에서 재생 가능한 인터랙티브 뷰어로 만든다. Phase A는 채팅 패널 재생만.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/session-replay-phase-b-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/session-replay-phase-b-prd",
+        "title": "Session Replay Phase B — Tool Visualization PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-02",
+        "updated": "2026-04-08",
+        "summary": "Discussion: JSONL 기반 세션 리플레이에서 tool_use 결과를 좌측 뷰어에 시각화한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/url-sync-v2-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/url-sync-v2-prd",
+        "title": "urlSync v2 — 상용 수준 URL 상태 동기화 PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "Discussion: viewer URL 딥링크 미작동에서 출발 → urlSync를 nuqs/TanStack Router 표준급으로 보강 Explain: `docs/0-inbox/78-[explain]urlSync-three-layer-problem.md`",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/engine/prds/useCommandBind-prd.md",
+      "frontmatter": {
+        "id": "2-areas/engine/prds/useCommandBind-prd",
+        "title": "useCommandBind — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Discussion: ExpandIndicator 클릭 시 expand toggle. 이벤트와 커맨드를 선언적으로 바인딩하는 hook.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/claude-md.md",
+      "frontmatter": {
+        "id": "2-areas/harness/claude-md",
+        "title": "CLAUDE.md — 규칙 레퍼런스",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-04",
+        "updated": "2026-04-04",
+        "summary": "`.claude/CLAUDE.md`는 강제력 ~50%. LLM이 매 세션 시작 시 읽지만, 복잡한 규칙은 무시될 수 있다. **기계적으로 잡을 수 있는 규칙은 훅으로 승격**하는 것이 원칙.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/hooks.md",
+      "frontmatter": {
+        "id": "2-areas/harness/hooks",
+        "title": "Hooks — 기계적 강제",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-04",
+        "updated": "2026-04-04",
+        "summary": "훅은 강제력 100%. regex/파일 체크로 위반을 감지하고 block 또는 warning을 반환한다. 모든 훅은 `.claude/hooks/*.mjs` (ESM), stdin으로 JSON 입력, stdout/stderr로 출력.",
+        "topics": [
+          "2-areas",
+          "async"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/memory.md",
+      "frontmatter": {
+        "id": "2-areas/harness/memory",
+        "title": "Memory — 프로젝트 지식 영속화",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-04",
+        "updated": "2026-04-04",
+        "summary": "Memory는 강제력 ~50%. 매 세션 시작 시 MEMORY.md 인덱스가 로딩되지만, 개별 파일은 필요 시에만 읽힌다. **반복 3회 이상이면 feedback 승격, 기계적 감지 가능하면 훅 승격.**",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/prds/guard-os-patterns-task.md",
+      "frontmatter": {
+        "id": "2-areas/harness/prds/guard-os-patterns-task",
+        "title": "guard-os-patterns hook",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/prds/harness-convergence-task.md",
+      "frontmatter": {
+        "id": "2-areas/harness/prds/harness-convergence-task",
+        "title": "하네스 수렴 구조 개선",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/prds/os-violation-retroactive-scan-prd.md",
+      "frontmatter": {
+        "id": "2-areas/harness/prds/os-violation-retroactive-scan-prd",
+        "title": "OS Violation Retroactive Scan — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Discussion: 기존 PreToolUse 훅 2개(guardOsPatterns, guardCssAxes)를 소급 적용하여 src/ 전체의 축적된 os 위반을 가시화·수렴한다. `pages/` → `ui/` → `primitives/` 순서 레이어별 청소.",
+        "topics": [
+          "2-areas",
+          "m"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/prds/teo-introduce-rewrite-task.md",
+      "frontmatter": {
+        "id": "2-areas/harness/prds/teo-introduce-rewrite-task",
+        "title": "Task: 멘토링 소개글 재작성",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/README.md",
+      "frontmatter": {
+        "id": "2-areas/harness/README",
+        "title": "Claude Harness — Area Overview",
+        "status": "active",
+        "kind": "readme",
+        "created": "2026-04-04",
+        "updated": "2026-04-04",
+        "summary": "AI 협업의 품질을 **기계적으로 강제**하는 하네스 시스템. CLAUDE.md/Memory는 참고 수준(~50%), 스킬은 워크플로우 강제(~80%), 훅은 기계적 차단(100%).",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/reports/violations-pages.md",
+      "frontmatter": {
+        "id": "2-areas/harness/reports/violations-pages",
+        "title": "Violations — pages",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Generated: 2026-04-12T03:07:55.047Z Total: 14 violations in 12 files (of 147 scanned)",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/reports/violations-primitives.md",
+      "frontmatter": {
+        "id": "2-areas/harness/reports/violations-primitives",
+        "title": "Violations — primitives",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Generated: 2026-04-12T02:34:06.649Z Total: 0 violations in 0 files (of 21 scanned)",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/reports/violations-ui.md",
+      "frontmatter": {
+        "id": "2-areas/harness/reports/violations-ui",
+        "title": "Violations — ui",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Generated: 2026-04-12T03:24:27.995Z Total: 6 violations in 5 files (of 357 scanned)",
+        "topics": [
+          "2-areas",
+          "m"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/settings.md",
+      "frontmatter": {
+        "id": "2-areas/harness/settings",
+        "title": "Settings — 훅 등록",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-04",
+        "updated": "2026-04-04",
+        "summary": "`.claude/settings.json`이 훅의 등록/매칭/실행 방식을 결정한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/harness/skills.md",
+      "frontmatter": {
+        "id": "2-areas/harness/skills",
+        "title": "Skills — 워크플로우 강제",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-04",
+        "updated": "2026-04-04",
+        "summary": "스킬은 강제력 ~80%. LLM의 행동 패턴을 구조화하지만, 텍스트 기반이라 100% 보장은 아님. 모든 스킬은 `.claude/skills/{name}/SKILL.md`.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/interactiveOsArchitectureVision.md",
+      "frontmatter": {
+        "id": "2-areas/interactiveOsArchitectureVision",
+        "title": "interactive-os — Architecture Vision",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-17",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-17 현재 상태가 아닌, 프로젝트의 이상적 완성 형태를 그린 로드맵 구조도",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/layout/70-[explain]projectPageDesignDecisions.md",
+      "frontmatter": {
+        "id": "2-areas/layout/70-[explain]projectPageDesignDecisions",
+        "title": "/project 페이지 — 디자인 의사결정 근거",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-04-06",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-04-05 맥락: `/project` 라우트는 프로젝트 전체 조감도를 TreeView로 보여주는 내부 도구다",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/layout/76-[explain]flat-layout-engine-what-changed.md",
+      "frontmatter": {
+        "id": "2-areas/layout/76-[explain]flat-layout-engine-what-changed",
+        "title": "FlatLayout 엔진 — 뭐가 달라졌나 — 2026-04-10",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/layout/prds/flatlayout-nav-catalog-prd.md",
+      "frontmatter": {
+        "id": "2-areas/layout/prds/flatlayout-nav-catalog-prd",
+        "title": "FlatLayout NavNode + 카탈로그 통합 + 시각 개선 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "Discussion: FlatLayout을 범용 페이지 구조 엔진으로 확장하고, theme/catalog/showcase 3개 페이지를 사이드 Nav + 콘텐츠 구조로 통합하며, 그 과정에서 ax() 축/불변량 충분성을 검증한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/layout/prds/flatlayout-resizable-split-prd.md",
+      "frontmatter": {
+        "id": "2-areas/layout/prds/flatlayout-resizable-split-prd",
+        "title": "FlatLayout Resizable Split — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-12",
+        "updated": "2026-04-12",
+        "summary": "Discussion: FlatLayout split 렌더러를 SplitPane으로 위임하여 리사이즈 가능하게 하고, raised widget에 그림자 가시성 확보, CodeBlock fill clipping 구현",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/layout/prds/flatlayout-slot-policy-prd.md",
+      "frontmatter": {
+        "id": "2-areas/layout/prds/flatlayout-slot-policy-prd",
+        "title": "FlatLayout Slot Policy — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-13",
+        "updated": "2026-04-13",
+        "summary": "Discussion: FlatLayout 위젯 컨테이너를 Swing식 \"슬롯이 정책 소유\" 2층 구조로 전환하여, 스크롤/flex를 엔진이 자동 보장. LLM 결정 지점 0.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/19-[explain]patternPluginDependency.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/19-[explain]patternPluginDependency",
+        "title": "Pattern→Plugin 의존 구조 — createPatternContext가 모든 위반의 허브다",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-28",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-26 맥락: L4 Pattern이 L5 Plugins를 runtime import하는 구조적 위반 분석",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/58-[explain]remainingL4L5Violations.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/58-[explain]remainingL4L5Violations",
+        "title": "L4→L5 잔존 위반 2개 — createPatternContext가 spatial·rename plugin을 직접 import한다",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-26",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-26 맥락: 26개 역참조를 정리하여 2개까지 줄였으나, spatial·rename의 command 팩토리가 여전히 L4에서 직접 import됨",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/apgConformanceMatrix.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/apgConformanceMatrix",
+        "title": "APG Conformance Matrix",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "APG(WAI-ARIA Authoring Practices Guide) 전체 example과 우리 pattern/roles/ 매핑. CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 기준.",
+        "topics": [
+          "2-areas",
+          "aria-label"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/patternCompositionLogicTree.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/patternCompositionLogicTree",
+        "title": "Pattern Composition 로직트리 — 2026-03-20",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-21",
+        "updated": "2026-03-24",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/prds/compose-pattern-3arg-prd.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/prds/compose-pattern-3arg-prd",
+        "title": "composePattern 3인자 리팩토링 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-29",
+        "updated": "2026-04-08",
+        "summary": "Discussion: Identity 14필드 god object → 축 인스턴스 SSOT + required 배열 + APG 3섹션 1:1 매핑",
+        "topics": [
+          "2-areas",
+          "axes",
+          "newaxes",
+          "newaxis",
+          "sel"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/prds/compose-pattern-recursive-prd.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/prds/compose-pattern-recursive-prd",
+        "title": "composePattern 재귀 오버라이드 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-28",
+        "updated": "2026-04-08",
+        "summary": "Discussion: v3 대규모 마이그레이션 실패 → 점진 전환 전략. 첫 단계로 keyMap 소유권을 composePattern에 확립하고, 패턴-on-패턴 재귀 합성을 지원한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/prds/ctx-axis-namespace-prd.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/prds/ctx-axis-namespace-prd",
+        "title": "createPatternContext 축 namespace 분산 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: createPatternContext가 6축을 하드코딩하는 god object. 축이 aria-* 변화 단위로 ctx factory를 소유하고, createPatternContext는 base + merge만 수행하도록 분산.",
+        "topics": [
+          "2-areas",
+          "focusedid"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/prds/form-pattern-detail-panel-prd.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/prds/form-pattern-detail-panel-prd",
+        "title": "CMS DetailPanel os화 — form 패턴 + zone 전환 PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "Discussion: slot-only 노드에서 Enter drill-down 시 sr-only 프록시에 포커스되어 무반응. form 패턴 신규 + DetailPanel os화 + zone 전환으로 근본 해결.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/prds/listbox-example-unification-prd.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/prds/listbox-example-unification-prd",
+        "title": "ListBox Example → UI 완성품 기반 전환 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: examples/가 ui/ 완성품을 소비하여 APG를 재현. 의존 방향: examples → ui → pattern. drift 제거 + APG 검증 유지.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/prds/modal-key-trap-prd.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/prds/modal-key-trap-prd",
+        "title": "Modal Key Trap — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Discussion: Book 라우트의 ArrowUp/Down이 TOC 모달을 뚫고 페이지를 넘김. keyMap에 등록된 키만 trap되고 나머지가 leak. findMatchingKey에 `'*'` 와일드카드 fallback을 추가하여 모달이 모든 키를 소비하게 한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/pattern/prds/route-modal-prd.md",
+      "frontmatter": {
+        "id": "2-areas/pattern/prds/route-modal-prd",
+        "title": "AriaRoute Route-Level Modal — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Discussion: 화면을 가리는 UI(fullscreen view 등)는 modal 취급해야 한다. popup 축(인스턴스 내 modal)과 별개로, AriaRoute가 인스턴스 간 포커스 격리를 담당한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/plugin-showcase.md",
+      "frontmatter": {
+        "id": "2-areas/plugin-showcase",
+        "title": "Plugin Showcase",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-21",
+        "updated": "2026-03-21",
+        "summary": "최종 갱신: 2026-03-21 (retro: plugin-showcase-gap-phase2)",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/primitives/47-[ideal]keymapOnlyAria.md",
+      "frontmatter": {
+        "id": "2-areas/primitives/47-[ideal]keymapOnlyAria",
+        "title": "keyMap-only Aria — 선언적 OCP로 전역 단축키 처리",
+        "status": "active",
+        "kind": "ideal",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-25 맥락: CMS에 `Cmd+\\` preview 토글을 추가하면서, engine 없이 keyMap만으로 동작하는 Aria의 이상적 사용 패턴을 시뮬레이션한다. 선행 문서: `46-[explain]declarativeOcp.md` (선언적 OCP 3원칙)",
+        "topics": [
+          "2-areas",
+          "explain",
+          "ideal"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/primitives/67-[explain]popupTriggerCollision.md",
+      "frontmatter": {
+        "id": "2-areas/primitives/67-[explain]popupTriggerCollision",
+        "title": "Popup Trigger 충돌 — Aria.Item과 Aria.Trigger가 같은 노드를 2번 렌더하는 이유",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-03-30",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-30 맥락: APG 전수 전환에서 발견된 Gap 2 — popup 패턴이 `<Aria>` 선언적 방식을 사용할 수 없는 구조적 원인",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/primitives/osMultiViewGap.md",
+      "frontmatter": {
+        "id": "2-areas/primitives/osMultiViewGap",
+        "title": "os multi-view gap — 1 Store, 2 Widgets 충돌 해설",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-20",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-20 맥락: CMS sidebar를 os aria로 전환하면서 드러난 구조적 갭. 수동 구현보다 글루코드가 오히려 증가하여 \"세련되지 않다\"는 문제 제기.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/primitives/prds/aria-item-children-prd.md",
+      "frontmatter": {
+        "id": "2-areas/primitives/prds/aria-item-children-prd",
+        "title": "Aria.Item render children — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-28",
+        "updated": "2026-04-08",
+        "summary": "Discussion: container node의 자식을 render callback 4번째 인자로 전달하여 APG group wrapper 구조 지원",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/primitives/prds/aria-panel-trigger-plan.md",
+      "frontmatter": {
+        "id": "2-areas/primitives/prds/aria-panel-trigger-plan",
+        "title": "Aria.Panel + Aria.Trigger Implementation Plan",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-03-29",
+        "updated": "2026-04-08",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/primitives/prds/aria-panel-trigger-prd.md",
+      "frontmatter": {
+        "id": "2-areas/primitives/prds/aria-panel-trigger-prd",
+        "title": "Aria.Panel + Aria.Trigger — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-28",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 축 v3에서 capability 분리는 완성됐지만, 소비측(Aria 컴포넌트)이 `<Aria><Aria.Item/>` 단일 구조로 고정되어 multi-zone 패턴(Tabs, Accordion, MenuButton, Combobox, Dialog)의 DOM 구조/ARIA 관계를 표현할 수 없다.",
+        "topics": [
+          "2-areas",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/primitives/prds/aria-panel-trigger-task.md",
+      "frontmatter": {
+        "id": "2-areas/primitives/prds/aria-panel-trigger-task",
+        "title": "Aria.Panel + Aria.Trigger — Task",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "PRD: `2026-03-28-aria-panel-trigger-prd.md`",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/store/prds/clipboard-serialize-prd.md",
+      "frontmatter": {
+        "id": "2-areas/store/prds/clipboard-serialize-prd",
+        "title": "Clipboard Serialize/Deserialize — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-08",
+        "summary": "Discussion: clipboard plugin에 serialize/deserialize 옵션을 추가하여 시스템 클립보드 양방향 통합. Writer는 MD 직렬화 주입.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/store/prds/command-unification-prd.md",
+      "frontmatter": {
+        "id": "2-areas/store/prds/command-unification-prd",
+        "title": "Command Unification — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-03",
+        "updated": "2026-04-08",
+        "summary": "Discussion: OS 위의 모든 컴포넌트가 NormalizedData + Command로 상태/행동을 표현하여, 기록·통신·외부 조작이 가능하도록 통일한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/store/prds/command-unification-task.md",
+      "frontmatter": {
+        "id": "2-areas/store/prds/command-unification-task",
+        "title": "Command Unification — Task",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-03",
+        "updated": "2026-04-08",
+        "summary": "PRD: `2026-04-03-command-unification-prd.md` 빅뱅 1커밋. 모든 useState → NormalizedData + Command.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/store/prds/define-command-prd.md",
+      "frontmatter": {
+        "id": "2-areas/store/prds/define-command-prd",
+        "title": "defineCommand 패턴 도입 (Phase 1: 추상화 벽) — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-28",
+        "updated": "2026-04-08",
+        "summary": "Discussion: Command의 execute 분리 → Redux 표준 action/reducer. Phase 1은 인터페이스만 세우고 내부는 .execute() 유지",
+        "topics": [
+          "2-areas",
+          "id"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/store/prds/store-slots-prd.md",
+      "frontmatter": {
+        "id": "2-areas/store/prds/store-slots-prd",
+        "title": "Store Slots 정규화 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-31",
+        "updated": "2026-04-08",
+        "summary": "Discussion: children(array) + slots(named object props) 이원 정규화로 모든 웹 콘텐츠를 예외 없이 표현. 복합 콘텐츠 drill down 지원.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/styles/72-[explain]ax-mece-review.md",
+      "frontmatter": {
+        "id": "2-areas/styles/72-[explain]ax-mece-review",
+        "title": "ax() 24축 MECE 검토 — 2026-04-06",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-04-06",
+        "updated": "2026-04-11",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/styles/77-[explain]design-system-invariant.md",
+      "frontmatter": {
+        "id": "2-areas/styles/77-[explain]design-system-invariant",
+        "title": "디자인 시스템 불변량 — 값이 아니라 값 사이의 관계를 잠그는 것",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-04-10",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-04-11 맥락: ax() 시스템에 pit of success를 도입하기 위한 discuss 중",
+        "topics": [
+          "2-areas",
+          "explain",
+          "role"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/styles/axLlmPrompt.md",
+      "frontmatter": {
+        "id": "2-areas/styles/axLlmPrompt",
+        "title": "ax() 디자인 시스템 — LLM Guide",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "ARIA OS UI를 생성할 때 사용하는 시스템 프롬프트. 이 문서에 적힌 **Public 14축만** 사용한다. 여기 없는 키(padding, gap, shape, border, icon, square, weight, text, opacity, state, motion)는 절대 `ax()` 호출에 넣지 않는다. 필요할 때는 `ax.raw()` 참조.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/styles/prds/ax-pit-of-success-prd.md",
+      "frontmatter": {
+        "id": "2-areas/styles/prds/ax-pit-of-success-prd",
+        "title": "ax() Pit of Success 불변량 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-10",
+        "updated": "2026-04-10",
+        "summary": "Discussion: ax() 축 간 관계(불변량)가 없어서 조합이 깨질 수 있다. 페어링/레벨/시드 3가지 불변량을 도입하여 어떤 조합도 안전한 시스템을 만든다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/styles/prds/ax-preset-seed-expansion.md",
+      "frontmatter": {
+        "id": "2-areas/styles/prds/ax-preset-seed-expansion",
+        "title": "ax() rolePreset Seed Expansion — Scan Report",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "Date: 2026-04-18 Scope: `src/**/*.{ts,tsx}` — 모든 `ax({...})` 호출 Goal: `rolePresetTable` 의 `role.surface.cs` 키에 자동 도출 seed 추가",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/styles/prds/ax-public-private-split-prd.md",
+      "frontmatter": {
+        "id": "2-areas/styles/prds/ax-public-private-split-prd",
+        "title": "ax Public/Private 2계층 분리 — Blueprint",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "**Discussion**: 이번 세션 /discuss 결과 — ax 24축 → Public 3축 + Private 프리셋 주입 **산출물 유형**: 엔진 / 리팩토링 **규모 추정**: 파일 ~5개 신규, ~10개 수정, 마이그레이션 139 데모",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui-dictionary.md",
+      "frontmatter": {
+        "id": "2-areas/ui-dictionary",
+        "title": "UI Component Dictionary",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-22",
+        "updated": "2026-03-23",
+        "summary": "보편적 UI 컴포넌트 사전. shadcn/ui + Radix + Base UI 합집합 기준. interactive-os 보유 현황 매핑.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui-usage-concept.md",
+      "frontmatter": {
+        "id": "2-areas/ui-usage-concept",
+        "title": "UI Usage Concept — 예상도",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-22",
+        "updated": "2026-03-23",
+        "summary": "**이 문서는 실제 존재하는 코드가 아닙니다.** interactive-os UI 컴포넌트를 사용자에게 어떻게 제공할지 구상하는 컨셉 문서입니다. \"이렇게 제공해볼 생각입니다\"의 밑그림.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/57-[explain]chatRenderingPipeline.md",
+      "frontmatter": {
+        "id": "2-areas/ui/57-[explain]chatRenderingPipeline",
+        "title": "Chat 렌더링 파이프라인 — 3계층 변환이 tool_group을 재생산한다",
+        "status": "active",
+        "kind": "explain",
+        "created": "2026-04-04",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-04-03 맥락: timelineAdapter에서 tool_group을 제거했지만 ChatFeed 내부에서 재그룹핑이 발생하여 여전히 그룹 카드가 보임",
+        "topics": [
+          "2-areas",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/66-[retro]apgUnificationDesignGaps.md",
+      "frontmatter": {
+        "id": "2-areas/ui/66-[retro]apgUnificationDesignGaps",
+        "title": "APG 전수 전환 설계 갭 리포트 — 2026-03-30",
+        "status": "active",
+        "kind": "retro",
+        "created": "2026-03-30",
+        "updated": "2026-04-11",
+        "topics": [
+          "2-areas",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/componentDesignChecklist.md",
+      "frontmatter": {
+        "id": "2-areas/ui/componentDesignChecklist",
+        "title": "Component Design Checklist",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "shadcn/ui v4 구조 추출 + 우리 토큰 매핑. 레퍼런스·체크리스트·디자인 가이드 3역할. **갱신 시점:** 컴포넌트 디자인 패스 완료 시 상태 갱신. **상태:** ⬜ 미구현 / 🟡 부분 / 🟢 완료 / — 해당 없음",
+        "topics": [
+          "2-areas",
+          "aria-checked",
+          "data-compact",
+          "data-focused",
+          "data-invalid",
+          "data-renaming",
+          "spacing"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/indicators.md",
+      "frontmatter": {
+        "id": "2-areas/ui/indicators",
+        "title": "Indicators",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "UI 완성품 내부에서 상태를 시각화하는 비-인터랙티브 요소 모음. 단독 사용 불가 — 항상 완성품(TreeView, Checkbox, Grid 등)이 소비한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/a2ui-composites-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/a2ui-composites-prd",
+        "title": "A2UI Composites — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-07",
+        "updated": "2026-04-08",
+        "summary": "Discussion: LLM이 Row/Column/Card 수준 레이아웃을 직접 설계하면 와이어프레임 수준에 머문다. 의도 수준 컴포넌트(composites)를 ui/ 하위에 추가하여 Pit of Success를 구조적으로 해결한다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/a2ui-declarative-surface-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/a2ui-declarative-surface-prd",
+        "title": "A2UI Declarative Surface — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-03",
+        "updated": "2026-04-08",
+        "summary": "Discussion: React를 내부 구현으로 숨기고, flat 선언만으로 접근성 완비 UI를 조립하는 A2UI 호환 표면 제공",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/a2ui-surface-showcase-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/a2ui-surface-showcase-prd",
+        "title": "A2UI Surface Showcase — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-03",
+        "updated": "2026-04-08",
+        "summary": "Discussion: A2UI 프로토콜의 세부 스펙을 조사하여 우리 interactive-os UI 컴포넌트와 매핑 가능성을 분석. 읽기 전용 showcase로 첫 통로를 만든다.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/camera-primitive-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/camera-primitive-prd",
+        "title": "Camera 프리미티브 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "Discussion: ZoomPane(imperative) + ZoomPanCanvas(user wheel/pan)를 단일 Camera 프리미티브로 통합. 선언형 shot 시퀀스(time/end/signal advance) + 명령형 focus API, interact/view 모드 분리, 사용자 조작 시 언제나 pause.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/code-viewer-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/code-viewer-prd",
+        "title": "CodeViewer — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "Discussion: CodeBlock을 단일 fat 완성품 `CodeViewer`로 통합하여 PPT/md/chat/shorts/edit 5 사용처를 preset 레시피로 커버한다. VirtualCodeBlock 흡수, 원자적 rename, preset 4종(presentation/doc/chat/replay) 도입, ARIA 기본, softwrap·deleted 색·설정 공백 해소.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/component-catalog-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/component-catalog-prd",
+        "title": "Component Catalog — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-10",
+        "updated": "2026-04-10",
+        "summary": "Discussion: ui/ 75개 중 24개만 showcase 등록. 수동 fixture 비용이 병목. *.demo.tsx 컨벤션 + FlatLayout 자동 카탈로그 + visual UI 레이어 + ax() 승격 루프.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/datepicker-composite-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/datepicker-composite-prd",
+        "title": "DatePicker Composite — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: Gap 3 해소 — 바이브코딩에서 `<DatePicker />` 한 줄로 접근성 완전한 date picker 생산",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/lightbox-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/lightbox-prd",
+        "title": "Lightbox — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-08",
+        "updated": "2026-04-08",
+        "summary": "Discussion: MarkdownViewer 내 이미지/머메이드 클릭 → 100vw×100vh 풀스크린 modal. OS 기반, dispatch-only Context 디커플링.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/menubar-refactor-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/menubar-refactor-prd",
+        "title": "MenuBar 리팩토링 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "summary": "Discussion: MenuBar가 ax() + 부품 분리 원칙을 위반. levelMap + CSS Anchor + interactive CSS로 재설계.",
+        "topics": [
+          "2-areas",
+          "aria-expanded",
+          "data-focused"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/slot-children-visual-render-design.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/slot-children-visual-render-design",
+        "title": "Slot Children 시각적 렌더링 + Auto-drill",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "summary": "**Date:** 2026-04-07 **Status:** Approved",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/slot-children-visual-render-plan.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/slot-children-visual-render-plan",
+        "title": "Slot Children 시각적 렌더링 + Auto-drill Implementation Plan",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-06",
+        "updated": "2026-04-08",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/ui-common-interface-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/ui-common-interface-prd",
+        "title": "UI 완성품 공통 인터페이스 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-03-30",
+        "updated": "2026-04-08",
+        "summary": "Discussion: UI 완성품의 3축 모델(Pattern/Plugin/Renderer) 도출. 소비자 커스텀 cliff 해소를 위해 공통 인터페이스 + Plugin renderer 슬롯 + Renderer 주입점 확립.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/ui-items-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/ui-items-prd",
+        "title": "UI 부품 레이어 확장 — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-05",
+        "updated": "2026-04-08",
+        "summary": "Discussion: 도구 UI 글자 크기 불일치 → 부품 레이어 부재가 근본 원인 → indicators처럼 items/panels/cells 3개 부품 레이어 추가 + hook 강제",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/virtual-code-block-task.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/virtual-code-block-task",
+        "title": "FilePanel 대규모 파일 가상화",
+        "status": "active",
+        "kind": "plan",
+        "created": "2026-04-04",
+        "updated": "2026-04-17",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/prds/virtual-scroll-plugin-prd.md",
+      "frontmatter": {
+        "id": "2-areas/ui/prds/virtual-scroll-plugin-prd",
+        "title": "virtualScroll Plugin — PRD",
+        "status": "active",
+        "kind": "prd",
+        "created": "2026-04-04",
+        "updated": "2026-04-17",
+        "summary": "Discussion: useVirtualScroll을 os definePlugin으로 승격. autoscroll 패턴 — useEffect + 훅 이중 구조.",
+        "topics": [
+          "2-areas",
+          "itemcount"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/splitPane.md",
+      "frontmatter": {
+        "id": "2-areas/ui/splitPane",
+        "title": "SplitPane",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "Ratio 기반 리사이즈 가능한 분할 컨테이너. 수평/수직 방향, 키보드/포인터 리사이즈 지원.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/tabGroup.md",
+      "frontmatter": {
+        "id": "2-areas/ui/tabGroup",
+        "title": "TabGroup",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "탭 내비게이션 + 패널 렌더링. os의 tabs pattern 기반, 활성화/삭제/순서 변경 지원.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/2-areas/ui/workspace.md",
+      "frontmatter": {
+        "id": "2-areas/ui/workspace",
+        "title": "Workspace",
+        "status": "active",
+        "kind": "note",
+        "created": "2026-03-27",
+        "updated": "2026-03-27",
+        "summary": "SplitPane + TabGroup 재귀 오케스트레이터. cmux/IDE 스타일 분할 워크스페이스.",
+        "topics": [
+          "2-areas"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/01-[event]aiSprintConcept.md",
+      "frontmatter": {
+        "id": "3-resources/01-[event]aiSprintConcept",
+        "title": "AI 스프린트 — 테오의 스프린트 AI 버전 행사 기획안",
+        "status": "reference",
+        "kind": "event",
+        "created": "2026-03-20",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-19 맥락: 7월 AI 스프린트 행사를 위해 행사 담당자와의 미팅 준비 자료",
+        "topics": [
+          "3-resources",
+          "event"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/02-[design]headlessUiDesignCustomization.md",
+      "frontmatter": {
+        "id": "3-resources/02-[design]headlessUiDesignCustomization",
+        "title": "Headless UI 위의 디자인 커스터마이제이션 패턴",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-23",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-22 맥락: interactive-os(headless) 위에 shadcn/ui 모델의 UI 레이어를 만들 때, 디자인 커스텀을 어떤 방식으로 제공할지 레퍼런스 조사",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/03-[design]shadcnThemeTokens.md",
+      "frontmatter": {
+        "id": "3-resources/03-[design]shadcnThemeTokens",
+        "title": "shadcn/ui Theme Tokens — 테마 커스터마이징 가능한 CSS 변수 전체 목록",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-22",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-22 맥락: interactive-os UI 컴포넌트의 surface 기반 minimal design 전략에서, shadcn/ui가 노출하는 테마 토큰의 범위를 확정하기 위해 조사",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/04-[design]surfaceElevationNaming.md",
+      "frontmatter": {
+        "id": "3-resources/04-[design]surfaceElevationNaming",
+        "title": "Surface/Elevation 네이밍 체계 — 주요 디자인 시스템 비교",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-22",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-22 맥락: interactive-os의 surface level 이름을 업계 표준에 맞추기 위해, 주요 디자인 시스템의 네이밍 체계를 비교 조사",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/05-[design]minimalCssApproaches.md",
+      "frontmatter": {
+        "id": "3-resources/05-[design]minimalCssApproaches",
+        "title": "Minimal CSS 접근법 — 최소한의 CSS로 기본 UI를 커버하는 방법론",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-22",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-22 맥락: interactive-os UI 컴포넌트의 base 디자인을 잡되, 22개 개별 CSS를 관리하지 않고 최소한의 공통 CSS로 전체를 커버하는 방법을 찾기 위해",
+        "topics": [
+          "3-resources",
+          "data-focused",
+          "data-pressed",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/06-[tooling]namingReport.md",
+      "frontmatter": {
+        "id": "3-resources/06-[tooling]namingReport",
+        "title": "Naming Report",
+        "status": "reference",
+        "kind": "tooling",
+        "created": "2026-03-22",
+        "updated": "2026-04-18",
+        "summary": "Generated: 2026-03-22",
+        "topics": [
+          "3-resources",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/07-[methodology]projectMaturityFrameworks.md",
+      "frontmatter": {
+        "id": "3-resources/07-[methodology]projectMaturityFrameworks",
+        "title": "프로젝트 진척도/성숙도 추적 프레임워크 — 소프트웨어 모듈 단위",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-23",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-23 맥락: PROGRESS.md를 체크리스트에서 아키텍처 맵으로 전환하면서, 모듈별 성숙도를 표준화된 기준으로 표현하기 위한 조사",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/08-[tooling]vitestBrowserEmbedding.md",
+      "frontmatter": {
+        "id": "3-resources/08-[tooling]vitestBrowserEmbedding",
+        "title": "Vitest Browser Mode 앱 내장 가능성 — 데모 페이지에서 테스트를 눈으로 보기",
+        "status": "reference",
+        "kind": "tooling",
+        "created": "2026-03-23",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-23 맥락: interactive-os 홈페이지의 auto test 기능을 위해, vitest 테스트 코드를 실제 데모 페이지에서 브라우저로 실행할 수 있는지 조사",
+        "topics": [
+          "3-resources",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/09-[pattern]baseUiRenderPattern.md",
+      "frontmatter": {
+        "id": "3-resources/09-[pattern]baseUiRenderPattern",
+        "title": "Base UI Render Prop 패턴 — interactive-os에 적용할 힌트",
+        "status": "reference",
+        "kind": "pattern",
+        "created": "2026-03-23",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-23 맥락: AriaItem wrapper 제거 후, render API를 Base UI 방식으로 개선하기 위한 근거 수집",
+        "topics": [
+          "3-resources",
+          "checked",
+          "pattern"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/10-[methodology]problemSolvingFrameworks.md",
+      "frontmatter": {
+        "id": "3-resources/10-[methodology]problemSolvingFrameworks",
+        "title": "구조적 문제해결 프레임워크 비교 — TOC와 유사한 방법론들",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-24",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-24 맥락: discussion 스킬이 TOC Thinking Processes를 기반으로 하는데, 다른 구조적 문제해결 방법론에서 차용할 수 있는 요소가 있는지 탐색",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/11-[methodology]whyDocumentFormats.md",
+      "frontmatter": {
+        "id": "3-resources/11-[methodology]whyDocumentFormats",
+        "title": "WHY를 구조적으로 기록하는 IT 문서 산출물 — 비교 분석",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-24",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-24 맥락: PRD에 discuss의 WHY가 구조적으로 이식되도록 개선하려는 논의에서, 업계 대표 WHY 기록 형식을 조사",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/12-[i18n]i18nEditorFeatures.md",
+      "frontmatter": {
+        "id": "3-resources/12-[i18n]i18nEditorFeatures",
+        "title": "i18n Editor FE 기능 — 상용 서비스 대비 갭 분석",
+        "status": "reference",
+        "kind": "i18n",
+        "created": "2026-03-24",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-25 맥락: PageI18nEditor 개밥먹기 후 상용 서비스 대비 누락 기능 식별",
+        "topics": [
+          "3-resources",
+          "i18n"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/13-[design]cssTokenNamingConventions.md",
+      "frontmatter": {
+        "id": "3-resources/13-[design]cssTokenNamingConventions",
+        "title": "CSS 디자인 토큰 네이밍 약어 관행 — 주요 시스템 비교",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-24",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-25 맥락: DESIGN.md 5개 번들의 축 이름에 통용 약어 vs 자의적 약어를 구분하기 위한 근거 조사",
+        "topics": [
+          "3-resources",
+          "data-surface",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/14-[design]designSystemArchitecture.md",
+      "frontmatter": {
+        "id": "3-resources/14-[design]designSystemArchitecture",
+        "title": "디자인 시스템 현황 — aria 프로젝트의 토큰·스타일·컴포넌트 아키텍처",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-22",
+        "updated": "2026-03-26",
+        "summary": "작성일: 2026-03-22 맥락: 현재까지 구축된 디자인 시스템의 구조, 결정 이유, 현황을 정리한다.",
+        "topics": [
+          "3-resources",
+          "data-aria-container",
+          "data-surface",
+          "design",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/15-[tooling]agentViewerVirtualScroll.md",
+      "frontmatter": {
+        "id": "3-resources/15-[tooling]agentViewerVirtualScroll",
+        "title": "Agent Viewer 가상스크롤 — height cache + linear scan 기반 윈도잉",
+        "status": "reference",
+        "kind": "tooling",
+        "created": "2026-03-23",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-23 맥락: Agent Viewer의 타임라인 렌더링 성능 메커니즘 해설",
+        "topics": [
+          "3-resources",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/16-[design]uiCatalogVision.md",
+      "frontmatter": {
+        "id": "3-resources/16-[design]uiCatalogVision",
+        "title": "UI Catalog — 2026-03-23",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-23",
+        "updated": "2026-03-25",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/17-[design]uiComponentHierarchy.md",
+      "frontmatter": {
+        "id": "3-resources/17-[design]uiComponentHierarchy",
+        "title": "UI Component Hierarchy — 2026-03-23",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-23",
+        "updated": "2026-03-25",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/18-[methodology]pitOfSuccessPrinciples.md",
+      "frontmatter": {
+        "id": "3-resources/18-[methodology]pitOfSuccessPrinciples",
+        "title": "interactive-os Pit of Success — LLM이 올바른 코드로 수렴하는 설계 원리",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-23",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-23 맥락: interactive-os를 \"LLM이 위에서 개발하면 올바른 형태의 코드로 수렴할 수밖에 없는\" 프레임워크로 만들기 위한 설계 원리 정립과 현재 상태 감사",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/19-[design]namingDictionaryLogicTree.md",
+      "frontmatter": {
+        "id": "3-resources/19-[design]namingDictionaryLogicTree",
+        "title": "Naming Dictionary 명사 MECE 로직트리 — 2026-03-24",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-24",
+        "updated": "2026-03-25",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/20-[tooling]showcaseRegistryRefactor.md",
+      "frontmatter": {
+        "id": "3-resources/20-[tooling]showcaseRegistryRefactor",
+        "title": "showcaseRegistry 의존성 트리 — 2026-03-25",
+        "status": "reference",
+        "kind": "tooling",
+        "created": "2026-03-24",
+        "updated": "2026-03-25",
+        "topics": [
+          "3-resources",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/21-[design]cssLayerArchitecture.md",
+      "frontmatter": {
+        "id": "3-resources/21-[design]cssLayerArchitecture",
+        "title": "CSS Layer Architecture — SRP 기반 스타일링 전략 — 2026-03-25",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "topics": [
+          "3-resources",
+          "data-interactive",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/22-[design]aestheticScoring.md",
+      "frontmatter": {
+        "id": "3-resources/22-[design]aestheticScoring",
+        "title": "디자인 미감 자동 점수화 — 구조적 품질 측정 도구와 방법론",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: 프리미티브 프리뷰 페이지에서 \"비율이 안 좋다\"는 피드백 → 사람 의존 루프를 자동 점수로 대체할 수 있는가?",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/22-[design]componentCompletenessBaseline.md",
+      "frontmatter": {
+        "id": "3-resources/22-[design]componentCompletenessBaseline",
+        "title": "Component Completeness Baseline — UI 라이브러리 횡단 조사",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: CSS Layer Protocol은 정의됐지만, grep compliance만으로는 \"디자인이 좋아졌는가\"를 측정 못 함. \"컴포넌트가 뭘 갖춰야 완성인가\"의 레퍼런스가 필요.",
+        "topics": [
+          "3-resources",
+          "data-aria-container",
+          "data-pressed",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/23-[methodology]discussFirstWorkflowTheory.md",
+      "frontmatter": {
+        "id": "3-resources/23-[methodology]discussFirstWorkflowTheory",
+        "title": "Discuss-First 워크플로우의 이론적 기반",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: discuss→prd→go→retrospect→improve 파이프라인을 범용화하기 전에 이론적 탄탄함을 검증",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/24-[pattern]agenticBrowserStateCapture.md",
+      "frontmatter": {
+        "id": "3-resources/24-[pattern]agenticBrowserStateCapture",
+        "title": "Agentic Browser State Capture — Accessibility Tree 기반 페이지 상태 표현",
+        "status": "reference",
+        "kind": "pattern",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: REC(재현 녹화) 기능에 ARIA tree 스냅샷을 도입하기 위해, 에이전틱 브라우저들이 실제로 페이지 상태를 어떻게 캡처하는지 조사",
+        "topics": [
+          "3-resources",
+          "checked",
+          "disabled",
+          "expanded",
+          "pattern",
+          "pressed",
+          "selected"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/26-[pattern]globalShortcutArchitecture.md",
+      "frontmatter": {
+        "id": "3-resources/26-[pattern]globalShortcutArchitecture",
+        "title": "전역 키보드 단축키 아키텍처 — 업계 패턴 조사",
+        "status": "reference",
+        "kind": "pattern",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: interactive-os의 keyMap-only Aria가 DOM 서브트리 스코프라서 전역 단축키에 도달하지 못하는 문제. 설계 원칙(선언적 OCP)을 지키면서 전역 도달을 양립시키는 패턴을 조사.",
+        "topics": [
+          "3-resources",
+          "pattern"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/27-[pattern]routeScopedKeybinding.md",
+      "frontmatter": {
+        "id": "3-resources/27-[pattern]routeScopedKeybinding",
+        "title": "라우트 기반 키바인딩 — 페이지/모드 단위 단축키 스코핑 패턴",
+        "status": "reference",
+        "kind": "pattern",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: interactive-os에서 전역 단축키를 라우트 단위로 활성화/비활성화하는 설계를 검토 중. \"AriaRoute\" 개념의 외부 선행 사례를 조사.",
+        "topics": [
+          "3-resources",
+          "pattern"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/28-[pattern]tailwindEscapeHatchProblem.md",
+      "frontmatter": {
+        "id": "3-resources/28-[pattern]tailwindEscapeHatchProblem",
+        "title": "Tailwind의 Escape Hatch 문제 — 디자인 시스템 프로젝트에서의 충돌과 대안",
+        "status": "reference",
+        "kind": "pattern",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-25 맥락: interactive-os는 자체 CSS 변수 토큰 시스템(DESIGN.md)을 가지고 있다. 구조적 CSS(레이아웃)를 LLM이 파악하기 어려워서 Tailwind 도입을 검토했으나, escape hatch 남용과 토큰 이중 관리가 우려됨.",
+        "topics": [
+          "3-resources",
+          "pattern"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/29-[design]spacingRelationshipRules.md",
+      "frontmatter": {
+        "id": "3-resources/29-[design]spacingRelationshipRules",
+        "title": "UI Spacing 관계 규칙의 수치화 — 값 레벨을 넘어선 공식은 존재하는가",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-26 맥락: LLM이 spacing 값(8pt grid)은 알지만 관계/위계/조합 규칙을 못 쓰는 이유를 외부 자료에서 확인",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/30-[design]textColorHierarchyTokens.md",
+      "frontmatter": {
+        "id": "3-resources/30-[design]textColorHierarchyTokens",
+        "title": "Text Color Hierarchy Tokens — 디자인 시스템별 텍스트 색상 위계 비교",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-25",
+        "updated": "2026-03-25",
+        "summary": "작성일: 2026-03-26 맥락: Surface 위 text-muted가 WCAG AA를 전면 실패하여, 업계 표준 텍스트 위계 구조와 대비 기준을 조사",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/31-[design]macosSequoiaLightThemeColors.md",
+      "frontmatter": {
+        "id": "3-resources/31-[design]macosSequoiaLightThemeColors",
+        "title": "macOS Sequoia Light Theme Colors — 시스템 앱 색상 실측",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "작성일: 2026-03-26 맥락: Light theme surface 톤이 부자연스러워서, macOS 최신 네이티브 앱의 실제 색상을 레퍼런스로 조사",
+        "topics": [
+          "3-resources",
+          "design"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/32-[tooling]aiIncidentManagementUI.md",
+      "frontmatter": {
+        "id": "3-resources/32-[tooling]aiIncidentManagementUI",
+        "title": "AI Incident Management UI — 장애 도구들이 LLM/AI를 시각화와 조작에 엮는 방향",
+        "status": "reference",
+        "kind": "tooling",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "작성일: 2026-03-26 맥락: interactive-os 기반 장애 모니터링 도구 구상에 앞서, 시장의 AI+시각화 통합 방향을 파악",
+        "topics": [
+          "3-resources",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/32-[tooling]layerDependencyEnforcement.md",
+      "frontmatter": {
+        "id": "3-resources/32-[tooling]layerDependencyEnforcement",
+        "title": "TS 레이어 의존성 강제 도구 — 자체 스크립트 vs 표준 도구",
+        "status": "reference",
+        "kind": "tooling",
+        "created": "2026-03-26",
+        "updated": "2026-03-26",
+        "summary": "작성일: 2026-03-26 맥락: checkLayerDeps.mjs 자체 스크립트(147줄)로 레이어 역참조를 감지 중. 표준 도구로 교체 가능한지 조사.",
+        "topics": [
+          "3-resources",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/33-[methodology]aiCollaborationTipsAndInsights.md",
+      "frontmatter": {
+        "id": "3-resources/33-[methodology]aiCollaborationTipsAndInsights",
+        "title": "AI 협업 실전 팁과 인사이트",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-25",
+        "updated": "2026-03-28",
+        "summary": "작성일: 2026-03-25 작성자: FE개발 대상: AI 코딩 도구를 사용하고 있거나 도입을 검토하는 개발자 성격: 3개월간 Claude Code 전면 사용에서 얻은 실전 교훈",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/34-[methodology]aiCollaborationPlaybook.md",
+      "frontmatter": {
+        "id": "3-resources/34-[methodology]aiCollaborationPlaybook",
+        "title": "AI한테 일 잘 시키는 법 — 3개월간 Claude Code 전면 사용 후기",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-25",
+        "updated": "2026-03-28",
+        "summary": "작성일: 2026-03-25 작성자: FE개발",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/35-[protocol]a2uiAgentToUI.md",
+      "frontmatter": {
+        "id": "3-resources/35-[protocol]a2uiAgentToUI",
+        "title": "A2UI (Agent-to-UI) Protocol — 에이전트가 선언적 JSON으로 UI를 말하는 프로토콜",
+        "status": "reference",
+        "kind": "protocol",
+        "created": "2026-04-03",
+        "updated": "2026-04-03",
+        "summary": "작성일: 2026-04-04 맥락: interactive-os의 ARIA-first UI 컴포넌트가 A2UI 렌더러가 될 수 있는지 매핑 가능성 분석",
+        "topics": [
+          "3-resources",
+          "parentid",
+          "protocol",
+          "slotname"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/36-[library]pretext.md",
+      "frontmatter": {
+        "id": "3-resources/36-[library]pretext",
+        "title": "Pretext — DOM-free 텍스트 측정/레이아웃 엔진",
+        "status": "reference",
+        "kind": "library",
+        "created": "2026-04-04",
+        "updated": "2026-04-04",
+        "summary": "작성일: 2026-04-04 맥락: interactive-os 프로젝트에 적용 가능한 외부 라이브러리 평가",
+        "topics": [
+          "3-resources",
+          "library"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/37-[analysis]harnessGapAudit.md",
+      "frontmatter": {
+        "id": "3-resources/37-[analysis]harnessGapAudit",
+        "title": "Harness Gap Audit: 기술부채와 강제 메커니즘의 빈틈",
+        "status": "reference",
+        "kind": "analysis",
+        "created": "2026-04-05",
+        "updated": "2026-04-05",
+        "topics": [
+          "3-resources",
+          "analysis"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/38-[research]userStoryMapUI.md",
+      "frontmatter": {
+        "id": "3-resources/38-[research]userStoryMapUI",
+        "title": "User Story Map UI in Production Services — 상용 도구들의 레이아웃·인터랙션 패턴",
+        "status": "reference",
+        "kind": "note",
+        "created": "2026-04-06",
+        "updated": "2026-04-06",
+        "summary": "작성일: 2026-04-05 맥락: 스토리맵 페이지 재구현 전, 상용 서비스의 시각 구조와 인터랙션 패턴을 파악하기 위함",
+        "topics": [
+          "3-resources",
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/39-[methodology]universalProjectProfile.md",
+      "frontmatter": {
+        "id": "3-resources/39-[methodology]universalProjectProfile",
+        "title": "범용 프로젝트 프로필의 이상적 모습",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-25 맥락: 스킬 에코시스템 범용화를 위해, \"프로젝트 설정 레이어\"가 어떤 모습이어야 하는지를 시뮬레이션",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/40-[idea]aiIncidentMonitorUI.md",
+      "frontmatter": {
+        "id": "3-resources/40-[idea]aiIncidentMonitorUI",
+        "title": "AI 장애 모니터링 UI 구상 — 2026-03-26",
+        "status": "reference",
+        "kind": "idea",
+        "created": "2026-03-28",
+        "updated": "2026-04-11",
+        "topics": [
+          "3-resources",
+          "idea",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/41-[methodology]skillHarnessVision.md",
+      "frontmatter": {
+        "id": "3-resources/41-[methodology]skillHarnessVision",
+        "title": "AI 협업 하네스 — 세션이 쌓일수록 똑똑해지는 사고 운영체제",
+        "status": "reference",
+        "kind": "methodology",
+        "created": "2026-03-29",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-29 맥락: 22개 커스텀 스킬, 130개+ memory, 이번 세션의 prd/retrospect 수정 의도에서 역추론",
+        "topics": [
+          "3-resources",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/42-[tooling]skillWorkflowVisualization.md",
+      "frontmatter": {
+        "id": "3-resources/42-[tooling]skillWorkflowVisualization",
+        "title": "스킬 워크플로우 전체 시각화 — 2026-04-08",
+        "status": "reference",
+        "kind": "tooling",
+        "created": "2026-04-09",
+        "updated": "2026-04-11",
+        "topics": [
+          "3-resources",
+          "tooling"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/43-[design]shadcnAxMapping.md",
+      "frontmatter": {
+        "id": "3-resources/43-[design]shadcnAxMapping",
+        "title": "shadcn/ui → ax() 전수 매핑 테이블",
+        "status": "reference",
+        "kind": "design",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**목적**: shadcn/ui의 tailwind 유틸리티를 ax() 축으로 1:1 번역하기 위한 참조 테이블. **원칙**: \"대충 비슷한 거\" 선택 금지. 매핑이 없으면 ❌ GAP으로 명시. **출처**: `/tmp/shadcn-reference/src/components/ui/` (shadcn@latest, 2026-04)",
+        "topics": [
+          "3-resources",
+          "auto_1fr",
+          "design",
+          "svg"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/3-resources/featureLedger.md",
+      "frontmatter": {
+        "id": "3-resources/featureLedger",
+        "title": "Feature Ledger — 누적적 자기설명 문서의 기존 개념 지도",
+        "status": "reference",
+        "kind": "note",
+        "created": "2026-03-24",
+        "updated": "2026-03-24",
+        "summary": "작성일: 2026-03-25 맥락: interactive-os 스킬 파이프라인에서 \"MD를 쓰면 끝\"을 만들려는데, feature 단위의 누적 관리 개념이 필요",
+        "topics": [
+          "3-resources"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/axis/archive/22-[retro]grid-i18n.md",
+      "frontmatter": {
+        "id": "4-archive/axis/archive/22-[retro]grid-i18n",
+        "title": "Retro: Grid 범용화 + CMS i18n Table — 2026-03-23",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-22",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/axis/archive/24-[retro]grid-sample.md",
+      "frontmatter": {
+        "id": "4-archive/axis/archive/24-[retro]grid-sample",
+        "title": "Retro: Grid 샘플 보강 — 2026-03-23",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/axis/archive/34-[retro]active-zone.md",
+      "frontmatter": {
+        "id": "4-archive/axis/archive/34-[retro]active-zone",
+        "title": "Retro: Active Zone — 2026-03-24",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/axis/archive/35-[retro]tab-axis.md",
+      "frontmatter": {
+        "id": "4-archive/axis/archive/35-[retro]tab-axis",
+        "title": "Retro: tab-axis — 2026-03-24",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/axis/archive/axisV2FiveAxesModel.md",
+      "frontmatter": {
+        "id": "4-archive/axis/archive/axisV2FiveAxesModel",
+        "title": "Axis v2: 5축 모델 — 2026-03-20",
+        "status": "archived",
+        "kind": "note",
+        "created": "2026-03-21",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/axis/summary.md",
+      "frontmatter": {
+        "id": "4-archive/axis/summary",
+        "title": "Axis — 결정 요약",
+        "status": "archived",
+        "kind": "summary",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/cms/archive/35-[retro]cms-field-type-system.md",
+      "frontmatter": {
+        "id": "4-archive/cms/archive/35-[retro]cms-field-type-system",
+        "title": "Retro: CMS Field Type System — 2026-03-24",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/cms/archive/36-[retro]cms-floating-viewport-bar.md",
+      "frontmatter": {
+        "id": "4-archive/cms/archive/36-[retro]cms-floating-viewport-bar",
+        "title": "Retro: CMS Floating Viewport Bar — 2026-03-24",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-24",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/cms/archive/37-[retro]cms-landing-design-system.md",
+      "frontmatter": {
+        "id": "4-archive/cms/archive/37-[retro]cms-landing-design-system",
+        "title": "Retro: CMS Landing 독립 디자인 시스템 — 2026-03-24",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-24",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/cms/summary.md",
+      "frontmatter": {
+        "id": "4-archive/cms/summary",
+        "title": "CMS — 결정 요약",
+        "status": "archived",
+        "kind": "summary",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/design/archive/54-[retro]structuralCssSessionSummary.md",
+      "frontmatter": {
+        "id": "4-archive/design/archive/54-[retro]structuralCssSessionSummary",
+        "title": "구조적 CSS의 LLM 한계 + 설계 방향 미결정 — 2026-03-25",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "explain",
+          "ideal",
+          "pattern",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/design/archive/55-[retro]cssWritingRules.md",
+      "frontmatter": {
+        "id": "4-archive/design/archive/55-[retro]cssWritingRules",
+        "title": "Retro: CSS Writing Rules — 2026-03-25",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "data-aria-container",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/design/summary.md",
+      "frontmatter": {
+        "id": "4-archive/design/summary",
+        "title": "Design — 결정 요약",
+        "status": "archived",
+        "kind": "summary",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/archive/29-[retro]history-delta.md",
+      "frontmatter": {
+        "id": "4-archive/engine/archive/29-[retro]history-delta",
+        "title": "Retro: History Delta-Based Undo/Redo — 2026-03-23",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/archive/30-[explain]clipboard-singleton-contamination.md",
+      "frontmatter": {
+        "id": "4-archive/engine/archive/30-[explain]clipboard-singleton-contamination",
+        "title": "Clipboard Singleton 오염 — module-level 전역 상태가 paste 동작을 페이지 간 오염시킨다",
+        "status": "archived",
+        "kind": "explain",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-23 맥락: `/plugin/history` 페이지에서 paste가 항상 리스트 마지막에 삽입되는 현상을 추적하다 발견한 구조적 결함",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/archive/31-[retro]define-plugin.md",
+      "frontmatter": {
+        "id": "4-archive/engine/archive/31-[retro]define-plugin",
+        "title": "Retro: definePlugin — 2026-03-23",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/archive/41-[retro]cell-edit-plugin.md",
+      "frontmatter": {
+        "id": "4-archive/engine/archive/41-[retro]cell-edit-plugin",
+        "title": "Retro: cellEdit Plugin — 2026-03-25",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-24",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/archive/42-[explain]getVisibleNodes-dependency-tree.md",
+      "frontmatter": {
+        "id": "4-archive/engine/archive/42-[explain]getVisibleNodes-dependency-tree",
+        "title": "getVisibleNodes는 tree-only 가시성 함수인데 범용으로 쓰이고 있다",
+        "status": "archived",
+        "kind": "explain",
+        "created": "2026-03-24",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-25 맥락: NavList 사이드바에서 ArrowDown이 동작하지 않는 버그를 추적하다, getVisibleNodes의 설계 한계를 발견",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/archive/43-[explain]expandedIds-to-collapsedIds-constraints.md",
+      "frontmatter": {
+        "id": "4-archive/engine/archive/43-[explain]expandedIds-to-collapsedIds-constraints",
+        "title": "expandedIds→collapsedIds 전환은 8개 파일에 닿고, 핵심 제약은 2개다",
+        "status": "archived",
+        "kind": "explain",
+        "created": "2026-03-24",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-25 맥락: NavList 그룹 버그에서 출발, getVisibleNodes의 가시성 모델을 화이트리스트→블랙리스트로 전환하기로 결정",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/archive/definePluginArchitecture.md",
+      "frontmatter": {
+        "id": "4-archive/engine/archive/definePluginArchitecture",
+        "title": "clipboard keyMap → native event 전환 — 2026-03-23",
+        "status": "archived",
+        "kind": "note",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/engine/summary.md",
+      "frontmatter": {
+        "id": "4-archive/engine/summary",
+        "title": "Engine — 결정 요약",
+        "status": "archived",
+        "kind": "summary",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "explain",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/handoffs/handoff-2026-04-11-skill-diet.md",
+      "frontmatter": {
+        "id": "4-archive/handoffs/handoff-2026-04-11-skill-diet",
+        "title": "Handoff: 스킬 다이어트 — discuss 12요소 + 34→19 구조 설계",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-11",
+        "updated": "2026-04-15",
+        "summary": "2026-04-11 세션에서 discuss 프레임 확장(⑧보유자산) + 스킬 다이어트 논의",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "consumed_by": "2026-04-15-archived",
+          "consumed_at": "2026-04-15"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/handoffs/handoff-2026-04-12-flatlayout-incident-experiment.md",
+      "frontmatter": {
+        "id": "4-archive/handoffs/handoff-2026-04-12-flatlayout-incident-experiment",
+        "title": "FlatLayout incident 재현 실험 — widget 합성 한계 발견",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-12",
+        "updated": "2026-04-15",
+        "summary": "2026-04-12 세션에서 FlatLayout이 어디까지 incident 수준 화면을 표현할 수 있는지 실험하고 10개 GAP을 발견·일부 해결.",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "name": "FlatLayout incident 재현 실험 — widget 합성 한계 발견",
+          "date": "2026-04-12",
+          "consumed_by": "2026-04-15-archived",
+          "consumed_at": "2026-04-15"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/handoffs/handoff-2026-04-12-minto-skill-rewrite.md",
+      "frontmatter": {
+        "id": "minto-skill-rewrite",
+        "title": "minto 스킬 재작성 + 강의 피라미드 진화",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-12",
+        "updated": "2026-04-15",
+        "summary": "2026-04-12 세션에서 minto 스킬/훅/강의 피라미드를 한 사이클 크게 진화시켰다. 핵심 규칙 3개 변경 (접속사→자연스런 의문, 요소 맨앞, P 샌드위치). 모두 uncommitted.",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "date": "2026-04-12",
+          "slug": "minto-skill-rewrite",
+          "consumed_by": "2026-04-12-continue",
+          "consumed_at": "2026-04-12"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/handoffs/handoff-2026-04-13-widget-boundary.md",
+      "frontmatter": {
+        "id": "4-archive/handoffs/handoff-2026-04-13-widget-boundary",
+        "title": "Handoff: 위젯/컴포넌트 경계 구조적 강제",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-13",
+        "updated": "2026-04-15",
+        "summary": "2026-04-13 세션에서 ui→pages 역방향 의존 제거 + 위젯 경계 차단 규칙 추가",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "consumed_by": "2026-04-15-archived",
+          "consumed_at": "2026-04-15"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/handoffs/handoff-2026-04-15-beauty-loop-failure.md",
+      "frontmatter": {
+        "id": "4-archive/handoffs/handoff-2026-04-15-beauty-loop-failure",
+        "title": "Handoff: Beauty 루프 실패 회고 — 왜 점수가 안 올랐나",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-15",
+        "updated": "2026-04-15",
+        "summary": "correctness 루프(L1/L2 체크리스트)는 수렴 증명에 성공했지만, 그걸로는 \"미려함\"이 생산되지 않음을 실증. 3-actor beauty 루프(Critic/Improver/Judge) 구조는 작동했으나 단일 토큰 개입으로는 30개 결함 중 3개만 부분 개선. 다음 세션에서 \"대규모 동시 개입\"으로 재도전해야 함.",
+        "topics": [
+          "4-archive",
+          "design-loop",
+          "failure",
+          "retrospective"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-15",
+          "session_id": "124c5a5b-e314-4a59-8e2d-130b15acb61c",
+          "tags": [
+            "retrospective",
+            "failure",
+            "design-loop"
+          ],
+          "consumed_by": "2026-04-15-handoff-ack",
+          "consumed_at": "2026-04-15"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/handoffs/handoff-2026-04-15-keyline-tools.md",
+      "frontmatter": {
+        "id": "4-archive/handoffs/handoff-2026-04-15-keyline-tools",
+        "title": "Handoff: Key Line 정적 분석 + Inspector 도구",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-15",
+        "updated": "2026-04-15",
+        "summary": "디자인 피드백 루프를 빠르게 하기 위한 결정적 도구의 첫 번째 세트 — ax() 정적 분석 CLI와 visual inspector overlay 테스트 페이지를 구현했다.",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-15",
+          "consumed_by": "2026-04-15-keyline-resume",
+          "consumed_at": "2026-04-15"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/handoffs/handoff-2026-04-15-themeComponentsMasonry.md",
+      "frontmatter": {
+        "id": "4-archive/handoffs/handoff-2026-04-15-themeComponentsMasonry",
+        "title": "Handoff: /internals/theme#components 개선",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-15",
+        "updated": "2026-04-15",
+        "summary": "Components 쇼케이스를 flat masonry + 카테고리 7 그룹화로 재구성. Row 1 빈공간/컬럼 불균형/그룹 위계 부재 해소.",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "created_at": "2026-04-15",
+          "session_id": "theme-components-masonry",
+          "consumed_by": "2026-04-15-archived",
+          "consumed_at": "2026-04-15"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/23-[sample]progress-v2.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/23-[sample]progress-v2",
+        "title": "interactive-os — Architecture Map",
+        "status": "archived",
+        "kind": "note",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "summary": "LLM 세션 시작 시 프로젝트 현황 파악용. 구조적 변경 시에만 업데이트. Maturity: Concept → Prototype → Validated → Integrated → Production",
+        "topics": [
+          "4-archive",
+          "sample"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/25-[retro]duplication-audit.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/25-[retro]duplication-audit",
+        "title": "중복 현황 조사 보고서 — 2026-03-23",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/28-[vision]architecture-snapshot.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/28-[vision]architecture-snapshot",
+        "title": "Architecture Snapshot — 2026-03-23",
+        "status": "archived",
+        "kind": "vision",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "vision"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/39-[explain]interactive-os-architecture.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/39-[explain]interactive-os-architecture",
+        "title": "interactive-os — GUI 구축 비용을 0으로 만드는 ARIA 프레임워크",
+        "status": "archived",
+        "kind": "explain",
+        "created": "2026-03-24",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-24 맥락: 프로젝트 전체 아키텍처 해설. 디자인 시스템 구축과 UI 완성품 양산을 앞두고, 현재까지의 설계 의도와 구조를 정리한다.",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/47-[audit]skillEcosystemReport.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/47-[audit]skillEcosystemReport",
+        "title": "스킬 에코시스템 현황 보고서",
+        "status": "archived",
+        "kind": "audit",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-25 목적: 범용 플러그인 설계 전 현황 파악 — 설계 제안이 아니라 있는 그대로의 지형도",
+        "topics": [
+          "4-archive",
+          "audit",
+          "methodology"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/49-[report]aiUtilizationReport.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/49-[report]aiUtilizationReport",
+        "title": "AI 개발 협업 현황 보고서",
+        "status": "archived",
+        "kind": "report",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-25 작성자: FE개발 대상: 사내 기술 공유 분류: AI 활용 사례 보고",
+        "topics": [
+          "4-archive",
+          "audit",
+          "ideal",
+          "methodology",
+          "report"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/51-[report]aiBuiltSystemsShowcase.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/51-[report]aiBuiltSystemsShowcase",
+        "title": "내가 구축한 AI 협업 시스템 — 실물 쇼케이스",
+        "status": "archived",
+        "kind": "report",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-25 작성자: FE개발 성격: \"이런 걸 만들었다\"를 실물 위주로 보여주는 문서",
+        "topics": [
+          "4-archive",
+          "report"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/65-[question]claudeCodeWebUiReadability.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/65-[question]claudeCodeWebUiReadability",
+        "title": "클로드 코드 웹 UI 가독성 — 2026-03-30",
+        "status": "archived",
+        "kind": "note",
+        "created": "2026-03-31",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "question"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/74-[memo]initialProjectReview.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/74-[memo]initialProjectReview",
+        "title": "74-[memo]initialProjectReview",
+        "status": "archived",
+        "kind": "memo",
+        "created": "2026-03-28",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "memo"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/handoff-2026-04-11-finder-viewer.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/handoff-2026-04-11-finder-viewer",
+        "title": "Handoff: Finder Viewer",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-11",
+        "updated": "2026-04-18",
+        "summary": "consumed_by: 7a4c6d1d (FilePreview OCP 통합)",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/handoff-2026-04-11-skill-kanban-v2.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/handoff-2026-04-11-skill-kanban-v2",
+        "title": "Handoff: Skill Kanban v2 — 2패널 모달 + 산출물 표시",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "2026-04-11 세션에서 Skill Kanban v2 discuss→PRD→구현→simplify 완료. 브라우저 실사용 검증과 디자인 개선이 남음.",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "consumed_by": "38aac4f5 — Agent Dashboard 재설계로 v2 handoff 항목 해소"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/handoff-2026-04-11-skill-kanban.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/handoff-2026-04-11-skill-kanban",
+        "title": "Handoff: Skill Kanban v1 완성 → 상품성 개선 계속",
+        "status": "archived",
+        "kind": "handoff",
+        "created": "2026-04-10",
+        "updated": "2026-04-11",
+        "summary": "2026-04-11 세션에서 Skill Kanban 페이지를 discuss→PRD→구현→상품성 개선까지 진행",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": [],
+        "legacy": {
+          "consumed_by": "38aac4f5 — Agent Dashboard 재설계로 v1 handoff 항목 해소"
+        }
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/archive/skill-kanban-v2-review.md",
+      "frontmatter": {
+        "id": "4-archive/meta/archive/skill-kanban-v2-review",
+        "title": "Skill Kanban v2 — Review",
+        "status": "archived",
+        "kind": "note",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/meta/summary.md",
+      "frontmatter": {
+        "id": "4-archive/meta/summary",
+        "title": "Meta — 아카이브 인덱스",
+        "status": "archived",
+        "kind": "summary",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "summary": "프로젝트 스냅샷, 보고서, 메모 등 \"결정\"이 아닌 시점 기록.",
+        "topics": [
+          "4-archive",
+          "audit",
+          "explain",
+          "memo",
+          "question",
+          "report",
+          "retro",
+          "sample",
+          "vision"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/primitives/archive/32-[explain]useAria.md",
+      "frontmatter": {
+        "id": "4-archive/primitives/archive/32-[explain]useAria",
+        "title": "useAria.ts — 442줄의 해부",
+        "status": "archived",
+        "kind": "explain",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-23 맥락: 중간 점검에서 \"접착층(L5-L6)이 1,501 LOC로 무겁다\"는 지적. useAria 442줄이 커져야 할 이유가 있는지 해부.",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/primitives/archive/33-[explain]useAria-triad.md",
+      "frontmatter": {
+        "id": "4-archive/primitives/archive/33-[explain]useAria-triad",
+        "title": "useAria · useAriaZone · useAriaView — 라인별 해설",
+        "status": "archived",
+        "kind": "explain",
+        "created": "2026-03-23",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-23 맥락: useAria 리팩터 후 3개 hook의 역할 분담을 라인 단위로 해설",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/primitives/archive/listboxGroupedApgStructure.md",
+      "frontmatter": {
+        "id": "4-archive/primitives/archive/listboxGroupedApgStructure",
+        "title": "listboxGrouped APG 구조 불일치 — 2026-03-28",
+        "status": "archived",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/primitives/summary.md",
+      "frontmatter": {
+        "id": "4-archive/primitives/summary",
+        "title": "Primitives — 결정 요약",
+        "status": "archived",
+        "kind": "summary",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/ui/archive/56-[explain]agentViewerHmrUnsafety.md",
+      "frontmatter": {
+        "id": "4-archive/ui/archive/56-[explain]agentViewerHmrUnsafety",
+        "title": "AgentViewer HMR 비안전성 — 왜 코드 수정 시 타임라인이 날아가는가",
+        "status": "archived",
+        "kind": "explain",
+        "created": "2026-03-25",
+        "updated": "2026-04-11",
+        "summary": "작성일: 2026-03-26 맥락: agentViewer 개발 중 파일 수정 시 축적된 타임라인 데이터와 스크롤 위치가 소실된다",
+        "topics": [
+          "4-archive",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/ui/archive/60-[retro]chatModule.md",
+      "frontmatter": {
+        "id": "4-archive/ui/archive/60-[retro]chatModule",
+        "title": "Retro: Gen UI Chat Module — 2026-03-27",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-27",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/ui/archive/62-[retro]workspaceSync.md",
+      "frontmatter": {
+        "id": "4-archive/ui/archive/62-[retro]workspaceSync",
+        "title": "Retro: Workspace Sync — 2026-03-28",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-27",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/ui/archive/63-[retro]uiIndicators.md",
+      "frontmatter": {
+        "id": "4-archive/ui/archive/63-[retro]uiIndicators",
+        "title": "Retro: UI Indicators Phase 1 — 2026-03-28",
+        "status": "archived",
+        "kind": "retro",
+        "created": "2026-03-28",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/4-archive/ui/summary.md",
+      "frontmatter": {
+        "id": "4-archive/ui/summary",
+        "title": "UI — 결정 요약",
+        "status": "archived",
+        "kind": "summary",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "4-archive",
+          "retro"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/5-backlogs/2026-03-22-viewer-chat-channel-prd.md",
+      "frontmatter": {
+        "id": "5-backlogs/2026-03-22-viewer-chat-channel-prd",
+        "title": "Viewer Chat Channel — PRD",
+        "status": "backlog",
+        "kind": "prd",
+        "created": "2026-03-23",
+        "updated": "2026-03-24",
+        "summary": "Discussion: agent viewer에서 실행 중인 Claude Code 세션에 메시지를 보내기 위해 커스텀 MCP Channel 플러그인을 만든다. viewer 입력 → HTTP POST → MCP Channel → 세션에 push, 응답은 기존 JSONL SSE로 수신.",
+        "topics": [
+          "5-backlogs"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/5-backlogs/cmsLandingDesignDiversity.md",
+      "frontmatter": {
+        "id": "5-backlogs/cmsLandingDesignDiversity",
+        "title": "CMS 랜딩 디자인 다양화 — 2026-03-24",
+        "status": "backlog",
+        "kind": "note",
+        "created": "2026-03-24",
+        "updated": "2026-03-24",
+        "topics": [
+          "5-backlogs",
+          "explain"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/5-backlogs/identityConfigSlim.md",
+      "frontmatter": {
+        "id": "5-backlogs/identityConfigSlim",
+        "title": "Identity Config 축소 — 2026-03-29",
+        "status": "backlog",
+        "kind": "note",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "topics": [
+          "5-backlogs"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/5-backlogs/modalPluginFlatLayout.md",
+      "frontmatter": {
+        "id": "5-backlogs/modalPluginFlatLayout",
+        "title": "Modal을 os plugin + FlatLayout overlay로 통일 — 2026-04-11",
+        "status": "backlog",
+        "kind": "note",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "5-backlogs"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/5-backlogs/uiSdkCatalog.md",
+      "frontmatter": {
+        "id": "5-backlogs/uiSdkCatalog",
+        "title": "UI SDK 카탈로그 장기 플랜 — 2026-03-23",
+        "status": "backlog",
+        "kind": "note",
+        "created": "2026-03-23",
+        "updated": "2026-03-23",
+        "topics": [
+          "5-backlogs",
+          "vision",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "frontmatter": {
+        "id": "ARCHITECTURE",
+        "title": "interactive-os — Architecture",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-03-23",
+        "updated": "2026-04-13",
+        "summary": "Living snapshot. 고정이 아니라 \"지금까지 발견된 것\"의 스냅샷. **갱신 시점:** 레이어 경계 변경, 새 축/플러그인 추가, /retro 시 gap 반영. **재료:** naming-dictionary.md (식별자) + PROGRESS.md (maturity) + BACKLOGS.md (gap)",
+        "topics": [],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/BACKLOGS.md",
+      "frontmatter": {
+        "id": "BACKLOGS",
+        "title": "BACKLOGS",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-03-21",
+        "updated": "2026-04-17",
+        "topics": [
+          "p0",
+          "p1",
+          "p2",
+          "retro",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/COMPONENTS.md",
+      "frontmatter": {
+        "id": "COMPONENTS",
+        "title": "Universal Component Domain Dictionary",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-04-14",
+        "updated": "2026-04-14",
+        "summary": "aria-os 컴포넌트와 7개 주요 라이브러리의 교차 매핑 사전. 생성일: 2026-04-14",
+        "topics": [],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/DESIGN.md",
+      "frontmatter": {
+        "id": "DESIGN",
+        "title": "Design System — interactive-os",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-03-24",
+        "updated": "2026-04-17",
+        "summary": "SSOT: `src/styles/ax.ts` (축 타입) + `src/styles/ax.css` (CSS 구현) 이 문서는 **디자인 철학 + 축 조합 규칙 + CSS 레이어**를 정의한다. 토큰 값은 `tokens.css`가 SSOT.",
+        "topics": [],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/GOAL.md",
+      "frontmatter": {
+        "id": "GOAL",
+        "title": "GOAL — interactive-os",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-03-23",
+        "updated": "2026-04-07",
+        "summary": "작성일: 2026-03-23 갱신일: 2026-04-08 맥락: \"FE의 엔진\" 비전 재설정. 엔진 + SaaS 2층 구조 합의.",
+        "topics": [
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/LAYOUT.md",
+      "frontmatter": {
+        "id": "LAYOUT",
+        "title": "FlatLayout — 선언적 페이지 레이아웃",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-04-14",
+        "updated": "2026-04-14",
+        "summary": "SSOT: `src/interactive-os/layout/`",
+        "topics": [],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/PROGRESS-ARCHIVE.md",
+      "frontmatter": {
+        "id": "PROGRESS-ARCHIVE",
+        "title": "interactive-os — Progress Tracker",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-03-16",
+        "updated": "2026-03-23",
+        "summary": "**For LLMs:** 작업 시작 시 이 문서를 읽고 현황을 파악하세요. 기능 완료 및 커밋 시 체크를 업데이트하세요. **For humans:** 우선순위 태그 `[P0]`~`[P2]`는 수시로 조절 가능합니다.",
+        "topics": [
+          "data-surface",
+          "data-theme",
+          "p0",
+          "p1",
+          "p2",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/PROGRESS.md",
+      "frontmatter": {
+        "id": "PROGRESS",
+        "title": "interactive-os — Architecture Map",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-03-16",
+        "updated": "2026-04-17",
+        "summary": "Concept Map + Maturity Tracker. Task list가 아님. > **갱신 시점:** 모듈 추가/삭제 시 행 갱신. Maturity·Gaps는 /retro 시 반영. > **Maturity:** Concept → Prototype → Validated → Integrated → Production **이력:** PROGRESS-ARCHIVE.md (체크리스트 시절 전체 이력)",
+        "topics": [],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/00-mandate.md",
+      "frontmatter": {
+        "id": "research/ax/00-mandate",
+        "title": "00 Mandate — ax 메타 원리 연구",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**선언일:** 2026-04-18 **이전 상태:** ax = 24축 CSS-in-JS 시스템 (실험 중) **재정의 후:** ax = **현대 UI 디자인 메타 원리의 공식 좌표계**",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/01-literature-review.md",
+      "frontmatter": {
+        "id": "research/ax/01-literature-review",
+        "title": "01 Literature Review — 1·2·3군 외부 탐색 통합",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**작성일:** 2026-04-18 **조사 방법:** 3개 independent agent 병렬 탐색 (WebSearch + WebFetch) **조사 대상:** 1군 업계 표준 / 2군 현업·도구 / 3군 원리·수학·인지",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/02-principles.md",
+      "frontmatter": {
+        "id": "research/ax/02-principles",
+        "title": "02 Principles — ax 메타 원리 카드",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**작성일:** 2026-04-18 **상태:** 초안 v1. 20개 카드. 03 매핑 작업 전 검토 필요. **포맷:** 6항목 Principle Card (원리 / 정의 / 업계 증거 / 수학·인지 근거 / 반증 조건 / ax 매핑 + Examples)",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/03-ax-mapping.md",
+      "frontmatter": {
+        "id": "research/ax/03-ax-mapping",
+        "title": "03 ax Mapping — 원리 × 25축 Locked/Exposed/Missing/Conflicts/N/A",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**작성일:** 2026-04-18 **근거:** `src/styles/ax.ts`, `axPublic.ts`, `axPrivate.ts`, `rolePreset.ts`, `ax.css`, `tokens.css`, `palette.css`, `docs/DESIGN.md` 실독 **목적:** 02 원리 20개 × ax 25축 역매핑으로 **원리 자체의 타당성**과 **축 구현의 완성도**를 동시에 검증 (`feedback_enforcement_multilayer`, `feedback_judgment_priority`)",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/04-gap-plan.md",
+      "frontmatter": {
+        "id": "research/ax/04-gap-plan",
+        "title": "04 Gap Plan — 원리 × 7 Enforcement Layer + 보정 로드맵",
+        "status": "research",
+        "kind": "plan",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**작성일:** 2026-04-18 **입력:** `02-principles.md` (20 원리) + `03-ax-mapping.md` (현재 상태 판정) + `feedback_enforcement_multilayer` memory **목적:** 원리별 **7 enforcement layer** 현재/이상 상태 매핑 → 보정 액션 P0~P3 우선순위화 → DESIGN.md 재편 플랜",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/gemmaCritique/book.md",
+      "frontmatter": {
+        "id": "research/ax/gemmaCritique/book",
+        "title": "Gemma 4 Critique — /book",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "- **Route**: `/book` - **Label**: `book` - **Timestamp**: 2026-04-18T03:40:30.006Z - **Model**: gemma4:latest - **Latency**: 45.3s - **Screenshot**: [book.png](../../../screenshots/book.png)",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/README.md",
+      "frontmatter": {
+        "id": "research/ax/README",
+        "title": "ax 메타 원리 연구 (research/ax/)",
+        "status": "research",
+        "kind": "readme",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "ax()를 \"현대 UI 디자인 메타 원리의 공식 좌표계\"로 정립하기 위한 연구 산출물 모음.",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/reports/focus-apca-2026-04-18.md",
+      "frontmatter": {
+        "id": "research/ax/reports/focus-apca-2026-04-18",
+        "title": "Focus APCA Measurement — 2026-04-18",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**기준:** APCA Lc ≥ 60 (24px body, P-08 Focus Visibility)",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/reports/modular-scale-2026-04-18.md",
+      "frontmatter": {
+        "id": "research/ax/reports/modular-scale-2026-04-18",
+        "title": "Modular Scale Verification — 2026-04-18",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**기준:** 각 계단 인접 ratio `r ∈ [1.067, 2]` (P-02 Size Ladder) **권장:** 1.25 Major Third 기반 ladder (± 0.05)",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/research/ax/reports/scrollability-2026-04-18.md",
+      "frontmatter": {
+        "id": "research/ax/reports/scrollability-2026-04-18",
+        "title": "Scrollability — 2026-04-18",
+        "status": "research",
+        "kind": "note",
+        "created": "2026-04-18",
+        "updated": "2026-04-18",
+        "summary": "**기준:** content가 viewport보다 크면 window.scrollTo(0,500) 후 scrollY > 0 **Base URL:** http://localhost:4173/interactive-os-2   **Viewport:** 1280×800",
+        "topics": [
+          "research"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/architecture.md",
+      "frontmatter": {
+        "id": "samples/architecture",
+        "title": "CMS 모듈 아키텍처",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/artifact-pipeline.md",
+      "frontmatter": {
+        "id": "samples/artifact-pipeline",
+        "title": "산출물 파이프라인 — N:M 관계도",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-11",
+        "updated": "2026-04-11",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/decision-log.md",
+      "frontmatter": {
+        "id": "samples/decision-log",
+        "title": "Decision Log — CMS 프로젝트",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "아키텍처 결정 기록 (ADR-lite).",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/design-spec.md",
+      "frontmatter": {
+        "id": "samples/design-spec",
+        "title": "Design Spec: CMS Toolbar",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-18",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/information-architecture.md",
+      "frontmatter": {
+        "id": "samples/information-architecture",
+        "title": "Information Architecture — Aria CMS",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/release-note.md",
+      "frontmatter": {
+        "id": "samples/release-note",
+        "title": "Release Notes",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "---",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/task-spec.md",
+      "frontmatter": {
+        "id": "samples/task-spec",
+        "title": "TRD: 슬라이드 복제 기능",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "**요약**: 선택된 section(슬라이드)을 자식 노드 포함 deep copy하여 바로 아래에 삽입한다.",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/test-spec.md",
+      "frontmatter": {
+        "id": "samples/test-spec",
+        "title": "Test Spec — CMS Slide CRUD",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/user-story-map.md",
+      "frontmatter": {
+        "id": "samples/user-story-map",
+        "title": "User Story Map — Visual CMS",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "summary": "Backbone: 사용자 활동 흐름 (좌→우) Walking Skeleton: 각 활동의 최소 동작 단위 Stories: 우선순위별 사용자 스토리 (P0=MVP, P1=v1, P2=후순위)",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/samples/wireframe.md",
+      "frontmatter": {
+        "id": "samples/wireframe",
+        "title": "Visual CMS 와이어프레임",
+        "status": "sample",
+        "kind": "note",
+        "created": "2026-04-09",
+        "updated": "2026-04-09",
+        "topics": [
+          "samples"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/superpowers/plans/2026-04-17-catalog-unified-studio.md",
+      "frontmatter": {
+        "id": "superpowers/plans/2026-04-17-catalog-unified-studio",
+        "title": "Catalog 통합뷰 구현 Plan",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.",
+        "topics": [
+          "catalog",
+          "superpowers"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-03-28-overlay-core-layer-prd.md",
+      "frontmatter": {
+        "id": "superpowers/specs/2026-03-28-overlay-core-layer-prd",
+        "title": "Overlay Core Layer — PRD",
+        "status": "meta",
+        "kind": "prd",
+        "created": "2026-03-28",
+        "updated": "2026-03-28",
+        "summary": "Discussion: 오버레이 컴포넌트(Dialog, Menu, Tooltip 등)가 각자도생으로 구현되어 z-index 충돌, dismiss 미통일, 중첩 미대응 — 브라우저 네이티브 top-layer 기반 통합 코어 레이어 제안",
+        "topics": [
+          "open",
+          "superpowers",
+          "x"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-17-catalog-unified-studio-design.md",
+      "frontmatter": {
+        "id": "superpowers/specs/2026-04-17-catalog-unified-studio-design",
+        "title": "Catalog 통합뷰 설계 (Unified Studio)",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-04-17",
+        "updated": "2026-04-17",
+        "summary": "- 작성일: 2026-04-17 - 라우트: `/catalog` 확장 - 목표: 컴포넌트 demo·커버리지·문서를 한 화면에서 보고 편집",
+        "topics": [
+          "superpowers"
+        ],
+        "relates": [],
+        "supersedes": []
+      }
+    },
+    {
+      "path": "docs/teo-introduce.md",
+      "frontmatter": {
+        "id": "teo-introduce",
+        "title": "테오 (유용태) — 시니어 웹 프론트엔드 개발자",
+        "status": "meta",
+        "kind": "note",
+        "created": "2026-04-04",
+        "updated": "2026-04-07",
+        "topics": [],
+        "relates": [],
+        "supersedes": []
+      }
+    }
+  ]
+}

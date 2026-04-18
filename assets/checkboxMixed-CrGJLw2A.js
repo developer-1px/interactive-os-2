@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DOjM5vD7.js";import{t}from"./composePattern-CzrKuiBe.js";import{t as n}from"./checked-D0rjhvdE.js";var r={shouldDescend:()=>!0},i=e(`vertical`),a=n(),o=t({role:`group`,childRole:`checkbox`},[i,a,{keyMap:{},visibilityFilter:r}],{Enter:a.toggle,Space:a.toggle,Click:a.toggle,ArrowDown:i.next,ArrowUp:i.prev,Home:i.first,End:i.last});export{o as t};

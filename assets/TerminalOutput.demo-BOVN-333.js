@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{TerminalOutput as t}from"./TerminalOutput-DWKIiaWc.js";var n=e(),r={slug:`terminal-output`,category:`ui`,label:`TerminalOutput`};function i(){return(0,n.jsx)(t,{command:`pnpm typecheck`,output:`src/index.ts - no errors found`})}export{i as Demo,r as meta};

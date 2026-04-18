@@ -1,0 +1,1 @@
+import{o as e}from"./chunk-CFjPhJqf.js";import{t}from"./react-nm2Ru1Pt.js";import{t as n}from"./index-tEjY2jeN.js";import{y as r}from"./showcaseFixtures-DPVQlrPh.js";import{t as i}from"./Toggle-DFbsfDQ9.js";var a=e(t(),1),o=n(),s={slug:`toggle`,category:`ui`,label:`Toggle`};function c(){let[e,t]=(0,a.useState)(r);return(0,o.jsx)(i,{data:e,onChange:t})}export{c as Demo,s as meta};

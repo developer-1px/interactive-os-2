@@ -1,0 +1,1 @@
+import{t as e}from"./index-tEjY2jeN.js";import{t}from"./EmptyState-DODnZfBv.js";var n=e(),r={slug:`empty-state`,category:`ui`,label:`EmptyState`};function i(){return(0,n.jsx)(t,{title:`No items yet`,description:`Create your first item to get started.`,action:{label:`Create Item`,onClick:()=>{}}})}export{i as Demo,r as meta};

@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{t}from"./ax-4rdbEknh.js";var n=e();function r({width:e=`full`,height:r=`sm`,shape:i=`rect`}){return(0,n.jsx)(`div`,{className:t({surface:`sunken`,motion:`pulse`,shape:i===`circle`?`pill`:i===`text`?`sm`:`md`,width:i===`circle`?void 0:e,square:r}),"aria-hidden":`true`})}export{r as Skeleton};

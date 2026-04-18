@@ -1,0 +1,1 @@
+import{t as e}from"./index-tEjY2jeN.js";import{t}from"./PatternDemo-BzFAAePg.js";var n=e(),r={slug:`pattern-demo`,category:`ui`,label:`PatternDemo`};function i(){return(0,n.jsx)(t,{example:`alert`})}export{i as Demo,r as meta};

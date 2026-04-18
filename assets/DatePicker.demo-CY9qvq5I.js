@@ -1,1 +1,0 @@
-import{o as e}from"./chunk-CFjPhJqf.js";import{t}from"./react-nm2Ru1Pt.js";import{t as n}from"./index-iX45rFNc.js";import{t as r}from"./DatePicker-CdSnrUT7.js";var i=e(t(),1),a=n(),o={slug:`date-picker`,category:`ui`,label:`DatePicker`};function s(){let[e,t]=(0,i.useState)(null);return(0,a.jsx)(r,{value:e,onChange:t,"aria-label":`Select date`})}export{s as Demo,o as meta};

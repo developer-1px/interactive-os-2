@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{t}from"./ax-4rdbEknh.js";import{t as n}from"./CloseIndicator-BmnuZtTW.js";var r=e(),i={slug:`close-indicator`,category:`indicator`,label:`CloseIndicator`};function a(){return(0,r.jsx)(`div`,{className:t({layout:`bar`,gap:`md`}),children:(0,r.jsx)(n,{})})}export{a as Demo,i as meta};

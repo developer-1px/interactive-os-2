@@ -1,0 +1,1 @@
+import{t as e}from"./index-tEjY2jeN.js";import{t}from"./ax-i2mPtHDV.js";import{t as n}from"./StatusIndicator-Cx-ci57_.js";var r=e(),i={done:`success`,wip:`warning`,empty:`info`};function a({status:e}){return e===null?(0,r.jsx)(`span`,{}):(0,r.jsx)(`span`,{className:t({layout:`center`}),children:(0,r.jsx)(n,{tone:i[e]})})}export{a as t};

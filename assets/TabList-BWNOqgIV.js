@@ -1,0 +1,1 @@
+import{t as e}from"./TabList-YvbLTUXX.js";export{e as TabList};

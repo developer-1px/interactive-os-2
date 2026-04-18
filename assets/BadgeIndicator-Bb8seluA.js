@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{t}from"./ax-4rdbEknh.js";var n=e();function r({count:e,className:r}){return e<=0?null:(0,n.jsx)(`span`,{className:[t({role:`badge`,flex:`none`,surface:`display`,tone:`danger`,content:`text`,clamp:`1`}),`item-indicator--badge`,r].filter(Boolean).join(` `),children:e>=100?`99+`:e})}export{r as t};

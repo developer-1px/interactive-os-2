@@ -1,0 +1,1 @@
+import{t as e}from"./index-tEjY2jeN.js";import{t}from"./ax-i2mPtHDV.js";import{t as n}from"./ScrollArea-X56LG9U0.js";var r=e(),i={slug:`scroll-area`,category:`ui`,label:`ScrollArea`};function a(){return(0,r.jsx)(n,{children:Array.from({length:20},(e,n)=>(0,r.jsxs)(`div`,{className:t({padding:`sm`,textStyle:`body`}),children:[`Row `,n+1]},n))})}export{a as Demo,i as meta};

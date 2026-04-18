@@ -1,0 +1,1 @@
+import{t as e}from"./index-tEjY2jeN.js";import{t}from"./ax-i2mPtHDV.js";import{t as n}from"./IndeterminateIndicator-BsDoydcQ.js";var r=e(),i={slug:`indeterminate-indicator`,category:`indicator`,label:`IndeterminateIndicator`};function a(){return(0,r.jsx)(`div`,{className:t({layout:`bar`,gap:`md`}),children:(0,r.jsx)(n,{})})}export{a as Demo,i as meta};

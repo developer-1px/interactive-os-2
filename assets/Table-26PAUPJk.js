@@ -1,0 +1,1 @@
+import{t as e}from"./Table-BOzoLbv4.js";export{e as Table};

@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DOjM5vD7.js";import{t}from"./composePattern-CzrKuiBe.js";import{t as n}from"./checked-D0rjhvdE.js";var r=e(`natural`),i=n(),a=t({role:`switch`,childRole:`switch`},[r,i],{Enter:i.toggle,Space:i.toggle,Click:i.toggle});export{a as t};

@@ -1,0 +1,1 @@
+import{t as e}from"./MenuActivedescendant-BLWWwkkX.js";export{e as MenuActivedescendant};

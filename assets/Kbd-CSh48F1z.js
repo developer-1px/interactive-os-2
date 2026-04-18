@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{t}from"./ax-4rdbEknh.js";var n=e();function r({children:e}){return(0,n.jsx)(`kbd`,{className:t({surface:`overlay`,shape:`sm`,textStyle:`code`,text:`secondary`,padding:`xs`,content:`text`,border:`default`}),children:e})}export{r as Kbd};

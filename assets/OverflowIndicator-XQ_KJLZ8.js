@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{t}from"./ax-4rdbEknh.js";var n=e();function r({count:e,className:r}){return e<=0?null:(0,n.jsxs)(`span`,{className:[`whitespace-nowrap ${t({flex:`none`})}`,`item-indicator--overflow`,r].filter(Boolean).join(` `),children:[`+`,e]})}export{r as t};

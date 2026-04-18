@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{t}from"./PatternDemo-Bm8A_7-L.js";var n=e(),r={slug:`pattern-demo`,category:`ui`,label:`PatternDemo`};function i(){return(0,n.jsx)(t,{example:`alert`})}export{i as Demo,r as meta};

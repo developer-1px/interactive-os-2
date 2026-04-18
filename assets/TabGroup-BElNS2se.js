@@ -1,0 +1,1 @@
+import{t as e}from"./TabGroup-DyxqGAXw.js";export{e as TabGroup};

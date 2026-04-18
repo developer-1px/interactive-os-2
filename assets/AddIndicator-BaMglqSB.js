@@ -1,1 +1,0 @@
-import{t as e}from"./index-iX45rFNc.js";import{t}from"./ax-4rdbEknh.js";import{t as n}from"./plus-BSI7OPUa.js";var r=e();function i({className:e}){return(0,r.jsx)(`span`,{className:[`inline-flex ${t({layout:`center`})}`,`item-indicator--add`,e].filter(Boolean).join(` `),children:(0,r.jsx)(n,{size:`1em`})})}export{i as t};

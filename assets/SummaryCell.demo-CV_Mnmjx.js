@@ -1,0 +1,1 @@
+import{t as e}from"./index-tEjY2jeN.js";import{t}from"./ax-i2mPtHDV.js";var n=e();function r({summary:e}){return(0,n.jsx)(`span`,{className:t({clamp:`1`}),children:e})}var i={slug:`summary-cell`,category:`cell`,label:`SummaryCell`};function a(){return(0,n.jsx)(r,{summary:`A brief description of the item that may be truncated if too long`})}export{a as Demo,i as meta};
