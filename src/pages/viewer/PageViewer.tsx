@@ -57,8 +57,8 @@ const NOW = new Date()
 const YESTERDAY = new Date(NOW.getTime() - 24 * 60 * 60 * 1000)
 
 const RECENT: FavoriteRoot[] = [
-  { id: 'today',       name: 'today',       path: docsDayPath(NOW),                   icon: <CalendarDays size={ICON_SIZE} /> },
-  { id: 'yesterday',   name: 'yesterday',   path: docsDayPath(YESTERDAY),             icon: <CalendarClock size={ICON_SIZE} /> },
+  { id: 'today',       name: 'Today',       path: docsDayPath(NOW),                   icon: <CalendarDays size={ICON_SIZE} /> },
+  { id: 'yesterday',   name: 'Yesterday',   path: docsDayPath(YESTERDAY),             icon: <CalendarClock size={ICON_SIZE} /> },
 ]
 
 const FAVORITES: FavoriteRoot[] = [
@@ -128,6 +128,7 @@ export default function PageViewer() {
   const navigate = useNavigate()
 
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null) // @useState-hatch
+  const titleMapRef = useRef<Map<string, string>>(new Map())
   const [quickOpenVisible, setQuickOpenVisible] = useState(false) // @useState-hatch
   const [viewMode, setViewMode] = useState<'list' | 'columns'>(() => {
     const saved = localStorage.getItem(VIEWMODE_KEY)
@@ -145,8 +146,18 @@ export default function PageViewer() {
 
   useEffect(() => {
     const initialFilePath = urlPathToFilePath(window.location.pathname, 'viewer', DEFAULT_ROOT)
-    fetchTree(resolveRoot(currentRoot)).then((tree) => {
-      let store = treeToStore(tree)
+    // mddb-index 먼저 로드하여 md 파일의 frontmatter.title을 tree display name으로 사용
+    Promise.all([
+      fetchMddbIndex().then((idx) => {
+        const map = new Map<string, string>()
+        for (const e of idx.entries) {
+          if (e.frontmatter.title) map.set(`${DEFAULT_ROOT}/${e.path}`, e.frontmatter.title)
+        }
+        titleMapRef.current = map
+      }).catch(() => { /* mddb 없으면 파일명 그대로 사용 */ }),
+      fetchTree(resolveRoot(currentRoot)),
+    ]).then(([, tree]) => {
+      let store = treeToStore(tree, titleMapRef.current)
       if (initialFilePath && store.entities[initialFilePath]) {
         store = withInitialFileSelected(store, initialFilePath)
       }
@@ -160,7 +171,7 @@ export default function PageViewer() {
     const handler = () => {
       fetchTree(resolveRoot(currentRoot)).then((tree) => {
         setInitialStore(prev => {
-          const next = treeToStore(tree)
+          const next = treeToStore(tree, titleMapRef.current)
           if (!prev) return next
           const expanded = prev.entities[EXPANDED_ID]
           const focus = prev.entities[FOCUS_ID]
@@ -202,7 +213,7 @@ export default function PageViewer() {
     const thisId = ++fetchIdRef.current
     fetchTree(resolveRoot(newRoot)).then((tree) => {
       if (fetchIdRef.current !== thisId) return
-      let store = treeToStore(tree)
+      let store = treeToStore(tree, titleMapRef.current)
       if (store.entities[id]) {
         store = withInitialFileSelected(store, id)
         setPreviewPath(id)
@@ -244,7 +255,7 @@ export default function PageViewer() {
       setPreviewPath(null)
       setCurrentRoot(nodeId)
       fetchTree(resolveRoot(nodeId)).then((tree) => {
-        setInitialStore(treeToStore(tree))
+        setInitialStore(treeToStore(tree, titleMapRef.current))
       })
     }
   }, [])

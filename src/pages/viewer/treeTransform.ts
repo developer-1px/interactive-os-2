@@ -5,7 +5,7 @@ import { createStore } from '@os/store/createStore'
 import { FOCUS_ID } from '@os/core'
 import { EXPANDED_ID } from '@os/axis/expand'
 
-export function treeToStore(nodes: TreeNode[]): NormalizedData {
+export function treeToStore(nodes: TreeNode[], titleMap?: Map<string, string>): NormalizedData {
   const entities: Record<string, Entity> = {}
   const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
 
@@ -13,8 +13,9 @@ export function treeToStore(nodes: TreeNode[]): NormalizedData {
     for (const node of items) {
       const isFile = node.type !== 'directory'
       const ext = isFile && node.name.includes('.') ? node.name.split('.').pop() ?? '' : ''
-      const cells: unknown[] = [{ name: node.name, type: node.type }, ext, isFile ? (node.loc ?? '') : '']
-      entities[node.id] = { id: node.id, data: { name: node.name, type: node.type, path: node.id, ...(node.loc != null && { loc: node.loc }), cells } }
+      const displayName = titleMap?.get(node.id) ?? node.name
+      const cells: unknown[] = [{ name: displayName, type: node.type }, ext, isFile ? (node.loc ?? '') : '']
+      entities[node.id] = { id: node.id, data: { name: displayName, type: node.type, path: node.id, ...(node.loc != null && { loc: node.loc }), cells } }
       if (!relationships[parentId]) relationships[parentId] = []
       relationships[parentId].push(node.id)
       if (node.children && node.children.length > 0) {
