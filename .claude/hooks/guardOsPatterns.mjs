@@ -204,12 +204,21 @@ if (isTsx && ICON_SYMBOLS.test(content)) {
   }
 }
 
-// 규칙 11: src/pages/에서 renderItem prop 직접 전달 금지
-if (isPages && isTsx && /\brenderItem\s*=\s*[\{(]/.test(content)) {
-  const items = listComponents('items').join(', ')
-  violations.push(
-    `renderItem 직접 전달 금지 — ui/items/ 사용: ${items}. 필요하면 ui/items/에 새 Item을 추가하세요`
-  )
+// 규칙 11: src/pages/에서 renderItem 인라인 함수 금지 (PascalCase 식별자 참조는 허용)
+// 허용: renderItem={ListItem}, renderItem={TodoItem}  — ui/items/ 또는 src/entities/{도메인}/ui/ 의 컴포넌트
+// 차단: renderItem={() => ...}, renderItem={(props) => ...}, renderItem={function() {}}
+if (isPages && isTsx) {
+  const renderItemMatch = content.match(/\brenderItem\s*=\s*\{([^}]+)\}/)
+  if (renderItemMatch) {
+    const inner = renderItemMatch[1].trim()
+    const isNamedComponent = /^[A-Z]\w*$/.test(inner)
+    if (!isNamedComponent) {
+      const items = listComponents('items').join(', ')
+      violations.push(
+        `renderItem 인라인 함수 금지 — ui/items/ 또는 src/entities/{도메인}/ui/ 에 정의된 컴포넌트 식별자를 전달하세요. 범용: ${items}`
+      )
+    }
+  }
 }
 
 // 규칙 13: src/pages/에서 renderCell prop 직접 전달 금지

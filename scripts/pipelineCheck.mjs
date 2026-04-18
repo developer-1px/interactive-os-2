@@ -10,6 +10,8 @@
  *      (src/pages/{sample}/*.tsx)에서 import 되었는가.
  *   B. Stage 5 코드에 role="list|listitem|tab|row|cell|option|radio|..." 수동 선언 0건.
  *   C. NormalizedData 우회 패턴: <div>.map() 에 role="list*" 조합.
+ *   D. domain_items 선언 (optional) — 각 item의 path 파일이 존재하고, pages 코드가
+ *      그 이름을 import + renderItem={Name} 으로 사용하는가.
  *
  * 출력:
  *   docs/research/pipeline/{sample}/5-assembly.check.md
@@ -96,7 +98,29 @@ const main = () => {
     }
   }
 
-  const pass = aViolations.length === 0 && bViolations.length === 0 && cViolations.length === 0
+  // D. domain_items (optional)
+  const dViolations = []
+  const declDomainItems = decl.domain_items ?? []
+  for (const item of declDomainItems) {
+    const itemPath = resolve(process.cwd(), item.path)
+    if (!existsSync(itemPath)) {
+      dViolations.push({ name: item.name, reason: `파일 없음: ${item.path}` })
+      continue
+    }
+    const importRe = new RegExp(`import\\s*\\{[^}]*\\b${item.name}\\b[^}]*\\}\\s*from`)
+    const namedFromRe = new RegExp(`from\\s+['"][^'"]*${item.name}['"]`)
+    const imported = importRe.test(joined) || namedFromRe.test(joined)
+    if (!imported) {
+      dViolations.push({ name: item.name, reason: `import 없음` })
+      continue
+    }
+    const usageRe = new RegExp(`\\brenderItem\\s*=\\s*\\{\\s*${item.name}\\s*\\}`)
+    if (!usageRe.test(joined)) {
+      dViolations.push({ name: item.name, reason: `renderItem={${item.name}} 사용 흔적 없음` })
+    }
+  }
+
+  const pass = aViolations.length === 0 && bViolations.length === 0 && cViolations.length === 0 && dViolations.length === 0
   const now = new Date().toISOString()
 
   const lines = [
@@ -125,6 +149,14 @@ const main = () => {
       ? '✅ .map() 내부 수동 role 선언 0건.'
       : `❌ 우회 패턴 ${cViolations.length}건:\n\n${cViolations.map((v) => `  - \`${v.file}\` — .map() 안에서 수동 role 선언 감지`).join('\n')}\n\n→ NormalizedData를 Aria 컴포넌트의 \`data\` prop에 주입하고 renderItem slot을 사용하세요.`,
     '',
+    '## D. Domain Items',
+    '',
+    declDomainItems.length === 0
+      ? '선언 없음 (optional).'
+      : dViolations.length === 0
+        ? `✅ domain_items ${declDomainItems.length}건 전부 file 존재 + import + renderItem 사용 확인.`
+        : `❌ domain_items 위반 ${dViolations.length}건:\n\n${dViolations.map((v) => `  - **${v.name}** — ${v.reason}`).join('\n')}\n\n→ \`src/entities/{도메인}/ui/{Name}.tsx\` 에 정의하고 ListBox/TreeView 등에 \`renderItem={${declDomainItems[0]?.name ?? 'Name'}}\` 로 전달하세요.`,
+    '',
     '## 파이프라인 의미',
     '',
     pass
@@ -136,7 +168,7 @@ const main = () => {
   writeFileSync(reportPath, lines.join('\n'))
   console.log(`  ${pass ? '✓' : '✗'} ${reportPath.replace(resolve(process.cwd()) + '/', '')}`)
   if (!pass) {
-    console.log(`    A: ${aViolations.length} · B: ${bViolations.length} · C: ${cViolations.length}`)
+    console.log(`    A: ${aViolations.length} · B: ${bViolations.length} · C: ${cViolations.length} · D: ${dViolations.length}`)
   }
 
   process.exit(pass ? 0 : 1)
