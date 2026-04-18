@@ -1,3 +1,15 @@
+---
+id: 5-backlogs/2026-03-22-viewer-chat-channel-prd
+title: 'Viewer Chat Channel — PRD'
+status: backlog
+kind: prd
+created: 2026-03-23
+updated: 2026-03-24
+summary: 'Discussion: agent viewer에서 실행 중인 Claude Code 세션에 메시지를 보내기 위해 커스텀 MCP Channel 플러그인을 만든다. viewer 입력 → HTTP POST → MCP Channel → 세션에 push, 응답은 기존 JSONL SSE로 수신.'
+topics: [5-backlogs]
+relates: []
+supersedes: []
+---
 # Viewer Chat Channel — PRD
 
 > Discussion: agent viewer에서 실행 중인 Claude Code 세션에 메시지를 보내기 위해 커스텀 MCP Channel 플러그인을 만든다. viewer 입력 → HTTP POST → MCP Channel → 세션에 push, 응답은 기존 JSONL SSE로 수신.

@@ -1,3 +1,14 @@
+---
+id: 5-backlogs/identityConfigSlim
+title: 'Identity Config 축소 — 2026-03-29'
+status: backlog
+kind: note
+created: 2026-03-28
+updated: 2026-03-28
+topics: [5-backlogs]
+relates: []
+supersedes: []
+---
 # Identity Config 축소 — 2026-03-29
 
 ## 배경

@@ -1,3 +1,14 @@
+---
+id: 5-backlogs/modalPluginFlatLayout
+title: 'Modal을 os plugin + FlatLayout overlay로 통일 — 2026-04-11'
+status: backlog
+kind: note
+created: 2026-04-11
+updated: 2026-04-11
+topics: [5-backlogs]
+relates: []
+supersedes: []
+---
 # Modal을 os plugin + FlatLayout overlay로 통일 — 2026-04-11
 
 ## 배경
