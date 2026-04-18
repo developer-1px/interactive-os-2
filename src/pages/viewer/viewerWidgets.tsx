@@ -44,27 +44,32 @@ export function ViewerSortBarWidget() {
   const sortDirection = (key: SortKey) =>
     sortKey === key ? (sortDir === 'asc' ? 'ascending' as const : 'descending' as const) : undefined
 
+  // Action clusters as floating glass pills (lifted theme: frost + tint + rim).
+  // Container row stays solid; the clusters are the "things you press" → glass.
   return (
-    <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })}>
-      <Button onClick={() => onSort('name')}>
-        Name <SortIndicator direction={sortDirection('name')} />
-      </Button>
-      <Button onClick={() => onSort('type')}>
-        Type <SortIndicator direction={sortDirection('type')} />
-      </Button>
-      <Button onClick={() => onSort('loc')}>
-        LOC <SortIndicator direction={sortDirection('loc')} />
-      </Button>
-      <span className={ax({ border: 'end', flex: 'none' })} />
-      {['.tsx', '.ts', '.css', '.md'].map(ext => (
-        <Button
-          key={ext}
-          variant={filters.includes(ext) ? 'dialog' : 'ghost'}
-          onClick={() => setFilters(f => f.includes(ext) ? f.filter(e => e !== ext) : [...f, ext])}
-        >
-          {ext}
+    <div className={ax({ layout: 'bar' })}>
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
+        <Button onClick={() => onSort('name')}>
+          Name <SortIndicator direction={sortDirection('name')} />
         </Button>
-      ))}
+        <Button onClick={() => onSort('type')}>
+          Type <SortIndicator direction={sortDirection('type')} />
+        </Button>
+        <Button onClick={() => onSort('loc')}>
+          LOC <SortIndicator direction={sortDirection('loc')} />
+        </Button>
+      </div>
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
+        {['.tsx', '.ts', '.css', '.md'].map(ext => (
+          <Button
+            key={ext}
+            variant={filters.includes(ext) ? 'dialog' : 'ghost'}
+            onClick={() => setFilters(f => f.includes(ext) ? f.filter(e => e !== ext) : [...f, ext])}
+          >
+            {ext}
+          </Button>
+        ))}
+      </div>
     </div>
   )
 }
