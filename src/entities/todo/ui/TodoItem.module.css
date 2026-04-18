@@ -1,0 +1,4 @@
+/* Last-mile: ax()에 text-decoration 축이 없어 module.css로 표현. */
+.doneText {
+  text-decoration: line-through;
+}
