@@ -32,7 +32,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: GITHUB_PAGES=true pnpm build
+      - run: GITHUB_PAGES=true pnpm exec vite build && cp dist/index.html dist/404.html
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
