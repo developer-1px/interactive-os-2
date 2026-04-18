@@ -60,7 +60,7 @@ const slidesLayout = definePage({
     slideSearch: { data: { type: 'widget', widget: 'SlideSearch' } },
     slideFilter: { data: { type: 'widget', widget: 'SlideFilter' } },
     slideRail:   { data: { type: 'widget', widget: 'SlideRail', surface: 'sunken' } },
-    canvas: { data: { type: 'tab' }, children: ['normal', 'outline', 'sorter'] },
+    canvas: { data: { type: 'tabgroup', activeTabId: 'normal' }, children: ['normal', 'outline', 'sorter'] },
     normal:  { data: { type: 'widget', widget: 'SlideCanvas', label: 'Normal' } },
     outline: { data: { type: 'widget', widget: 'OutlineView', label: 'Outline' } },
     sorter:  { data: { type: 'widget', widget: 'SlideSorter', label: 'Sorter' } },

@@ -1,4 +1,5 @@
 // ② flat-layout-engine-prd.md
+// ② cmux-layout-prd.md
 import type { NormalizedData, PaneSize } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { createStore } from '../store/createStore'
@@ -57,8 +58,18 @@ export interface NavNode extends LayoutBase {
   sidebarWidth?: number  // 0~1 비율, 기본 0.2
 }
 
+/** Tabgroup — activeTabId로 자식 탭 중 활성 탭 결정. workspaceStore의 TabGroupData와 동일 스키마. */
+export interface TabgroupNode extends LayoutBase {
+  type: 'tabgroup'
+  activeTabId: string
+}
+
+/** Tab — workspaceStore의 TabData와 동일 스키마. contentType/contentRef로 위젯에 콘텐츠 식별자 전달. */
 export interface TabNode extends LayoutBase {
   type: 'tab'
+  label: string
+  contentType?: string
+  contentRef?: string
 }
 
 export interface SectionNode extends LayoutBase {
@@ -79,7 +90,7 @@ export interface StateNode extends LayoutBase {
   [key: string]: unknown
 }
 
-export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabNode | SectionNode | FloatingNode | StateNode
+export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabgroupNode | TabNode | SectionNode | FloatingNode | StateNode
 
 // ── definePage factory ────────────────────────────────
 

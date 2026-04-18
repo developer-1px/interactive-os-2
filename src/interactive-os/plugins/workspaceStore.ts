@@ -157,6 +157,52 @@ const _workspaceCommands = defineCommands({
     create: (paneId: string) => ({ paneId }),
     handler: (store, { paneId }) => closePaneInternal(store, paneId),
   },
+
+  // ② cmux-layout-prd.md
+  nextTab: {
+    type: 'workspace:nextTab' as const,
+    create: (tabgroupId: string) => ({ tabgroupId }),
+    handler: (store, { tabgroupId }) => {
+      const children = getChildren(store, tabgroupId)
+      if (children.length === 0) return store
+      const tgData = getEntityData<TabGroupData>(store, tabgroupId)
+      const activeId = tgData?.activeTabId ?? ''
+      const curIdx = children.indexOf(activeId)
+      const n = children.length
+      const base = curIdx < 0 ? -1 : curIdx
+      const nextIdx = ((base + 1) % n + n) % n
+      return updateEntityData(store, tabgroupId, { activeTabId: children[nextIdx]! })
+    },
+  },
+
+  // ② cmux-layout-prd.md
+  prevTab: {
+    type: 'workspace:prevTab' as const,
+    create: (tabgroupId: string) => ({ tabgroupId }),
+    handler: (store, { tabgroupId }) => {
+      const children = getChildren(store, tabgroupId)
+      if (children.length === 0) return store
+      const tgData = getEntityData<TabGroupData>(store, tabgroupId)
+      const activeId = tgData?.activeTabId ?? ''
+      const curIdx = children.indexOf(activeId)
+      const n = children.length
+      const base = curIdx < 0 ? 0 : curIdx
+      const prevIdx = ((base - 1) % n + n) % n
+      return updateEntityData(store, tabgroupId, { activeTabId: children[prevIdx]! })
+    },
+  },
+
+  // ② cmux-layout-prd.md
+  gotoTab: {
+    type: 'workspace:gotoTab' as const,
+    create: (tabgroupId: string, index: number) => ({ tabgroupId, index }),
+    handler: (store, { tabgroupId, index }) => {
+      const children = getChildren(store, tabgroupId)
+      if (children.length === 0) return store
+      const clamped = Math.max(0, Math.min(index, children.length - 1))
+      return updateEntityData(store, tabgroupId, { activeTabId: children[clamped]! })
+    },
+  },
 })
 
 export const workspaceCommands = {

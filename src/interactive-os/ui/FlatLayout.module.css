@@ -31,4 +31,14 @@
     height: 100%;
     flex: 1;
   }
+
+  /* ② cmux-layout-prd.md flashPane */
+  [data-flash="true"] {
+    animation: var(--flat-flash-anim, flat-flash 0.3s ease-out);
+  }
+
+  @keyframes flat-flash {
+    0%, 100% { box-shadow: none; }
+    50%      { box-shadow: 0 0 0 3px var(--tone-primary-base); }
+  }
 }

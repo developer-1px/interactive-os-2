@@ -193,6 +193,77 @@ describe('serialization', () => {
   })
 })
 
+// V: cmux-layout-prd.md §5 W4
+describe('workspaceCommands.nextTab', () => {
+  it('cycles active tab forward — 3rd wraps to 1st', () => {
+    const store = createWorkspace()
+    const tgId = getChildren(store, ROOT_ID)[0]!
+    const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
+    const tab2: Entity = { id: 'tab-2', data: { type: 'tab', label: 'B', contentType: 'editor', contentRef: '/b' } }
+    const tab3: Entity = { id: 'tab-3', data: { type: 'tab', label: 'C', contentType: 'editor', contentRef: '/c' } }
+    let s = workspaceCommands.createTab.reduce(store, tgId, tab1)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab1.id)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab2)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab3)
+
+    // 1 → 2
+    s = workspaceCommands.nextTab.reduce(s, tgId)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-2')
+    // 2 → 3
+    s = workspaceCommands.nextTab.reduce(s, tgId)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-3')
+    // 3 → 1 (wrap)
+    s = workspaceCommands.nextTab.reduce(s, tgId)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-1')
+  })
+})
+
+// V: cmux-layout-prd.md §5 W4
+describe('workspaceCommands.prevTab', () => {
+  it('cycles active tab backward — 1st wraps to last', () => {
+    const store = createWorkspace()
+    const tgId = getChildren(store, ROOT_ID)[0]!
+    const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
+    const tab2: Entity = { id: 'tab-2', data: { type: 'tab', label: 'B', contentType: 'editor', contentRef: '/b' } }
+    const tab3: Entity = { id: 'tab-3', data: { type: 'tab', label: 'C', contentType: 'editor', contentRef: '/c' } }
+    let s = workspaceCommands.createTab.reduce(store, tgId, tab1)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab1.id)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab2)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab3)
+
+    // active=tab-1 → prev wraps to tab-3
+    s = workspaceCommands.prevTab.reduce(s, tgId)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-3')
+    // tab-3 → tab-2
+    s = workspaceCommands.prevTab.reduce(s, tgId)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-2')
+  })
+})
+
+// V: cmux-layout-prd.md §5 W4
+describe('workspaceCommands.gotoTab', () => {
+  it('clamps out-of-range index — -1 → 0, 10 → last', () => {
+    const store = createWorkspace()
+    const tgId = getChildren(store, ROOT_ID)[0]!
+    const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
+    const tab2: Entity = { id: 'tab-2', data: { type: 'tab', label: 'B', contentType: 'editor', contentRef: '/b' } }
+    const tab3: Entity = { id: 'tab-3', data: { type: 'tab', label: 'C', contentType: 'editor', contentRef: '/c' } }
+    let s = workspaceCommands.createTab.reduce(store, tgId, tab1)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab2)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab3)
+
+    // index=-1 → clamp to 0 → tab-1
+    s = workspaceCommands.gotoTab.reduce(s, tgId, -1)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-1')
+    // index=10 → clamp to length-1=2 → tab-3
+    s = workspaceCommands.gotoTab.reduce(s, tgId, 10)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-3')
+    // 정상 범위
+    s = workspaceCommands.gotoTab.reduce(s, tgId, 1)
+    expect(getEntityData<TabGroupData>(s, tgId)?.activeTabId).toBe('tab-2')
+  })
+})
+
 // V3: 2026-03-26-workspace-containers-prd.md
 describe('workspace plugin', () => {
   it('returns a plugin with name and commands', () => {
