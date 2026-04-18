@@ -244,21 +244,24 @@
   line-height: var(--leading-relaxed);
 }
 
-/* static state mirror — row는 display only.
-   모든 row가 균일하게 static. 실제 pseudo-class 체험은 button row에서 */
+/* static state mirror — 실제 ax.css 규칙과 동일 토큰 참조.
+   display only. 실제 pseudo-class 체험은 button row에서 */
 .theme-zone-card .ia-item {
   pointer-events: none;
 }
+/* :hover → --bg-hover (zone별 재바인딩) */
 .theme-zone-card .ia-item[data-hover] {
   background: var(--bg-hover);
 }
+/* :active → --tone-primary-bright (zone 불변, accent 기반) */
 .theme-zone-card .ia-item[data-active] {
-  background: var(--bg-active);
+  background: var(--tone-primary-bright);
 }
+/* :focus (active pane) → bg tone-primary-dim + outline-color focus (Mac Finder 모델) */
 .theme-zone-card .ia-item[data-focus-ring] {
-  box-shadow: var(--focus-ring-shadow);
-  outline: none;
-  margin-block: var(--space-2xs);
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
 }
 .theme-zone-card .ia-item[aria-disabled="true"] {
   opacity: 0.4;

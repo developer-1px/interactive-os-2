@@ -42,7 +42,7 @@ const itemStates: Array<{ label: string; attrs: ItemStateAttrs }> = [
   { label: 'default', attrs: {} },
   { label: 'hover', attrs: { 'data-hover': true } },
   { label: 'active', attrs: { 'data-active': true } },
-  { label: 'focus ring', attrs: { 'data-focus-ring': true } },
+  { label: 'focus', attrs: { 'data-focus-ring': true } },
   { label: 'selected', attrs: { 'aria-selected': 'true' } },
   { label: 'sel + focus', attrs: { 'aria-selected': 'true', 'data-focused': true } },
   { label: 'checked', attrs: { 'aria-checked': 'true' } },
@@ -92,9 +92,9 @@ function ZoneCompositionAxis() {
           </div>
         ))}
         <span className={`${ax({ textStyle: 'caption' })} theme-zone-caption`}>
-          모든 state(default / hover / active / focus ring / selected / sel+focus / checked / disabled)가
-          sunken/base/raised/overlay 각 zone에서 어떻게 다르게 렌더되는지 동시 비교.
-          `.sf-{'{'}z{'}'}` 클래스가 --bg-hover · --bg-active · --selection · --selection-cursor 전부 zone별로 재바인딩 (Zone cascade).
+          모든 state가 각 zone에서 어떻게 렌더되는지 동시 비교.
+          {' '}<strong>Zone별 재바인딩</strong>: hover(--bg-hover), selected(--selection), sel+focus(--selection-cursor).
+          {' '}<strong>Zone 불변</strong>: active(--tone-primary-bright), focus(--tone-primary-dim + --focus outline), disabled(opacity). button row는 실제 pseudo-class 체험용.
         </span>
       </div>
     </Section>
