@@ -1,0 +1,1 @@
+import{t as e}from"./FileIcon-BC9oZ7UE.js";export{e as FileIcon};

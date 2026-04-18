@@ -1,1 +1,0 @@
-import{t as e}from"./index-CZ4T_dVD.js";import{Composer as t}from"./Composer-Z52PWple.js";var n=e(),r={slug:`composer`,category:`ui`,label:`Composer`};function i(){return(0,n.jsx)(t,{placeholder:`Type a message...`,onSubmit:()=>{}})}export{i as Demo,r as meta};

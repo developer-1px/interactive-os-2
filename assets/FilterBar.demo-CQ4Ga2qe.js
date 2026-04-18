@@ -1,0 +1,1 @@
+import{t as e}from"./index-iX45rFNc.js";import{t}from"./FilterBar-DZgJSyGw.js";var n=e(),r={slug:`filter-bar`,category:`ui`,label:`FilterBar`};function i(){return(0,n.jsx)(t,{filters:[{id:`status`,label:`Status`,value:`Open`},{id:`priority`,label:`Priority`,value:`High`},{id:`assignee`,label:`Assignee`,value:`jkim`}],onAddFilter:()=>{}})}export{i as Demo,r as meta};

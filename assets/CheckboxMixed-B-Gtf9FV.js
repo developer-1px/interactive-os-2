@@ -1,1 +1,0 @@
-import{t as e}from"./index-CZ4T_dVD.js";import{t}from"./aria-lCyLEbyi.js";import{t as n}from"./CheckItem-Dl4GWYeu.js";import{t as r}from"./checkboxMixed-CrGJLw2A.js";var i=e();function a({data:e,plugins:a=[],onChange:o,renderItem:s=n,"aria-label":c}){return(0,i.jsx)(t,{pattern:r,data:e,plugins:a,onChange:o,"aria-label":c,children:(0,i.jsx)(t.Item,{render:s})})}export{a as t};

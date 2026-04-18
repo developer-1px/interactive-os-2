@@ -1,0 +1,1 @@
+import{t as e}from"./index-iX45rFNc.js";import{Composer as t}from"./Composer-raL58U5N.js";var n=e(),r={slug:`composer`,category:`ui`,label:`Composer`};function i(){return(0,n.jsx)(t,{placeholder:`Type a message...`,onSubmit:()=>{}})}export{i as Demo,r as meta};

@@ -1,0 +1,1 @@
+import{t as e}from"./index-iX45rFNc.js";import{t}from"./ax-4rdbEknh.js";var n=e();function r({width:e,height:r,className:i}){return(0,n.jsx)(`div`,{className:[t({shape:`sm`}),`item-indicator--skeleton`,i].filter(Boolean).join(` `),style:{width:e,height:r}})}export{r as t};

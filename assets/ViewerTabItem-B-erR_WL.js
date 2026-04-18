@@ -1,0 +1,1 @@
+import{t as e}from"./index-iX45rFNc.js";import{t}from"./file-text-DAYSMSf5.js";import{t as n}from"./search-Csvy2S6q.js";import{t as r}from"./terminal-BB-iSjls.js";import{t as i}from"./TabItem-DR7MvEER.js";var a=e(),o={file:t,search:n,terminal:r};function s(e,n,r){return i(e,n,r,{icon:(0,a.jsx)(o[n.data?.type??`file`]??t,{size:12})})}export{s as t};

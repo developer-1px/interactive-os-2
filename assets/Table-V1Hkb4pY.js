@@ -1,0 +1,1 @@
+import{t as e}from"./Table-Bx8A_Exw.js";export{e as Table};
