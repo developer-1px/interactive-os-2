@@ -10,6 +10,8 @@ if (typeof requestIdleCallback !== 'undefined') {
   requestIdleCallback(() => { bookChunk() })
 }
 
+const ROUTER_BASE = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined
+
 export const router = createBrowserRouter([
   {
     element: <AppShell />,
@@ -47,7 +49,8 @@ export const router = createBrowserRouter([
       { path: '/kanban', lazy: () => import('./pages/replay/SkillKanban').then(m => ({ Component: m.default })) },
       { path: '/showcase/gmail', lazy: () => import('./pages/showcase/gmail/PageGmail').then(m => ({ Component: m.default })) },
       { path: '/test/keyline', lazy: () => import('./pages/keyline/PageKeylineTest').then(m => ({ Component: m.default })) },
+      { path: '/ax-principles', lazy: () => import('./pages/ax-principles/PageAxPrinciples').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
-])
+], { basename: ROUTER_BASE })

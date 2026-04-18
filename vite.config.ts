@@ -8,6 +8,7 @@ import { browserTestPlugin } from './src/devtools/testRunner/browserTestPlugin'
 import writerPlugin from './writerFilePlugin'
 
 export default defineConfig({
+  base: process.env.GITHUB_PAGES === 'true' ? '/interactive-os-2/' : '/',
   plugins: [
     react(),
     inspectorPlugin(),
