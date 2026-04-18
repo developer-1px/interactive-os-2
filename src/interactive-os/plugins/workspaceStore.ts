@@ -374,10 +374,16 @@ export function workspace() {
     commands: {
       setActiveTab: workspaceCommands.setActiveTab,
       resize: workspaceCommands.resize,
+      // createTab — addTab(batch) 내부에서 dispatch됨. 엔진 레지스트리에 없으면 batch 재생 시 handler 누락.
+      createTab: _workspaceCommands.createTab,
       addTab: workspaceCommands.addTab,
       removeTab: workspaceCommands.removeTab,
       splitPane: workspaceCommands.splitPane,
       closePane: workspaceCommands.closePane,
+      // cmux-layout-prd: tab navigation commands
+      nextTab: workspaceCommands.nextTab,
+      prevTab: workspaceCommands.prevTab,
+      gotoTab: workspaceCommands.gotoTab,
     },
   })
 }

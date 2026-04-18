@@ -1,11 +1,11 @@
 // ② flat-layout-engine-prd.md
 // ② cmux-layout-prd.md
-import type { NormalizedData } from '../store/types'
+import type { NormalizedData, Entity } from '../store/types'
 import type { Command } from '../engine/types'
-import type { TabGroupData } from '../plugins/workspaceStore'
+import type { TabData, TabGroupData } from '../plugins/workspaceStore'
 import { defineCommands } from '../engine/defineCommand'
 import { getEntityData, updateEntityData } from '../store/createStore'
-import { workspaceCommands } from '../plugins/workspaceStore'
+import { workspaceCommands, splitAndAddTab } from '../plugins/workspaceStore'
 import { findBestInDirection } from '../primitives/spatialAlgorithm'
 import type { Direction } from '../primitives/spatialAlgorithm'
 
@@ -59,9 +59,9 @@ export const layoutCommands = defineCommands({
   },
 
   /**
-   * splitHere — focused tabgroup을 direction 방향으로 split.
+   * splitHere — focused tabgroup을 direction 방향으로 split 하고, 현재 active tab을 새 pane에 복제한다.
    * FOCUS_STATE_ID에 focus가 없으면 no-op.
-   * workspaceCommands.splitPane의 순수 handler를 호출하여 store만 변환.
+   * cmux 규약: 분할 직후 양쪽 모두 컨텐츠를 보이게 해서 두 번째 tablist가 즉시 DOM에 나타난다.
    */
   splitHere: {
     type: 'layout:splitHere' as const,
@@ -69,10 +69,26 @@ export const layoutCommands = defineCommands({
     handler: (store, { direction }) => {
       const focus = getEntityData<FocusStateData>(store, FOCUS_STATE_ID)
       if (!focus?.focusedTabgroupId) return store
-      return workspaceCommands.splitPane.handler(store, {
-        paneId: focus.focusedTabgroupId,
-        direction,
-      })
+      const tgId = focus.focusedTabgroupId
+      const tg = getEntityData<TabGroupData>(store, tgId)
+      const srcTabId = tg?.activeTabId
+      const srcTabData = srcTabId ? getEntityData<TabData>(store, srcTabId) : undefined
+      // active tab이 없으면 (빈 tg) 그냥 빈 split만 생성
+      if (!srcTabData) {
+        return workspaceCommands.splitPane.handler(store, { paneId: tgId, direction })
+      }
+      // active tab을 복제 — 새 tab id, 같은 content ref
+      const cloneId = `${srcTabId}-clone-${Date.now().toString(36)}`
+      const cloneTab: Entity = {
+        id: cloneId,
+        data: {
+          type: 'tab',
+          label: srcTabData.label,
+          contentType: srcTabData.contentType,
+          contentRef: srcTabData.contentRef,
+        } as TabData,
+      }
+      return splitAndAddTab(store, tgId, direction, cloneTab)
     },
   },
 

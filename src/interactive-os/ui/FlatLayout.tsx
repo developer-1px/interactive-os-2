@@ -222,10 +222,17 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       ? node.activeTabId
       : childIds[0]!
 
+    // ② cmux-layout-prd — external focus sync.
+    // useAria는 data.entities[FOCUS_ID]가 있을 때만 external focus 변경을 전파한다.
+    // activeTabId가 런타임에 바뀌면 내부 ViewerTabList의 focus/selection이 따라가야
+    // aria-selected가 재그려진다 (⌘T, ⌘⇧] 등).
     const tabBarStore: NormalizedData = {
-      entities: Object.fromEntries(
-        childIds.map(id => [id, { id, data: getEntityData(store, id) }])
-      ),
+      entities: {
+        ...Object.fromEntries(
+          childIds.map(id => [id, { id, data: getEntityData(store, id) }])
+        ),
+        __focus__: { id: '__focus__', focusedId: activeTabId } as unknown as NormalizedData['entities'][string],
+      },
       relationships: { [ROOT_ID]: childIds },
     }
 
