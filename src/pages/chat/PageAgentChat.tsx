@@ -1,37 +1,42 @@
-// ② 2026-04-17 Agent IDE 3-zone layout
-import { useState, useMemo, useCallback } from 'react'
+// ② cmux-layout-prd.md
+import { useMemo } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { definePage } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
-import { updateEntityData } from '@os/store/createStore'
+import type { FocusStateData } from '@os/layout/layoutCommands'
 import {
   useActiveSession,
   useChatSessions,
 } from './chatStore'
 import type { ChatMessage } from '@os/ui/chat/types'
-import { ChatProvider, type ChatContextValue, type SidebarMode } from './chatContext'
-import { ChatSidebarWidget, ChatAreaWidget, ChatBottomPanelWidget } from './chatWidgets'
+import { ChatProvider, type ChatContextValue, type WorkspaceMeta } from './chatContext'
+import { WorkspaceSidebarWidget, SurfaceLeafWidget } from './chatWidgets'
+import { ChatKeybindingsWidget } from './chatKeybindings'
 import './PageAgentChat.css'
 
-// ── Layout ──
+// ── Layout (cmux 초기 상태) ─────────────────────────────
+// root = split(sidebar | main)
+// main = tabgroup(t1) → tab → SurfaceLeaf widget (activeSession 기반 Chat pane)
+// __focus = FOCUS_STATE_ID state node — layoutCommands.setFocus/splitHere/closeHere가 읽어 dispatch
+// ChatKeybindings는 FlatLayout children slot으로 mount (DOM 비점유 side-effect widget).
 
-const chatWidgets = createWidgetRegistry({
-  Sidebar: ChatSidebarWidget,
-  ChatArea: ChatAreaWidget,
-  BottomPanel: ChatBottomPanelWidget,
-})
-
-const baseLayout = definePage({
+const chatBaseLayout = definePage({
   entities: {
-    root:        { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
-    sidebar:     { data: { type: 'widget', widget: 'Sidebar', surface: 'sunken' } },
-    main:        { data: { type: 'split', direction: 'vertical', sizes: ['flex', 0.3], resizable: true }, children: ['chatArea', 'bottomPanel'] },
-    chatArea:    { data: { type: 'widget', widget: 'ChatArea' } },
-    bottomPanel: { data: { type: 'widget', widget: 'BottomPanel', surface: 'sunken', hidden: true } },
+    root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
+    sidebar:   { data: { type: 'widget', widget: 'WorkspaceSidebar', surface: 'sunken' } },
+    main:      { data: { type: 'tabgroup', activeTabId: 't1' }, children: ['t1'] },
+    t1:        { data: { type: 'tab', label: 'Chat', contentType: 'chat', contentRef: 'session-1' }, children: ['t1-body'] },
+    't1-body': { data: { type: 'widget', widget: 'SurfaceLeaf' } },
+    '__focus': { data: { type: 'state', focusedTabgroupId: 'main', focusedTabId: 't1' } satisfies FocusStateData },
   },
 })
 
-// ── File extraction ──
+const chatWidgets = createWidgetRegistry({
+  WorkspaceSidebar: WorkspaceSidebarWidget,
+  SurfaceLeaf: SurfaceLeafWidget,
+})
+
+// ── File extraction ────────────────────────────────────
 
 const FILE_TOOLS = new Set(['Edit', 'Write'])
 
@@ -49,41 +54,45 @@ function extractModifiedFiles(messages: ChatMessage[]): string[] {
   return [...files]
 }
 
-// ── Page ──
+// ── Page ───────────────────────────────────────────────
 
 export default function PageAgentChat() {
   const sessions = useChatSessions()
   const activeSession = useActiveSession()
   const activeSessionId = activeSession?.id ?? null
 
-  const [sidebarMode, setSidebarMode] = useState<SidebarMode>('sessions')
-  const [bottomVisible, setBottomVisible] = useState(false)
-
-  const toggleBottom = useCallback(() => setBottomVisible(v => !v), [])
-
-  const chatLayout = useMemo(
-    () => updateEntityData(baseLayout, 'bottomPanel', { hidden: !bottomVisible }),
-    [bottomVisible],
+  const workspaces = useMemo<readonly [WorkspaceMeta]>(
+    () => [{
+      id: 'ws-1',
+      label: 'Claude',
+      status: activeSession ? 'running' : 'idle',
+      unreadCount: 0,
+    }],
+    [activeSession],
   )
 
-  const modifiedFiles = useMemo(() => {
-    if (!activeSession) return []
-    return extractModifiedFiles(activeSession.messages)
-  }, [activeSession])
+  const modifiedFiles = useMemo(
+    () => activeSession ? extractModifiedFiles(activeSession.messages) : [],
+    [activeSession],
+  )
 
   const chatCtx = useMemo<ChatContextValue>(() => ({
     sessions,
     activeSessionId,
-    sidebarMode,
-    setSidebarMode,
-    bottomVisible,
-    toggleBottom,
     modifiedFiles,
-  }), [sessions, activeSessionId, sidebarMode, setSidebarMode, bottomVisible, toggleBottom, modifiedFiles])
+    workspaces,
+    activeWorkspaceId: 'ws-1',
+  }), [sessions, activeSessionId, modifiedFiles, workspaces])
 
   return (
     <ChatProvider value={chatCtx}>
-      <FlatLayout data={chatLayout} registry={chatWidgets} aria-label="Agent IDE" />
+      <FlatLayout
+        data={chatBaseLayout}
+        registry={chatWidgets}
+        aria-label="Agent IDE (cmux)"
+      >
+        <ChatKeybindingsWidget />
+      </FlatLayout>
     </ChatProvider>
   )
 }

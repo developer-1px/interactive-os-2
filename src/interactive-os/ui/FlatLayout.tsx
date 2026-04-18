@@ -333,9 +333,11 @@ interface FlatLayoutProps {
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   'aria-label'?: string
+  /** FlatLayoutContext 안에서 mount되는 부작용 전용 자식 (예: 전역 단축키). DOM에 렌더되지 않는 부분만 사용. */
+  children?: React.ReactNode
 }
 
-export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'aria-label': ariaLabel }: FlatLayoutProps) {
+export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'aria-label': ariaLabel, children }: FlatLayoutProps) {
   const allPlugins = useMemo(
     () => [layout(), ...(extraPlugins ?? [])],
     [extraPlugins],
@@ -358,7 +360,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
   })
 
   const store = aria.getStore()
-  const layoutCtx = useMemo(() => ({ store, dispatch: aria.dispatch }), [store, aria.dispatch])
+  const layoutCtx = useMemo(() => ({ store, dispatch: aria.dispatch, getNodeElement }), [store, aria.dispatch, getNodeElement])
 
   const renderNode = (nodeId: string, parentType?: string): React.ReactNode => {
     const entity = store.entities[nodeId]
@@ -394,6 +396,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
         {rootIds.map((id) => (
           <React.Fragment key={id}>{renderNode(id)}</React.Fragment>
         ))}
+        {children}
       </div>
     </FlatLayoutContext.Provider>
   )
