@@ -1,17 +1,17 @@
 /**
- * Live chatStore + entities/chat fixtures → NormalizedData (TreeGrid columns).
+ * Zod schema introspection → NormalizedData (TreeGrid columns).
  *
- * 각 entity 의 data 는 { cells: [key, value] } shape — TreeGrid columns mode 가 직접 읽음.
- * 중첩 객체(usage)는 한 단계 더 children.
+ * 각 entity 의 data 는 { cells: [field, type] } shape — TreeGrid columns mode 가 직접 읽음.
+ * z.object 는 children 으로 한 단계 더 펼침 (z.array(z.object(...)) 도 element 만 펼침).
  */
 import { createStore, ROOT_ID } from '@os/schema'
 import type { Entity, NormalizedData } from '@os/store/types'
 import {
-  chatSessionFixtures,
-  chatUiStateFixture,
-  CHAT_UI_STATE_ID,
+  chatSessionSchema,
+  chatUiStateSchema,
+  sessionCardModelSchema,
+  turnUsageSchema,
 } from '@entities/chat'
-import type { ChatSession } from './chatStore'
 
 interface CellNode {
   id: string
@@ -21,113 +21,161 @@ interface CellNode {
 function pushNode(
   entities: Record<string, CellNode>,
   id: string,
-  key: string,
-  value: string,
+  field: string,
+  type: string,
 ): void {
-  entities[id] = { id, data: { cells: [key, value] } }
+  entities[id] = { id, data: { cells: [field, type] } }
 }
 
-function isPlainObject(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null && !Array.isArray(v)
+// ── Zod v4 type introspection ─────────────────────────────────
+
+interface ZodLike {
+  _def?: {
+    type: string
+    innerType?: ZodLike
+    defaultValue?: unknown
+    element?: ZodLike
+    entries?: Record<string, string>
+    values?: unknown[]
+    shape?: Record<string, ZodLike>
+  }
+  shape?: Record<string, ZodLike>
 }
 
-function formatScalar(v: unknown): string {
-  if (v === null) return 'null'
-  if (v === undefined) return 'undefined'
-  if (typeof v === 'string') return v.length > 100 ? `${v.slice(0, 100)}...` : v
-  return String(v)
+interface TypeDescription {
+  type: string
+  isObject: boolean
+  shape?: Record<string, ZodLike>
+  isArrayOfObject: boolean
+  arrayElementShape?: Record<string, ZodLike>
 }
 
-function appendFields(
+function describeType(t: ZodLike): TypeDescription {
+  let cur: ZodLike = t
+  const mods: string[] = []
+  // Unwrap modifier wrappers (optional/nullable/default)
+  while (cur?._def) {
+    const d = cur._def
+    if (d.type === 'optional' && d.innerType) {
+      mods.push('?')
+      cur = d.innerType
+      continue
+    }
+    if (d.type === 'nullable' && d.innerType) {
+      mods.push('| null')
+      cur = d.innerType
+      continue
+    }
+    if (d.type === 'default' && d.innerType) {
+      const dv = typeof d.defaultValue === 'function'
+        ? (d.defaultValue as () => unknown)()
+        : d.defaultValue
+      mods.push(`= ${JSON.stringify(dv)}`)
+      cur = d.innerType
+      continue
+    }
+    break
+  }
+
+  const def = cur._def
+  if (!def) return { type: '?', isObject: false, isArrayOfObject: false }
+
+  let baseType = '?'
+  let isObject = false
+  let shape: Record<string, ZodLike> | undefined
+  let isArrayOfObject = false
+  let arrayElementShape: Record<string, ZodLike> | undefined
+
+  switch (def.type) {
+    case 'object':
+      baseType = 'object'
+      isObject = true
+      shape = cur.shape ?? def.shape
+      break
+    case 'string':
+      baseType = 'string'
+      break
+    case 'number':
+      baseType = 'number'
+      break
+    case 'boolean':
+      baseType = 'boolean'
+      break
+    case 'enum': {
+      const vals = Object.values(def.entries ?? {}) as string[]
+      baseType = vals.map(v => `'${v}'`).join(' | ')
+      break
+    }
+    case 'literal': {
+      const v = def.values?.[0]
+      baseType = `'${v}'`
+      break
+    }
+    case 'array': {
+      const elt = def.element ? describeType(def.element) : { type: '?', isObject: false }
+      baseType = `${elt.type}[]`
+      if (elt.isObject) {
+        isArrayOfObject = true
+        arrayElementShape = (elt as TypeDescription).shape
+      }
+      break
+    }
+    default:
+      baseType = def.type
+  }
+
+  const typeStr = mods.length > 0 ? `${baseType} ${mods.join(' ')}` : baseType
+  return { type: typeStr, isObject, shape, isArrayOfObject, arrayElementShape }
+}
+
+// ── Build subtree for a Zod object's shape ────────────────────
+
+function buildSchemaSubtree(
   entities: Record<string, CellNode>,
   relationships: Record<string, string[]>,
   parentId: string,
-  data: Record<string, unknown>,
+  shape: Record<string, ZodLike>,
 ): void {
   const childIds: string[] = []
-  for (const [key, value] of Object.entries(data)) {
-    const childId = `${parentId}.${key}`
-    if (isPlainObject(value)) {
-      pushNode(entities, childId, key, `{${Object.keys(value).length} keys}`)
-      const grandIds: string[] = []
-      for (const [k2, v2] of Object.entries(value)) {
-        const gid = `${childId}.${k2}`
-        if (isPlainObject(v2)) {
-          pushNode(entities, gid, k2, `{${Object.keys(v2).length} keys}`)
-        } else if (Array.isArray(v2)) {
-          pushNode(entities, gid, k2, `[${v2.length} items]`)
-        } else {
-          pushNode(entities, gid, k2, formatScalar(v2))
-        }
-        grandIds.push(gid)
-      }
-      relationships[childId] = grandIds
-    } else if (Array.isArray(value)) {
-      pushNode(entities, childId, key, `[${value.length} items]`)
-      const arrIds: string[] = []
-      value.forEach((item, i) => {
-        const aid = `${childId}.${i}`
-        pushNode(entities, aid, `[${i}]`, formatScalar(item))
-        arrIds.push(aid)
-      })
-      relationships[childId] = arrIds
-    } else {
-      pushNode(entities, childId, key, formatScalar(value))
-    }
+  for (const [fieldName, fieldSchema] of Object.entries(shape)) {
+    const childId = `${parentId}.${fieldName}`
+    const desc = describeType(fieldSchema)
+    pushNode(entities, childId, fieldName, desc.type)
     childIds.push(childId)
+    if (desc.isObject && desc.shape) {
+      buildSchemaSubtree(entities, relationships, childId, desc.shape)
+    } else if (desc.isArrayOfObject && desc.arrayElementShape) {
+      buildSchemaSubtree(entities, relationships, childId, desc.arrayElementShape)
+    }
   }
   relationships[parentId] = childIds
 }
 
-export interface BuildSource {
-  liveSessions: ChatSession[]
-  liveActiveId: string | null
-  liveUi: { sidebarMode: string; bottomVisible: boolean }
+// ── Public: build tree of all chat schemas ───────────────────
+
+interface SchemaEntry {
+  id: string
+  schema: ZodLike
 }
 
-/** Build TreeGrid-compatible data for a list of entity blobs */
-function buildTree(
-  groups: Array<{ id: string; label: string; data: Record<string, unknown> }>,
-): NormalizedData {
+export function buildSchemaTree(): NormalizedData {
+  const schemas: SchemaEntry[] = [
+    { id: 'ChatSession', schema: chatSessionSchema as unknown as ZodLike },
+    { id: 'ChatUiState', schema: chatUiStateSchema as unknown as ZodLike },
+    { id: 'SessionCardModel', schema: sessionCardModelSchema as unknown as ZodLike },
+    { id: 'TurnUsage', schema: turnUsageSchema as unknown as ZodLike },
+  ]
   const entities: Record<string, CellNode> = {}
   const relationships: Record<string, string[]> = {}
   const rootChildren: string[] = []
-  for (const g of groups) {
-    pushNode(entities, g.id, g.label, '')
-    appendFields(entities, relationships, g.id, g.data)
-    rootChildren.push(g.id)
+  for (const { id, schema } of schemas) {
+    pushNode(entities, id, id, 'object')
+    const desc = describeType(schema)
+    if (desc.isObject && desc.shape) {
+      buildSchemaSubtree(entities, relationships, id, desc.shape)
+    }
+    rootChildren.push(id)
   }
   relationships[ROOT_ID] = rootChildren
   return createStore({ entities: entities as unknown as Record<string, Entity>, relationships })
-}
-
-/** Live store — chatStore + 페이지 UI state (전달받음) */
-export function buildLiveStateTree(src: BuildSource): NormalizedData {
-  if (src.liveSessions.length === 0) return buildTree([])
-  const groups = src.liveSessions.map(s => ({
-    id: s.id,
-    label: `${s.id}  ·  ${s.state}`,
-    data: s as unknown as Record<string, unknown>,
-  }))
-  groups.push({
-    id: '__ui__',
-    label: '__ui__  ·  page state',
-    data: { activeSessionId: src.liveActiveId, ...src.liveUi } as Record<string, unknown>,
-  })
-  return buildTree(groups)
-}
-
-/** Fixtures — entities/chat 에서 직접 (라이브 비어있을 때 폴백 또는 비교 용) */
-export function buildFixtureTree(): NormalizedData {
-  const groups = Object.entries(chatSessionFixtures).map(([id, s]) => ({
-    id,
-    label: `${id}  ·  ${s.state}`,
-    data: s as unknown as Record<string, unknown>,
-  }))
-  groups.push({
-    id: CHAT_UI_STATE_ID,
-    label: `${CHAT_UI_STATE_ID}  ·  ui singleton`,
-    data: chatUiStateFixture as unknown as Record<string, unknown>,
-  })
-  return buildTree(groups)
 }
