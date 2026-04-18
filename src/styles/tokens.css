@@ -377,12 +377,12 @@
   --bg-hover:          var(--depth-base-hover);
   --bg-active:         var(--depth-base-active);
 
-  /* ── Selection — light: inactive=subtle darker, active=pure white raised ── */
+  /* ── Selection — light: inactive=stone, active=primary tint (Apple Finder accent) ── */
   --selection-context: var(--depth-base-sel-context);
   --selection:         var(--stone-100);              /* inactive pane (subtle darker) */
   --selection-cursor:  var(--stone-200);              /* inactive pane cursor */
-  --selection-active:         var(--stone-0);         /* active pane = pure white raised */
-  --selection-cursor-active:  var(--stone-0);         /* active cursor = pure white + focus ring */
+  --selection-active:         var(--tone-primary-dim);  /* active = primary 50 tint */
+  --selection-cursor-active:  var(--tone-primary-mid);  /* active cursor = primary 100 */
 
   /* ── File type colors (same hues, adjusted L for light bg contrast) ── */
   --file-folder: oklch(55%  0.040  250);

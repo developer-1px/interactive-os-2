@@ -31,7 +31,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
-  <div className={ax({ textStyle: 'overline' })}>{label}</div>
+  <div className={ax({ role: 'badge', surface: 'ghost', textStyle: 'overline', tone: 'neutral-dim', cs: 'xs' })}>{label}</div>
 )
 
 function isGroup(entity: Record<string, unknown>): boolean {
