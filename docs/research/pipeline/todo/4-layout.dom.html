@@ -1,0 +1,3784 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <script>
+      const t = localStorage.getItem('theme');
+      document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+    </script>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aria</title>
+  <style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/CodeViewer.css">@layer component {
+/* CodeViewer — last-mile: shiki integration, line numbers, chrome, token highlights */
+/* ② code-viewer-prd.md */
+
+.code-viewer {
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--shape-xl-radius);
+}
+
+.code-viewer--chat,
+.code-viewer--replay {
+  border-radius: var(--shape-md-radius);
+}
+
+.code-viewer--presentation {
+  border-radius: var(--shape-xl-radius);
+}
+
+/* Chrome dots (mac-style) */
+.code-viewer-chrome-dot {
+  width: var(--_dot-size, 10px);
+  height: var(--_dot-size, 10px);
+  border-radius: 50%;
+}
+
+.code-viewer-chrome-dot:nth-child(1) { background: #ff5f56; }
+.code-viewer-chrome-dot:nth-child(2) { background: #ffbd2e; }
+.code-viewer-chrome-dot:nth-child(3) { background: #27c93f; }
+
+/* Shiki pre */
+.code-viewer :is(.shiki.code-viewer-pre) {
+  margin: 0;
+  padding-block: var(--space-md);
+  padding-inline: 0;
+  counter-reset: line;
+  background-image: linear-gradient(var(--surface-base), var(--surface-base)) !important;
+}
+
+.code-viewer-body[data-gutter-offset="0"] :is(.shiki.code-viewer-pre) { counter-reset: line 0; }
+.code-viewer-body[data-gutter-offset] :is(.shiki.code-viewer-pre) {
+  counter-reset: line var(--_gutter-offset, 0);
+}
+
+.code-viewer--chat :is(.shiki.code-viewer-pre),
+.code-viewer--replay :is(.shiki.code-viewer-pre) {
+  padding-block: var(--space-sm);
+}
+
+.code-viewer--presentation :is(.shiki.code-viewer-pre) {
+  padding-block: var(--space-lg);
+  font-size: calc(var(--type-code-size) * 1.15);
+}
+
+/* shiki .line must be block for highlight backgrounds to span full row */
+.code-viewer :is(.shiki.code-viewer-pre) code {
+  display: var(--_flex, flex);
+  flex-direction: var(--_col, column);
+}
+
+.code-viewer :is(.shiki.code-viewer-pre .line) {
+  display: var(--_block, block);
+  padding-left: var(--_gutter-w, 3.5em);
+  padding-right: var(--space-lg);
+  text-indent: calc(-1 * var(--_gutter-w, 3.5em));
+}
+
+.code-viewer :is(.shiki.code-viewer-pre .line.code-line--with-gutter)::before,
+.code-viewer-gutter {
+  display: var(--_inline-block, inline-block);
+  width: var(--_gutter-w, 3.5em);
+}
+
+.code-viewer--no-gutter :is(.shiki.code-viewer-pre .line) {
+  padding-left: var(--space-md);
+  text-indent: 0;
+}
+
+.code-viewer--chat :is(.shiki.code-viewer-pre .line),
+.code-viewer--replay :is(.shiki.code-viewer-pre .line) {
+  padding-right: var(--space-md);
+}
+
+/* Softwrap mode — hanging indent for continuation */
+.code-viewer--wrap :is(.shiki.code-viewer-pre .line) {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* Gutter via counter (non-virtualized) */
+.code-viewer :is(.shiki.code-viewer-pre .line.code-line--with-gutter)::before {
+  counter-increment: line;
+  content: counter(line);
+  padding-right: var(--_gutter-pr, 1em);
+  text-align: right;
+  text-indent: 0;
+  color: var(--text-muted);
+  font-size: var(--type-code-size);
+  user-select: none;
+  opacity: 0.65;
+}
+
+/* Virtualized body uses explicit <span class="code-viewer-gutter"> */
+.code-viewer-gutter {
+  padding-right: var(--_gutter-pr, 1em);
+  text-align: right;
+  text-indent: 0;
+  color: var(--text-muted);
+  font-size: var(--type-code-size);
+  user-select: none;
+  opacity: 0.65;
+}
+
+.code-viewer :is(.shiki.code-viewer-pre .line:has(> .code-viewer-gutter))::before {
+  content: none;
+}
+
+/* Token highlight */
+.code-token {
+  cursor: pointer;
+  border-radius: var(--space-inline-code);
+  transition: background 0.1s;
+}
+
+:where(.code-token):hover {
+  background: var(--tone-primary-dim);
+}
+
+.code-token--highlighted {
+  background-image: linear-gradient(var(--tone-primary-mid), var(--tone-primary-mid)) !important;
+  outline: var(--border-width) solid var(--tone-primary-bright);
+  border-radius: var(--space-inline-code);
+}
+
+/*
+  Line tones — background layers so gutter stays aligned (no padding/border shift).
+  ② code-viewer-prd.md — deleted tone 강화 (15% → 28%) for continuous row legibility.
+*/
+.code-line--edited {
+  background-image:
+    linear-gradient(var(--tone-warning-base), var(--tone-warning-base)),
+    linear-gradient(color-mix(in srgb, var(--tone-warning-base) 12%, transparent), color-mix(in srgb, var(--tone-warning-base) 12%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--selected {
+  background-image:
+    linear-gradient(var(--selection-cursor), var(--selection-cursor)),
+    linear-gradient(var(--selection), var(--selection));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--deleted {
+  background-image:
+    linear-gradient(var(--tone-destructive-base), var(--tone-destructive-base)),
+    linear-gradient(color-mix(in srgb, var(--tone-destructive-base) 28%, transparent), color-mix(in srgb, var(--tone-destructive-base) 28%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--inserted {
+  background-image:
+    linear-gradient(var(--tone-success-base), var(--tone-success-base)),
+    linear-gradient(color-mix(in srgb, var(--tone-success-base) 15%, transparent), color-mix(in srgb, var(--tone-success-base) 15%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--context {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--tone-success-base) 30%, transparent), color-mix(in srgb, var(--tone-success-base) 30%, transparent)),
+    linear-gradient(color-mix(in srgb, var(--tone-success-base) 5%, transparent), color-mix(in srgb, var(--tone-success-base) 5%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/FrontmatterCard.module.css">._label_obw72_1 {
+  min-width: 7em;
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/Camera.css">/* Camera inner: origin must be (0,0) so that the translate+scale math in
+   computeTransformToCenter (tx = cw/2 - cx*scale) places rect centers at
+   container center. Origin itself is not a positioning mechanism — it only
+   fixes the coordinate system. Positioning is done entirely via translate+scale. */
+.camera-inner {
+  transform-origin: 0 0;
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/Lightbox.css">/* ② lightbox-prd.md — dialog UA stylesheet override (last-mile) */
+@layer component {
+  .lightbox-dialog {
+    position: var(--_pos-fixed, fixed);
+    inset: 0;
+    max-width: none;
+    max-height: none;
+    border: none;
+    cursor: var(--_cursor-zoom-out, zoom-out);
+  }
+
+  img.lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+
+  .lightbox-svg {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  .lightbox-svg svg {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  .lightbox-canvas {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .lightbox-mermaid {
+    transform-origin: center center;
+  }
+
+  .lightbox-mermaid svg {
+    max-width: none;
+    max-height: none;
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/MarkdownViewer.css">@layer component {
+/* Markdown prose — all rules are last-mile (prose typography rhythm)
+   stylelint margin exceptions: .markdown is flow layout (not flex/grid),
+   so vertical rhythm between block elements requires margin-block. */
+
+.markdown {
+  font-size: var(--type-prose-size);
+  font-weight: var(--type-prose-weight);
+  font-family: var(--type-prose-family);
+  line-height: var(--type-prose-line-height);
+  letter-spacing: var(--type-prose-letter-spacing);
+}
+
+.markdown > *:first-child {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin-top: 0;
+}
+
+.markdown h1 {
+  font-size: var(--type-hero-size);
+  font-weight: var(--type-hero-weight);
+  font-family: var(--type-hero-family);
+  line-height: var(--type-hero-line-height);
+  letter-spacing: var(--type-hero-letter-spacing);
+  color: var(--text-bright);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 1.2em 0 0.4em;
+  padding-bottom: 0.2em;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.markdown h2 {
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  font-family: var(--type-display-family);
+  line-height: var(--type-display-line-height);
+  letter-spacing: var(--type-display-letter-spacing);
+  color: var(--text-bright);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 1.4em 0 0.35em;
+  padding-bottom: 0.15em;
+  border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+.markdown h3 {
+  font-size: var(--type-page-size);
+  font-weight: var(--type-page-weight);
+  font-family: var(--type-page-family);
+  line-height: var(--type-page-line-height);
+  letter-spacing: var(--type-page-letter-spacing);
+  color: var(--text-bright);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 1.1em 0 0.3em;
+}
+
+.markdown h4 {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-section-weight);
+  font-family: var(--type-section-family);
+  line-height: var(--type-section-line-height);
+  letter-spacing: var(--type-section-letter-spacing);
+  color: var(--text-secondary);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 1.2em 0 0.3em;
+}
+
+.markdown p {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 0.8em 0;
+}
+
+.markdown code {
+  font-family: var(--mono);
+  background: var(--surface-raised);
+  padding: 0.15em 0.35em;
+  border-radius: var(--shape-xs-radius);
+}
+
+.markdown pre {
+  background: var(--surface-raised);
+  border: none;
+  border-radius: var(--shape-lg-radius);
+  padding: var(--shape-lg-py) var(--shape-lg-px);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 1.5em 0;
+}
+
+/* CodeViewer wrapper reset */
+.markdown pre:has(.shiki) {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.markdown pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: var(--leading-code);
+}
+
+.markdown ul,
+.markdown ol {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 0.6em 0;
+  padding-left: 1.6em;
+}
+
+.markdown > ul > li,
+.markdown > ol > li {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 0.4em 0;
+}
+
+.markdown li {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 0.25em 0;
+}
+
+.markdown li > p {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 0.3em 0;
+}
+
+.markdown ul ul,
+.markdown ol ol,
+.markdown ul ol,
+.markdown ol ul {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 0.15em 0;
+}
+
+.markdown blockquote {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 1.2em 0;
+  padding: var(--shape-lg-py) var(--shape-lg-px);
+  background: var(--surface-sunken);
+  border-radius: var(--shape-lg-radius);
+  color: var(--text-secondary);
+}
+
+.markdown blockquote > *:first-child {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin-top: 0;
+}
+
+.markdown blockquote > *:last-child {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin-bottom: 0;
+}
+
+.markdown table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 1.2em 0;
+  overflow-wrap: break-word;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  background: transparent;
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--shape-lg-radius);
+}
+
+.markdown th,
+.markdown td {
+  border: none;
+  border-bottom: var(--border-width) solid var(--border-default);
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+}
+
+.markdown tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown th {
+  background: var(--surface-raised);
+  border-bottom: var(--border-width) solid var(--border-subtle);
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+}
+
+.markdown tr:nth-child(even) {
+  background: transparent;
+}
+
+.markdown a {
+  color: var(--tone-primary-base);
+  text-decoration: none;
+}
+
+.markdown a:hover {
+  text-decoration: underline;
+}
+
+.markdown img {
+  max-width: 100%;
+  border-radius: var(--shape-lg-radius);
+}
+
+.markdown svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown hr {
+  border: none;
+  border-top: var(--border-width) solid var(--border-subtle);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
+  margin: 2em 0;
+}
+
+.markdown strong {
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+}
+
+.markdown input[type="checkbox"] {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- checkbox inline spacing */
+  margin-right: 0.4em;
+  vertical-align: middle;
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/FileIcon.css">@layer component {
+  /* FileIcon — file-type color overrides */
+  .file-icon-folder { color: var(--file-folder); }
+  .file-icon-ts     { color: var(--file-ts); }
+  .file-icon-js     { color: var(--file-js); }
+  .file-icon-json   { color: var(--file-json); }
+  .file-icon-md     { color: var(--file-md); }
+  .file-icon-css    { color: var(--file-css); }
+  .file-icon-sh     { color: var(--file-sh); }
+  .file-icon-img    { color: var(--file-img); }
+  .file-icon-config { color: var(--file-config); }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/FileViewerModal.css">@layer component {
+/* FileViewerModal — dialog and modal styling */
+.fvm-dialog {
+  padding: 0;
+  max-width: none;
+  max-height: none;
+  width: 100vw;
+  height: 100vh;
+}
+
+.fvm-dialog::backdrop {
+  background: var(--dialog-backdrop);
+}
+
+.fvm-modal {
+  place-self: center;
+  width: 85vw;
+  max-width: var(--content-xl);
+  height: 85vh;
+  box-shadow: var(--shadow-lg);
+}
+
+.fvm-meta-sep {
+  width: var(--border-width);
+  height: var(--shape-md-radius);
+  background: var(--border-default);
+  padding-inline: var(--space-inline-code);
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/items/SlideThumbItem.module.css">/* SlideThumbItem — aspect-ratio는 ax()에 직접 축이 없어 last-mile만 여기서 처리 */
+
+._slideThumbPreview_eagrg_3 {
+  aspect-ratio: 16 / 9;
+}
+
+._slideThumbPreview_eagrg_3[data-ratio='4:3'] {
+  aspect-ratio: 4 / 3;
+}
+
+/* 미니어처 블록 시각화 — 높이/너비 비율만 여기서 관리 (ax() 축 범위 밖) */
+._miniBlock_eagrg_12[data-kind='title'] {
+  height: 10%;
+  width: 60%;
+  opacity: 0.85;
+}
+
+._miniBlock_eagrg_12[data-kind='bullets'] {
+  height: 8%;
+  width: 90%;
+}
+
+._miniBlock_eagrg_12[data-kind='stat'] {
+  height: 22%;
+  width: 40%;
+  opacity: 0.75;
+}
+
+._miniBlock_eagrg_12[data-kind='image'] {
+  height: 30%;
+  width: 70%;
+  opacity: 0.4;
+}
+
+._miniBlock_eagrg_12[data-kind='quote'] {
+  height: 16%;
+  width: 80%;
+  opacity: 0.5;
+}
+
+._miniBlock_eagrg_12[data-kind='code'] {
+  height: 22%;
+  width: 85%;
+  opacity: 0.45;
+}
+
+._miniBlock_eagrg_12[data-kind='chart'] {
+  height: 28%;
+  width: 55%;
+  opacity: 0.55;
+}
+
+._slideThumbNumber_eagrg_53 {
+  min-width: 2ch;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/SplitPane.css">@layer component {
+/* SplitPane — separator hit areas */
+.split-sep-h {
+  width: var(--border-width);
+  border-left: var(--border-width) solid var(--border-default);
+}
+
+.split-sep-h::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(-1 * var(--space-xs));
+}
+
+.split-sep-v {
+  height: var(--border-width);
+  border-top: var(--border-width) solid var(--border-default);
+}
+
+.split-sep-v::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--space-xs)) 0;
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/devtools/inspector/renderInspectorItem.css">@layer component {
+.inspector-item {
+  padding-left: calc(var(--space-sm) + var(--_indent, 0px));
+}
+
+.inspector-item[data-focused] {
+  outline: 1.5px solid var(--focus);
+}
+
+.inspector-item-type {
+  color: var(--_type-color, inherit);
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/devtools/inspector/InspectorWindow.css">.inspector-table {
+  border-collapse: collapse;
+}
+
+.inspector-th {
+  border-bottom: var(--border-width) solid var(--border-default);
+}
+
+.inspector-td-key {
+  font-family: var(--mono);
+}
+
+.inspector-td-command {
+  font-family: var(--mono);
+}
+
+.inspector-td-mismatch {
+  font-family: var(--mono);
+}
+
+.inspector-tab-bar {
+  border-bottom: var(--border-width) solid var(--border-default);
+}
+
+.inspector-tab {
+  border-bottom: var(--indicator-width) solid transparent;
+}
+
+.inspector-tab-active {
+  border-bottom-color: var(--text-bright);
+}
+
+/* Log tab */
+.inspector-log-filter {
+  border-bottom: var(--border-width) solid var(--border-default);
+}
+
+.inspector-log-input {
+  font-family: var(--mono);
+  min-width: 0;
+}
+
+.inspector-log-scroll {
+  font-family: var(--mono);
+}
+
+.inspector-log-detail {
+  font-family: var(--mono);
+  word-break: break-all;
+  border-left: var(--indicator-width) solid var(--border-default);
+  padding-left: var(--space-sm);
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/layers.css">/* ═══════════════════════════════════════════
+   L0 Layer Order — Global cascade priority
+   ═══════════════════════════════════════════
+   뒤가 이긴다. recipe/state가 component를 이김.
+   이 파일은 모든 CSS보다 먼저 import되어야 한다. */
+
+@layer reset, tokens, base, component, recipe, state;
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/palette.css">/* ═══════════════════════════════════════════
+   L0 Palette — OKLCH color definitions ONLY
+   ═══════════════════════════════════════════
+   Changes when: brand colors change.
+   Single responsibility: raw color palette.
+   No semantic meaning — just "what colors exist".
+   All values in oklch() for perceptual uniformity.
+
+   Hue 90° = warm neutral (stone)
+   Each accent family holds its own hue.
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* ── Stone: warm neutral (hue 90°) ──
+     Lightness만 변하고 hue/chroma 고정 → 톤 일관성 보장.
+     400/500은 text hierarchy AA 달성을 위해 조정됨. */
+
+  --stone-0:   oklch(100%   0       0);     /* #FFFFFF — pure white, achromatic */
+  --stone-50:  oklch(98%    0.005   90);
+  --stone-100: oklch(94.8%  0.010   90);
+  --stone-200: oklch(92%    0.012   90);
+  --stone-300: oklch(86.6%  0.013   90);
+  --stone-400: oklch(73%    0.012   90);    /* text-muted(dark), border-strong(light) */
+  --stone-500: oklch(51%    0.009   90);    /* text-muted(light) — 4.5:1+ on stone-200 */
+  --stone-600: oklch(47%    0.008   90);    /* text-secondary(light) */
+  --stone-650: oklch(41.5%  0.007   90);    /* depth-overlay ladder step */
+  --stone-700: oklch(35.9%  0.006   90);
+  --stone-750: oklch(32%    0.006   90);
+  --stone-800: oklch(29%    0.006   90);
+  --stone-850: oklch(25.3%  0.005   90);
+  --stone-875: oklch(23.3%  0.004   90);
+  --stone-900: oklch(21.4%  0.004   90);
+  --stone-950: oklch(16.3%  0.003   90);
+
+  /* ── Blue: primary accent (hue 246°–255°) ── */
+  --blue-50:  oklch(96.1%  0.015  250);
+  --blue-100: oklch(91.1%  0.034  250);
+  --blue-200: oklch(82.2%  0.070  250);
+  --blue-400: oklch(67.4%  0.128  246);
+  --blue-500: oklch(60.6%  0.155  252);
+  --blue-600: oklch(50.9%  0.139  253);
+  --blue-700: oklch(43.6%  0.119  253);
+  --blue-900: oklch(32.2%  0.090  255);
+
+  /* ── Red: destructive (hue 19°–23°) ── */
+  --red-400: oklch(70.1%  0.157  19);
+  --red-500: oklch(62.6%  0.193  23);
+
+  /* ── Green: success (hue 158°–159°) ── */
+  --green-400: oklch(73.5%  0.136  159);
+  --green-500: oklch(64.1%  0.133  158);
+
+  /* ── Amber: warning (hue 81°–83°) ── */
+  --amber-400: oklch(80.4%  0.156  83);
+  --amber-500: oklch(73.7%  0.132  81);
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/reset.css">@layer reset {
+
+  *{margin:0;padding:0;font:inherit;color:inherit;}
+  *, :after, :before {box-sizing:border-box;}
+  :root {-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;cursor:default;line-height:1.5;overflow-wrap:break-word;word-break:break-word;tab-size:4}
+  html, body {height:100%;}
+  img, picture, video, canvas, svg {display: block;max-width:100%;}
+  button {background:none;border:0;cursor:pointer;}
+  a {text-decoration:none}
+  table {border-collapse:collapse;border-spacing:0}
+
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: var(--surface-base);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    font-size: var(--type-body-size);
+    font-weight: var(--weight-book);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root { max-width: 100%; margin: 0 auto; min-height: 100svh; display: flex; flex-direction: column; border: none; text-align: left; }
+
+  /* ── Icons: flex-shrink 방지 (글로벌) ── */
+  .lucide { flex-shrink: 0; }
+
+  *:focus-visible {
+    outline: var(--focus-ring) solid var(--focus);
+    outline-offset: calc(-1 * var(--focus-ring));
+  }
+
+} /* @layer reset */</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/tokens.css">
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap');
+/* ═══════════════════════════════════════════
+   L2 Tokens — Semantic design value declarations
+   ═══════════════════════════════════════════
+   Changes when: design system values change.
+   Single responsibility: :root variable declarations + theme overrides.
+   No selectors, no rules — only values.
+   Raw palette is in palette.css (L0). */
+@layer tokens {
+:root {
+  /* ══ Semantic tokens (dark default) ══
+     All color values reference palette.css variables.
+     No hex/rgb/oklch literals here — palette is the single source. */
+
+  /* ── Surface ── */
+  --surface-base:     var(--stone-875);
+  --surface-sunken:   var(--stone-950);
+  --surface-default:  var(--stone-850);
+  --surface-raised:   var(--stone-750);
+  --surface-overlay:  var(--stone-700);
+
+  /* ── Shadow (xs/sm/md/lg scale) ── */
+  /* Linear: shadow는 overlay만. xs/sm은 미세, lg만 overlay급 */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06);
+
+  /* ── Text color: 4-level hierarchy ──
+     All 4 levels pass WCAG AA (4.5:1+) on every surface including overlay.
+     bright/primary = AAA, secondary/muted = AA. */
+  --text-bright:    var(--stone-0);
+  --text-primary:   var(--stone-100);
+  --text-secondary: var(--stone-200);
+  --text-muted:     var(--stone-300);
+
+  /* inverted text — 역전 surface(.sf-inverted) 전용. dark 기본은 밝은 bg에 맞춘 어두운 text */
+  --text-bright-inverted:    var(--stone-950);
+  --text-primary-inverted:   var(--stone-900);
+  --text-secondary-inverted: var(--stone-700);
+  --text-muted-inverted:     var(--stone-500);
+
+  /* ── Border ── */
+  --border-subtle:  var(--stone-850);
+  --border-default: var(--stone-800);
+  --border-strong:  var(--stone-600);
+
+  /* ── Overlay edge — top-lit gradient border ── */
+  --overlay-edge-top:    rgba(255,255,255, 0.12);
+  --overlay-edge-bottom: rgba(255,255,255, 0.04);
+
+  /* ── Tone: semantic color bundles (base + hover + dim + mid + bright + foreground)
+     All tones share the same axis structure. dim/mid/bright = background tint 3 levels. ── */
+  --tone-primary-base:       var(--blue-500);
+  --tone-primary-hover:      var(--blue-400);
+  --tone-primary-dim:        oklch(28%  0.037  250);
+  --tone-primary-mid:        oklch(31%  0.047  250);
+  --tone-primary-bright:     oklch(35%  0.052  249);
+  --tone-primary-foreground: var(--stone-0);
+
+  --tone-destructive-base:       var(--red-500);
+  --tone-destructive-hover:      var(--red-400);
+  --tone-destructive-dim:        oklch(26%  0.051  21);
+  --tone-destructive-foreground: var(--stone-0);
+
+  --tone-success-base:       var(--green-500);
+  --tone-success-hover:      var(--green-400);
+  --tone-success-dim:        oklch(28%  0.034  157);
+  --tone-success-foreground: var(--stone-0);
+
+  --tone-warning-base:       var(--amber-500);
+  --tone-warning-hover:      var(--amber-400);
+  --tone-warning-dim:        oklch(28%  0.028  90);
+  --tone-warning-foreground: var(--stone-950);
+
+  --tone-neutral-base:       var(--stone-500);
+  --tone-neutral-hover:      var(--stone-400);
+  --tone-neutral-dim:        var(--stone-800);
+  --tone-neutral-foreground: var(--stone-0);
+
+  /* ── Focus ──
+     focus inverted 토큰은 역전 surface(inverted) 전용. dark 기본은 blue 진하게,
+     light 오버라이드에서 반대로 재지정. */
+  --focus:          var(--blue-100);
+  --focus-inverted: var(--blue-700);
+  --focus-idle:     var(--bg-hover);
+  --focus-ring:     1px;
+  --focus-ring-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.95);
+
+  /* ── Indicator ── */
+  --indicator-width: 2px;
+
+  /* ── L1 Semantic: Elevation tier ──
+     surface별 elev base + step ladder. role 토큰은 여기서 자동 파생.
+     dark: +Δ L = raised (lighter on dark = elevated)
+     palette 직접 매핑은 elev base만. 나머지는 oklch from 계산.
+     ② design-token-3tier-auto-derivation-prd.md */
+
+  --elev-base-sunken:  var(--stone-900);
+  --elev-base:         var(--stone-850);
+  --elev-base-raised:  var(--stone-800);
+  --elev-base-overlay: var(--stone-750);
+
+  --elev-step-direction: 1;       /* dark = +1, light overrides to -1 */
+  --elev-delta-1: 0.03;            /* hover, selection-context */
+  --elev-delta-2: 0.07;            /* selection */
+  --elev-delta-3: 0.11;            /* active, selection-cursor */
+
+  /* ── L2 Role aliases (depth-*): elev base + step → oklch from 자동 파생 ──
+     ax.css의 sf-{surface} recipe가 이 토큰들을 var()로 소비. */
+
+  --depth-sunken-hover:       oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-active:      oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-sel-context: oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-sel:         oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-sel-cursor:  oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+
+  --depth-base-hover:         oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-active:        oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-sel-context:   oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-sel:           oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-sel-cursor:    oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+
+  --depth-raised-hover:       oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-active:      oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-sel-context: oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-sel:         oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-sel-cursor:  oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+
+  --depth-overlay-hover:       oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-active:      oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-sel-context: oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-sel:         oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-sel-cursor:  oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+
+  /* prominent = overlay alias (선택 가능한 가장 밝은 elev) */
+  --depth-prominent-hover:       var(--depth-overlay-hover);
+  --depth-prominent-active:      var(--depth-overlay-active);
+  --depth-prominent-sel-context: var(--depth-overlay-sel-context);
+  --depth-prominent-sel:         var(--depth-overlay-sel);
+  --depth-prominent-sel-cursor:  var(--depth-overlay-sel-cursor);
+
+  /* ── Interactive (base depth = :root default) ── */
+  --bg-hover:          var(--depth-base-hover);
+  --bg-active:         var(--depth-base-active);
+
+  /* ── Selection — active pane vs inactive pane 분리 (Mac Finder 모델)
+     기본 토큰 = inactive pane (다른 pane에 focus 있을 때). ax.css :focus-within에서 active로 override.
+     "raised = 더 밝은" 메타포. dark는 +Δ, light는 +Δ(pure white). accent 0%, stone only. ── */
+  --selection-context: var(--depth-base-sel-context); /* grid row context, subtle */
+  --selection:         var(--stone-800);               /* inactive pane selection (subtle) */
+  --selection-cursor:  var(--stone-750);               /* inactive pane cursor (slight raised) */
+  --selection-active:         var(--stone-700);       /* active pane selection (clearly raised) */
+  --selection-cursor-active:  var(--stone-600);        /* active pane cursor (brightest, pressable) */
+
+  /* ══ Typography ══ */
+
+  /* ── Font families ── */
+  --mono:  'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+  --sans:  'Inter', -apple-system, system-ui, sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  /* ── Type bundle: size + weight + family + line-height + letter-spacing (claude.ai 실측)
+     size가 바뀌면 weight·family·line-height·letter-spacing이 함께 바뀐다. color는 독립. ── */
+  --type-hero-size: 40px;       --type-hero-weight: 330;    --type-hero-family: var(--serif); --type-hero-line-height: 1.5;  --type-hero-letter-spacing: -0.02em;
+  --type-display-size: 32px;    --type-display-weight: 400;  --type-display-family: var(--serif); --type-display-line-height: 1.3;  --type-display-letter-spacing: -0.02em;
+  --type-page-size: 24px;       --type-page-weight: 500;    --type-page-family: var(--serif); --type-page-line-height: 1.3;  --type-page-letter-spacing: -0.01em;
+  --type-section-size: 16px;    --type-section-weight: 600;  --type-section-family: var(--sans); --type-section-line-height: 1.4;  --type-section-letter-spacing: 0em;
+  --type-control-size: 14px;    --type-control-weight: 500;  --type-control-line-height: 20px;
+  --type-item-line-height: 20px;
+  --type-body-size: 14px;       --type-body-weight: 450;    --type-body-family: var(--sans); --type-body-line-height: 1.4;  --type-body-letter-spacing: 0em;
+  --type-prose-size: 16px;      --type-prose-weight: 400;    --type-prose-family: var(--sans); --type-prose-line-height: 1.6;  --type-prose-letter-spacing: 0em;
+  --type-caption-size: 12px;    --type-caption-weight: 450;  --type-caption-family: var(--sans); --type-caption-line-height: 1.33;  --type-caption-letter-spacing: 0em;
+  --type-code-size: 12px;       --type-code-weight: 400;     --type-code-family: var(--mono); --type-code-line-height: 1.5;   --type-code-letter-spacing: 0em;
+
+  /* ── Independent axes: weight
+     type 번들과 독립적으로 사용. 버튼·배지 등 텍스트 계층과 무관한 요소용. ── */
+  --weight-regular: 400;
+  --weight-book:    450;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
+
+  /* ── Independent axes: line-height
+     type 번들과 독립적으로 사용. 마크다운·코드 등 특수 line-height 필요 시. ── */
+  --leading-snug:    1.4;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.75;
+  --leading-code:    1.6;
+
+  /* ── Independent axes: letter-spacing
+     type 번들과 독립적으로 사용. uppercase label 등 번들 외 tracking 필요 시. ── */
+  --tracking-normal:  0.02em;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.08em;
+
+  /* ── Radius Seed — 비율 파생 불변량 ── */
+  --radius-seed: 8px;
+  --shape-2xs-radius: 2px;                               /* checkbox inner */
+  --shape-xs-radius:  4px;                               /* checkbox */
+  --shape-sm-radius:  6px;                               /* = shadcn rounded-md */
+  --shape-md-radius:  var(--radius-seed);                /* 8px = shadcn rounded-lg */
+  --shape-lg-radius:  12px;                              /* = shadcn rounded-xl */
+  --shape-xl-radius:  calc(var(--radius-seed) * 2);     /* 16px */
+  --shape-pill-radius: 9999px;                           /* 시드 무관 */
+
+  /* ── Shape bundle: padding-y + padding-x (claude.ai 실측)
+     radius는 seed에서 파생. padding은 비례 관계. ── */
+  --shape-xs-py: 6px;  --shape-xs-px: 12px;
+  --shape-sm-py: 6px;  --shape-sm-px: 16px;
+  --shape-md-py: 0px;  --shape-md-px: 12px;
+  --shape-lg-py: 20px; --shape-lg-px: 20px;
+  --shape-xl-py: 24px; --shape-xl-px: 24px;
+
+  /* ── Spacing ── */
+  --space-inline-code: 2px;
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+  --space-5xl: 96px;
+
+  /* ── Border ── */
+  --border-width: 0.5px;
+
+  /* ── Icon ── */
+  --icon-xs:  14px;
+  --icon-sm:  16px;
+  --icon-md:  18px;
+  --icon-lg:  24px;
+
+
+  /* ── Component specs (claude.ai + Linear 실측) ── */
+  --control-height: 36px;
+  --toolbar-height: 36px;
+  --input-padding-x: 12px;
+  --sidebar-item-height: 28px;
+  --item-height: 28px;
+  --storymap-col-width: 220px;
+  --overlay-width:  360px;
+  --content-sm:     560px;
+  --content-md:     720px;
+  --content-xl:     960px;
+  --content-max:    1600px;
+  --switch-width:   36px;
+  --switch-height:  20px;
+  --switch-thumb-inset: 2px;
+
+  /* ── Indicator structural tokens ── */
+  /* Low-level position/size primitives used by indicator part classes.
+     These exist as vars so module.css can reference them (guardCssAxes hook
+     allows var()-valued ax-owned properties). */
+  --pos-absolute: absolute;
+  --indicator-icon: 1em;
+  --indicator-icon-lg: 1.2em;
+  --indicator-box: 1.25em;
+  --indicator-hairline: 1px;
+  --indicator-active-rail-offset: -4px;
+  --indicator-active-rail-width: 3px;
+  --indicator-active-rail-height: 16px;
+  --indicator-active-rail-radius: 0 2px 2px 0;
+  --indicator-skeleton-bg: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-hover) 50%,
+    var(--surface-overlay) 75%
+  );
+
+  /* ── File type colors ── */
+  --file-folder: oklch(67%  0.040  250);
+  --file-ts:     oklch(62%  0.070  250);
+  --file-js:     oklch(67%  0.080  130);
+  --file-json:   oklch(62%  0.025  250);
+  --file-md:     oklch(62%  0.055  240);
+  --file-css:    oklch(57%  0.080  300);
+  --file-sh:     oklch(62%  0.065  160);
+  --file-img:    oklch(57%  0.070  350);
+  --file-config: oklch(58%  0.020  250);
+
+  /* ── Motion bundle: duration + easing (claude.ai 실측)
+     property는 독립. duration과 easing이 세트. ── */
+  --motion-instant-duration: 0.075s;  --motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
+  --motion-normal-duration:  0.15s;   --motion-normal-easing:  cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-enter-duration:   0.15s;   --motion-enter-easing:   cubic-bezier(0, 0, 0.2, 1);
+
+  /* ── Dialog ── */
+  --dialog-backdrop: rgba(0, 0, 0, 0.5);
+}
+
+/* ══ Light theme — pure neutral (macOS Sequoia 실측 기반) ══
+   dark = warm stone (C>0, hue 90°)
+   light = 완전 무채색 (C=0) — macOS 네이티브와 동일한 톤.
+   Surface gap과 L값은 macOS windowBg(94.3%) 실측 참조. */
+
+[data-theme="light"] {
+  /* ── Surface ── */
+  --surface-base:     var(--stone-50);     /* page bg */
+  --surface-sunken:   oklch(96% 0.007 90); /* sidebar, blockquote — 2% gap from base */
+  --surface-default:  var(--stone-0);      /* content — pure white */
+  --surface-raised:   var(--stone-0);      /* + shadow */
+  --surface-overlay:  var(--stone-0);      /* + shadow */
+
+  /* ── Shadow: Linear 실측 — overlay만 shadow, 나머지는 면 분리 ── */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.03), 0 0 1px rgba(0,0,0,0.02);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.03);
+
+  /* ── Text ── */
+  --text-bright:    var(--stone-950);
+  --text-primary:   var(--stone-900);
+  --text-secondary: var(--stone-700);
+  --text-muted:     var(--stone-500);
+
+  /* inverted text (light theme) — 어두운 bg에 맞춘 밝은 text */
+  --text-bright-inverted:    var(--stone-0);
+  --text-primary-inverted:   var(--stone-100);
+  --text-secondary-inverted: var(--stone-200);
+  --text-muted-inverted:     var(--stone-300);
+
+  /* ── Border — subtle for layout, stronger for interactive ── */
+  --border-subtle:  oklch(96% 0.007 90);  /* ~2% — layout dividers */
+  --border-default: oklch(94% 0.009 90);  /* ~4% — general */
+  --border-strong:  oklch(88% 0.012 90);  /* ~12% — input, overlay */
+
+  /* ── Overlay edge — top-lit gradient border ── */
+  --overlay-edge-top:    rgba(255,255,255, 0.55);
+  --overlay-edge-bottom: rgba(255,255,255, 0.12);
+
+  /* ── Tone (light) ── */
+  --tone-primary-base:   var(--blue-600);
+  --tone-primary-hover:  var(--blue-700);
+  --tone-primary-dim:    var(--blue-50);
+  --tone-primary-mid:    var(--blue-100);
+  --tone-primary-bright: var(--blue-200);
+
+  --tone-destructive-base:  oklch(59.2%  0.202  21);
+  --tone-destructive-hover: oklch(53%    0.200  21);
+  --tone-destructive-dim:   oklch(96.5%  0.014  17);
+
+  --tone-success-base:  oklch(56.9%  0.119  155);
+  --tone-success-hover: oklch(51%    0.119  155);
+  --tone-success-dim:   oklch(98.2%  0.017  159);
+
+  --tone-warning-base:       oklch(65.2%  0.132  82);
+  --tone-warning-hover:      oklch(59%    0.132  82);
+  --tone-warning-dim:        oklch(98.7%  0.026  102);
+  --tone-warning-foreground: oklch(16.3%  0  0);
+
+  --tone-neutral-base:  var(--stone-500);
+  --tone-neutral-hover: var(--stone-600);
+  --tone-neutral-dim:   var(--stone-100);
+
+  /* ── Focus ── */
+  --focus:          var(--blue-700);
+  --focus-inverted: var(--blue-100);
+  --focus-idle:     var(--bg-hover);
+
+  /* ── L1 Semantic: Elevation tier (light) ──
+     light: -Δ L = raised (darker on light = elevated, 카드/그림자 메타포)
+     elev base만 override. role aliases는 :root에서 자동 재계산됨. */
+
+  --elev-base-sunken:  var(--stone-100);
+  --elev-base:         var(--stone-50);
+  --elev-base-raised:  var(--stone-0);
+  --elev-base-overlay: var(--stone-0);
+
+  --elev-step-direction: -1;
+
+  /* ── Interactive (base depth default) ── */
+  --bg-hover:          var(--depth-base-hover);
+  --bg-active:         var(--depth-base-active);
+
+  /* ── Selection — light: inactive=subtle darker, active=pure white raised ── */
+  --selection-context: var(--depth-base-sel-context);
+  --selection:         var(--stone-100);              /* inactive pane (subtle darker) */
+  --selection-cursor:  var(--stone-200);              /* inactive pane cursor */
+  --selection-active:         var(--stone-0);         /* active pane = pure white raised */
+  --selection-cursor-active:  var(--stone-0);         /* active cursor = pure white + focus ring */
+
+  /* ── File type colors (same hues, adjusted L for light bg contrast) ── */
+  --file-folder: oklch(55%  0.040  250);
+  --file-ts:     oklch(50%  0.070  250);
+  --file-js:     oklch(55%  0.080  130);
+  --file-json:   oklch(50%  0.025  250);
+  --file-md:     oklch(50%  0.055  240);
+  --file-css:    oklch(45%  0.080  300);
+  --file-sh:     oklch(50%  0.065  160);
+  --file-img:    oklch(45%  0.070  350);
+  --file-config: oklch(46%  0.020  250);
+
+  --dialog-backdrop: rgba(0, 0, 0, 0.2);
+}
+}
+/* @layer tokens */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/structure.css">@layer base {
+/* ═══════════════════════════════════════════
+   Structure — atomic layout classes (closed system)
+   ═══════════════════════════════════════════
+   Closed system: only these classes exist. No JIT, no escape hatch.
+   Tailwind naming convention (de facto standard).
+
+   Includes: value-free layout props + token-bound gap scale.
+   Gap is included because the token scale is fixed (7 values).
+
+   Prefer ax() for new code (ly-row, ly-column, ly-bar, ly-spread,
+   ly-center, ly-scroll, ly-fill, g-*, fx-*, w-*).
+   These classes remain for cases ax() doesn't cover.
+
+   // ② 2026-03-25-css-writing-rules-prd.md
+*/
+
+/* ── Display ── */
+.block         { display: block; }
+.inline-block  { display: inline-block; }
+.hidden        { display: none; }
+.contents      { display: contents; }
+
+/* ── Flex ── */
+.flex-wrap     { flex-wrap: wrap; }
+.inline-flex   { display: inline-flex; }
+
+/* ── Grid ── */
+.grid          { display: grid; }
+
+/* ── Alignment ── */
+.items-center    { align-items: center; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: flex-end; }
+
+/* ── Sizing ── */
+.min-w-0  { min-width: 0; }
+.h-full   { height: 100%; }
+.w-full   { width: 100%; }
+
+/* ── Text ── */
+.text-center   { text-align: center; }
+.whitespace-nowrap { white-space: nowrap; }
+.align-middle  { vertical-align: middle; }
+
+/* ── Position ── */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed; }
+.sticky   { position: sticky; }
+.inset-0  { inset: 0; }
+
+/* ── Interactive ── */
+.cursor-pointer      { cursor: pointer; }
+.pointer-events-none { pointer-events: none; }
+
+/* ── Reset ── */
+.border-none  { border: none; }
+.object-cover { object-fit: cover; }
+
+} /* @layer base */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/ax.css">/* ── MECE Axis Design System — CSS Classes ──
+ * 시각 6축 + 구조 6축 = 12축. 이게 전부.
+ * style={} 사용 금지. 모든 것을 ax()로.
+ * 토큰은 tokens.css 참조. claude.ai 실측 기반.
+ *
+ * Layer 분리: recipe(구조 잠금) + state(상태 잠금)
+ * @layer 순서는 layers.css가 선언. state가 recipe를 이긴다.
+ */
+
+/* ════════════════════════════════════════════
+ * Surface→Text pairing tokens (Material on-*)
+ * --text-on-* = surface별 기본 전경색. tone 미주입 시 fallback.
+ * surface의 color는 var(--_fg, var(--text-on-{surface}))
+ *   — tone 주입 시 --_fg 우선, 미주입 시 surface 자동 파생.
+ * inverted surface는 내부에서 --text-* 토큰 체인을 재할당하여
+ * 하위 요소 전체의 text 색상을 역전시킨다 (sf-inverted 블록 참고).
+ * ════════════════════════════════════════════ */
+
+@layer tokens {
+  :root {
+    --text-on-action:   var(--tone-primary-foreground);
+    --text-on-input:    var(--text-primary);
+    --text-on-display:  var(--text-primary);
+    --text-on-overlay:  var(--text-primary);
+    --text-on-sunken:   var(--text-primary);
+    --text-on-base:     var(--text-primary);
+    --text-on-raised:   var(--text-primary);
+    --text-on-ghost:    inherit;
+    --text-on-inverted: var(--text-bright-inverted);
+  }
+}
+
+@layer state {
+
+/* ════════════════════════════════════════════
+ * Surface — "이 요소는 사용자와 어떤 관계인가"
+ * 번들: cursor + border + background + color + 상태 정책
+ * ════════════════════════════════════════════ */
+
+.sf-action {
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: var(--_bg, transparent);
+  color: var(--_fg, var(--text-on-action));
+  transition: color 150ms, background-color 150ms, box-shadow 150ms;
+}
+.sf-action:hover { background: var(--_bg-hover, var(--bg-hover)); }
+.sf-action:active { background: var(--_bg-active, var(--bg-active)); }
+.sf-action:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
+.sf-action[aria-disabled="true"],
+.sf-action:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
+
+.sf-input {
+  border: 1px solid var(--border-strong);
+  background: var(--_bg, var(--surface-default));
+  color: var(--_fg, var(--text-on-input));
+  box-shadow: var(--shadow-xs);
+  transition: color 150ms, box-shadow 150ms, border-color 150ms;
+  /* border가 role의 min-height를 깨뜨리지 않도록 padding 보정 */
+  padding-block: calc(var(--space-sm) - 1px);
+}
+textarea.sf-input { field-sizing: content; }
+.sf-input:focus-within { border-color: var(--focus); }
+.sf-input:focus-visible { outline: none; border-color: var(--focus); box-shadow: var(--focus-ring-shadow); }
+.sf-input[aria-invalid="true"] { border-color: var(--tone-destructive-base); }
+.sf-input[aria-disabled="true"],
+.sf-input:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
+
+.sf-display {
+  border: 1px solid var(--border-subtle);
+  background: var(--_bg, var(--surface-default));
+  color: var(--_fg, var(--text-on-display));
+}
+
+.sf-overlay {
+  background: var(--_bg, var(--surface-overlay));
+  color: var(--_fg, var(--text-on-overlay));
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-strong);
+  z-index: 10;
+  position: relative;
+  --bg-hover:  var(--depth-overlay-hover);
+  --bg-active: var(--depth-overlay-active);
+  /* selection은 surface 불변 — :root 값 사용 */
+}
+
+/* Entry animation — popover/dialog 전용, surface와 분리 */
+.sf-overlay[popover],
+dialog.sf-overlay {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-easing),
+              transform var(--motion-enter-duration) var(--motion-enter-easing),
+              display var(--motion-enter-duration) var(--motion-enter-easing) allow-discrete,
+              overlay var(--motion-enter-duration) var(--motion-enter-easing) allow-discrete;
+}
+
+.sf-overlay:popover-open,
+dialog.sf-overlay[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@starting-style {
+  .sf-overlay:popover-open,
+  dialog.sf-overlay[open] {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Light-reflection gradient border — top-lit glass edge */
+.sf-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    var(--overlay-edge-top)    0%,
+    var(--overlay-edge-bottom) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sf-sunken {
+  background: var(--_bg, var(--surface-sunken));
+  color: var(--_fg, var(--text-on-sunken));
+  border: none;
+  --bg-hover:  var(--depth-sunken-hover);
+  --bg-active: var(--depth-sunken-active);
+}
+
+.sf-base {
+  background: var(--_bg, var(--surface-base));
+  color: var(--_fg, var(--text-on-base));
+  border: none;
+  --bg-hover:  var(--depth-base-hover);
+  --bg-active: var(--depth-base-active);
+}
+
+.sf-raised {
+  background: var(--_bg, var(--surface-raised));
+  color: var(--_fg, var(--text-on-raised));
+  border: none;
+  box-shadow: var(--shadow-md);
+  --bg-hover:  var(--depth-raised-hover);
+  --bg-active: var(--depth-raised-active);
+}
+
+.sf-inverted {
+  background: var(--text-primary);
+  color: var(--_fg, var(--text-on-inverted));
+  border: none;
+  /* 역전 맥락 — focus/text 모두 반전된 토큰 쓰기 (cascade로 하위 요소 자동 적용) */
+  --focus:          var(--focus-inverted);
+  --text-bright:    var(--text-bright-inverted);
+  --text-primary:   var(--text-primary-inverted);
+  --text-secondary: var(--text-secondary-inverted);
+  --text-muted:     var(--text-muted-inverted);
+}
+
+.sf-placeholder {
+  cursor: pointer;
+  user-select: none;
+  border: 1px dashed var(--border-subtle);
+  background: var(--_bg, transparent);
+  color: var(--text-muted);
+}
+.sf-placeholder:hover { border-color: var(--tone-primary-base); color: var(--tone-primary-base); }
+.sf-placeholder:focus-visible { outline: none; border-color: var(--focus); box-shadow: var(--focus-ring-shadow); }
+.sf-placeholder[aria-disabled="true"] { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
+
+.sf-ghost {
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: transparent;
+  color: var(--_fg, var(--text-on-ghost));
+  transition: color 150ms, background-color 150ms;
+}
+.sf-ghost:hover { background: var(--bg-hover); }
+.sf-ghost:active { background: var(--bg-active); }
+.sf-ghost:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
+.sf-ghost[aria-disabled="true"] { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
+
+} /* @layer state — Surface */
+
+@layer recipe {
+
+/* ════════════════════════════════════════════
+ * Recipe — 레거시 크기 프리셋 (role 축으로 이전 중)
+ * container만 잔존. control/item/badge는 role 축 사용.
+ * ════════════════════════════════════════════ */
+
+/* ── container: 카드, 다이얼로그, 패널 (의미적 마커) ── */
+.rc-container    { /* size identity: none — semantic marker */ }
+.rc-container-sm { /* size identity: none — semantic marker */ }
+
+/* ════════════════════════════════════════════
+ * Control Size — "이 요소의 크기급" (레거시 — recipe 사용 권장)
+ * 번들: min-height + min-width(=정사각 보장) + border-radius + font-size
+ * padding은 padding 축이 소유, content 축이 inline 비율 결정
+ * ════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════
+ * Text Style — 타이포그래피 번들
+ * 번들: font-size + weight + family + line-height + letter-spacing
+ * claude.ai 실측: Anthropic Serif(body) / Anthropic Sans(ui)
+ * ════════════════════════════════════════════ */
+
+.ts-hero {
+  font-size: var(--type-hero-size);
+  font-weight: var(--type-hero-weight);
+  font-family: var(--type-hero-family);
+  line-height: var(--type-hero-line-height);
+  letter-spacing: var(--type-hero-letter-spacing);
+}
+.ts-display {
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  font-family: var(--type-display-family);
+  line-height: var(--type-display-line-height);
+  letter-spacing: var(--type-display-letter-spacing);
+}
+.ts-page {
+  font-size: var(--type-page-size);
+  font-weight: var(--type-page-weight);
+  font-family: var(--type-page-family);
+  line-height: var(--type-page-line-height);
+  letter-spacing: var(--type-page-letter-spacing);
+}
+.ts-section {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-section-weight);
+  font-family: var(--type-section-family);
+  line-height: var(--type-section-line-height);
+  letter-spacing: var(--type-section-letter-spacing);
+}
+.ts-label {
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-medium);
+  font-family: var(--sans);
+  line-height: var(--type-body-line-height);
+  letter-spacing: var(--type-body-letter-spacing);
+}
+.ts-body {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  font-family: var(--type-body-family);
+  line-height: var(--type-body-line-height);
+  letter-spacing: var(--type-body-letter-spacing);
+}
+.ts-caption {
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  font-family: var(--type-caption-family);
+  line-height: var(--type-caption-line-height);
+  letter-spacing: var(--type-caption-letter-spacing);
+}
+.ts-code {
+  font-size: var(--type-code-size);
+  font-weight: var(--type-code-weight);
+  font-family: var(--type-code-family);
+  line-height: var(--type-code-line-height);
+  letter-spacing: var(--type-code-letter-spacing);
+}
+.ts-overline {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  font-family: var(--sans);
+  line-height: var(--type-caption-line-height);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ════════════════════════════════════════════
+ * Role: Control — 버튼, 인풋, 셀렉트의 크기 정체성
+ * role이 크기+구조+interactive를 소유한다.
+ * surface는 색칠만, tone은 의미 색상만.
+ * ════════════════════════════════════════════ */
+
+.rl-control {
+  min-height: var(--control-height);
+  min-width: var(--control-height);
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
+  line-height: var(--type-control-line-height);
+  padding-inline: var(--space-md);
+  padding-block: var(--space-sm);
+  gap: var(--space-sm);
+  border-radius: var(--shape-sm-radius);
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 150ms, background-color 150ms, box-shadow 150ms;
+}
+
+/* SVG auto-size inside controls */
+.rl-control svg:not([class*="ic-"]) {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* 아이콘 전용 — content:'icon'과 조합 시 정사각형 */
+.rl-control.ct-icon {
+  padding: 0;
+  aspect-ratio: 1;
+  justify-content: center;
+}
+
+/* ════════════════════════════════════════════
+ * Role: ControlGroup — 필드형 복합 컨트롤의 외곽 셸
+ * Spinbutton [- 1 +], Combobox [input ▾] 등.
+ * 크기 SSOT: 내부 part는 role 없이 stretch로 높이를 채움.
+ * ════════════════════════════════════════════ */
+
+.rl-control-group {
+  min-height: var(--control-height);
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
+  gap: 0;
+  border-radius: var(--shape-sm-radius);
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* control-group 내부의 control은 크기를 그룹에 위임 */
+.rl-control-group .rl-control {
+  min-height: unset;
+  min-width: unset;
+  border-radius: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* ════════════════════════════════════════════
+ * Role: Item — 리스트/메뉴/트리/사이드바 아이템의 크기 정체성
+ * role이 크기(height/font/padding/gap/shape)를 소유한다.
+ * width, layout, interactive는 미소유 — 컴포넌트가 명시.
+ * ════════════════════════════════════════════ */
+
+.rl-item {
+  min-height: var(--item-height);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-item-line-height);
+  padding-block: var(--space-xs);
+  padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
+  gap: var(--space-sm);
+  border-radius: var(--shape-2xs-radius);
+  display: flex;
+  align-items: center;
+  cursor: default;
+  user-select: none;
+}
+
+/* ════════════════════════════════════════════
+ * Role: Badge — 배지, 태그의 크기 정체성
+ * 작고 둥글고 한 줄. content:'text'와 조합하여 inline padding 2배.
+ * ════════════════════════════════════════════ */
+
+.rl-badge {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-medium);
+  padding-block: var(--space-xs);
+  padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
+  gap: var(--space-xs);
+  border-radius: var(--shape-pill-radius);
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+/* SVG auto-size inside badges */
+.rl-badge svg:not([class*="ic-"]) {
+  width: 0.75em;
+  height: 0.75em;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+} /* @layer recipe — Recipe, Control Size, Text Style */
+
+@layer state {
+
+/* ════════════════════════════════════════════
+ * Tone — "이 요소의 의미적 색상"
+ * 번들: --_bg + --_fg + --_bg-hover + --_bg-active
+ * Surface의 상태 정책이 이 변수를 소비
+ * ════════════════════════════════════════════ */
+
+.tn-accent {
+  --_bg: var(--tone-primary-base);
+  --_fg: var(--tone-primary-foreground);
+  --_bg-hover: var(--tone-primary-hover);
+  --_bg-active: var(--tone-primary-bright);
+}
+.tn-danger {
+  --_bg: var(--tone-destructive-base);
+  --_fg: var(--tone-destructive-foreground);
+  --_bg-hover: var(--tone-destructive-hover);
+  --_bg-active: var(--tone-destructive-dim);
+}
+.tn-success {
+  --_bg: var(--tone-success-base);
+  --_fg: var(--tone-success-foreground);
+  --_bg-hover: var(--tone-success-hover);
+  --_bg-active: var(--tone-success-dim);
+}
+.tn-warning {
+  --_bg: var(--tone-warning-base);
+  --_fg: var(--tone-warning-foreground);
+  --_bg-hover: var(--tone-warning-hover);
+  --_bg-active: var(--tone-warning-dim);
+}
+.tn-neutral {
+  --_bg: transparent;
+  --_fg: var(--text-secondary);
+  --_bg-hover: var(--bg-hover);
+  --_bg-active: var(--bg-active);
+}
+
+/* ── Tone standalone text — :where() zero specificity, surface가 있으면 surface의 color가 이긴다 ── */
+
+:where(.tn-accent)      { color: var(--tone-primary-base); }
+:where(.tn-danger)      { color: var(--tone-destructive-base); }
+:where(.tn-success)     { color: var(--tone-success-base); }
+:where(.tn-warning)     { color: var(--tone-warning-base); }
+:where(.tn-neutral)     { color: var(--text-secondary); }
+
+/* ── Tone dim — 연한 배경, 진한 전경 (배지, 버블, 하이라이트) ── */
+
+.tn-accent-dim {
+  --_bg: var(--tone-primary-dim);
+  --_fg: var(--tone-primary-hover);
+  --_bg-hover: var(--tone-primary-mid);
+  --_bg-active: var(--tone-primary-dim);
+}
+.tn-danger-dim {
+  --_bg: var(--tone-destructive-dim);
+  --_fg: var(--tone-destructive-hover);
+  --_bg-hover: var(--tone-destructive-mid);
+  --_bg-active: var(--tone-destructive-dim);
+}
+.tn-success-dim {
+  --_bg: var(--tone-success-dim);
+  --_fg: var(--tone-success-hover);
+  --_bg-hover: var(--tone-success-mid);
+  --_bg-active: var(--tone-success-dim);
+}
+.tn-warning-dim {
+  --_bg: var(--tone-warning-dim);
+  --_fg: var(--tone-warning-hover);
+  --_bg-hover: var(--tone-warning-mid);
+  --_bg-active: var(--tone-warning-dim);
+}
+.tn-neutral-dim {
+  --_bg: var(--bg-hover);
+  --_fg: var(--text-secondary);
+  --_bg-hover: var(--bg-active);
+  --_bg-active: var(--bg-hover);
+}
+
+:where(.tn-accent-dim)  { color: var(--tone-primary-hover); }
+:where(.tn-danger-dim)  { color: var(--tone-destructive-hover); }
+:where(.tn-success-dim) { color: var(--tone-success-hover); }
+:where(.tn-warning-dim) { color: var(--tone-warning-hover); }
+:where(.tn-neutral-dim) { color: var(--text-secondary); }
+
+/* ── Role: Control — interactive 상태 ── */
+.rl-control:hover { background: var(--_bg-hover, var(--bg-hover)); }
+.rl-control:active { background: var(--_bg-active, var(--bg-active)); }
+.rl-control:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
+.rl-control[aria-disabled="true"],
+.rl-control:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
+
+} /* @layer state — Tone */
+
+@layer recipe {
+
+/* ════════════════════════════════════════════
+ * Content — 콘텐츠 유형에 ��른 padding inline 비율
+ * padding 축의 calc(... * var(--pd-ratio, 1))을 구동
+ * ════════════════════════════════════════════ */
+
+.ct-text   { --pd-ratio: 2; }
+.ct-code   { --pd-ratio: 0; }
+.ct-bubble { --pd-ratio: 2; }
+.ct-icon {
+  padding: 0;
+  justify-content: center;
+  align-content: center;
+}
+
+/* ════════════════════════════════════════════
+ * Border — 테두리
+ * 전체: subtle/default/strong (4면 모두)
+ * 단면: bottom/top/start/end (구분선, subtle 색상)
+ * ════════════════════════════════════════════ */
+
+.bd-subtle  { border: var(--border-width) solid var(--border-subtle); }
+.bd-dashed  { border: var(--border-width) dashed var(--border-subtle); }
+.bd-default { border: var(--border-width) solid var(--border-default); }
+.bd-strong  { border: var(--border-width) solid var(--border-strong); }
+.bd-bottom  { border-bottom: var(--border-width) solid var(--border-subtle); }
+.bd-top     { border-top: var(--border-width) solid var(--border-subtle); }
+.bd-start   { border-inline-start: var(--border-width) solid var(--border-subtle); }
+.bd-end     { border-inline-end: var(--border-width) solid var(--border-subtle); }
+.bd-ring    { --bd-ring: 0 0 0 1px oklch(from var(--text-primary) l c h / 0.10); box-shadow: var(--bd-ring); }
+.bd-ring:focus-visible { box-shadow: var(--bd-ring), var(--focus-ring-shadow); }
+
+/* ════════════════════════════════════════════
+ * Shape — 비-컨트롤 요소의 border-radius
+ * 컨트롤(button/input 등)은 controlSize가 소유
+ * ════════════════════════════════════════════ */
+
+.sh-none { border-radius: 0; }
+.sh-2xs  { border-radius: var(--shape-2xs-radius); } /*  2px */
+.sh-xs   { border-radius: var(--shape-xs-radius); }  /*  4px */
+.sh-sm   { border-radius: var(--shape-sm-radius); }  /*  6px */
+.sh-md   { border-radius: var(--shape-md-radius); }  /*  8px */
+.sh-lg   { border-radius: var(--shape-lg-radius); }  /* 12px */
+.sh-xl   { border-radius: var(--shape-xl-radius); }  /* 16px */
+.sh-pill { border-radius: var(--shape-pill-radius); }
+
+/* ════════════════════════════════════════════
+ * Layout — 역할 기반 구조 번들
+ * display + direction + align + justify + overflow
+ * claude.ai 실측: control=81% row+center+center
+ * ════════════════════════════════════════════ */
+
+.ly-row    { display: flex; flex-direction: row; }
+.ly-center { display: flex; align-items: center; justify-content: center; }
+.ly-bar    { display: flex; flex-direction: row; align-items: center; }
+.ly-spread { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
+.ly-stack  { display: flex; flex-direction: column; }
+.ly-scroll   { display: flex; flex-direction: column; overflow-y: auto; block-size: 100%; min-width: 0; min-height: 0; scrollbar-gutter: stable; }
+.ly-scroll-x { display: flex; flex-direction: row;    overflow-x: auto; block-size: 100%; min-width: 0; min-height: 0; }
+.ly-scroll::-webkit-scrollbar { width: 6px; }
+.ly-scroll::-webkit-scrollbar-thumb { background: transparent; border-radius: 3px; }
+.ly-scroll:hover::-webkit-scrollbar-thumb { background: var(--border-default); }
+/* clip — D2: 'scroll:hidden' 대체. overflow:clip (스크롤/포커스 잠금 + 자식이 밖으로 못 나옴) */
+.ly-clip     { overflow: clip; }
+/* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
+.ly-fill     { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+.ly-row-fill { display: flex; flex-direction: row; flex: 1; min-width: 0; min-height: 0; }
+.ly-wrap     { display: inline-flex; flex-wrap: wrap; align-items: center; }
+/* ── Grid — equal-column 그리드 ── */
+.ly-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
+.ly-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.ly-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); }
+.ly-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); }
+.ly-grid-7 { display: grid; grid-template-columns: repeat(7, 1fr); }
+/* ── Table (CSS Grid subgrid) ── */
+.ly-table {
+  display: grid;
+  grid-template-columns: var(--grid-columns, repeat(var(--grid-col-count, 4), 1fr));
+}
+.ly-table > .ax-interactive {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+.ly-table .ax-interactive > :not([role="row"], [role="option"]) {
+  grid-column: 1 / -1;
+}
+.ly-table [role="row"] {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+.ly-table > [role="row"]:not(.ax-interactive [role="row"]),
+.ly-table > [role="rowgroup"] {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+/* ── Self-alignment — 자식이 부모 안에서의 위치 ── */
+.ly-self-start  { align-self: flex-start; }
+.ly-self-end    { align-self: flex-end; }
+.ly-self-center { align-self: center; }
+
+/* ════════════════════════════════════════════
+ * Gap — 간격 스케일 (dense: xs~sm, breathing: md~xl)
+ * ════════════════════════════════════════════ */
+
+.g-xs  { gap: var(--space-xs); }   /*  4px */
+.g-sm  { gap: var(--space-sm); }   /*  8px */
+.g-md  { gap: var(--space-md); }   /* 16px */
+.g-lg  { gap: var(--space-lg); }   /* 24px */
+.g-xl  { gap: var(--space-xl); }   /* 32px */
+.g-2xl { gap: var(--space-2xl); }  /* 48px */
+
+/* ════════════════════════════════════════════
+ * Padding — block 기본, inline은 content 축의 --pd-ratio로 스케일
+ * content:'text' → inline 2배 (optical balance)
+ * ════════════════════════════════════════════ */
+
+.pd-none { padding: 0; }
+.pd-xs   { padding-block: var(--space-xs);  padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1)); }   /*  4px */
+.pd-sm   { padding-block: var(--space-sm);  padding-inline: calc(var(--space-sm) * var(--pd-ratio, 1)); }   /*  8px */
+.pd-md   { padding-block: var(--space-md);  padding-inline: calc(var(--space-md) * var(--pd-ratio, 1)); }   /* 16px */
+.pd-lg   { padding-block: var(--space-lg);  padding-inline: calc(var(--space-lg) * var(--pd-ratio, 1)); }   /* 24px */
+.pd-xl   { padding-block: var(--space-xl);  padding-inline: calc(var(--space-xl) * var(--pd-ratio, 1)); }   /* 32px */
+
+/* ════════════════════════════════════════════
+ * Width — 너비 제약
+ * ════════════════════════════════════════════ */
+
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+.w-fit  { width: fit-content; }
+.w-sm    { width: 100%; max-width: 200px; margin-inline: auto; }
+.w-md    { width: 100%; max-width: 400px; margin-inline: auto; }
+.w-lg    { width: 100%; max-width: 640px; margin-inline: auto; }
+.w-xl    { width: 100%; max-width: 960px; margin-inline: auto; }
+.w-prose { width: 100%; max-width: 72ch; margin-inline: auto; }
+
+/* ════════════════════════════════════════════
+ * Flex — flex item 크기
+ * ════════════════════════════════════════════ */
+
+.fx-none { flex: none; }
+.fx-auto { flex: auto; }
+.fx-1    { flex: 1; }
+
+/* ════════════════════════════════════════════
+ * Clamp — 텍스트 줄 수 제한
+ * '1': nowrap + ellipsis (단일행)
+ * '2'~'4': CSS line-clamp (다중행)
+ * ════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════
+ * Motion — 반복/진입 애니메이션
+ * transition은 어느 축도 소유하지 않음 — last-mile.
+ * motion은 @keyframes 기반 반복/진입 애니메이션.
+ * ════════════════════════════════════════════ */
+
+@keyframes ax-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes ax-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ax-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ax-slide-up {
+  from { opacity: 0; transform: translateY(var(--space-sm)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mo-pulse    { animation: ax-pulse 1.5s ease-in-out infinite; }
+.mo-spin     { animation: ax-spin 1s linear infinite; }
+.mo-fade-in  { animation: ax-fade-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-slide-up { animation: ax-slide-up var(--motion-enter-duration) var(--motion-enter-easing) both; }
+
+@keyframes ax-fade-slide-in {
+  from { opacity: 0; transform: translateY(var(--space-sm)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ax-slide-in {
+  from { opacity: 0; transform: translateY(calc(-1 * var(--space-sm))); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ax-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ax-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes ax-shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.mo-fade-slide-in { animation: ax-fade-slide-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-slide-in      { animation: ax-slide-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-scale-in      { animation: ax-scale-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-blink         { animation: ax-blink 0.8s step-end infinite; }
+.mo-shimmer       { animation: ax-shimmer 1.5s ease-in-out infinite; }
+
+/* ════════════════════════════════════════════
+ * Clamp — 텍스트 줄 수 제한
+ * '1': nowrap + ellipsis (단일행)
+ * '2'~'4': CSS line-clamp (다중행)
+ * ════════════════════════════════════════════ */
+
+.cl-scroll { max-height: 300px; overflow-y: auto; }
+.cl-1   { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-pre { white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+.cl-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.cl-3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.cl-4 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+
+/* ── icon: SVG 크기 (width + height) ── */
+.ic-xs { width: var(--icon-xs); height: var(--icon-xs); }
+.ic-sm { width: var(--icon-sm); height: var(--icon-sm); }
+.ic-md { width: var(--icon-md); height: var(--icon-md); }
+.ic-lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+/* ════════════════════════════════════════════
+ * Square — 정사각 크기 (비-SVG 요소: avatar, dot, swatch 등)
+ * ════════════════════════════════════════════ */
+
+.sq-xs  { width: var(--space-xs);  height: var(--space-xs); }   /*  4px */
+.sq-sm  { width: var(--space-sm);  height: var(--space-sm); }   /*  8px */
+.sq-md  { width: var(--space-md);  height: var(--space-md); }   /* 16px */
+.sq-lg  { width: var(--space-lg);  height: var(--space-lg); }   /* 24px */
+.sq-xl  { width: var(--space-xl);  height: var(--space-xl); }   /* 32px */
+.sq-2xl { width: var(--space-2xl); height: var(--space-2xl); }  /* 48px */
+
+/* ════════════════════════════════════════════
+ * Aspect — 종횡비
+ * ════════════════════════════════════════════ */
+
+.ar-1     { aspect-ratio: 1; }
+.ar-video { aspect-ratio: 16 / 9; }
+.ar-card  { aspect-ratio: 1.4; }
+
+/* ════════════════════════════════════════════
+ * Atomic Utilities — 키워드 전용 (수치 없음)
+ * module.css last-mile 제거용
+ * ════════════════════════════════════════════ */
+
+/* cursor */
+.cursor-default { cursor: default; }
+.cursor-pointer { cursor: pointer; }
+
+/* overflow */
+.overflow-hidden  { overflow: hidden; }
+.overflow-auto    { overflow: auto; }
+.overflow-y-auto  { overflow-y: auto; }
+.overflow-x-auto  { overflow-x: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+
+/* text / white-space */
+.text-right   { text-align: right; }
+.text-center  { text-align: center; }
+.text-left    { text-align: left; }
+.pre-wrap     { white-space: pre-wrap; }
+.break-word   { overflow-wrap: break-word; }
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* ── Placement — 의도 기반 배치 (position + inset + transform 번들) ── */
+/* ② 2026-04-05-placement-axis-prd.md */
+.pl-above         { position: absolute; bottom: 100%; left: 0; right: 0; }
+.pl-below         { position: absolute; top: 100%; left: 0; right: 0; }
+.pl-bottom        { position: absolute; bottom: 0; left: 0; right: 0; }
+.pl-bottom-center { position: absolute; bottom: var(--space-md); left: 50%; transform: translateX(-50%); }
+.pl-center        { position: absolute; inset: 0; margin: auto; width: fit-content; height: fit-content; }
+.pl-top-start     { position: absolute; top: 0; inset-inline-start: 0; }
+.pl-top-end       { position: absolute; top: 0; inset-inline-end: 0; }
+.pl-viewport      { position: fixed; inset: 0; z-index: 100; }
+.pl-sticky        { position: sticky; top: 0; z-index: 1; }
+.pl-anchor-below        { position: fixed; inset: unset; position-area: block-end span-inline-end; position-try-fallbacks: flip-block; }
+.pl-anchor-below-start  { position: fixed; inset: unset; position-area: block-end span-inline-start; position-try-fallbacks: flip-block; }
+.pl-anchor-above        { position: fixed; inset: unset; position-area: block-start span-all; position-try-fallbacks: flip-block; }
+.pl-anchor-end          { position: fixed; inset: unset; position-area: inline-end span-all; position-try-fallbacks: flip-inline; }
+.pl-anchor-start        { position: fixed; inset: unset; position-area: inline-start span-all; position-try-fallbacks: flip-inline; }
+.pl-relative      { position: relative; }
+.pl-float-top-start     { position: fixed; top: var(--space-md); inset-inline-start: var(--space-md); z-index: 100; }
+.pl-float-top-center    { position: fixed; top: var(--space-md); left: 50%; transform: translateX(-50%); z-index: 100; }
+.pl-float-bottom-center { position: fixed; bottom: var(--space-lg); left: 50%; transform: translateX(-50%); z-index: 100; }
+.pl-float-bottom        { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; }
+
+/* layout helpers */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.inset-0  { inset: 0; }
+
+/* HTML hidden attribute must always win over layout classes */
+[hidden] { display: none !important; }
+
+/* reset / misc */
+.border-none     { border: none; }
+.outline-none    { outline: none; }
+.bg-transparent  { background: transparent; }
+.select-none     { user-select: none; }
+.select-text     { user-select: text; }
+.pointer-none    { pointer-events: none; }
+.pointer-auto    { pointer-events: auto; }
+.font-inherit    { font-family: inherit; }
+.ml-auto         { margin-left: auto; }
+.border-collapse { border-collapse: collapse; }
+.cursor-col-resize { cursor: col-resize; }
+.cursor-row-resize { cursor: row-resize; }
+.font-italic     { font-style: italic; }
+
+/* ════════════════════════════════════════════
+ * Global form element styling
+ * placeholder, selection, aria-invalid
+ * ════════════════════════════════════════════ */
+
+input::placeholder,
+textarea::placeholder { color: var(--text-muted); }
+
+::selection { background: var(--tone-primary-dim); color: var(--text-bright); }
+
+/* aria-invalid ring — input/textarea */
+.sf-input[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px oklch(from var(--tone-destructive-base) l c h / 0.2);
+}
+
+} /* @layer recipe — Content~Placement~Utilities */
+
+@layer state {
+
+/* ════════════════════════════════════════════
+ * Interactive — 동적 상태 시각 (hover/focus/selected/checked/disabled)
+ * surface=정적(cursor/border/shadow), interactive=동적 상태 응답
+ * .ax-interactive = 컨테이너 스코프 (:focus-within idle/active 판정)
+ *
+ * 모든 규칙 :where() → specificity (0,0,0). module.css override 가능.
+ * 색상은 depth 토큰(--bg-hover, --selection 등)만 참조 → surface별 자동 적응.
+ * ════════════════════════════════════════════ */
+
+/* ── ia-item: option, treeitem, menuitem, row ── */
+
+:where(.ia-item) {
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--shape-xs-radius);
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  transition: color 150ms, background-color 150ms;
+}
+
+/* hover (컨테이너 포커스 없을 때) */
+:where(.ax-interactive:not(:focus-within) .ia-item:hover) {
+  background: var(--bg-hover);
+}
+
+/* hover (컨테이너 포커스 있을 때, 비포커스 아이템만) */
+:where(.ax-interactive:focus-within .ia-item:hover:not(:focus):not([data-focused])) {
+  background: var(--bg-hover);
+}
+
+/* focus: idle (컨테이너 비활성) */
+:where(.ax-interactive:not(:focus-within) .ia-item:focus),
+:where(.ax-interactive:not(:focus-within) .ia-item[data-focused]) {
+  background: var(--focus-idle);
+}
+
+/* focus: active (컨테이너 활성) */
+:where(.ax-interactive:focus-within .ia-item:focus),
+:where(.ax-interactive:focus-within .ia-item[data-focused]) {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
+}
+
+/* active (press) */
+:where(.ia-item:active) {
+  background: var(--tone-primary-bright);
+}
+
+/* selected — no :where() to win over surface bg */
+.ia-item[aria-selected="true"] {
+  background: var(--selection);
+}
+
+/* checked (radio, switch) */
+.ia-item[aria-checked="true"] {
+  background: var(--selection);
+}
+
+/* focused + selected compound */
+.ia-item[aria-selected="true"]:focus,
+.ia-item[aria-checked="true"]:focus,
+.ia-item[aria-selected="true"][data-focused],
+.ia-item[aria-checked="true"][data-focused] {
+  background: var(--selection-cursor);
+}
+
+/* active pane override — container :focus-within 일 때 selection을 더 밝게 (Mac Finder 모델) */
+.ax-interactive:focus-within {
+  --selection:        var(--selection-active);
+  --selection-cursor: var(--selection-cursor-active);
+}
+
+.ax-interactive:focus-within .ia-item[aria-selected="true"][data-focused],
+.ax-interactive:focus-within .ia-item[aria-checked="true"][data-focused] {
+  outline-color: var(--focus);
+}
+
+/* disabled */
+.ia-item[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+.ia-item[aria-disabled="true"][aria-selected="true"],
+.ia-item[aria-disabled="true"][aria-checked="true"] {
+  background: var(--selection);
+  opacity: 0.4;
+}
+
+/* ── ia-item: treeitem expanded redirect ── */
+
+:where(.ia-item[aria-expanded]) {
+  transition: none;
+}
+
+:where(.ia-item[aria-expanded="true"]:has(> .ia-item)) {
+  padding: 0;
+  background: transparent !important;
+  outline: none !important;
+}
+
+:where(.ia-item[aria-expanded="true"]:has(> .ia-item) > :first-child) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-item[aria-expanded="true"]:hover > :first-child) {
+  background: var(--bg-hover);
+}
+
+:where(.ax-interactive:focus-within .ia-item[aria-expanded="true"]:focus > :first-child),
+:where(.ax-interactive:focus-within .ia-item[aria-expanded="true"][data-focused] > :first-child) {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-item[aria-expanded="true"]:focus > :first-child),
+:where(.ax-interactive:not(:focus-within) .ia-item[aria-expanded="true"][data-focused] > :first-child) {
+  background: var(--focus-idle);
+}
+
+:where(.ia-item[aria-expanded="true"]:active:not(:has(.ia-item:active)) > :first-child) {
+  background: var(--tone-primary-bright);
+}
+
+/* ── ia-item: treeitem group indentation ── */
+
+:where(.ia-item > [role="group"]) {
+  flex-basis: 100%;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+/* ── ia-tab: tab ── */
+
+:where(.ia-tab) {
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 2px solid transparent;
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-tab:hover) {
+  color: var(--text-secondary);
+}
+
+:where(.ia-tab:focus),
+:where(.ia-tab[data-focused]) {
+  color: var(--tone-primary-base);
+  border-bottom-color: var(--tone-primary-base);
+  font-weight: var(--weight-semi);
+  outline-color: transparent;
+}
+
+.ia-tab[aria-selected="true"] {
+  color: var(--text-bright);
+  border-bottom-color: var(--text-bright);
+  font-weight: var(--weight-semi);
+  background: var(--selection);
+}
+
+/* ── ia-check: radio, switch, checkbox ── */
+
+:where(.ia-check) {
+  cursor: pointer;
+  user-select: none;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  box-shadow: var(--shadow-xs);
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-check:hover) {
+  background: var(--bg-hover);
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-check:focus) {
+  background: var(--focus-idle);
+}
+
+:where(.ax-interactive:focus-within .ia-check:focus) {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
+}
+
+.ia-check[aria-checked="true"] {
+  background: var(--selection);
+}
+
+.ia-check[aria-checked="true"]:focus,
+.ia-check[aria-checked="true"][data-focused] {
+  background: var(--selection-cursor);
+  color: var(--text-bright);
+}
+
+.ia-check[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── ia-cell: gridcell ── */
+
+:where(.ia-cell) {
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  min-width: 0;
+  overflow: hidden;
+}
+
+:where(.ia-cell:last-child) {
+  border-right: none;
+}
+
+:where(.ia-cell[tabindex="0"]) {
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
+  background: var(--tone-primary-dim);
+}
+
+/* ia-cell: grid row selection */
+.ia-item[role="row"][aria-selected="true"],
+.ia-item[role="row"][aria-selected="true"][data-focused] {
+  background: var(--selection-context);
+}
+
+.ax-interactive:focus-within .ia-cell[data-cell-focused] {
+  background: var(--selection-cursor);
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+/* ② 2026-04-13-grid-cell-range-prd.md
+   cellRange visual: neutral tint only (accent budget — focus cell keeps the outline). */
+.ia-cell[data-in-range="true"] {
+  background: color-mix(in oklch, var(--focus) 8%, transparent);
+}
+
+/* range + focused cell: keep accent outline on top of the tint */
+.ax-interactive:focus-within .ia-cell[data-in-range="true"][data-cell-focused] {
+  background: var(--selection-cursor);
+}
+
+/* ── ia-button: button ── */
+
+:where(.ia-button) {
+  cursor: pointer;
+  user-select: none;
+}
+
+:where(.ia-button:hover) {
+  background: var(--bg-hover);
+}
+
+:where(.ia-button:active) {
+  background: var(--tone-primary-bright);
+}
+
+.ia-button[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── ia-input: textbox, combobox input ── */
+
+:where(.ia-input[aria-invalid="true"]) {
+  border-color: var(--tone-destructive-base);
+}
+
+:where(.ia-input[aria-invalid="true"]:focus) {
+  border-color: var(--tone-destructive-base);
+  outline-color: var(--tone-destructive-base);
+}
+
+/* ── .ax-interactive 컨테이너 ── */
+
+/* tablist padding은 소비자가 padding 축으로 설정 */
+
+/* ── Expanded chevron rotation (컨테이너 스코프) ── */
+
+:where(.ax-interactive [aria-expanded="true"] > .chevron),
+:where(.ax-interactive [aria-expanded="true"] > * > .chevron) {
+  transform: rotate(90deg);
+}
+
+/* ── Standalone disabled (컨테이너 밖) ── */
+
+:where(:disabled),
+:where([aria-disabled="true"]:not(.ia-item):not(.ia-tab):not(.ia-check):not(.ia-button)) {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+} /* @layer state — Interactive */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/interactive.css">@layer state {
+/* ═══════════════════════════════════════════
+   L4 Interactive — Structure-only rules
+   ═══════════════════════════════════════════
+   상태 스타일(hover/focus/selected/disabled)은 ax.css .ia-* 축으로 이관됨.
+   여기는 ARIA role 기반 구조 규칙(grid layout, tree depth)만 남김.
+   // ② 2026-04-06-interactive-axis-prd.md
+*/
+
+/* ── Tree depth indentation ── */
+
+/* Tree: nested DOM — group-based indentation */
+:where([role="tree"] [role="group"]) { padding-left: var(--space-lg); }
+
+/* Treegrid: flat DOM — absolute aria-level-based indentation */
+:where([role="treegrid"] [aria-level="1"]) { padding-left: var(--space-sm); }
+:where([role="treegrid"] [aria-level="2"]) { padding-left: var(--space-xl); }
+:where([role="treegrid"] [aria-level="3"]) { padding-left: var(--space-3xl); }
+:where([role="treegrid"] [aria-level="4"]) { padding-left: 56px; }
+:where([role="treegrid"] [aria-level="5"]) { padding-left: 72px; }
+:where([role="treegrid"] [aria-level="6"]) { padding-left: 88px; }
+:where([role="treegrid"] [aria-level="7"]) { padding-left: 104px; }
+:where([role="treegrid"] [aria-level="8"]) { padding-left: 120px; }
+:where([role="treegrid"] [aria-level="9"]) { padding-left: 136px; }
+:where([role="treegrid"] [aria-level="10"]) { padding-left: 152px; }
+
+
+/* ── Standalone disabled (컨테이너 밖) ── */
+
+:where(:disabled),
+:where([aria-disabled="true"]:not(.ia-item):not(.ia-tab):not(.ia-check):not(.ia-button)) {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── Invalid (input error state) ── */
+
+:where([aria-invalid="true"]) {
+  border-color: var(--tone-destructive-base);
+}
+
+:where([aria-invalid="true"]:focus) {
+  border-color: var(--tone-destructive-base);
+  outline-color: var(--tone-destructive-base);
+}
+} /* @layer state */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/indicators/indicators.css">@layer component {
+/* ═══════════════════════════════════════════
+   Indicator part classes (item-indicator--* convention)
+   ARIA attributes drive state — no JS class toggle needed.
+   Root-level visual axes (surface/border/shape/size/motion) live on the
+   TSX via ax(). This file holds only:
+     - last-mile properties (transition, transform, pseudo-elements)
+     - ARIA state-driven color overrides (aria-checked, aria-sort, etc.)
+     - token-referenced structural values (all via var())
+   Specificity 0 via :where() — ax() overrides freely.
+   ═══════════════════════════════════════════ */
+
+/* ── Chevron ── */
+
+:where(.ax-interactive .item-chevron),
+:where(details .item-chevron) {
+  color: var(--text-muted);
+  opacity: 0.65;
+  transition: transform var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+:where(.ax-interactive .item-chevron--expand),
+:where(details .item-chevron--expand) {
+  min-width: var(--indicator-icon);
+  width: var(--indicator-icon);
+}
+
+:where(.ax-interactive .item-chevron--tree) {
+  min-width: var(--indicator-icon-lg);
+  width: var(--indicator-icon-lg);
+}
+
+/* Expanded state: ARIA parent, data-expanded self, or details[open] drives rotation */
+:where([aria-expanded="true"] > .item-chevron),
+:where(.item-chevron[data-expanded]),
+:where(details[open] > summary .item-chevron) {
+  transform: rotate(90deg);
+}
+
+/* ── Checked indicators — shared checked-state color ──
+   aria-checked="true" on parent drives all three variants.
+   Concept: border → primary on check, inner marker appears. */
+
+:where(.ax-interactive [aria-checked="true"]) :where(
+  .item-indicator--checkbox,
+  .item-indicator--radio,
+  .item-indicator--switch
+) {
+  border-color: var(--tone-primary-base);
+}
+
+/* Checkbox + switch fill background on check */
+:where(.ax-interactive [aria-checked="true"]) :where(
+  .item-indicator--checkbox,
+  .item-indicator--switch
+) {
+  background: var(--tone-primary-base);
+}
+
+/* ── Box sizes ── */
+
+:where(.item-indicator--checkbox),
+:where(.item-indicator--radio) {
+  width: var(--indicator-box);
+  height: var(--indicator-box);
+}
+
+:where(.item-indicator--switch) {
+  width: var(--switch-width);
+  height: var(--switch-height);
+}
+
+/* ── Inner markers — appear on check via scale(0→1) ── */
+
+:where(.ax-interactive .item-indicator--checkbox-icon),
+:where(.ax-interactive .item-indicator--radio-dot) {
+  transform: scale(0);
+  transition: transform var(--motion-instant-duration);
+}
+
+:where(.ax-interactive [aria-checked="true"] .item-indicator--checkbox-icon),
+:where(.ax-interactive [aria-checked="true"] .item-indicator--radio-dot) {
+  transform: scale(1);
+}
+
+/* Checkbox icon size + color */
+:where(.ax-interactive .item-indicator--checkbox-icon) {
+  width: var(--indicator-icon);
+  height: var(--indicator-icon);
+  color: var(--tone-primary-foreground);
+}
+
+/* Radio dot size + shape */
+:where(.ax-interactive .item-indicator--radio-dot) {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: 50%;
+  background: var(--tone-primary-base);
+}
+
+/* ── Switch thumb — translateX instead of scale ── */
+
+:where(.ax-interactive .item-indicator--switch-thumb) {
+  top: var(--switch-thumb-inset);
+  left: var(--switch-thumb-inset);
+  width: calc(var(--switch-height) - 8px);
+  height: calc(var(--switch-height) - 8px);
+  border-radius: 50%;
+  background: var(--text-secondary);
+  transition: transform var(--motion-normal-duration) var(--motion-normal-easing),
+              background var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+:where(.ax-interactive [aria-checked="true"] .item-indicator--switch-thumb) {
+  background: var(--tone-primary-foreground);
+  transform: translateX(calc(var(--switch-width) - var(--switch-height) + 2px));
+}
+
+/* ── Toggle text indicator (On/Off) ── */
+
+:where(.ax-interactive .item-indicator--toggle) {
+  color: var(--text-muted);
+}
+
+:where(.ax-interactive [aria-checked="true"] .item-indicator--toggle) {
+  color: var(--tone-success-base);
+}
+
+/* ── ToggleGroup text indicator ── */
+
+:where(.ax-interactive .item-indicator--toggle-group) {
+  color: var(--text-muted);
+}
+
+/* selected override 제거: accent 미사용, 기본 muted 유지 */
+
+/* ── Sort indicator ── */
+
+:where(.ax-interactive .item-indicator--sort) {
+  color: var(--text-muted);
+}
+
+:where(.ax-interactive [aria-sort="ascending"] .item-indicator--sort),
+:where(.ax-interactive [aria-sort="descending"] .item-indicator--sort) {
+  color: var(--text-primary);
+}
+
+/* ── Spinner indicator ──
+   Animation via ax({ motion: 'spin' }).
+   Size feeds SVG via font-size (Loader2 uses size="1em"). */
+
+:where(.item-indicator--spinner) {
+  color: var(--tone-primary-base);
+}
+
+:where(.item-indicator--spinner-sm) { font-size: var(--icon-sm); }
+:where(.item-indicator--spinner-md) { font-size: var(--icon-md); }
+:where(.item-indicator--spinner-lg) { font-size: var(--icon-lg, var(--space-2xl)); }
+
+/* ── Progress indicator ──
+   Shape/background ← ax() on TSX wrapper. Height is a bar thickness token. */
+
+:where(.item-indicator--progress) {
+  height: var(--space-xs);
+  background: var(--surface-overlay);
+}
+
+:where(.item-indicator--progress-fill) {
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-pill-radius);
+  transition: width var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+/* ── Skeleton indicator ──
+   Shape/background ← ax() on TSX wrapper (bg override via --_bg). */
+
+@keyframes indicator-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+:where(.item-indicator--skeleton) {
+  background: var(--indicator-skeleton-bg);
+  background-size: 200% 100%;
+  animation: var(--motion-indicator-shimmer, indicator-shimmer 1.5s ease-in-out infinite);
+}
+
+/* ── Status indicator ──
+   Size/shape ← ax() on TSX. Tone-based color applied here. */
+
+:where(.item-indicator--status-success) { background: var(--tone-success-base); }
+:where(.item-indicator--status-error) { background: var(--tone-destructive-base); }
+:where(.item-indicator--status-warning) { background: var(--tone-warning-base, #f59e0b); }
+:where(.item-indicator--status-info) { background: var(--tone-primary-base); }
+
+/* ── Page indicator (pagination dots) ──
+   Dot size/shape ← ax() on TSX. */
+
+:where(.item-indicator--page-dot) {
+  background: var(--border-default);
+  transition: background var(--motion-instant-duration);
+}
+
+:where(.item-indicator--page-dot-active) {
+  background: var(--tone-primary-base);
+}
+
+/* ── Direction indicator ── */
+
+:where(.item-indicator--direction) {
+  color: var(--text-muted);
+}
+
+/* ── Step indicator ──
+   Size/border/shape ← ax() on TSX wrapper. */
+
+:where(.item-indicator--step) {
+  width: var(--indicator-box);
+  height: var(--indicator-box);
+  font-weight: var(--weight-semi);
+  color: var(--text-secondary);
+}
+
+:where(.item-indicator--step-completed) {
+  background: var(--tone-primary-base);
+  border-color: var(--tone-primary-base);
+  color: var(--tone-primary-foreground);
+}
+
+/* ── Badge indicator ──
+   Size/shape/padding/background ← ax() on TSX wrapper. */
+
+:where(.item-indicator--badge) {
+  color: var(--tone-primary-foreground);
+  font-weight: var(--weight-semi);
+  line-height: 1;
+}
+
+/* ── Overflow indicator ── */
+
+:where(.item-indicator--overflow) {
+  color: var(--text-muted);
+}
+
+/* ── Grip indicator ── */
+
+:where(.item-indicator--grip) {
+  color: var(--text-muted);
+}
+
+/* ── Tree connector ──
+   Uses ::before/::after pseudo-elements (cannot carry ax() classes).
+   Position/size via var()-wrapped tokens so guardCssAxes accepts them. */
+
+:where(.item-indicator--tree-connector) {
+  width: var(--space-lg);
+}
+
+:where(.item-indicator--tree-connector)::before {
+  content: '';
+  position: var(--pos-absolute);
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: var(--indicator-hairline);
+  background: var(--border-subtle);
+}
+
+:where(.item-indicator--tree-connector)::after {
+  content: '';
+  position: var(--pos-absolute);
+  left: 50%;
+  top: 50%;
+  width: 50%;
+  height: var(--indicator-hairline);
+  background: var(--border-subtle);
+}
+
+:where(.item-indicator--tree-connector-last)::before {
+  bottom: 50%;
+}
+
+/* ── Separator indicator ── */
+
+:where(.item-indicator--separator) {
+  background: var(--border-subtle);
+}
+
+:where(.item-indicator--separator[aria-orientation="horizontal"]),
+:where(.item-indicator--separator:not([aria-orientation])) {
+  height: var(--indicator-hairline);
+}
+
+:where(.item-indicator--separator[aria-orientation="vertical"]) {
+  width: var(--indicator-hairline);
+  align-self: stretch;
+}
+
+/* ── Active rail indicator (nav sidebar) ──
+   Tokenized structural values so guardCssAxes accepts the var() forms. */
+
+:where(.item-indicator--active-rail) {
+  position: var(--pos-absolute);
+  left: var(--indicator-active-rail-offset);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--indicator-active-rail-width);
+  height: var(--indicator-active-rail-height);
+  background: var(--tone-primary-base);
+  border-radius: var(--indicator-active-rail-radius);
+}
+} /* @layer component */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/layout.css">@layer component {
+/* ═══════════════════════════════════════════
+   Layout — page, sidebar, content
+   ═══════════════════════════════════════════
+   Parent-enforced layout: 부모가 크기를 정하고 자식은 그 안에서 분할.
+   flex 자식의 min-width:auto 기본값을 0으로 override하여
+   콘텐츠가 부모를 밀지 못하게 한다. Content는 이걸 몰라도 됨.
+*/
+
+.page > *, .page-content > *, .sidebar-layout > * { min-width: 0; min-height: 0; }
+
+.page-content { position: relative; }
+.page-content > * { flex: 1; }
+
+.page {
+  height: 100svh;
+  background: var(--surface-base);
+}
+
+.sidebar {
+  width: 192px;
+  background: var(--surface-sunken);
+  border-right: 1px solid var(--border-subtle);
+  padding: var(--space-md) 0;
+}
+
+.sidebar-header {
+  padding: 0 var(--space-md) var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-sm);
+}
+
+.sidebar-header .logo {
+  margin-bottom: var(--space-xs);
+}
+
+.sidebar-section-title {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--tracking-normal);
+  color: var(--text-muted);
+  padding: var(--space-md) var(--space-md) var(--space-xs);
+  margin-bottom: 0;
+}
+
+.sidebar-nav { padding: 0; margin: 0; }
+
+.sidebar-link {
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--border-width) var(--space-sm);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  transition: color 0.08s, background 0.08s;
+  border-radius: var(--shape-md-radius);
+}
+
+.sidebar-link:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+/* sidebar-link active/focus state handled by interactive.css ARIA selectors */
+
+.badge-wip {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-muted);
+  background: var(--surface-base);
+  padding: var(--border-width) var(--space-xs);
+  border-radius: var(--shape-xl-radius);
+  letter-spacing: var(--tracking-normal);
+}
+
+.content {
+  padding: var(--space-2xl) var(--space-3xl);
+  background: var(--surface-default);
+  box-shadow: var(--shadow-md);
+}
+
+/* Outlet wrapper — ActivityBar 옆의 콘텐츠 영역 */
+} /* @layer component */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/app.css">@layer component {
+/* ═══════════════════════════════════════════
+   Logo (shared between sidebar header etc.)
+   ═══════════════════════════════════════════ */
+
+.logo {
+  gap: var(--space-sm);
+  margin-bottom: var(--shape-xs-py);
+}
+
+.logo-mark {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-xs-radius);
+}
+
+.logo h1 {
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin: 0;
+}
+
+.version {
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--tone-primary-base);
+  background: var(--tone-primary-dim);
+  padding: var(--border-width) var(--shape-xs-py);
+  border-radius: var(--shape-md-radius);
+  border: 1px solid var(--tone-primary-mid);
+}
+
+/* ═══════════════════════════════════════════
+   Page header — title, description, keys
+   ═══════════════════════════════════════════ */
+
+.page-header {
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border-subtle);
+  max-width: 720px;
+}
+
+.page-title {
+  font-size: var(--type-display-size);
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--type-display-letter-spacing);
+  color: var(--text-bright);
+  margin: 0 0 var(--space-sm);
+}
+
+.page-desc {
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: var(--leading-normal);
+  max-width: 520px;
+}
+
+.page-keys {
+  gap: var(--space-xs) var(--shape-xs-py);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-xl-radius);
+}
+
+.wip-placeholder {
+  padding: var(--space-3xl) var(--space-lg);
+  font-size: var(--type-body-size);
+  color: var(--text-muted);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--shape-xl-radius);
+  background: var(--surface-sunken);
+}
+
+/* --- APG Reference Table --- */
+
+.apg-table-wrap {
+  margin-top: var(--space-md);
+  max-width: 720px;
+}
+
+.apg-table {
+  border-collapse: collapse;
+  font-size: var(--type-body-size);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+.apg-table thead th {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-secondary);
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.apg-table tbody td {
+  padding: var(--space-md) var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: top;
+}
+
+.apg-table tbody td:first-child {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.apg-table tbody td:first-child kbd {
+  font-size: var(--type-caption-size);
+  background: none;
+  border: none;
+  border-bottom-width: 0;
+  padding: 0;
+  color: var(--text-bright);
+  font-weight: var(--weight-semi);
+}
+
+.apg-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.apg-source {
+  margin-top: var(--space-sm);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+.apg-source a {
+  color: var(--tone-primary-base);
+  text-decoration: none;
+}
+
+.apg-source a:hover {
+  text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════════
+   Kbd — keyboard shortcut badges
+   ═══════════════════════════════════════════ */
+
+kbd {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-default);
+  border-bottom-width: 2px;
+  border-radius: var(--shape-xs-radius);
+  padding: var(--border-width) var(--space-xs);
+  line-height: var(--leading-snug);
+  vertical-align: baseline;
+}
+
+.key-hint {
+  color: var(--text-muted);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-medium);
+}
+
+/* ═══════════════════════════════════════════
+   Card — raised surface container
+   ═══════════════════════════════════════════ */
+
+.card {
+  border: 1px solid var(--border-subtle);
+  border-radius: calc(var(--shape-xl-radius) + 2px);
+  background: var(--surface-raised);
+  box-shadow: var(--surface-3-shadow);
+  max-width: 720px;
+  /* raised context: elev base override 1줄로 role 토큰 전체 자동 파생 */
+  --elev-base: var(--elev-base-raised);
+}
+
+/* ═══════════════════════════════════════════
+   Demo sections & utilities
+   ═══════════════════════════════════════════ */
+
+.demo-section {
+  margin-bottom: var(--space-xl);
+  max-width: 720px;
+}
+
+.demo-section h3 {
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+  margin: 0 0 var(--space-sm);
+  letter-spacing: var(--type-page-letter-spacing);
+}
+
+.demo-section h4 {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--tone-primary-base);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin: var(--space-lg) 0 var(--shape-xs-py);
+}
+
+.demo-section p {
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
+  margin: 0 0 var(--shape-xs-py);
+  line-height: var(--leading-snug);
+}
+
+.demo-section code {
+  font-family: var(--mono);
+  font-size: var(--type-body-size);
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  padding: var(--border-width) var(--space-xs);
+  border-radius: var(--shape-md-radius);
+  color: var(--tone-primary-base);
+}
+
+/* --- Key table (APG) --- */
+
+.key-table {
+  border-collapse: collapse;
+  font-size: var(--type-body-size);
+  margin-top: var(--space-sm);
+  max-width: 720px;
+}
+
+.key-table th {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-secondary);
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.key-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.key-table td:first-child {
+  font-family: var(--mono);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════
+   ListBox — demo item classes
+   ═══════════════════════════════════════════ */
+
+.list-item {
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--border-width) var(--space-xs);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-medium);
+  border-radius: var(--shape-md-radius);
+}
+
+.list-item__label {
+  color: inherit;
+}
+
+.list-item__desc {
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════
+   Accordion — demo item classes
+   ═══════════════════════════════════════════ */
+
+.accordion-header {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.accordion-header__label {
+  color: inherit;
+}
+
+.accordion-header__icon {
+  color: var(--text-muted);
+}
+
+.accordion-panel {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-base);
+}
+
+/* ═══════════════════════════════════════════
+   MenuList — demo item classes
+   ═══════════════════════════════════════════ */
+
+.menu-item {
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--border-width) var(--space-xs);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-medium);
+  border-radius: var(--shape-md-radius);
+}
+
+.menu-item__label {
+  color: inherit;
+}
+
+.menu-item__arrow {
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════
+   DisclosureGroup — demo item classes
+   ═══════════════════════════════════════════ */
+
+.disclosure-trigger {
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin: var(--border-width) var(--space-xs);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-medium);
+  border-radius: var(--shape-md-radius);
+}
+
+.disclosure-trigger__icon {
+  color: var(--text-muted);
+}
+
+.disclosure-trigger__label {
+  color: inherit;
+}
+
+.disclosure-panel {
+  padding: var(--shape-xs-py) var(--space-md) var(--shape-xs-py) var(--space-xl);
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-base);
+}
+
+/* ═══════════════════════════════════════════
+   TreeView — demo item classes
+   ═══════════════════════════════════════════ */
+
+.tree-node {
+  padding: var(--space-xs) var(--space-md);
+  margin: 0 var(--space-xs);
+  font-size: var(--type-body-size);
+  border-radius: var(--shape-md-radius);
+}
+
+.tree-node__chevron {
+  width: var(--icon-xs);
+  color: var(--text-muted);
+}
+
+.tree-node__icon {
+  margin-right: var(--space-xs);
+  opacity: 0.55;
+  color: var(--text-secondary);
+}
+
+.tree-node__name {
+  color: inherit;
+  font-weight: var(--weight-medium);
+}
+
+.tree-node__ext {
+  color: var(--text-muted);
+  font-weight: var(--weight-regular);
+}
+
+/* ═══════════════════════════════════════════
+   RadioGroup — demo item classes
+   ═══════════════════════════════════════════ */
+
+.radio-indicator {
+  font-size: var(--type-body-size);
+}
+
+/* ═══════════════════════════════════════════
+   SwitchGroup — demo item classes
+   ═══════════════════════════════════════════ */
+
+.switch-label {
+  font-weight: var(--weight-semi);
+  color: var(--text-muted);
+}
+
+.switch-label--on {
+  font-weight: var(--weight-semi);
+  color: var(--tone-primary-base);
+}
+} /* @layer component */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/styles/inspect.css">/* ═══════════════════════════════════════════════════════════════════
+   Design Guideline Inspector
+   ═══════════════════════════════════════════════════════════════════
+   3 modes, independently togglable via body class or query param:
+     ?inspect      → body.inspect       — role/interactive violation outline
+     ?inspect-grid → body.inspect-grid  — 8px baseline grid overlay
+     ?inspect-box  → body.inspect-box   — box-model color visualization
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Mode 1: Role Violation Outline (?inspect) ──
+   interactive(ia-*) without role(rl-*) = red outline (violation)
+   proper role = subtle green (correct) */
+
+@layer state {
+  body.inspect .ia-item:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-tab:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-check:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-cell:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-input:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-button:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge) {
+    outline: 3px solid rgba(255, 40, 40, 0.9);
+    outline-offset: -2px;
+  }
+
+  body.inspect .rl-control,
+  body.inspect .rl-control-group,
+  body.inspect .rl-item,
+  body.inspect .rl-badge {
+    outline: 1px solid rgba(100, 200, 100, 0.3);
+    outline-offset: -1px;
+  }
+}
+
+/* ── Mode 2: Baseline Grid (?inspect-grid) ──
+   8px horizontal grid — every element's height should land on these lines.
+   LLM vision detects broken rhythm as pattern mismatch in the stripe overlay. */
+
+@layer state {
+  body.inspect-grid::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99998;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 7px,
+        rgba(255, 60, 60, 0.25) 7px,
+        rgba(255, 60, 60, 0.25) 8px
+      );
+    background-size: 100% 8px;
+    background-position: top left;
+  }
+
+  /* 4px sub-grid — finer rhythm */
+  body.inspect-grid::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(255, 60, 60, 0.08) 3px,
+        rgba(255, 60, 60, 0.08) 4px
+      );
+    background-size: 100% 4px;
+  }
+}
+
+/* ── Mode 3: Box-Model Color (?inspect-box) ──
+   role = green tint, interactive = blue outline, surface = purple dot,
+   layout container = orange tint.
+   LLM vision sees color blocks and judges spacing uniformity. */
+
+@layer state {
+  /* Role elements — green: structural keyline elements */
+  body.inspect-box .rl-control,
+  body.inspect-box .rl-control-group,
+  body.inspect-box .rl-item,
+  body.inspect-box .rl-badge {
+    background-image: linear-gradient(rgba(76, 175, 80, 0.10), rgba(76, 175, 80, 0.10));
+    outline: 1px solid rgba(76, 175, 80, 0.35);
+    outline-offset: -1px;
+  }
+
+  /* Interactive elements — blue dashed: clickable/focusable */
+  body.inspect-box [class*="ia-"] {
+    background-image: linear-gradient(rgba(33, 150, 243, 0.06), rgba(33, 150, 243, 0.06));
+    outline: 1px dashed rgba(33, 150, 243, 0.30);
+    outline-offset: -1px;
+  }
+
+  /* Surface elements — purple dotted: visual containers */
+  body.inspect-box [class*="sf-"] {
+    outline: 1px dotted rgba(156, 39, 176, 0.25);
+    outline-offset: -1px;
+  }
+
+  /* Layout containers — orange: structural spacing */
+  body.inspect-box [class*="ly-"] {
+    background-image: linear-gradient(rgba(255, 152, 0, 0.06), rgba(255, 152, 0, 0.06));
+    outline: 1px dotted rgba(255, 152, 0, 0.25);
+    outline-offset: 0px;
+  }
+}
+
+/* ── Mode 4: Keyline Projection (?inspect-keyline) ──
+   SVG overlay via KeylineOverlay.tsx (src/devtools/).
+   Each rl-* element's 4 edges projected as full-viewport lines.
+   Aligned → lines overlap → few. Misaligned → lines scatter → many.
+   Visual entropy = inverse of design quality. ── */
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/Accordion.css">@layer component {
+  /* Accordion — chevron rotation */
+  .accordion-chevron {
+    transition: transform var(--motion-normal-duration) var(--motion-normal-easing);
+  }
+
+  .accordion-chevron[data-expanded='true'] {
+    transform: rotate(90deg);
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/Combobox.css">@layer component {
+/* Combobox — last-mile: dropdown offset */
+.combo-dropdown {
+  padding: 0;
+  padding-top: var(--space-xs);
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/Slider.css">@layer component {
+/* Slider — track, fill, thumb */
+.slider-label { min-width: calc(var(--space-2xl) * 2); }
+
+.slider-track {
+  --slider-track-height: 4px;
+
+  height: var(--slider-track-height);
+  background: var(--border-strong);
+  border-radius: var(--shape-pill-radius);
+}
+
+.slider-fill {
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-pill-radius);
+}
+
+.slider-thumb {
+  --slider-thumb-size: var(--icon-md);
+
+  top: 50%;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  background: var(--bg-white, #fff);
+  box-shadow: var(--shadow-sm);
+  transform: translate(-50%, -50%);
+  transition: outline-color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+[data-focused] .slider-thumb {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.slider-value { min-width: var(--space-2xl); }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/Spinbutton.css">@layer component {
+/* Spinbutton — group focus ring, button borders, value sizing */
+.spinbutton-group {
+  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing),
+              outline-color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+[data-focused] .spinbutton-group {
+  border-color: var(--tone-primary-base);
+  outline: var(--_ring-spread) solid var(--tone-primary-base);
+}
+
+.spinbutton-group[data-invalid] {
+  border-color: var(--tone-destructive-base);
+  outline: var(--_ring-spread) solid var(--tone-destructive-base);
+}
+
+.spinbutton-btn {
+  width: var(--_btn-w);
+
+  --_bg: var(--bg-hover);
+  --_bg-hover: var(--bg-active);
+
+  background: var(--_bg);
+  font-weight: var(--weight-regular);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
+}
+.spinbutton-btn-dec { border-right: var(--border-width) solid var(--border-default); }
+.spinbutton-btn-inc { border-left: var(--border-width) solid var(--border-default); }
+
+.spinbutton-value {
+  min-width: var(--_value-min-w);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.spinbutton-input {
+  width: var(--_value-min-w);
+  padding: var(--space-sm) var(--space-sm);
+}
+.spinbutton-input::placeholder { color: var(--text-muted); }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/devtools/testRunner/TestRunnerPanel.module.css">/* last-mile: ax() 축에 없는 속성만 */
+
+._resultItem_qtkfr_3 {
+  padding-block: 0;
+}
+
+._errorPre_qtkfr_7 {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
+  margin: var(--space-xs) 0 var(--space-xs) var(--space-xl);
+}
+
+._groupBlock_qtkfr_12 {
+  margin-bottom: var(--space-sm);
+}
+
+._renderArea_qtkfr_16 {
+  margin-bottom: var(--space-lg);
+}
+
+._summaryBar_qtkfr_20 {
+  margin-bottom: var(--space-md);
+}
+
+._failCount_qtkfr_24 {
+  margin-left: var(--space-md);
+}
+
+._totalCount_qtkfr_28 {
+  margin-left: var(--space-md);
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/devtools/inspector/PageStoreInspector.css">.store-inspector-split {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  min-height: var(--overlay-width);
+}
+
+.store-inspector-log {
+  grid-column: 1 / -1;
+  max-height: var(--storymap-col-width);
+  font-family: var(--mono);
+}
+
+.store-inspector-panel-label {
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  padding-bottom: var(--space-sm);
+}
+
+.store-inspector-log-chevron {
+  padding-right: var(--space-xs);
+  vertical-align: middle;
+}
+
+/* Expanded log details */
+.store-inspector-log-expanded {
+  padding-bottom: var(--space-xs);
+}
+
+.store-inspector-log-batch-children {
+  padding-bottom: var(--space-xs);
+}
+
+.store-inspector-log-diff {
+  padding-bottom: var(--space-xs);
+}
+
+.store-inspector-log-store-btn {
+  padding-bottom: var(--space-xs);
+}
+
+/* Store snapshot */
+.store-inspector-log-snapshot {
+  border-left: 2px solid var(--border);
+  padding-bottom: var(--space-xs);
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/pages/showcase/IndicatorsDemo.css">/* ── IndicatorsDemo last-mile ── */
+
+.indicators-section-title {
+  padding-bottom: var(--space-xs);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- reset browser default */
+  margin: 0;
+}
+
+.indicators-row {
+  display: grid;
+  grid-template-columns: 16ch 1fr;
+  align-items: center;
+  min-height: var(--space-2xl);
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/DatePicker.css">@layer component {
+/* DatePicker — border-radius splits, positioning */
+.dp-input {
+  padding-block: var(--shape-xs-py);
+  padding-inline: var(--shape-sm-px);
+  border-start-start-radius: var(--shape-xs-radius);
+  border-end-start-radius: var(--shape-xs-radius);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  font-family: inherit;
+}
+
+.dp-trigger {
+  padding-block: var(--shape-xs-py);
+  padding-inline: var(--shape-xs-px);
+  border-left: none;
+  border-start-end-radius: var(--shape-xs-radius);
+  border-end-end-radius: var(--shape-xs-radius);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+.dp-dialog {
+  padding-block-start: var(--space-xs);
+}
+.dp-nav-bar { padding-block-end: var(--space-sm); }
+
+.dp-nav-btn {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  padding: 0;
+}
+
+.dp-actions {
+  padding-block-start: var(--space-sm);
+}
+.dp-action-btn { font-family: inherit; }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/FlatLayout.module.css">@layer component {
+  ._splitPane_qm4vy_2 {
+    flex: var(--split-flex, 1);
+    flex-basis: var(--split-basis, auto);
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+  }
+
+  ._splitChild_qm4vy_10 {
+    height: 100%;
+  }
+
+  ._splitChild_qm4vy_10 > * {
+    flex: 1;
+    min-height: 0;
+  }
+
+  ._navRoot_qm4vy_19 {
+    height: 100%;
+  }
+
+  ._navSidebar_qm4vy_23 {
+    overflow-y: auto;
+    height: 100%;
+    border-right: 1px solid var(--color-border);
+  }
+
+  ._navContent_qm4vy_29 {
+    overflow-y: auto;
+    height: 100%;
+    flex: 1;
+  }
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/pages/todo/PageTodo.module.css">/* Stage 4 last-mile — ax 축에 없는 속성만 */
+
+/* 완료된 할 일 취소선 (text-decoration은 ax 축 없음) */
+._doneText_cgk8p_4 {
+  text-decoration: line-through;
+}
+
+/* 모바일 프레임 높이 (height: 100dvh는 ax 축 없음) */
+._mobileFrame_cgk8p_9 {
+  height: 100dvh;
+  border-inline: 1px solid var(--color-border-subtle, rgba(0,0,0,0.08));
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/SpreadReader.css">@layer component {
+/* SpreadReader — last-mile: column layout, transform, break-inside */
+
+.spread-root {
+  --_col-width: var(--overlay-width);
+  --_col-gap: var(--space-3xl);
+  --_padding-x: var(--space-5xl);
+  --_padding-y: var(--space-5xl);
+}
+
+.spread-inset {
+  padding: var(--_padding-y) var(--_padding-x);
+}
+
+.spread-columns {
+  height: 100%;
+  columns: var(--_col-width) 2;
+  column-gap: var(--_col-gap);
+  column-fill: balance;
+  transform: translateX(calc(-1 * var(--_spread, 0) * (100% + var(--_col-gap))));
+}
+
+.spread-columns :is(pre, table, blockquote, figure, ul, ol) {
+  break-inside: avoid;
+}
+
+.spread-columns :is(th) {
+  background: var(--surface-sunken);
+}
+
+.spread-columns > div {
+  padding: 0;
+  max-width: none;
+}
+
+.spread-indicator {
+  z-index: 20;
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/interactive-os/ui/QuickOpen.css">@layer component {
+/* QuickOpen — last-mile: positioning, animation, caret, placeholder */
+
+dialog.quick-open-dialog-el {
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: none;
+  max-height: none;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 12vh;
+}
+
+dialog.quick-open-dialog-el::backdrop {
+  background: var(--surface-scrim, rgb(0 0 0 / 50%));
+}
+
+.quick-open-dialog {
+  width: var(--overlay-width);
+  max-height: var(--overlay-width);
+  place-self: center;
+}
+
+.quick-open-input {
+  background: none;
+  caret-color: var(--tone-primary-base);
+}
+
+.quick-open-input::placeholder {
+  color: var(--text-muted);
+  font-weight: var(--type-body-weight);
+}
+
+.quick-open-item-text {
+  min-width: 0;
+}
+}
+</style><style type="text/css" data-vite-dev-id="/Users/user/Desktop/aria/src/pages/book/PageBookViewer.css">/* ═══════════════════════════════════════════
+   Book Viewer — last-mile CSS only
+   ═══════════════════════════════════════════ */
+
+.book {
+  --_page-col-width: var(--overlay-width);
+  --_page-col-gap: var(--space-3xl);
+  --_progress-height: var(--indicator-width);
+  --_chrome-duration: 600ms;
+  --_chrome-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Floating pill — chrome visibility ── */
+
+.book-pill {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--_chrome-duration) var(--_chrome-easing);
+}
+
+.book-pill[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Progress bar ── */
+
+.book-progress-bar {
+  height: var(--_progress-height);
+  background: var(--surface-sunken);
+}
+
+.book-progress-fill {
+  width: var(--progress, 0%);
+  height: 100%;
+  background: var(--tone-primary-base);
+  transition: width var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+/* ── TOC item indent ── */
+
+.book-toc-panel [data-indent] {
+  padding-left: var(--space-xl);
+}
+
+/* ── Page spread layout ── */
+
+.book-page-area {
+  min-width: 0;
+}
+
+.book-page {
+  height: 100%;
+  columns: var(--_page-col-width) 2;
+  column-gap: var(--_page-col-gap);
+  column-fill: balance;
+  transform: translateX(calc(-1 * var(--_spread, 0) * (100% + var(--_page-col-gap))));
+}
+
+.book-page pre,
+.book-page table,
+.book-page blockquote,
+.book-page figure,
+.book-page ul,
+.book-page ol {
+  break-inside: avoid;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.book-page th {
+  background: var(--surface-sunken);
+}
+
+.book-page > div {
+  padding: 0;
+  max-width: none;
+}
+
+</style><style id="component-inspector-style">body.debug-mode-active { cursor: crosshair; }</style></head>
+  <body>
+    <div id="root"><div data-inspector-line="src/AppShell.tsx:60:7" data-inspector-loc="77" class="page ly-row"><nav data-inspector-line="src/ActivityBar.tsx:165:5" data-inspector-loc="202" class="ly-scroll pd-xs"><div data-inspector-line="src/ActivityBar.tsx:166:7" data-inspector-loc="202" class="rl-control ly-center"><div data-inspector-line="src/ActivityBar.tsx:167:9" data-inspector-loc="202" class="logo-mark"></div></div><div data-inspector-line="src/interactive-os/primitives/aria.tsx:56:7" data-inspector-loc="315" role="toolbar" aria-label="Navigation" aria-orientation="vertical" data-aria-container="" tabindex="-1" class="ax-interactive"><div data-inspector-line="src/ActivityBar.tsx:177:9" data-inspector-loc="202" role="group" aria-label="Apps"><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="cms" aria-posinset="1" aria-setsize="19" aria-label="CMS" data-focused="" tabindex="0" class="rl-control sf-display ly-center ct-icon" interestfor="tooltip-_r_0_" aria-describedby="tooltip-_r_0_" style="anchor-name: --tooltip-r0;"><span data-inspector-line="src/ActivityBar.tsx:112:27" data-inspector-loc="202" class="item-indicator--active-rail"></span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_0_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r0; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">CMS</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="viewer" aria-posinset="2" aria-setsize="19" aria-label="Viewer" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_1_" aria-describedby="tooltip-_r_1_" style="anchor-name: --tooltip-r1;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-code ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M10 10.5 8 13l2 2.5"></path><path d="m14 10.5 2 2.5-2 2.5"></path><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_1_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r1; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Viewer</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="ui-showcase" aria-posinset="3" aria-setsize="19" aria-label="UI Showcase" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_2_" aria-describedby="tooltip-_r_2_" style="anchor-name: --tooltip-r2;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_2_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r2; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">UI Showcase</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="catalog" aria-posinset="4" aria-setsize="19" aria-label="Catalog" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_3_" aria-describedby="tooltip-_r_3_" style="anchor-name: --tooltip-r3;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-boxes ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"></path><path d="m7 16.5-4.74-2.85"></path><path d="m7 16.5 5-3"></path><path d="M7 16.5v5.17"></path><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"></path><path d="m17 16.5-5-3"></path><path d="m17 16.5 4.74-2.85"></path><path d="M17 16.5v5.17"></path><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"></path><path d="M12 8 7.26 5.15"></path><path d="m12 8 4.74-2.85"></path><path d="M12 13.5V8"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_3_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r3; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Catalog</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="chat" aria-posinset="5" aria-setsize="19" aria-label="Chat" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_4_" aria-describedby="tooltip-_r_4_" style="anchor-name: --tooltip-r4;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_4_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r4; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Chat</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="book" aria-posinset="6" aria-setsize="19" aria-label="Book" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_5_" aria-describedby="tooltip-_r_5_" style="anchor-name: --tooltip-r5;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-text ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"></path><path d="M8 11h8"></path><path d="M8 7h6"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_5_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r5; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Book</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="pipeline" aria-posinset="7" aria-setsize="19" aria-label="Pipeline" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_6_" aria-describedby="tooltip-_r_6_" style="anchor-name: --tooltip-r6;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-branch ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_6_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r6; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Pipeline</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="features" aria-posinset="8" aria-setsize="19" aria-label="Features" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_7_" aria-describedby="tooltip-_r_7_" style="anchor-name: --tooltip-r7;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-tree ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M8 5h13"></path><path d="M13 12h8"></path><path d="M13 19h8"></path><path d="M3 10a2 2 0 0 0 2 2h3"></path><path d="M3 5v12a2 2 0 0 0 2 2h3"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_7_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r7; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Features</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="creator" aria-posinset="9" aria-setsize="19" aria-label="Creator" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_8_" aria-describedby="tooltip-_r_8_" style="anchor-name: --tooltip-r8;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-component ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M15.536 11.293a1 1 0 0 0 0 1.414l2.376 2.377a1 1 0 0 0 1.414 0l2.377-2.377a1 1 0 0 0 0-1.414l-2.377-2.377a1 1 0 0 0-1.414 0z"></path><path d="M2.297 11.293a1 1 0 0 0 0 1.414l2.377 2.377a1 1 0 0 0 1.414 0l2.377-2.377a1 1 0 0 0 0-1.414L6.088 8.916a1 1 0 0 0-1.414 0z"></path><path d="M8.916 17.912a1 1 0 0 0 0 1.415l2.377 2.376a1 1 0 0 0 1.414 0l2.377-2.376a1 1 0 0 0 0-1.415l-2.377-2.376a1 1 0 0 0-1.414 0z"></path><path d="M8.916 4.674a1 1 0 0 0 0 1.414l2.377 2.376a1 1 0 0 0 1.414 0l2.377-2.376a1 1 0 0 0 0-1.414l-2.377-2.377a1 1 0 0 0-1.414 0z"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_8_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r8; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Creator</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="i18n" aria-posinset="10" aria-setsize="19" aria-label="i18n" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_9_" aria-describedby="tooltip-_r_9_" style="anchor-name: --tooltip-r9;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_9_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-r9; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">i18n</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="incident" aria-posinset="11" aria-setsize="19" aria-label="Incident" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_a_" aria-describedby="tooltip-_r_a_" style="anchor-name: --tooltip-ra;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_a_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-ra; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Incident</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="theme-creator" aria-posinset="12" aria-setsize="19" aria-label="Theme" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_b_" aria-describedby="tooltip-_r_b_" style="anchor-name: --tooltip-rb;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"></path><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_b_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-rb; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Theme</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="replay" aria-posinset="13" aria-setsize="19" aria-label="Replay" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_c_" aria-describedby="tooltip-_r_c_" style="anchor-name: --tooltip-rc;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_c_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-rc; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Replay</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="kanban" aria-posinset="14" aria-setsize="19" aria-label="Kanban" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_d_" aria-describedby="tooltip-_r_d_" style="anchor-name: --tooltip-rd;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-kanban ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M8 7v7"></path><path d="M12 7v4"></path><path d="M16 7v9"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_d_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-rd; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Kanban</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="a2ui" aria-posinset="15" aria-setsize="19" aria-label="A2UI" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_e_" aria-describedby="tooltip-_r_e_" style="anchor-name: --tooltip-re;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cable ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z"></path><path d="M17 21v-2"></path><path d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10"></path><path d="M21 21v-2"></path><path d="M3 5V3"></path><path d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z"></path><path d="M7 5V3"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_e_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-re; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">A2UI</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="project" aria-posinset="16" aria-setsize="19" aria-label="Project" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_f_" aria-describedby="tooltip-_r_f_" style="anchor-name: --tooltip-rf;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-kanban ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M5 3v14"></path><path d="M12 3v8"></path><path d="M19 3v18"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_f_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-rf; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Project</span><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="writer" aria-posinset="17" aria-setsize="19" aria-label="Writer" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_g_" aria-describedby="tooltip-_r_g_" style="anchor-name: --tooltip-rg;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen-line ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_g_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-rg; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Writer</span></div><div data-inspector-line="src/ActivityBar.tsx:180:9" data-inspector-loc="202" role="separator" class="bd-top"></div><div data-inspector-line="src/ActivityBar.tsx:181:9" data-inspector-loc="202" role="group" aria-label="Showcase"><div data-inspector-line="src/ActivityBar.tsx:111:7" data-inspector-loc="202" role="button" data-node-id="gmail" aria-posinset="18" aria-setsize="19" aria-label="Gmail" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_h_" aria-describedby="tooltip-_r_h_" style="anchor-name: --tooltip-rh;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:113:9" data-inspector-loc="202"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_h_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-rh; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Gmail</span></div><div data-inspector-line="src/ActivityBar.tsx:184:9" data-inspector-loc="202" class="fx-1"></div><div data-inspector-line="src/ActivityBar.tsx:185:9" data-inspector-loc="202" role="group" aria-label="Util"><div data-inspector-line="src/ActivityBar.tsx:190:17" data-inspector-loc="202" role="button" data-node-id="theme" aria-posinset="19" aria-setsize="19" aria-label="Theme" tabindex="-1" class="pd-xs sh-md rl-control sf-ghost ly-center ct-icon" interestfor="tooltip-_r_i_" aria-describedby="tooltip-_r_i_" style="anchor-name: --tooltip-ri;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun ic-sm" aria-hidden="true" data-inspector-line="src/ActivityBar.tsx:192:19" data-inspector-loc="202"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></div><span data-inspector-line="src/interactive-os/ui/Tooltip.tsx:75:7" data-inspector-loc="93" id="tooltip-_r_i_" popover="hint" role="tooltip" class="pointer-none pd-xs sh-sm mo-fade-slide-in rl-tip sf-inverted pl-anchor-end ts-caption" style="position-anchor: --tooltip-ri; max-width: calc(var(--space-3xl) * 6); overflow-wrap: break-word; padding-inline-start: var(--space-xs);">Switch to light theme</span></div></div></nav><div data-inspector-line="src/AppShell.tsx:64:9" data-inspector-loc="77" class="page-content ly-scroll fx-1"><div data-inspector-line="src/pages/todo/PageTodo.tsx:18:5" data-inspector-loc="29" class="ly-center w-full"><div data-inspector-line="src/pages/todo/PageTodo.tsx:19:7" data-inspector-loc="29" class="w-md ly-stack _mobileFrame_cgk8p_9"><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:370:7" data-inspector-loc="381" class="ly-fill w-full"><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:119:9" data-inspector-loc="381" class="ly-stack w-full fx-1"><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:131:15" data-inspector-loc="381" class=" " style="--split-flex: 0 0 auto; --split-basis: auto;"><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:301:7" data-inspector-loc="381" class="w-full ly-fill _splitChild_qm4vy_10"><div data-inspector-line="src/pages/todo/todoWidgets.tsx:21:5" data-inspector-loc="62" class="rl-control-group sf-raised ly-row w-full fx-none"><div data-inspector-line="src/pages/todo/todoWidgets.tsx:22:7" data-inspector-loc="62" class="ts-section fx-1">Todo</div><div data-inspector-line="src/pages/todo/todoWidgets.tsx:23:7" data-inspector-loc="62" class="ts-body">완료 1 / 3</div></div></div></div><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:131:15" data-inspector-loc="381" class=" _splitPane_qm4vy_2" style="--split-flex: 1; --split-basis: auto;"><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:301:7" data-inspector-loc="381" class="w-full ly-fill _splitChild_qm4vy_10"><div data-inspector-line="src/pages/todo/todoWidgets.tsx:33:5" data-inspector-loc="62" role="list" class="ly-stack w-full fx-1"><div data-inspector-line="src/pages/todo/todoWidgets.tsx:35:9" data-inspector-loc="62" role="listitem" class="rl-item ia-item sf-ghost ly-row w-full"><span data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:18:5" data-inspector-loc="23" class="fx-none ly-center bd-strong sh-sm bg-transparent item-indicator--checkbox"><svg data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:5:3" data-inspector-loc="23" class="item-indicator--checkbox-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:6:5" data-inspector-loc="23" d="M20 6 9 17l-5-5"></path></svg></span><span data-inspector-line="src/pages/todo/todoWidgets.tsx:42:11" data-inspector-loc="62" class="cl-1 fx-1">우유 사기</span><button data-inspector-line="src/pages/todo/todoWidgets.tsx:45:11" data-inspector-loc="62" class="pd-xs sh-md sf-ghost rl-control ct-icon" aria-label="우유 사기 삭제"><span data-inspector-line="src/interactive-os/ui/indicators/CloseIndicator.tsx:11:5" data-inspector-loc="16" class="inline-flex ly-center item-indicator--close"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true" data-inspector-line="src/interactive-os/ui/indicators/CloseIndicator.tsx:12:7" data-inspector-loc="16"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span></button></div><div data-inspector-line="src/pages/todo/todoWidgets.tsx:35:9" data-inspector-loc="62" role="listitem" class="rl-item ia-item sf-ghost ly-row w-full" data-done="true"><span data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:18:5" data-inspector-loc="23" class="fx-none ly-center bd-strong sh-sm bg-transparent item-indicator--checkbox is-checked"><svg data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:5:3" data-inspector-loc="23" class="item-indicator--checkbox-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:6:5" data-inspector-loc="23" d="M20 6 9 17l-5-5"></path></svg></span><span data-inspector-line="src/pages/todo/todoWidgets.tsx:42:11" data-inspector-loc="62" class="cl-1 fx-1 _doneText_cgk8p_4">세탁물 찾기</span><button data-inspector-line="src/pages/todo/todoWidgets.tsx:45:11" data-inspector-loc="62" class="pd-xs sh-md sf-ghost rl-control ct-icon" aria-label="세탁물 찾기 삭제"><span data-inspector-line="src/interactive-os/ui/indicators/CloseIndicator.tsx:11:5" data-inspector-loc="16" class="inline-flex ly-center item-indicator--close"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true" data-inspector-line="src/interactive-os/ui/indicators/CloseIndicator.tsx:12:7" data-inspector-loc="16"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span></button></div><div data-inspector-line="src/pages/todo/todoWidgets.tsx:35:9" data-inspector-loc="62" role="listitem" class="rl-item ia-item sf-ghost ly-row w-full"><span data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:18:5" data-inspector-loc="23" class="fx-none ly-center bd-strong sh-sm bg-transparent item-indicator--checkbox"><svg data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:5:3" data-inspector-loc="23" class="item-indicator--checkbox-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-inspector-line="src/interactive-os/ui/indicators/CheckIndicator.tsx:6:5" data-inspector-loc="23" d="M20 6 9 17l-5-5"></path></svg></span><span data-inspector-line="src/pages/todo/todoWidgets.tsx:42:11" data-inspector-loc="62" class="cl-1 fx-1">이메일 확인</span><button data-inspector-line="src/pages/todo/todoWidgets.tsx:45:11" data-inspector-loc="62" class="pd-xs sh-md sf-ghost rl-control ct-icon" aria-label="이메일 확인 삭제"><span data-inspector-line="src/interactive-os/ui/indicators/CloseIndicator.tsx:11:5" data-inspector-loc="16" class="inline-flex ly-center item-indicator--close"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true" data-inspector-line="src/interactive-os/ui/indicators/CloseIndicator.tsx:12:7" data-inspector-loc="16"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span></button></div></div></div></div><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:131:15" data-inspector-loc="381" class=" " style="--split-flex: 0 0 auto; --split-basis: auto;"><div data-inspector-line="src/interactive-os/ui/FlatLayout.tsx:301:7" data-inspector-loc="381" class="w-full ly-fill _splitChild_qm4vy_10"><div data-inspector-line="src/pages/todo/todoWidgets.tsx:56:5" data-inspector-loc="62" class="rl-control-group sf-sunken ly-row w-full fx-none"><input data-inspector-line="src/pages/todo/todoWidgets.tsx:57:7" data-inspector-loc="62" class="pd-sm sh-md bd-default rl-control sf-input ct-text cl-1 w-full ia-input" placeholder="새 할 일을 입력하세요..." type="text"><button data-inspector-line="src/pages/todo/todoWidgets.tsx:58:7" data-inspector-loc="62" class="pd-sm sh-md g-xs sf-action tn-accent rl-control ct-text">추가</button></div></div></div></div></div></div></div></div><dialog data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:84:5" data-inspector-loc="126" class="border-none bg-transparent fvm-dialog"><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:85:7" data-inspector-loc="126" class="fvm-modal sf-trap ly-stack sh-xl"><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:86:9" data-inspector-loc="126" class="rl-item ct-text ly-spread fx-none ts-overline bd-bottom w-full"><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:88:11" data-inspector-loc="126" class="ly-bar g-sm"><button data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:107:13" data-inspector-loc="126" class="pd-xs sh-md rl-control sf-ghost ct-icon">×</button></div></div><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:110:9" data-inspector-loc="126" class="fx-1 ly-scroll"><div data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:102:5" data-inspector-loc="395" class="pl-relative"><figure data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:103:7" data-inspector-loc="395" class="code-viewer code-viewer--doc ly-stack ts-code sf-raised" role="region" aria-label="Code example, text"><div data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:357:5" data-inspector-loc="395" class="code-viewer-body select-text "><pre data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:362:7" data-inspector-loc="395" class="shiki code-viewer-pre" tabindex="0"><code data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:363:9" data-inspector-loc="395" class="ly-stack" style="height: 20px;"><div data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:364:11" data-inspector-loc="395" style="height: 0px;"></div><span data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:384:17" data-inspector-loc="395" class="line code-line--with-gutter" data-line="1"><span data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:385:39" data-inspector-loc="395" class="code-viewer-gutter" aria-hidden="true">1</span></span></code></pre></div></figure><button data-inspector-line="src/interactive-os/ui/CopyButton.tsx:17:5" data-inspector-loc="27" type="button" class="pd-xs sh-md pl-top-end rl-control sf-ghost ct-icon" aria-label="Copy to clipboard"><span data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:18:5" data-inspector-loc="23" class="fx-none ly-center"><svg data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:4:3" data-inspector-loc="23" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:5:5" data-inspector-loc="23" x="9" y="9" width="13" height="13" rx="2"></rect><path data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:6:5" data-inspector-loc="23" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span></button></div></div></div></dialog><dialog data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:84:5" data-inspector-loc="126" class="border-none bg-transparent fvm-dialog"><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:85:7" data-inspector-loc="126" class="fvm-modal sf-trap ly-stack sh-xl"><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:86:9" data-inspector-loc="126" class="rl-item ct-text ly-spread fx-none ts-overline bd-bottom w-full"><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:88:11" data-inspector-loc="126" class="ly-bar g-sm"><button data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:107:13" data-inspector-loc="126" class="pd-xs sh-md rl-control sf-ghost ct-icon">×</button></div></div><div data-inspector-line="src/interactive-os/ui/FileViewerModal.tsx:110:9" data-inspector-loc="126" class="fx-1 ly-scroll"><div data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:102:5" data-inspector-loc="395" class="pl-relative"><figure data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:103:7" data-inspector-loc="395" class="code-viewer code-viewer--doc ly-stack ts-code sf-raised" role="region" aria-label="Code example, text"><div data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:357:5" data-inspector-loc="395" class="code-viewer-body select-text "><pre data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:362:7" data-inspector-loc="395" class="shiki code-viewer-pre" tabindex="0"><code data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:363:9" data-inspector-loc="395" class="ly-stack" style="height: 20px;"><div data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:364:11" data-inspector-loc="395" style="height: 0px;"></div><span data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:384:17" data-inspector-loc="395" class="line code-line--with-gutter" data-line="1"><span data-inspector-line="src/interactive-os/ui/CodeViewer.tsx:385:39" data-inspector-loc="395" class="code-viewer-gutter" aria-hidden="true">1</span></span></code></pre></div></figure><button data-inspector-line="src/interactive-os/ui/CopyButton.tsx:17:5" data-inspector-loc="27" type="button" class="pd-xs sh-md pl-top-end rl-control sf-ghost ct-icon" aria-label="Copy to clipboard"><span data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:18:5" data-inspector-loc="23" class="fx-none ly-center"><svg data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:4:3" data-inspector-loc="23" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:5:5" data-inspector-loc="23" x="9" y="9" width="13" height="13" rx="2"></rect><path data-inspector-line="src/interactive-os/ui/indicators/CopyIndicator.tsx:6:5" data-inspector-loc="23" d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span></button></div></div></div></dialog></div></div>
+    <script type="module" src="/src/main.tsx?t=1776495120352"></script>
+  
+
+</body></html>

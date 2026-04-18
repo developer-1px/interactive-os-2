@@ -1,0 +1,12 @@
+/* Stage 4 last-mile — ax 축에 없는 속성만 */
+
+/* 완료된 할 일 취소선 (text-decoration은 ax 축 없음) */
+.doneText {
+  text-decoration: line-through;
+}
+
+/* 모바일 프레임 높이 (height: 100dvh는 ax 축 없음) */
+.mobileFrame {
+  height: 100dvh;
+  border-inline: 1px solid var(--color-border-subtle, rgba(0,0,0,0.08));
+}
