@@ -1,62 +1,189 @@
-/** @catalog 마크다운 frontmatter 메타 카드 — Notion 스타일 페이지 프로퍼티 */
+/** @catalog 마크다운 frontmatter 메타 카드 — 의도별 티어(hero/subtitle/byline) + 기타 접기 */
+import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { ax } from '@styles/ax'
 import { Badge } from './Badge'
 import styles from './FrontmatterCard.module.css'
 
-const DATE_KEYS = new Set(['date', 'created', 'updated', 'modified', 'published'])
-const TAG_KEYS = new Set(['tags', 'tag', 'keywords', 'categories'])
+// 동의어 집합 — Jekyll/Hugo/Docusaurus/Astro/Obsidian/Hashnode/Dev.to 호환
+const TITLE_KEYS = new Set(['title'])
+const SUBTITLE_KEYS = new Set(['description', 'subtitle', 'summary', 'excerpt'])
+const DATE_KEYS = new Set([
+  'date',
+  'created', 'created_at', 'createdAt',
+  'published', 'published_at', 'publishedAt', 'publish_date', 'publishDate',
+  'updated', 'updated_at', 'updatedAt',
+  'modified', 'modified_at', 'modifiedAt',
+  'last_update', 'lastUpdate', 'lastmod',
+])
+const PEOPLE_KEYS = new Set(['author', 'authors', 'by'])
+const TAG_KEYS = new Set(['tags', 'tag', 'categories', 'keywords'])
+// 라우팅/SEO/내부 — 읽는 사람에게 의미 없음
+const HIDDEN_KEYS = new Set([
+  'id', 'slug', 'aliases', 'permalink', 'url', 'path',
+  'draft', 'unlisted', 'published',
+  'image', 'cover', 'banner', 'thumbnail', 'og_image', 'social_image',
+  'layout', 'template',
+  'legacy',
+])
 
-function renderValue(key: string, value: unknown) {
+const LONG_TEXT_THRESHOLD = 140
+const PERSIST_KEY = 'frontmatter-expanded'
+
+type Category = 'title' | 'subtitle' | 'date' | 'people' | 'tags' | 'hidden' | 'other'
+
+function classify(key: string): Category {
+  if (TITLE_KEYS.has(key)) return 'title'
+  if (SUBTITLE_KEYS.has(key)) return 'subtitle'
+  if (DATE_KEYS.has(key)) return 'date'
+  if (PEOPLE_KEYS.has(key)) return 'people'
+  if (TAG_KEYS.has(key)) return 'tags'
+  if (HIDDEN_KEYS.has(key)) return 'hidden'
+  return 'other'
+}
+
+function formatDate(value: unknown): string {
+  if (value instanceof Date) return value.toISOString().slice(0, 10)
+  return String(value)
+}
+
+function toTagArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(String).filter(Boolean)
+  if (typeof value === 'string') return value.split(/[,\s]+/).filter(Boolean)
+  return []
+}
+
+function TagList({ value }: { value: unknown }) {
+  const tags = toTagArray(value)
+  if (tags.length === 0) return null
+  return (
+    <div className={ax({ layout: 'wrap', gap: 'xs' })}>
+      {tags.map((v, i) => <Badge key={i} variant="outline">{v}</Badge>)}
+    </div>
+  )
+}
+
+function PeopleList({ value }: { value: unknown }) {
+  const list = Array.isArray(value) ? value : [value]
+  const names = list.map((p) =>
+    typeof p === 'object' && p !== null
+      ? ((p as { name?: string }).name ?? JSON.stringify(p))
+      : String(p),
+  )
+  return <span className={ax({ textStyle: 'caption' })}>{names.join(', ')}</span>
+}
+
+function ExpandableText({ value }: { value: string }) {
+  const [open, setOpen] = useState(false)
+  if (value.length <= LONG_TEXT_THRESHOLD) {
+    return <span className={ax({ textStyle: 'body' })}>{value}</span>
+  }
+  const display = open ? value : `${value.slice(0, LONG_TEXT_THRESHOLD)}…`
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen((o) => !o)}
+      className={`text-left ${ax({ role: 'control', interactive: 'button', surface: 'ghost', textStyle: 'body' })}`}
+    >
+      {display}
+    </button>
+  )
+}
+
+function renderValue(_key: string, value: unknown, cat: Category) {
+  if (value === null || value === undefined) return null
+
+  if (cat === 'tags') return <TagList value={value} />
+  if (cat === 'people') return <PeopleList value={value} />
+  if (cat === 'date') return <span className={ax({ textStyle: 'caption' })}>{formatDate(value)}</span>
+
   if (Array.isArray(value)) {
     return (
       <div className={ax({ layout: 'wrap', gap: 'xs' })}>
-        {value.map((v, i) => (
-          <Badge key={i} variant="outline">{String(v)}</Badge>
-        ))}
+        {value.map((v, i) => <Badge key={i} variant="outline">{String(v)}</Badge>)}
       </div>
     )
   }
-  if (TAG_KEYS.has(key) && typeof value === 'string') {
-    return (
-      <div className={ax({ layout: 'wrap', gap: 'xs' })}>
-        {value.split(/[,\s]+/).filter(Boolean).map((v, i) => (
-          <Badge key={i} variant="outline">{v}</Badge>
-        ))}
-      </div>
-    )
-  }
-  if (DATE_KEYS.has(key)) {
-    const s = value instanceof Date ? value.toISOString().slice(0, 10) : String(value)
-    return <span className={ax({ textStyle: 'body' })}>{s}</span>
-  }
-  if (value === null || value === undefined) return null
   if (typeof value === 'object') {
-    return (
-      <span className={ax({ textStyle: 'caption' })}>
-        {JSON.stringify(value)}
-      </span>
-    )
+    return <span className={ax({ textStyle: 'caption' })}>{JSON.stringify(value)}</span>
   }
+  return <ExpandableText value={String(value)} />
+}
+
+function Row({ keyName, value, cat }: { keyName: string; value: unknown; cat: Category }) {
   return (
-    <span className={ax({ textStyle: 'body' })}>
-      {String(value)}
-    </span>
+    <div className={ax({ layout: 'row', gap: 'md' })}>
+      <span className={`${styles.label} ${ax({ textStyle: 'caption', flex: 'none' })}`}>{keyName}</span>
+      <div className={ax({ flex: '1' })}>{renderValue(keyName, value, cat)}</div>
+    </div>
   )
 }
 
 export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
-  const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined && v !== '')
+  const [expanded, setExpanded] = useState<boolean>(() => {
+    try { return localStorage.getItem(PERSIST_KEY) === 'true' } catch { return false }
+  })
+
+  const entries = Object.entries(data)
+    .filter(([, v]) => v !== null && v !== undefined && v !== '')
+    .map(([key, value]) => ({ key, value, cat: classify(key) }))
+
   if (entries.length === 0) return null
+
+  const title = entries.find((e) => e.cat === 'title')?.value
+  const subtitle = entries.find((e) => e.cat === 'subtitle')?.value
+  const byline = entries.filter((e) => e.cat === 'date' || e.cat === 'people' || e.cat === 'tags')
+  const others = entries.filter((e) => e.cat === 'other')
+  // hidden은 전부 숨김
+
+  const hasHero = Boolean(title) || Boolean(subtitle) || byline.length > 0
+  if (!hasHero && others.length === 0) return null
+
+  const handleToggle = () => {
+    setExpanded((prev) => {
+      const next = !prev
+      try { localStorage.setItem(PERSIST_KEY, String(next)) } catch { /* ignore */ }
+      return next
+    })
+  }
+
   return (
-    <section className={ax({ surface: 'sunken', shape: 'md', layout: 'stack', gap: 'xs', padding: 'md' })}>
-      {entries.map(([key, value]) => (
-        <div key={key} className={ax({ layout: 'row', gap: 'md' })}>
-          <span className={`${styles.label} ${ax({ textStyle: 'caption', flex: 'none' })}`}>
-            {key}
-          </span>
-          <div className={ax({ flex: '1' })}>{renderValue(key, value)}</div>
+    <section className={ax({ surface: 'sunken', shape: 'md', layout: 'stack', gap: 'sm', padding: 'md' })}>
+      {typeof title === 'string' && (
+        <div className={ax({ textStyle: 'section' })}>{title}</div>
+      )}
+      {typeof subtitle === 'string' && (
+        <div className={ax({ textStyle: 'caption' })}>{subtitle}</div>
+      )}
+      {byline.length > 0 && (
+        <div className={ax({ layout: 'wrap', gap: 'md' })}>
+          {byline.map(({ key, value, cat }) => (
+            <div key={key} className={ax({ layout: 'row', gap: 'xs' })}>
+              <span className={ax({ textStyle: 'caption' })}>{key}</span>
+              {renderValue(key, value, cat)}
+            </div>
+          ))}
         </div>
-      ))}
+      )}
+
+      {others.length > 0 && expanded && (
+        <div className={ax({ layout: 'stack', gap: 'xs' })}>
+          {others.map(({ key, value, cat }) => (
+            <Row key={key} keyName={key} value={value} cat={cat} />
+          ))}
+        </div>
+      )}
+      {others.length > 0 && (
+        <button
+          type="button"
+          onClick={handleToggle}
+          data-expanded={expanded ? '' : undefined}
+          className={`${styles.toggle} ${ax({ role: 'control', interactive: 'button', surface: 'ghost', textStyle: 'caption', layout: 'row', gap: 'xs' })}`}
+        >
+          <ChevronDown size={12} className={styles.chevron} />
+          {expanded ? 'Hide properties' : `Show ${others.length} more ${others.length === 1 ? 'property' : 'properties'}`}
+        </button>
+      )}
     </section>
   )
 }

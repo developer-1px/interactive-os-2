@@ -1,3 +1,12 @@
 .label {
   min-width: 7em;
+  text-transform: lowercase;
+}
+
+.chevron {
+  transition: transform 0.15s ease;
+}
+
+.toggle[data-expanded] .chevron {
+  transform: rotate(180deg);
 }
