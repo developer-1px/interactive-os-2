@@ -1,0 +1,43 @@
+{
+  "_comment": "Stage 2 — NormalizedData shape + command signatures for Todo app.",
+  "normalizedData": {
+    "entities": {
+      "__root__": { "id": "__root__" },
+      "t1": { "id": "t1", "data": { "label": "우유 사기", "done": false } },
+      "t2": { "id": "t2", "data": { "label": "세탁물 찾기", "done": true } },
+      "t3": { "id": "t3", "data": { "label": "이메일 확인", "done": false } }
+    },
+    "relationships": {
+      "__root__": ["t1", "t2", "t3"]
+    }
+  },
+  "commands": [
+    {
+      "type": "todo:add",
+      "create": "(label: string) => ({ id: string, label })",
+      "effect": "addEntity(store, { id, data: { label, done: false } }, ROOT_ID)"
+    },
+    {
+      "type": "todo:toggle",
+      "create": "(id: string) => ({ id })",
+      "effect": "updateEntityData(store, id, { done: !store.entities[id].data.done })"
+    },
+    {
+      "type": "todo:remove",
+      "create": "(id: string) => ({ id })",
+      "effect": "removeEntity(store, id)"
+    }
+  ],
+  "selectors": [
+    {
+      "name": "selectTotal",
+      "returns": "number",
+      "desc": "root의 children 개수"
+    },
+    {
+      "name": "selectDoneCount",
+      "returns": "number",
+      "desc": "data.done === true인 엔티티 개수"
+    }
+  ]
+}
