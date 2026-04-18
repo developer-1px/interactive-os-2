@@ -24,82 +24,55 @@ function AxisRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /* ══ Zone × Interactive Composition ══
- * 용도에 맞는 조합 데모 — surface zone이 interactive 법도를 결정.
- * 같은 `aria-selected="true"` 아이템이 4 zone에서 각자 다른 배경을 받음.
- * (feedback_contextual_zone_cascade · P-26) */
-
-type ItemStateAttrs = {
-  'aria-selected'?: 'true'
-  'aria-disabled'?: 'true'
-  'aria-checked'?: 'true'
-  'data-focused'?: boolean
-  'data-hover'?: boolean
-  'data-active'?: boolean
-  'data-focus-ring'?: boolean
-}
-
-const itemStates: Array<{ label: string; attrs: ItemStateAttrs }> = [
-  { label: 'default', attrs: {} },
-  { label: 'hover', attrs: { 'data-hover': true } },
-  { label: 'active', attrs: { 'data-active': true } },
-  { label: 'focus', attrs: { 'data-focus-ring': true } },
-  { label: 'selected', attrs: { 'aria-selected': 'true' } },
-  { label: 'sel + focus', attrs: { 'aria-selected': 'true', 'data-focused': true } },
-  { label: 'checked', attrs: { 'aria-checked': 'true' } },
-  { label: 'disabled', attrs: { 'aria-disabled': 'true' } },
-]
+ * surface zone이 interactive 법도를 결정 (feedback_contextual_zone_cascade · P-26).
+ * ax 축만으로 구성. state는 실제 pseudo-class로 체험 (Tab/hover/click). */
 
 const buttonTones = ['accent', 'danger', 'success', 'warning', 'neutral'] as const
 
 function ZoneCompositionAxis() {
   const zones = ['sunken', 'base', 'raised', 'overlay'] as const
   return (
-    <Section title="ZONE × INTERACTIVE — 모든 state">
-      <div className="theme-zone-grid">
+    <Section title="ZONE × INTERACTIVE">
+      <div className={ax({ layout: 'grid-4' })}>
         {zones.map(z => (
-          <div key={z} className={ax({ layout: 'stack' })}>
-            <span className={`${ax({ textStyle: 'code' })} theme-zone-label`}>{z}</span>
-            <div
-              className={`${ax({ role: 'control-group', surface: z, layout: 'stack' })} ax-interactive theme-zone-card`}
-            >
-              {itemStates.map(s => (
-                <div
-                  key={s.label}
-                  className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`}
-                  {...s.attrs}
-                >
-                  <span>{s.label}</span>
-                </div>
-              ))}
+          <div key={z} className={`${ax({ role: 'control-group', surface: z, layout: 'stack' })} ax-interactive`}>
+            <span className={ax({ textStyle: 'code' })}>{z}</span>
 
-              <div className={ax({ layout: 'row' })}>
-                {buttonTones.map(t => (
-                  <button
-                    key={t}
-                    className={ax({ role: 'control', surface: 'action', content: 'text', tone: t, cs: 'xs' })}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-              <div className={ax({ layout: 'row' })}>
-                {buttonTones.map(t => (
-                  <button
-                    key={t}
-                    className={ax({ role: 'control', surface: 'ghost', content: 'text', tone: t, cs: 'xs' })}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
+            <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} tabIndex={0}>
+              <span>item 1</span>
+            </div>
+            <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} tabIndex={0}>
+              <span>item 2</span>
+            </div>
+            <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} tabIndex={0} aria-selected="true">
+              <span>selected</span>
+            </div>
+            <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} tabIndex={-1} aria-disabled="true">
+              <span>disabled</span>
+            </div>
+
+            <div className={ax({ layout: 'row' })}>
+              {buttonTones.map(t => (
+                <button
+                  key={t}
+                  className={ax({ role: 'control', surface: 'action', content: 'text', tone: t, cs: 'xs' })}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+            <div className={ax({ layout: 'row' })}>
+              {buttonTones.map(t => (
+                <button
+                  key={t}
+                  className={ax({ role: 'control', surface: 'ghost', content: 'text', tone: t, cs: 'xs' })}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
           </div>
         ))}
-        <span className={`${ax({ textStyle: 'caption' })} theme-zone-caption`}>
-          모든 state가 각 zone에서 어떻게 렌더되는지 동시 비교.
-          {' '}<strong>Zone별 재바인딩</strong>: hover(--bg-hover), selected(--selection), sel+focus(--selection-cursor).
-          {' '}<strong>Zone 불변</strong>: active(--tone-primary-bright), focus(--tone-primary-dim + --focus outline), disabled(opacity). button row는 실제 pseudo-class 체험용.
-        </span>
       </div>
     </Section>
   )
