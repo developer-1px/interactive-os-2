@@ -19,7 +19,7 @@ export function statGridRenderer({ entity }: A2UIRenderContext) {
         >
           <div className={ax({ layout: 'stack', gap: 'xs' })}>
             <div className={ax({ textStyle: 'display' })}>{item.value}</div>
-            <div className={ax({ textStyle: 'caption', text: 'secondary' })}>{item.label}</div>
+            <div className={ax({ textStyle: 'caption',  })}>{item.label}</div>
           </div>
         </div>
       ))}

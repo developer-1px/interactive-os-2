@@ -178,8 +178,8 @@ export function Combobox({
 
   const defaultRender = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
     <div {...props} className={[
-      ax({ interactive: 'item', role: 'item', content: 'text', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined, layout: 'row', width: 'full' }),
-    ].filter(Boolean).join(' ')}>
+      ax({ interactive: 'item', role: 'item', content: 'text', layout: 'row', width: 'full' }),
+    ].filter(Boolean).join(' ')} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       {getNodeLabel(item)}
     </div>
   )
@@ -339,7 +339,7 @@ export function Combobox({
           {showCreateOption && (
             <div
               data-combobox-create
-              className={ax({ interactive: 'item', role: 'item', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined, layout: 'row', width: 'full' })}
+              className={ax({ interactive: 'item', role: 'item', content: 'text', layout: 'row', width: 'full' })}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"

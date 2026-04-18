@@ -162,7 +162,7 @@ function MarkdownContent({ content, className, codePreset, prose, linkTransform,
   )
 
   return (
-    <div className={`break-word select-text ${ax({ text: 'primary', width: 'prose', layout: 'stack', gap: 'md' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
+    <div className={`break-word select-text ${ax({ width: 'prose', layout: 'stack', gap: 'md' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
       {Object.keys(frontmatter).length > 0 && <FrontmatterCard data={frontmatter} />}
       <Markdown
         remarkPlugins={remarkPlugins}

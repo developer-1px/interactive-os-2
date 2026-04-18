@@ -22,7 +22,7 @@ function FilePathLink({ path, children }: { path: string; children: React.ReactN
   const open = () => window.dispatchEvent(new CustomEvent('inspector:open-source', { detail: { fileName: path } }))
   return (
     <span
-      className={ax({ role: 'control', text: 'muted', clamp: '1', interactive: 'button' })}
+      className={ax({ role: 'control', clamp: '1', interactive: 'button' })}
       role="button"
       tabIndex={0}
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); open() }}
@@ -85,9 +85,9 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   const Icon = toolIcons[name] ?? Wrench
 
   return (
-    <div className={ax({ layout: 'bar', textStyle: 'caption', text: 'secondary', padding: 'sm', gap: 'xs' })}>
+    <div className={ax({ layout: 'bar', textStyle: 'caption', padding: 'sm', gap: 'xs' })}>
       <span className={ax({ layout: 'center', icon: 'sm' })}><Icon size={12} /></span>
-      <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={ax({ text: 'muted', clamp: '1' })}>{detail}</span></span>
+      <span><span className={ax({  })}>{name}</span>{detail ? ' ' : ''}<span className={ax({ clamp: '1' })}>{detail}</span></span>
     </div>
   )
 }
@@ -110,14 +110,14 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
   const isLong = lines.length > 3 || text.length > 200
 
   if (!isLong) {
-    return <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>
+    return <pre className={`${ax({ textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>
   }
 
   return (
     <div>
       <div
         {...toggleProps}
-        className={ax({ layout: 'bar', textStyle: 'code', text: 'muted', padding: 'sm', gap: 'xs' })}
+        className={ax({ layout: 'bar', textStyle: 'code', padding: 'sm', gap: 'xs' })}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
@@ -126,7 +126,7 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
         <ExpandIndicator variant="expand" expanded={expanded} />
         <span className={`${ax({ clamp: '1' })} tool-result-preview`}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
       </div>
-      {expanded && <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>}
+      {expanded && <pre className={`${ax({ textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>}
     </div>
   )
 }
@@ -173,7 +173,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   } else if (isEdit && input.file_path) {
     summaryLabel = <FilePathLink path={String(input.file_path)}>{detail}</FilePathLink>
   } else {
-    summaryLabel = detail ? <span className={ax({ text: 'muted', clamp: '1' })}>{detail}</span> : null
+    summaryLabel = detail ? <span className={ax({ clamp: '1' })}>{detail}</span> : null
   }
 
   // --- Content (no duplicate info — summary is the sole source) ---
@@ -195,16 +195,16 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`pre-wrap break-word ${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top', scroll: 'y' })} tool-group-result`}>{text}</pre>
+    content = <pre className={`pre-wrap break-word ${ax({ textStyle: 'code', padding: 'sm', border: 'top', scroll: 'y' })} tool-group-result`}>{text}</pre>
   }
 
   // No content → non-collapsible row
   if (!content) {
     return (
       <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} tool-group`}>
-        <div className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs', padding: 'sm' })}`}>
+        <div className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}`}>
           <span className={ax({ layout: 'center', icon: 'sm' })}><Icon size={12} /></span>
-          <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
+          <span className={ax({  })}>{name}</span> {summaryLabel}
         </div>
       </div>
     )
@@ -214,14 +214,14 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
     <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken', scroll: 'hidden' })} tool-group`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs', padding: 'sm' })}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
         <span className={ax({ layout: 'center', icon: 'sm' })}><ExpandIndicator variant="expand" expanded={expanded} /></span>
-        <Icon size={12} /> <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
+        <Icon size={12} /> <span className={ax({  })}>{name}</span> {summaryLabel}
       </div>
       {expanded && content}
     </div>
@@ -265,24 +265,24 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
     <div className={ax({ scroll: 'hidden', shape: 'md', border: 'subtle', surface: 'sunken' })}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs', padding: 'sm' })}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
         <span className={ax({ layout: 'center', icon: 'sm' })}><ExpandIndicator variant="expand" expanded={expanded} /></span>
-        <Layers size={12} /> <span className={ax({ text: 'muted', textStyle: 'code' })}>{summary}</span>
+        <Layers size={12} /> <span className={ax({ textStyle: 'code' })}>{summary}</span>
       </div>
       {expanded && (
         <div className={ax({ layout: 'stack', border: 'top' })}>
           {typeGroups.map(g => {
             const Icon = toolIcons[g.name] ?? Wrench
             return (
-              <div key={g.name} className={ax({ layout: 'bar', text: 'secondary', gap: 'xs', padding: 'sm' })}>
+              <div key={g.name} className={ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}>
                 <span className={ax({ layout: 'center', icon: 'sm' })}><Icon size={12} /></span>
-                <span className={ax({ weight: 'semi' })}>{g.name}</span>
-                <span className={ax({ text: 'muted', textStyle: 'code', clamp: '1' })}>
+                <span className={ax({  })}>{g.name}</span>
+                <span className={ax({ textStyle: 'code', clamp: '1' })}>
                   {g.details.join(' · ')}
                 </span>
               </div>

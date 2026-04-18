@@ -53,7 +53,7 @@ function CardHeader({ children, className }: { children: ReactNode; className?: 
 
 function CardBody({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`${ax({ textStyle: 'body', text: 'primary' })}${className ? ` ${className}` : ''}`}>
+    <div className={`${ax({ textStyle: 'body',  })}${className ? ` ${className}` : ''}`}>
       {children}
     </div>
   )
@@ -61,7 +61,7 @@ function CardBody({ children, className }: { children: ReactNode; className?: st
 
 function CardFooter({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`${ax({ layout: 'bar', gap: 'sm', text: 'secondary', textStyle: 'caption' })}${className ? ` ${className}` : ''}`}>
+    <div className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption' })}${className ? ` ${className}` : ''}`}>
       {children}
     </div>
   )

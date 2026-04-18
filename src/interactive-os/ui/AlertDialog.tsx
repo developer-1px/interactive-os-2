@@ -20,7 +20,6 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
         role: 'control',
         surface: isDanger ? 'action' : 'ghost',
         tone: isDanger ? 'danger' : 'neutral',
-        text: state.focused ? 'primary' : 'secondary',
         content: 'text', clamp: '1',
       })}
       data-focused={state.focused || undefined}

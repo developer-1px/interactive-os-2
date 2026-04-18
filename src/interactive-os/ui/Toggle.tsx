@@ -23,7 +23,6 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
         surface: pressed ? 'action' : 'ghost',
         tone: pressed ? 'accent-dim' : undefined,
         content: 'text',
-        text: pressed ? 'bright' : state.focused ? 'primary' : 'secondary',
         border: pressed ? undefined : 'default',
       })}
       data-focused={state.focused || undefined}

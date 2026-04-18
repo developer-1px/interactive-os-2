@@ -33,7 +33,7 @@ export function SidePanel({
       >
         {header && (
           <button
-            className={ax({ role: 'control', surface: 'ghost', text: 'muted' })}
+            className={ax({ role: 'control', surface: 'ghost',  })}
             onClick={() => setCollapsed(false)}
             aria-expanded={false}
           >
@@ -51,7 +51,7 @@ export function SidePanel({
           {header}
           {collapsible && (
             <button
-              className={ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'muted' })}
+              className={ax({ role: 'control', surface: 'ghost', content: 'icon',  })}
               onClick={() => setCollapsed(true)}
               aria-expanded={true}
             >

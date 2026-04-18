@@ -36,7 +36,9 @@ export function Demo() {
               <div
                 key={id}
                 {...ctx.getNodeProps(id)}
-                className={ax({ role: 'item', interactive: 'item', content: 'text', text: state.focused ? 'primary' : 'secondary', layout: 'row', width: 'full' })}
+                className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}
+                data-focused={state.focused || undefined}
+                data-selected={state.selected || undefined}
               >
                 {(store.entities[id]?.data as Record<string, unknown>)?.label as string}
               </div>

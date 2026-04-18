@@ -23,8 +23,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     <div {...props} className={ax({ surface: 'raised', border: 'ring', tone: resolvedTone, layout: 'row', gap: 'xs', padding: 'md', shape: 'md' })}>
       <StatusIndicator tone={indicatorTone} />
       <div className={ax({ layout: 'stack', gap: 'xs' })}>
-        <span className={ax({ textStyle: 'label', text: 'primary', weight: 'semi' })}>{label}</span>
-        {description && <span className={ax({ textStyle: 'body', text: 'secondary' })}>{description}</span>}
+        <span className={ax({ textStyle: 'label',  })}>{label}</span>
+        {description && <span className={ax({ textStyle: 'body',  })}>{description}</span>}
       </div>
     </div>
   )

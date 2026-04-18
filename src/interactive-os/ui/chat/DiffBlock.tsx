@@ -11,7 +11,7 @@ export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockTy
   return (
     <div className={ax({ surface: 'display', shape: 'md', scroll: 'hidden' })}>
       {block.filePath && (
-        <div className={ax({ text: 'secondary', textStyle: 'code', padding: 'xs', content: 'text' })}>{block.filePath}</div>
+        <div className={ax({ textStyle: 'code', padding: 'xs', content: 'text' })}>{block.filePath}</div>
       )}
       <div className={ax({ layout: 'grid-2' })}>
         <div className={ax({ scroll: 'hidden' })}>

@@ -8,7 +8,7 @@ import './FileIcon.css'
 
 const ICON_SIZE = 16
 
-const base = ax({ flex: 'none', text: 'secondary', opacity: 'dim' })
+const base = ax({ flex: 'none',  })
 
 export function FileIcon({ name, type, expanded }: { name: string; type: string; expanded?: boolean }) {
   if (type === 'directory') {

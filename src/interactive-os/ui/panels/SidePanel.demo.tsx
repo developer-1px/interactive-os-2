@@ -13,7 +13,7 @@ export function Demo() {
   return (
     <div className={ax({ square: 'xl', width: 'md' })}>
       <SidePanel header="Side Panel" surface="display" collapsible defaultCollapsed={false}>
-        <div className={ax({ padding: 'md', textStyle: 'body', text: 'secondary' })}>
+        <div className={ax({ padding: 'md', textStyle: 'body' })}>
           Collapsible side panel content.
         </div>
       </SidePanel>

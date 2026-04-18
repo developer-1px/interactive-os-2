@@ -14,9 +14,9 @@ export function Demo() {
     <div className={ax({ surface: 'raised', layout: 'stack', width: 'md', shape: 'md', scroll: 'hidden' })}>
       <PanelHeader>
         <span>Explorer</span>
-        <span className={ax({ text: 'muted' })}>3 files</span>
+        <span className={ax({})}>3 files</span>
       </PanelHeader>
-      <div className={ax({ padding: 'md', text: 'secondary', textStyle: 'body' })}>
+      <div className={ax({ padding: 'md', textStyle: 'body' })}>
         Panel content area
       </div>
     </div>

@@ -16,7 +16,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div {...props} className={ax({ role: 'item', layout: 'bar', interactive: 'item', content: 'text', width: 'full' })} data-focused={state.focused || undefined}>
       <ExpandIndicator expanded={state.expanded} />
-      <span className={ax({ text: state.focused ? 'bright' : 'primary' })}>{label}</span>
+      <span className={ax({})}>{label}</span>
     </div>
   )
 }

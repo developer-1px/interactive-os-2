@@ -87,7 +87,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             {filePath && (
-              <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
+              <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption',  })}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
                 {!isUrl && lineCount > 0 && (
@@ -99,12 +99,12 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 {mergedHighlightLines.size > 0 && (
                   <>
                     <span className="fvm-meta-sep" />
-                    <span className={ax({ tone: 'warning', weight: 'semi' })}>{mergedHighlightLines.size} lines highlighted</span>
+                    <span className={ax({ tone: 'warning',  })}>{mergedHighlightLines.size} lines highlighted</span>
                   </>
                 )}
               </div>
             )}
-            <button className={`${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'secondary' })}`} onClick={onClose}>&times;</button>
+            <button className={`${ax({ role: 'control', surface: 'ghost', content: 'icon',  })}`} onClick={onClose}>&times;</button>
           </div>
         </PanelHeader>
         <div className={ax({ flex: '1', layout: 'scroll' })}>

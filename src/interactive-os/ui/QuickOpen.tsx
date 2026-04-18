@@ -205,7 +205,9 @@ function QuickOpenManaged({
           key={childId}
           id={childId}
           {...(nodeProps as React.HTMLAttributes<HTMLDivElement>)}
-          className={`cursor-default ${ax({ interactive: 'item', role: 'item', content: 'text', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined, layout: 'row', width: 'full' })}`}
+          className={`cursor-default ${ax({ interactive: 'item', role: 'item', content: 'text', layout: 'row', width: 'full' })}`}
+          data-focused={state.focused || undefined}
+          data-selected={state.selected || undefined}
           onClick={() => {
             aria.dispatch(createBatchCommand([
               selectionCommands.select(childId),
@@ -221,7 +223,7 @@ function QuickOpenManaged({
   const content = (
     <div className={`quick-open-dialog ${ax({ layout: 'stack', surface: 'overlay', shape: 'xl', border: 'default', motion: 'slide-in', scroll: 'hidden' })}`} aria-label={ariaLabel}>
       <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
-        <Search size={16} className={ax({ text: 'muted', flex: 'none' })} />
+        <Search size={16} className={ax({ flex: 'none' })} />
         <input
           className={`quick-open-input border-none outline-none ${ax({ role: 'control', flex: '1', content: 'text', clamp: '1' })}`}
           type="text"
@@ -241,7 +243,7 @@ function QuickOpenManaged({
             else if (ariaRef && typeof ariaRef === 'object') (ariaRef as React.MutableRefObject<HTMLElement | null>).current = el
           }}
         />
-        <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
+        <kbd className={ax({ surface: 'base', textStyle: 'code', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
       </div>
       {isOpen && rootChildren.length > 0 ? (
         <div id={listboxId} role="listbox" className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
@@ -252,7 +254,7 @@ function QuickOpenManaged({
               const groupChildren = getChildren(store, id)
               return (
                 <div key={id} role="group" aria-label={getLabel(entity)}>
-                  <div className={ax({ role: 'item', textStyle: 'overline', text: 'muted', content: 'text' })}>{getLabel(entity)}</div>
+                  <div className={ax({ role: 'item', textStyle: 'overline', content: 'text' })}>{getLabel(entity)}</div>
                   {renderItems(groupChildren)}
                 </div>
               )
@@ -261,7 +263,7 @@ function QuickOpenManaged({
           }) : renderItems(rootChildren)}
         </div>
       ) : (
-        <div className={ax({ layout: 'center', text: 'muted', textStyle: 'body', padding: 'xl' })}>No results</div>
+        <div className={ax({ layout: 'center', textStyle: 'body', padding: 'xl' })}>No results</div>
       )}
     </div>
   )
@@ -322,8 +324,8 @@ function QuickOpenFile({ fileStore, root, onSelect, onClose, persistKey }: FileM
               <FileIcon name={fileData.name} type="file" />
             </span>
             <span className={`quick-open-item-text ${ax({ layout: 'stack', flex: '1' })}`}>
-              <span className={ax({ clamp: '1', weight: 'medium' })}>{fileData.name}</span>
-              <span className={ax({ text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
+              <span className={ax({ clamp: '1' })}>{fileData.name}</span>
+              <span className={ax({ clamp: '1' })}>{fileData.relativePath}</span>
             </span>
           </>
         )

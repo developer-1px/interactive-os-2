@@ -66,7 +66,7 @@ export function Select({
         className={ax({ surface: 'input', role: 'control', width: 'full', content: 'text', layout: 'row' })}
         style={{ anchorName } as React.CSSProperties}
       >
-        <span className={ax({ text: selectedLabel ? 'primary' : 'muted', clamp: '1', flex: '1' })}>
+        <span className={ax({ clamp: '1', flex: '1' })}>
           {selectedLabel ?? placeholder}
         </span>
         <DirectionIndicator direction={isOpen ? 'prev' : 'next'} orientation="vertical" />

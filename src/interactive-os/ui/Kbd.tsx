@@ -12,7 +12,6 @@ export function Kbd({ children }: KbdProps) {
         surface: 'overlay',
         shape: 'sm',
         textStyle: 'code',
-        text: 'secondary',
         padding: 'xs',
         content: 'text',
         border: 'default',

@@ -85,7 +85,6 @@ export function Popover({ content, placement = 'bottom', children }: PopoverProp
           padding: 'md',
           shape: 'md',
           textStyle: 'body',
-          text: 'primary',
           motion: 'fade-slide-in',
           border: 'subtle',
         })}

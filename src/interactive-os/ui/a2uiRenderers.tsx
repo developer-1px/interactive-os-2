@@ -87,7 +87,7 @@ function textFieldRenderer({ entity }: A2UIRenderContext) {
   const variant = d.variant as string | undefined
   return (
     <div className={ax({ layout: 'stack', gap: 'xs' })}>
-      {label && <label className={ax({ textStyle: 'label', text: 'secondary' })}>{label}</label>}
+      {label && <label className={ax({ textStyle: 'label',  })}>{label}</label>}
       {variant === 'longText' ? (
         <textarea
           className={ax({ surface: 'input', padding: 'sm', shape: 'sm', textStyle: 'body' })}
@@ -243,7 +243,7 @@ function dateTimeInputRenderer({ entity }: A2UIRenderContext) {
   const label = ((entity.data as Record<string, unknown>).label as string) ?? 'Date'
   return (
     <div className={ax({ layout: 'stack', gap: 'xs' })}>
-      {label && <label className={ax({ textStyle: 'label', text: 'secondary' })}>{label}</label>}
+      {label && <label className={ax({ textStyle: 'label',  })}>{label}</label>}
       <TextInput aria-label={label} placeholder="YYYY-MM-DD" />
     </div>
   )
@@ -254,15 +254,15 @@ export function fallbackRenderer({ entity }: A2UIRenderContext) {
   const component = (d.component as string) ?? 'Unknown'
   return (
     <div className={ax({ surface: 'sunken', padding: 'sm', shape: 'sm', textStyle: 'code' })}>
-      <div className={ax({ text: 'muted', textStyle: 'caption' })}>Unknown: {component}</div>
-      <pre className={ax({ textStyle: 'code', text: 'secondary' })}>{JSON.stringify(d, null, 2)}</pre>
+      <div className={ax({ textStyle: 'caption' })}>Unknown: {component}</div>
+      <pre className={ax({ textStyle: 'code',  })}>{JSON.stringify(d, null, 2)}</pre>
     </div>
   )
 }
 
 function iconRenderer({ entity }: A2UIRenderContext) {
   const name = ((entity.data as Record<string, unknown>).name as string) ?? 'icon'
-  return <span className={ax({ textStyle: 'label', text: 'secondary' })}>{name}</span>
+  return <span className={ax({ textStyle: 'label',  })}>{name}</span>
 }
 
 function videoRenderer({ entity }: A2UIRenderContext) {

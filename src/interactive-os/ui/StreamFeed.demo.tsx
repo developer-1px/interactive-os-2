@@ -25,7 +25,7 @@ export function Demo() {
         items={items}
         feedRef={feedRef}
         renderItem={(item, _index, { isLatest }) => (
-          <div key={item.id} className={ax({ padding: 'sm', text: isLatest ? 'primary' : 'secondary' })}>
+          <div key={item.id} className={ax({ padding: 'sm' })}>
             {item.text}
           </div>
         )}

@@ -69,7 +69,7 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
 
     if (content == null) {
       return (
-        <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ layout: 'center', flex: '1', textStyle: 'caption' })}>
           파일 내용 없음
         </div>
       )

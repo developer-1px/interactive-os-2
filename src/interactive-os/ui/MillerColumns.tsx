@@ -114,7 +114,7 @@ export function MillerColumns({
             >
               <FileIcon name={label} type={hasChildren ? 'directory' : 'file'} />
               <span className={ax({ clamp: '1', flex: '1' })}>{label}</span>
-              {hasChildren && <DirectionIndicator direction="next" className={ax({ text: 'muted', flex: 'none' })} />}
+              {hasChildren && <DirectionIndicator direction="next" className={ax({ flex: 'none' })} />}
             </FocusDiv>
           )
         })}
@@ -140,7 +140,7 @@ export function MillerColumns({
             </React.Fragment>
           ))}
           {!hasPreview && focusedId && !focusedIsFile && getChildren(store, focusedId).length === 0 && (
-            <div className={`${ax({ layout: 'center', surface: 'sunken', flex: 'none', text: 'muted', textStyle: 'caption' })} miller-column`} style={{ minWidth: COLUMN_MIN_WIDTH }}>
+            <div className={`${ax({ layout: 'center', surface: 'sunken', flex: 'none', textStyle: 'caption' })} miller-column`} style={{ minWidth: COLUMN_MIN_WIDTH }}>
               <EmptyState title="Empty" />
             </div>
           )}

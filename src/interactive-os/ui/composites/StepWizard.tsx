@@ -21,7 +21,7 @@ export function StepWizardRenderer({ entity, store, renderNode, depth }: A2UIRen
     return (
       <div className={ax({ layout: 'stack', gap: 'md' })}>
         {title && <div className={ax({ textStyle: 'page' })}>{title}</div>}
-        {subtitle && <div className={ax({ textStyle: 'caption', text: 'secondary' })}>{subtitle}</div>}
+        {subtitle && <div className={ax({ textStyle: 'caption',  })}>{subtitle}</div>}
         {store.entities[steps[0].content] && renderNode(steps[0].content, depth + 1)}
       </div>
     )
@@ -40,7 +40,7 @@ export function StepWizardRenderer({ entity, store, renderNode, depth }: A2UIRen
   return (
     <div className={ax({ layout: 'stack', gap: 'md' })}>
       {title && <div className={ax({ textStyle: 'page' })}>{title}</div>}
-      {subtitle && <div className={ax({ textStyle: 'caption', text: 'secondary' })}>{subtitle}</div>}
+      {subtitle && <div className={ax({ textStyle: 'caption',  })}>{subtitle}</div>}
       <TabList
         data={tabStore}
         plugins={[]}

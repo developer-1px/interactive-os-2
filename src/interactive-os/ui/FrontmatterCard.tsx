@@ -27,18 +27,18 @@ function renderValue(key: string, value: unknown) {
   }
   if (DATE_KEYS.has(key)) {
     const s = value instanceof Date ? value.toISOString().slice(0, 10) : String(value)
-    return <span className={ax({ textStyle: 'body', text: 'primary' })}>{s}</span>
+    return <span className={ax({ textStyle: 'body' })}>{s}</span>
   }
   if (value === null || value === undefined) return null
   if (typeof value === 'object') {
     return (
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+      <span className={ax({ textStyle: 'caption' })}>
         {JSON.stringify(value)}
       </span>
     )
   }
   return (
-    <span className={ax({ textStyle: 'body', text: 'primary' })}>
+    <span className={ax({ textStyle: 'body' })}>
       {String(value)}
     </span>
   )
@@ -51,7 +51,7 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
     <section className={ax({ surface: 'sunken', shape: 'md', layout: 'stack', gap: 'xs', padding: 'md' })}>
       {entries.map(([key, value]) => (
         <div key={key} className={ax({ layout: 'row', gap: 'md' })}>
-          <span className={`${styles.label} ${ax({ textStyle: 'caption', text: 'muted', flex: 'none' })}`}>
+          <span className={`${styles.label} ${ax({ textStyle: 'caption', flex: 'none' })}`}>
             {key}
           </span>
           <div className={ax({ flex: '1' })}>{renderValue(key, value)}</div>

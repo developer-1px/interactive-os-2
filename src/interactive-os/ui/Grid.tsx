@@ -105,7 +105,7 @@ export function Grid({
       {header && (
         <div role="row" className={ax({ placement: 'sticky', surface: 'sunken', border: 'bottom' })}>
           {columns.map((col, i) => (
-            <div key={col.key} className={ax({ role: 'item', textStyle: 'overline', text: 'secondary', content: 'text', ...(i < columns.length - 1 ? { border: 'end' } : {}) })}>{col.header}</div>
+            <div key={col.key} className={ax({ role: 'item', textStyle: 'overline', content: 'text', ...(i < columns.length - 1 ? { border: 'end' } : {}) })}>{col.header}</div>
           ))}
         </div>
       )}

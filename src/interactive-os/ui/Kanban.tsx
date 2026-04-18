@@ -121,10 +121,10 @@ export function Kanban({
         <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
           <span className={ax({ clamp: '1' })} style={{ minWidth: 0 }}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
           {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
-            <span className={`tabular-nums ${ax({ text: 'muted', flex: 'none' })}`} style={{ marginLeft: 'auto' }}>
+            <span className={`tabular-nums ${ax({ flex: 'none' })}`} style={{ marginLeft: 'auto' }}>
               {cardSubtitle}
-              {cardDepUp != null && cardDepUp > 0 && <span className={ax({ weight: 'medium' })} style={{ color: 'var(--tone-success-base)' }}> ↑{cardDepUp}</span>}
-              {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ tone: 'accent' })}`}> ↓{cardDepDown}</span>}
+              {cardDepUp != null && cardDepUp > 0 && <span className={ax({  })} style={{ color: 'var(--tone-success-base)' }}> ↑{cardDepUp}</span>}
+              {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({  })} ${ax({ tone: 'accent' })}`}> ↓{cardDepDown}</span>}
             </span>
           )}
         </AriaItemContext.Provider>
@@ -163,14 +163,14 @@ export function Kanban({
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={ax({ layout: 'bar', gap: 'sm', textStyle: compact ? 'caption' : 'overline', text: 'secondary', padding: 'xs', shape: 'sm', clamp: compact ? '1' : undefined, placement: 'relative' })}
+                className={ax({ layout: 'bar', gap: 'sm', textStyle: compact ? 'caption' : 'overline', padding: 'xs', shape: 'sm', clamp: compact ? '1' : undefined, placement: 'relative' })}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 style={compact ? { textTransform: 'none', letterSpacing: 0, paddingBlock: 'var(--space-xs)', paddingInline: 0 } as CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
                   <span>{colTitle}</span>
-                  <span className={ax({ text: 'muted' })} style={{ textTransform: 'none', letterSpacing: 0 }}>{cards.length}{totalLoc != null && totalLoc > 0 ? ` · ${totalLoc}L` : ''}</span>
+                  <span className={ax({  })} style={{ textTransform: 'none', letterSpacing: 0 }}>{cards.length}{totalLoc != null && totalLoc > 0 ? ` · ${totalLoc}L` : ''}</span>
                 </AriaItemContext.Provider>
                 {compact && locRatio > 0 && (
                   <div style={{

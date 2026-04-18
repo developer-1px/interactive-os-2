@@ -19,7 +19,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
   })
 
   return (
-    <div className={`${ax({ textStyle: 'caption', text: 'secondary', surface: settled ? undefined : 'sunken', shape: 'md' })} thinking-block${settled ? ' thinking-settled' : ''}`}>
+    <div className={`${ax({ textStyle: 'caption', surface: settled ? undefined : 'sunken', shape: 'md' })} thinking-block${settled ? ' thinking-settled' : ''}`}>
       <div
         {...toggleProps}
         className={`cursor-pointer select-none ${ax({ padding: 'sm' })}`}
@@ -29,10 +29,10 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
         onClick={toggle}
       >
         <div className={ax({ layout: 'bar', gap: 'xs' })}>
-          <span className={ax({ weight: 'semi', text: 'muted' })}>Thinking</span>
+          <span className={ax({ })}>Thinking</span>
           <ExpandIndicator variant="expand" expanded={expanded} />
         </div>
-        {isLatest && !expanded && <div className={ax({ text: 'muted', clamp: '2' })}>{preview}…</div>}
+        {isLatest && !expanded && <div className={ax({ clamp: '2' })}>{preview}…</div>}
       </div>
       {expanded && !isLatest && (
         <div className={`break-word ${ax({ clamp: 'scroll', padding: 'sm' })} thinking-content`}>

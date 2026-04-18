@@ -13,9 +13,9 @@ export function PropertyRow({ label, description, children }: PropertyRowProps) 
   return (
     <div className={ax({ role: 'item', content: 'text', layout: 'spread', width: 'full' })}>
       <div className={ax({ layout: 'stack', gap: 'xs' })}>
-        <span className={ax({ text: 'primary', weight: 'medium' })}>{label}</span>
+        <span className={ax({  })}>{label}</span>
         {description && (
-          <span className={ax({ text: 'muted' })}>{description}</span>
+          <span className={ax({  })}>{description}</span>
         )}
       </div>
       {children}

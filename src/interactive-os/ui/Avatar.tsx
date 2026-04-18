@@ -44,9 +44,7 @@ export function Avatar({ src, name, size = 'md' }: AvatarProps) {
         shape: 'pill',
         surface: 'sunken',
         layout: 'center',
-        textStyle: size === 'lg' ? 'label' : 'caption',
-        text: 'muted',
-      })}
+        textStyle: size === 'lg' ? 'label' : 'caption'})}
       aria-label={name}
       role="img"
     >

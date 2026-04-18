@@ -50,9 +50,9 @@ function ToastItem({
   return (
     <div className={`pointer-auto ${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' } as Axes)}`} style={variantBorder[variant]}>
       <div className={ax({ flex: '1', layout: 'self-start' })}>
-        <div className={ax({ textStyle: 'body', weight: 'medium' })}>{toast.title}</div>
+        <div className={ax({ textStyle: 'body',  })}>{toast.title}</div>
         {toast.description && (
-          <div className={ax({ textStyle: 'body', text: 'secondary' })}>{toast.description}</div>
+          <div className={ax({ textStyle: 'body',  })}>{toast.description}</div>
         )}
       </div>
       <button

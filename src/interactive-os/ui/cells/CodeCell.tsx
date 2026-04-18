@@ -9,7 +9,7 @@ interface CodeCellProps {
 
 export function CodeCell({ children, className }: CodeCellProps) {
   return (
-    <span className={ax({ textStyle: 'code', text: 'secondary', clamp: '1' }) + (className ? ` ${className}` : '')}>
+    <span className={ax({ textStyle: 'code', clamp: '1' }) + (className ? ` ${className}` : '')}>
       {children}
     </span>
   )

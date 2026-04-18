@@ -20,7 +20,7 @@ export function Demo() {
 
   return (
     <RouteModal active label="Demo Modal">
-      <div className={ax({ layout: 'center', padding: 'lg', text: 'primary', textStyle: 'body' })}>
+      <div className={ax({ layout: 'center', padding: 'lg', textStyle: 'body' })}>
         Modal content area
         <Button variant="ghost" onClick={() => setOpen(false)}>Close</Button>
       </div>

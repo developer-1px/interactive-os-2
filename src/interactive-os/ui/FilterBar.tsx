@@ -22,11 +22,11 @@ export function FilterBar({ filters, onAddFilter, children }: FilterBarProps) {
           key={chip.id}
           className={ax({ role: 'badge', surface: 'display', border: 'default', content: 'text', clamp: '1' })}
         >
-          <span className={ax({ text: 'muted' })}>{chip.label}</span>
+          <span className={ax({  })}>{chip.label}</span>
           {chip.value && (
             <>
-              <span className={ax({ text: 'muted' })}>:</span>
-              <span className={ax({ text: 'primary' })}>{chip.value}</span>
+              <span className={ax({  })}>:</span>
+              <span className={ax({  })}>{chip.value}</span>
             </>
           )}
           {chip.onRemove && (
@@ -45,7 +45,7 @@ export function FilterBar({ filters, onAddFilter, children }: FilterBarProps) {
         <button
           type="button"
           onClick={onAddFilter}
-          className={ax({ role: 'badge', surface: 'ghost', text: 'muted', interactive: 'button', content: 'text', clamp: '1' })}
+          className={ax({ role: 'badge', surface: 'ghost', interactive: 'button', content: 'text', clamp: '1' })}
         >
           +
         </button>

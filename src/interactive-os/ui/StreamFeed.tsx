@@ -27,7 +27,7 @@ function StreamingTimer() {
     return () => clearInterval(id)
   }, [])
 
-  return <span className={ax({ textStyle: 'caption', text: 'muted', opacity: 'dim' })}>{elapsed}s</span>
+  return <span className={ax({ textStyle: 'caption',  })}>{elapsed}s</span>
 }
 
 // --- StreamCursor (export for renderItem use) ---
@@ -63,7 +63,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`${ax({ role: 'control', surface: 'action', text: 'secondary', border: 'default', content: 'icon', placement: 'bottom-center', motion: 'fade-slide-in' })} stream-fab`} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ role: 'control', surface: 'action', border: 'default', content: 'icon', placement: 'bottom-center', motion: 'fade-slide-in' })} stream-fab`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <DirectionIndicator direction="next" orientation="vertical" />
     </button>
   )
@@ -87,7 +87,7 @@ export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streami
         {isStreaming && (
           <div className={`${ax({ layout: 'bar', gap: 'sm', width: 'full', motion: 'fade-slide-in' })} stream-indicator`}>
             <span className={`${ax({ shape: 'pill', motion: 'pulse' })} stream-dot`} />
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>{streamingLabel ?? 'Thinking'}</span>
+            <span className={ax({ textStyle: 'caption',  })}>{streamingLabel ?? 'Thinking'}</span>
             <StreamingTimer />
           </div>
         )}

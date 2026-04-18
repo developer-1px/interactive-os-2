@@ -27,15 +27,14 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     interactive: 'item',
     role: 'item',
     content: 'text',
-    text: (state.focused || state.active) ? 'primary' : 'secondary',
     layout: 'row',
     width: 'full',
   })
-  return <div {...props} className={`${props.className ?? ''} ${itemClass}`}><span>{label}</span></div>
+  return <div {...props} className={`${props.className ?? ''} ${itemClass}`} data-focused={state.focused || undefined} data-selected={state.selected || undefined}><span>{label}</span></div>
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
-  <div className={ax({ role: 'item', textStyle: 'overline', text: 'muted', content: 'text' })}>{label}</div>
+  <div className={ax({ role: 'item', textStyle: 'overline', content: 'text' })}>{label}</div>
 )
 
 function isGroup(entity: Record<string, unknown>): boolean {

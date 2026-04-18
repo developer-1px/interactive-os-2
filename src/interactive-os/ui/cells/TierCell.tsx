@@ -27,14 +27,11 @@ export function TierCell({ text, tier, subtitle, thumbnail }: TierCellProps) {
       )}
       <span className={ax({ layout: 'stack' })}>
         <span className={ax({
-          textStyle: style.textStyle,
-          weight: style.weight,
-          text: style.text,
-        })}>
+          textStyle: style.textStyle})}>
           {text}
         </span>
         {subtitle && (
-          <span className={ax({ text: 'muted', clamp: '1' })}>
+          <span className={ax({ clamp: '1' })}>
             {subtitle}
           </span>
         )}

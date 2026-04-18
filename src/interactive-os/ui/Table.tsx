@@ -15,7 +15,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   // level 1 = rowgroup, level 2 = row, level 3 = cell
   if (level === 1) return <div {...props} />
   if (level === 2) return <div {...props} className={`${props.className || ''} ${ax({ role: 'item', border: 'bottom', interactive: 'item' })}`} />
-  if (isHeader) return <div {...props} className={`${props.className || ''} ${ax({ padding: 'sm', weight: 'medium', text: 'secondary' })}`}>{label}</div>
+  if (isHeader) return <div {...props} className={`${props.className || ''} ${ax({ padding: 'sm', })}`}>{label}</div>
   return <div {...props} className={`${props.className || ''} ${ax({ padding: 'sm' })}`}>{label}</div>
 }
 

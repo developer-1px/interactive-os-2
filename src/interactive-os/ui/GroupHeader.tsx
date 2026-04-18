@@ -21,9 +21,9 @@ export function GroupHeader({ icon, label, count, expanded, onToggle }: GroupHea
         <ExpandIndicator expanded={expanded} />
       )}
       {icon}
-      <span className={ax({ weight: 'semi', text: 'muted' })}>{label}</span>
+      <span className={ax({ })}>{label}</span>
       {count !== undefined && (
-        <span className={`ml-auto ${ax({ flex: 'none', text: 'muted' })}`}>{count}</span>
+        <span className={`ml-auto ${ax({ flex: 'none',  })}`}>{count}</span>
       )}
     </div>
   )

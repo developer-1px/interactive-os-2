@@ -49,7 +49,7 @@ export function SearchableListRenderer({ entity }: A2UIRenderContext) {
           aria-label={ariaLabel}
         />
       ) : (
-        <div className={ax({ textStyle: 'caption', text: 'muted', padding: 'md' })}>
+        <div className={ax({ textStyle: 'caption', padding: 'md' })}>
           No results
         </div>
       )}

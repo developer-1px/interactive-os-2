@@ -158,7 +158,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
   return (
     <div className={ax({ layout: 'row', flex: 'none' })}>
-      <div className={`composer-input-wrap ${disabled ? 'pointer-none' : ''} ${ax({ surface: 'input', flex: '1', shape: 'md', placement: 'relative', opacity: disabled ? 'faint' : undefined })}`} data-disabled={disabled || undefined}>
+      <div className={`composer-input-wrap ${disabled ? 'pointer-none' : ''} ${ax({ surface: 'input', flex: '1', shape: 'md', placement: 'relative' })}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
           <ul className={`composer-suggestion-list ${ax({ surface: 'overlay', padding: 'xs', shape: 'md', placement: 'above', scroll: 'y' })}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
@@ -170,7 +170,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
                   ref={state.focused ? el => el?.scrollIntoView({ block: 'nearest' }) : undefined}
                   role="option"
                   aria-selected={state.focused}
-                  className={`composer-suggestion-item ${ax({ role: 'item', interactive: 'item', content: 'text', text: 'secondary' })}`}
+                  className={`composer-suggestion-item ${ax({ role: 'item', interactive: 'item', content: 'text' })}`}
                   data-selected={state.focused || undefined}
                   data-node-id={nodeProps['data-node-id'] as string}
                 >
@@ -183,7 +183,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         <div className={ax({ placement: 'relative' })}>
           <div
             ref={ref}
-            className={`composer-editor pre-wrap outline-none ${ax({ textStyle: 'body', text: 'primary', scroll: 'y' })}`}
+            className={`composer-editor pre-wrap outline-none ${ax({ textStyle: 'body', scroll: 'y' })}`}
             contentEditable={!disabled}
             role="textbox"
             aria-multiline="true"
@@ -202,9 +202,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
                 <span className={ax({ tone: 'accent' })}>{overlayText.slice(0, commandHighlight)}</span>
               )}
               {commandHighlight > 0 && overlayText.length > commandHighlight && (
-                <span className={ax({ text: 'primary' })}>{overlayText.slice(commandHighlight)}</span>
+                <span className={ax({})}>{overlayText.slice(commandHighlight)}</span>
               )}
-              {ghostText && <span className={ax({ text: 'muted' })}>{ghostText}</span>}
+              {ghostText && <span className={ax({})}>{ghostText}</span>}
             </div>
           )}
         </div>

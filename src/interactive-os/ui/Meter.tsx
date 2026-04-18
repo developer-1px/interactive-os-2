@@ -17,8 +17,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div {...props} className={ax({ layout: 'stack', gap: 'xs' })}>
       <div className={ax({ layout: 'spread' })}>
-        <span className={ax({ textStyle: 'caption', text: 'secondary' })}>{label}</span>
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{Math.round(pct)}%</span>
+        <span className={ax({ textStyle: 'caption',  })}>{label}</span>
+        <span className={ax({ textStyle: 'caption',  })}>{Math.round(pct)}%</span>
       </div>
       <div className={`${ax({ width: 'full', scroll: 'hidden' })} item-indicator--progress`}>
         <div className="h-full item-indicator--progress-fill" style={{ width: `${pct}%` }} />

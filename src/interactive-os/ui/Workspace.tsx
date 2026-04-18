@@ -108,7 +108,7 @@ export function Workspace({
   if (rootChildren.length === 0) {
     return (
       <div className={ax({ layout: 'fill' })} aria-label={ariaLabel}>
-        <div className={ax({ layout: 'center', text: 'muted', flex: '1' })}>No open tabs</div>
+        <div className={ax({ layout: 'center', flex: '1' })}>No open tabs</div>
       </div>
     )
   }

@@ -13,13 +13,13 @@ export function Demo() {
   return (
     <div className={ax({ layout: 'stack', gap: 'sm' })}>
       <PropertyRow label="Name" description="Display name">
-        <span className={ax({ text: 'secondary' })}>Aria OS</span>
+        <span className={ax({})}>Aria OS</span>
       </PropertyRow>
       <PropertyRow label="Version">
-        <span className={ax({ text: 'secondary' })}>2.4.1</span>
+        <span className={ax({})}>2.4.1</span>
       </PropertyRow>
       <PropertyRow label="Status" description="Current deploy status">
-        <span className={ax({ text: 'secondary' })}>Active</span>
+        <span className={ax({})}>Active</span>
       </PropertyRow>
     </div>
   )

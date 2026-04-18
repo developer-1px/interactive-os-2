@@ -14,7 +14,7 @@ interface EditableCellProps {
 export function EditableCell({ field, children, empty, allowEmpty, enterContinue, tabContinue }: EditableCellProps) {
   return (
     <Aria.Editable field={field} allowEmpty={allowEmpty} enterContinue={enterContinue} tabContinue={tabContinue}>
-      <span className={empty ? ax({ text: 'muted' }) : undefined}>
+      <span className={empty ? ax({  }) : undefined}>
         {empty ? '—' : children}
       </span>
     </Aria.Editable>

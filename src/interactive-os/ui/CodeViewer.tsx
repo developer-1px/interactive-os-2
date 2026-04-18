@@ -109,7 +109,7 @@ export function CodeViewer({
         {(filename || recipe.chrome === 'frame') && (
           <figcaption
             id={captionId}
-            className={`code-viewer-caption ${ax({ layout: 'bar', gap: 'sm', padding: 'sm', textStyle: 'caption', text: 'muted', border: 'bottom' })}`}
+            className={`code-viewer-caption ${ax({ layout: 'bar', gap: 'sm', padding: 'sm', textStyle: 'caption', border: 'bottom' })}`}
           >
             {recipe.chrome === 'frame' && (
               <span aria-hidden="true" className={`code-viewer-chrome-dots ${ax({ layout: 'bar', gap: 'xs' })}`}>

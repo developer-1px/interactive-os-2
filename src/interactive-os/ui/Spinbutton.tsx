@@ -119,12 +119,12 @@ export function Spinbutton({
     }
 
     return (
-      <div className={ax({ role: 'item', layout: 'bar', text: state.focused ? 'bright' : undefined })} data-focused={state.focused || undefined}>
-        {itemLabel && <span className={ax({ weight: 'medium', text: 'primary' })}>{itemLabel}</span>}
+      <div className={ax({ role: 'item', layout: 'bar' })} data-focused={state.focused || undefined}>
+        {itemLabel && <span className={ax({})}>{itemLabel}</span>}
         <div className={`spinbutton-group outline-none ${ax({ role: 'control-group', border: 'strong' })}`} data-invalid={invalid || undefined}>
           <button
             type="button"
-            className={`spinbutton-btn spinbutton-btn-dec select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'primary' })}`}
+            className={`spinbutton-btn spinbutton-btn-dec select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon' })}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -135,7 +135,7 @@ export function Spinbutton({
           {editing ? (
             <input
               ref={inputRef}
-              className={`spinbutton-input bg-transparent tabular-nums ${ax({ weight: 'semi', text: 'primary' })}`}
+              className={`spinbutton-input bg-transparent tabular-nums ${ax({})}`}
               type="text"
               inputMode="numeric"
               value={editValue}
@@ -146,7 +146,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className={`spinbutton-value tabular-nums ${ax({ layout: 'center', weight: 'semi', text: 'primary' })}`}
+              className={`spinbutton-value tabular-nums ${ax({ layout: 'center' })}`}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >
@@ -155,7 +155,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
-            className={`spinbutton-btn spinbutton-btn-inc select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'primary' })}`}
+            className={`spinbutton-btn spinbutton-btn-inc select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon' })}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

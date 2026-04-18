@@ -89,7 +89,6 @@ function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
                 role: 'item',
                 content: 'text',
                 surface: i === activeTab ? 'display' : 'ghost',
-                text: i === activeTab ? 'primary' : 'secondary',
                 layout: 'row',
                 width: 'full',
               })}
@@ -251,9 +250,9 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', gap: 'md', width: 'full', surface })}>
         <div className={ax({ layout: 'spread', width: 'full', padding: 'sm' })}>
-          <span className={ax({ textStyle: 'section', text: 'primary' })}>{node.title}</span>
+          <span className={ax({ textStyle: 'section',  })}>{node.title}</span>
           {node.count != null && (
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>{node.count}</span>
+            <span className={ax({ textStyle: 'caption',  })}>{node.count}</span>
           )}
         </div>
         {childIds.map(childId => (
@@ -284,7 +283,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
 
     if (!Component) {
       return (
-        <div className={ax({ surface: 'sunken', padding: 'sm', textStyle: 'caption', text: 'muted' })}>
+        <div className={ax({ surface: 'sunken', padding: 'sm', textStyle: 'caption',  })}>
           Unknown widget: {node.widget}
         </div>
       )

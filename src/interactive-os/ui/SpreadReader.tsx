@@ -128,8 +128,8 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
         </div>
       </div>
       {total > 1 && (
-        <div className={`spread-indicator ${ax({ placement: 'bottom-center', opacity: 'dim' })}`}>
-          <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        <div className={`spread-indicator ${ax({ placement: 'bottom-center',  })}`}>
+          <span className={ax({ textStyle: 'caption',  })}>
             {spreadIndex + 1}/{total}
           </span>
         </div>

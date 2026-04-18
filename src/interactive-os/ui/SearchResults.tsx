@@ -40,7 +40,7 @@ export function SearchResults({ query, output }: SearchResultsProps) {
 
   if (groups.size === 0) {
     return (
-      <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+      <div className={ax({ layout: 'center', flex: '1', textStyle: 'caption' })}>
         No results for "{query}"
       </div>
     )
@@ -48,15 +48,15 @@ export function SearchResults({ query, output }: SearchResultsProps) {
 
   return (
     <div className={ax({ layout: 'stack', textStyle: 'code' })}>
-      <div className={ax({ padding: 'xs', textStyle: 'caption', text: 'muted', flex: 'none' })}>
+      <div className={ax({ padding: 'xs', textStyle: 'caption', flex: 'none' })}>
         {[...groups.values()].reduce((s, g) => s + Math.max(g.length, 1), 0)} matches in {groups.size} files — "{query}"
       </div>
       {[...groups.entries()].map(([file, matches]) => (
         <div key={file}>
-          <div className={ax({ padding: 'xs', weight: 'semi', opacity: 'dim', surface: 'base', placement: 'sticky' })}>{file.replace(/.*\/aria\//, '')}</div>
+          <div className={ax({ padding: 'xs', surface: 'base', placement: 'sticky' })}>{file.replace(/.*\/aria\//, '')}</div>
           {matches.map((m, i) => (
             <div key={i} className={ax({ layout: 'row', gap: 'sm', padding: 'xs', surface: 'ghost' })}>
-              {m.line != null && <span className={`${ax({ flex: 'none', opacity: 'dim' })} text-right`}>{m.line}</span>}
+              {m.line != null && <span className={`${ax({ flex: 'none',  })} text-right`}>{m.line}</span>}
               <span className={ax({ flex: '1', clamp: 'pre' })}>{m.text}</span>
             </div>
           ))}
