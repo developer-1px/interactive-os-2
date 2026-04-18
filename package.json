@@ -78,7 +78,7 @@
     "mddb:extract": "tsx scripts/mddb/cli.ts extract",
     "mddb:validate": "tsx scripts/mddb/cli.ts validate",
     "mddb:audit": "tsx scripts/mddb/cli.ts audit",
-    "mddb:inject": "tsx scripts/mddb/cli.ts inject",
+    "mddb:relocate": "tsx scripts/mddb/cli.ts relocate",
     "mddb:index": "tsx scripts/mddb/cli.ts index"
   },
   "peerDependencies": {

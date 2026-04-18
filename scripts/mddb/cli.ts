@@ -1,30 +1,23 @@
-// @see docs/2-areas/docs-infra/prds/mddb-phase1-prd.md
+// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
 /**
- * CLI entry — `pnpm mddb:{extract|validate|audit|inject}` 단일 진입점.
+ * CLI entry — `pnpm mddb:{extract|validate|audit|relocate|index}` 단일 진입점.
  *
  * @invariant parseArgv는 pure (process.* 만지지 않음)
  * @invariant main은 exit code 반환 (0/1/2)
- * @invariant subcommand 라우팅:
- *   extract  → JSON stdout
- *   validate → ValidationReport stdout (errors면 exit 1)
- *   audit    → writeAuditFile or JSON (--json)
- *   inject   → extractFile + injectFrontmatter
  */
 import { resolve } from 'node:path'
-import { execSync } from 'node:child_process'
 import { extractFile, extractAll } from './extract.ts'
 import { validateExtract, validateAll } from './validate.ts'
 import { runAudit, writeAuditFile, renderAuditMarkdown } from './audit.ts'
-import { injectFrontmatter } from './injectFrontmatter.ts'
+import { relocate as runRelocate, planRelocate } from './relocate.ts'
 import { writeIndexFile, DEFAULT_INDEX_PATH } from './buildIndex.ts'
 import { toRelDocsPath, isDocsMd, isMemoryPath, DOCS_ROOT, PROJECT_ROOT, walkDocsMd } from './paths.ts'
 
 export type CliArgs = {
-  subcommand: 'extract' | 'validate' | 'audit' | 'inject' | 'index'
+  subcommand: 'extract' | 'validate' | 'audit' | 'relocate' | 'index'
   positionals: string[]
   flags: {
     dryRun?: boolean
-    mergeStrategy?: 'preserve-explicit' | 'overwrite'
     concurrency?: number
     outPath?: string
     json?: boolean
@@ -32,14 +25,14 @@ export type CliArgs = {
   }
 }
 
-const KNOWN_SUBCOMMANDS = ['extract', 'validate', 'audit', 'inject', 'index'] as const
+const KNOWN_SUBCOMMANDS = ['extract', 'validate', 'audit', 'relocate', 'index'] as const
 
 export function parseArgv(argv: string[]): CliArgs {
   const [first, ...rest] = argv
   if (!first || !(KNOWN_SUBCOMMANDS as readonly string[]).includes(first)) {
     throw new Error(
       `unknown subcommand: ${first ?? '(none)'}\n` +
-      `usage: mddb <extract|validate|audit|inject|index> [--scope PATH] [--dry-run] [--json] [--strategy STRATEGY] [--concurrency N] [--out PATH]`,
+      `usage: mddb <extract|validate|audit|relocate|index> [--scope PATH] [--dry-run] [--json] [--concurrency N] [--out PATH]`,
     )
   }
   const subcommand = first as CliArgs['subcommand']
@@ -50,8 +43,6 @@ export function parseArgv(argv: string[]): CliArgs {
     const tok = rest[i]
     if (tok === '--dry-run' || tok === '--dry') flags.dryRun = true
     else if (tok === '--json') flags.json = true
-    else if (tok.startsWith('--strategy=')) flags.mergeStrategy = tok.slice('--strategy='.length) as 'preserve-explicit' | 'overwrite'
-    else if (tok === '--strategy') flags.mergeStrategy = rest[++i] as 'preserve-explicit' | 'overwrite'
     else if (tok.startsWith('--scope=')) flags.scope = tok.slice('--scope='.length)
     else if (tok === '--scope') flags.scope = rest[++i]
     else if (tok.startsWith('--out=')) flags.outPath = tok.slice('--out='.length)
@@ -61,7 +52,6 @@ export function parseArgv(argv: string[]): CliArgs {
     else if (tok === '--path') positionals.push(rest[++i])
     else if (tok.startsWith('--path=')) positionals.push(tok.slice('--path='.length))
     else if (tok.startsWith('-')) {
-      // unknown flag — ignore with warn
       console.warn(`mddb: unknown flag ignored: ${tok}`)
     } else {
       positionals.push(tok)
@@ -71,36 +61,14 @@ export function parseArgv(argv: string[]): CliArgs {
   return { subcommand, positionals, flags }
 }
 
-function isGitDirty(): boolean {
-  try {
-    const out = execSync('git status --porcelain', {
-      cwd: PROJECT_ROOT,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    })
-    return out.trim().length > 0
-  } catch {
-    return false
-  }
-}
-
 function resolveScope(scope: string | undefined): string[] {
-  // 스코프는 docs/ 하위 폴더 또는 단일 파일
-  if (!scope || scope === '' || scope === '.') {
-    return walkDocsMd(DOCS_ROOT)
-  }
+  if (!scope || scope === '' || scope === '.') return walkDocsMd(DOCS_ROOT)
   const abs = resolve(PROJECT_ROOT, scope)
-  // 파일 1개
   if (scope.endsWith('.md')) {
-    if (isDocsMd(abs) && !isMemoryPath(abs)) {
-      return [toRelDocsPath(abs)]
-    }
+    if (isDocsMd(abs) && !isMemoryPath(abs)) return [toRelDocsPath(abs)]
     return []
   }
-  // 폴더
-  if (abs.startsWith(DOCS_ROOT)) {
-    return walkDocsMd(abs)
-  }
+  if (abs.startsWith(DOCS_ROOT)) return walkDocsMd(abs)
   return []
 }
 
@@ -111,20 +79,12 @@ async function extractSubcommand(args: CliArgs): Promise<number> {
     console.error(`no docs/ files found for scope: ${args.positionals[0]}`)
     return 2
   }
-
   if (args.positionals[0] && args.positionals[0].endsWith('.md') && !args.flags.scope) {
-    // 단일 파일 extract
     const relPath = files[0] ?? toRelDocsPath(resolve(PROJECT_ROOT, args.positionals[0]))
     const r = await extractFile(relPath)
-    if (args.flags.json) {
-      console.log(JSON.stringify(r, null, 2))
-    } else {
-      console.log(JSON.stringify(r, null, 2))
-    }
+    console.log(JSON.stringify(r, null, 2))
     return 0
   }
-
-  // 전체 scope
   const results = await Promise.all(files.map((f) => extractFile(f).catch((e) => ({
     path: f,
     error: (e as Error).message,
@@ -182,55 +142,39 @@ async function auditSubcommand(args: CliArgs): Promise<number> {
     const outPath = await writeAuditFile(report, resolve(PROJECT_ROOT, args.flags.outPath))
     console.log(`audit report: ${outPath}`)
   } else {
-    // stdout markdown
     console.log(renderAuditMarkdown(report))
   }
   return report.policyWatch.shouldFail ? 1 : 0
 }
 
-async function injectSubcommand(args: CliArgs): Promise<number> {
-  const scope = args.flags.scope ?? args.positionals[0]
+async function relocateSubcommand(args: CliArgs): Promise<number> {
   const dryRun = args.flags.dryRun ?? false
-  const strategy = args.flags.mergeStrategy ?? 'preserve-explicit'
-
-  if (!dryRun && isGitDirty()) {
-    console.error('mddb:inject: working tree is dirty. commit or stash first, or use --dry-run.')
-    return 2
-  }
-
-  const files = resolveScope(scope)
-  if (files.length === 0) {
-    console.error(`mddb:inject: no files for scope: ${scope ?? '(none)'}`)
-    return 2
-  }
-
-  const report = { total: 0, changed: 0, warnings: 0, errors: 0 }
-  for (const relPath of files) {
-    try {
-      const result = await extractFile(relPath)
-      report.total++
-      const errs = result.warnings.filter((w) => w.severity === 'error').length
-      const warns = result.warnings.filter((w) => w.severity !== 'error').length
-      report.errors += errs
-      report.warnings += warns
-
-      const inj = await injectFrontmatter(relPath, result, { dryRun, mergeStrategy: strategy })
-      if (inj.changed) report.changed++
-    } catch (e) {
-      report.errors++
-      console.error(`[${relPath}] ${(e as Error).message}`)
+  try {
+    const plan = dryRun ? await planRelocate() : await runRelocate({ dryRun })
+    if (args.flags.json) {
+      console.log(JSON.stringify(plan, null, 2))
+    } else {
+      console.log(`mddb:relocate dryRun=${dryRun}`)
+      console.log(`  total scanned: ${plan.total}`)
+      console.log(`  planned moves: ${plan.planned.length}`)
+      console.log(`  skipped:       ${plan.skipped.length}`)
+      const bySource: Record<string, number> = {}
+      for (const p of plan.planned) bySource[p.source] = (bySource[p.source] ?? 0) + 1
+      console.log('  by source:')
+      for (const [s, c] of Object.entries(bySource).sort()) console.log(`    ${s}: ${c}`)
+      const byReason: Record<string, number> = {}
+      for (const s of plan.skipped) byReason[s.reason] = (byReason[s.reason] ?? 0) + 1
+      if (Object.keys(byReason).length > 0) {
+        console.log('  by skip reason:')
+        for (const [r, c] of Object.entries(byReason).sort()) console.log(`    ${r}: ${c}`)
+      }
+      if (dryRun) console.log('  (dry-run: no files moved)')
     }
+    return 0
+  } catch (e) {
+    console.error(`mddb:relocate: ${(e as Error).message}`)
+    return 2
   }
-
-  if (args.flags.json) {
-    console.log(JSON.stringify(report, null, 2))
-  } else {
-    console.log(`mddb:inject scope=${scope ?? 'docs/'} dryRun=${dryRun} strategy=${strategy}`)
-    console.log(`  total=${report.total} changed=${report.changed}`)
-    console.log(`  warnings=${report.warnings} errors=${report.errors}`)
-    if (dryRun) console.log('  (dry-run: no files written)')
-  }
-  return report.errors > 0 ? 1 : 0
 }
 
 async function indexSubcommand(args: CliArgs): Promise<number> {
@@ -257,7 +201,7 @@ export async function main(argv: string[]): Promise<number> {
       case 'extract': return await extractSubcommand(args)
       case 'validate': return await validateSubcommand(args)
       case 'audit': return await auditSubcommand(args)
-      case 'inject': return await injectSubcommand(args)
+      case 'relocate': return await relocateSubcommand(args)
       case 'index': return await indexSubcommand(args)
     }
   } catch (e) {
@@ -266,7 +210,6 @@ export async function main(argv: string[]): Promise<number> {
   }
 }
 
-// Entry point — run when invoked directly (tsx/node)
 if (import.meta.url === `file://${process.argv[1]}`) {
   main(process.argv.slice(2)).then((code) => process.exit(code))
 }

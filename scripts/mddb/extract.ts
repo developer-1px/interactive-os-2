@@ -1,33 +1,35 @@
-// @see docs/2-areas/docs-infra/prds/mddb-phase1-prd.md
+// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
 /**
- * extract orchestrator — path + git + content → ExtractResult.
+ * extract orchestrator (lite) — content + git → ExtractResult.
  *
- * @invariant explicit > content > filename > folder > git > mtime > default (§4.0)
- * @invariant explicit 값이 있으면 해당 필드 source='explicit' + confidence='high'
- * @invariant provenance의 키 집합 === frontmatter의 확정 필드 집합
+ * @invariant 우선순위: explicit > content > git > filename > mtime
+ * @invariant tags = explicit.tags(array) || content.tags(last hashtag line)
+ * @invariant date-path-mismatch warn 시 frontmatter는 그대로 (relocate가 처리)
  * @invariant memory/ 경로는 throw (defense in depth)
- * @invariant Zod safeParse 실패 시 best-effort 부분 복구 + warning 'schema-invalid'
  */
 import { readFile } from 'node:fs/promises'
 import { resolve, basename } from 'node:path'
 import {
   DocFrontmatterSchema,
   SOURCE_CONFIDENCE,
-  STATUS_VALUES,
-  KIND_VALUES,
   LEGACY_FIELD_RENAMES,
-  FOLDER_STATUS_MAP,
 } from './schema.ts'
 import type {
   DocFrontmatter,
-  DocStatus,
-  DocKind,
   ExtractResult,
   ExtractSource,
   ExtractWarning,
   FieldProvenance,
 } from './schema.ts'
-import { DOCS_ROOT, PROJECT_ROOT, isDocsMd, isMemoryPath, toRelDocsPath, walkDocsMd, folder0 } from './paths.ts'
+import {
+  DOCS_ROOT,
+  PROJECT_ROOT,
+  isDocsMd,
+  isMemoryPath,
+  toRelDocsPath,
+  walkDocsMd,
+  parseDatePath,
+} from './paths.ts'
 import { extractPath } from './extractPath.ts'
 import type { PathExtract } from './extractPath.ts'
 import { extractGitDates } from './extractGitDates.ts'
@@ -36,21 +38,11 @@ import { extractContent } from './extractContent.ts'
 import type { ContentExtract } from './extractContent.ts'
 
 const CORE_FIELD_KEYS = [
-  'id', 'title', 'status', 'kind', 'created', 'updated',
-  'summary', 'topics', 'parent', 'relates', 'supersedes', 'superseded_by', 'legacy',
+  'id', 'title', 'created', 'updated', 'summary', 'tags', 'legacy',
 ] as const satisfies readonly (keyof DocFrontmatter)[]
 
-function isStatus(x: unknown): x is DocStatus {
-  return typeof x === 'string' && (STATUS_VALUES as readonly string[]).includes(x)
-}
-function isKind(x: unknown): x is DocKind {
-  return typeof x === 'string' && (KIND_VALUES as readonly string[]).includes(x)
-}
-
 function slugFromPath(relPath: string): string {
-  // '{folder0}/{filename-without-ext}' 상대 경로 slug
-  const withoutExt = relPath.replace(/\.md$/i, '')
-  return withoutExt
+  return relPath.replace(/\.md$/i, '')
 }
 
 function setProv(
@@ -63,11 +55,7 @@ function setProv(
 }
 
 /**
- * §4.0 L0 체인의 단일 소비자. 순수 함수.
- *
- * @invariant 우선순위: explicit > content > filename > folder > git > mtime > default
- * @invariant 반환 tuple[1]의 키 === tuple[0]의 확정 필드 집합
- * @invariant pure — FS/git/network IO 없음
+ * Pure builder. explicit > content > git > filename > mtime priority.
  */
 export function buildFrontmatterByPriority(input: {
   explicit: Record<string, unknown>
@@ -78,11 +66,9 @@ export function buildFrontmatterByPriority(input: {
 }): [DocFrontmatter, Partial<Record<keyof DocFrontmatter, FieldProvenance>>] {
   const { explicit, content, path, git, relPath } = input
   const prov: Partial<Record<keyof DocFrontmatter, FieldProvenance>> = {}
-  const filename = basename(relPath)
-  const filenameStem = filename.replace(/\.md$/i, '')
+  const filenameStem = basename(relPath).replace(/\.md$/i, '')
 
-  // legacy rename 전처리: explicit의 legacy 필드를 코어 필드로 흡수
-  // (단, 기존 코어 필드가 이미 있으면 덮어쓰지 않음)
+  // legacy rename 전처리
   const explicitCanonical: Record<string, unknown> = {}
   const legacyBucket: Record<string, unknown> = {}
   for (const [k, v] of Object.entries(explicit)) {
@@ -93,25 +79,13 @@ export function buildFrontmatterByPriority(input: {
     const rename = LEGACY_FIELD_RENAMES[k]
     if (rename) {
       if (explicitCanonical[rename] === undefined && explicit[rename] === undefined) {
-        // legacy → core 정규화
-        if (rename === 'topics') {
-          // tags 는 array concat — 기존 topics 값이 있으면 추후 병합
-          const cur = explicitCanonical[rename]
-          const toAdd = Array.isArray(v) ? v : [v]
-          explicitCanonical[rename] = Array.isArray(cur) ? [...(cur as unknown[]), ...toAdd] : toAdd
-        } else {
-          explicitCanonical[rename] = v
-        }
-        // 동시에 legacy에도 원본 보존 (투명성)
-        legacyBucket[k] = v
-      } else {
-        legacyBucket[k] = v
+        explicitCanonical[rename] = v
       }
+      legacyBucket[k] = v
     } else {
       legacyBucket[k] = v
     }
   }
-  // 기존 explicit.legacy 병합
   if (explicit.legacy && typeof explicit.legacy === 'object' && !Array.isArray(explicit.legacy)) {
     Object.assign(legacyBucket, explicit.legacy as Record<string, unknown>)
   }
@@ -137,29 +111,6 @@ export function buildFrontmatterByPriority(input: {
   } else {
     title = filenameStem
     setProv(prov, 'title', title, 'filename')
-  }
-
-  // ── status ──
-  let status: DocStatus
-  if (isStatus(explicitCanonical.status)) {
-    status = explicitCanonical.status
-    setProv(prov, 'status', status, 'explicit')
-  } else {
-    status = path.status
-    setProv(prov, 'status', status, 'folder')
-  }
-
-  // ── kind ──
-  let kind: DocKind
-  if (isKind(explicitCanonical.kind)) {
-    kind = explicitCanonical.kind
-    setProv(prov, 'kind', kind, 'explicit')
-  } else if (path.provenance.kind.source === 'filename') {
-    kind = path.kind
-    setProv(prov, 'kind', kind, 'filename')
-  } else {
-    kind = 'note'
-    setProv(prov, 'kind', kind, 'default')
   }
 
   // ── created ──
@@ -196,60 +147,19 @@ export function buildFrontmatterByPriority(input: {
   if (typeof explicitCanonical.summary === 'string' && explicitCanonical.summary.length > 0) {
     summary = explicitCanonical.summary
     setProv(prov, 'summary', summary, 'explicit')
-  } else if (content.summary) {
-    summary = content.summary
-    setProv(prov, 'summary', summary, 'content')
   }
 
-  // ── topics ── (union: explicit + body tags + filename tags + folder0)
-  const topicSet = new Set<string>()
-  if (Array.isArray(explicitCanonical.topics)) {
-    for (const t of explicitCanonical.topics as unknown[]) {
-      if (typeof t === 'string') topicSet.add(t.toLowerCase())
-    }
-  }
-  for (const t of content.tagsFromBody) topicSet.add(t.toLowerCase())
-  for (const t of path.topics) topicSet.add(t.toLowerCase())
-  const topics = Array.from(topicSet).sort()
-  if (topics.length > 0) {
-    // explicit이 있었으면 explicit, 아니면 content/filename 중 우선순위 높은 것
-    const src: ExtractSource =
-      Array.isArray(explicitCanonical.topics) && (explicitCanonical.topics as unknown[]).length > 0
-        ? 'explicit'
-        : content.tagsFromBody.length > 0
-          ? 'content'
-          : path.topics.length > 0
-            ? 'filename'
-            : 'default'
-    setProv(prov, 'topics', topics, src)
+  // ── tags ── explicit.tags > content.tags
+  let tags: string[] = []
+  if (Array.isArray(explicitCanonical.tags)) {
+    tags = (explicitCanonical.tags as unknown[])
+      .filter((t): t is string => typeof t === 'string')
+    setProv(prov, 'tags', tags, 'explicit')
+  } else if (content.tags.length > 0) {
+    tags = content.tags
+    setProv(prov, 'tags', tags, 'content')
   } else {
-    setProv(prov, 'topics', topics, 'default')
-  }
-
-  // ── parent ──
-  let parent: string | undefined
-  if (typeof explicitCanonical.parent === 'string' && explicitCanonical.parent.length > 0) {
-    parent = explicitCanonical.parent
-    setProv(prov, 'parent', parent, 'explicit')
-  }
-
-  // ── relates / supersedes / superseded_by ── explicit만
-  const relates = Array.isArray(explicitCanonical.relates)
-    ? (explicitCanonical.relates as unknown[]).filter((x): x is string => typeof x === 'string')
-    : []
-  if (relates.length > 0) setProv(prov, 'relates', relates, 'explicit')
-  else setProv(prov, 'relates', relates, 'default')
-
-  const supersedes = Array.isArray(explicitCanonical.supersedes)
-    ? (explicitCanonical.supersedes as unknown[]).filter((x): x is string => typeof x === 'string')
-    : []
-  if (supersedes.length > 0) setProv(prov, 'supersedes', supersedes, 'explicit')
-  else setProv(prov, 'supersedes', supersedes, 'default')
-
-  let supersededBy: string | undefined
-  if (typeof explicitCanonical.superseded_by === 'string' && explicitCanonical.superseded_by.length > 0) {
-    supersededBy = explicitCanonical.superseded_by
-    setProv(prov, 'superseded_by', supersededBy, 'explicit')
+    setProv(prov, 'tags', tags, 'filename')
   }
 
   // ── legacy ──
@@ -259,16 +169,10 @@ export function buildFrontmatterByPriority(input: {
   const frontmatter: DocFrontmatter = {
     id,
     title,
-    status,
-    kind,
     created,
     updated,
     summary,
-    topics,
-    parent,
-    relates,
-    supersedes,
-    superseded_by: supersededBy,
+    tags,
     legacy,
   }
 
@@ -276,22 +180,18 @@ export function buildFrontmatterByPriority(input: {
 }
 
 export async function extractFile(relPath: string): Promise<ExtractResult> {
-  // 1. 스코프 가드 (불변식 #8)
   if (!isDocsMd(relPath) || isMemoryPath(relPath)) {
     throw new Error(`out of mddb scope: ${relPath}`)
   }
 
-  // relPath: absolute | 'docs/..' | docs-relative ('0-inbox/..')
   const docsRel = toRelDocsPath(relPath)
   const absPath = resolve(DOCS_ROOT, docsRel)
   const warnings: ExtractWarning[] = []
 
-  // 2. 파일 읽기
   let source: string
   try {
     source = await readFile(absPath, 'utf8')
   } catch (e) {
-    // 파일 없음 — 빈 content로 처리 (테스트/훅 케이스)
     warnings.push({
       code: 'schema-invalid',
       severity: 'error',
@@ -300,7 +200,6 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
     source = ''
   }
 
-  // 3. 3개 source 수집
   const content = extractContent(source)
   if (!content.hasFrontmatterBlock) {
     warnings.push({
@@ -323,10 +222,7 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
     cwd: PROJECT_ROOT,
   })
 
-  // 4. explicit = content.rawFrontmatter (있으면)
   const explicit = content.rawFrontmatter ?? {}
-
-  // 5. 필드별 L0 체인 → frontmatter + provenance
   const [frontmatter, provenance] = buildFrontmatterByPriority({
     explicit,
     content,
@@ -335,7 +231,6 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
     relPath: docsRel,
   })
 
-  // 6. legacy-field-preserved warning
   if (frontmatter.legacy && Object.keys(frontmatter.legacy).length > 0) {
     warnings.push({
       code: 'legacy-field-preserved',
@@ -344,29 +239,23 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
     })
   }
 
-  // 7. status-folder-mismatch / kind-filename-mismatch
-  if (typeof explicit.status === 'string' && explicit.status !== path.status) {
+  // date-path-mismatch — 파일이 YYYY/YYYY-MM/YYYY-MM-DD/ 아래 있지 않으면 warn
+  const datePath = parseDatePath(docsRel)
+  if (!datePath) {
     warnings.push({
-      code: 'status-folder-mismatch',
-      field: 'status',
+      code: 'date-path-mismatch',
       severity: 'warn',
-      message: `explicit=${String(explicit.status)} folder=${path.status}`,
+      message: `not under YYYY/YYYY-MM/YYYY-MM-DD/ — relocate pending`,
     })
-  }
-  if (
-    typeof explicit.kind === 'string' &&
-    path.provenance.kind.source === 'filename' &&
-    explicit.kind !== path.kind
-  ) {
+  } else if (datePath.day !== frontmatter.created) {
+    // path 의 일자와 created 가 다르면 정보성 warning (relocate 후 일관성)
     warnings.push({
-      code: 'kind-filename-mismatch',
-      field: 'kind',
-      severity: 'warn',
-      message: `explicit=${String(explicit.kind)} filename=${path.kind}`,
+      code: 'date-path-mismatch',
+      severity: 'info',
+      message: `path day=${datePath.day} != created=${frontmatter.created}`,
     })
   }
 
-  // 8. untracked-mtime-fallback
   if (git.source === 'mtime' && !(provenance.created?.source === 'explicit')) {
     warnings.push({
       code: 'untracked-mtime-fallback',
@@ -376,7 +265,6 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
     })
   }
 
-  // 9. created > updated 자동 보정 (불변식 #4)
   if (frontmatter.created > frontmatter.updated) {
     warnings.push({
       code: 'created-after-updated',
@@ -387,29 +275,26 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
     frontmatter.updated = frontmatter.created
   }
 
-  // 10. future date check (today보다 미래) — informational
-  const today = new Date().toISOString().slice(0, 10)
-  if (frontmatter.created > today) {
-    warnings.push({
-      code: 'future-date',
-      field: 'created',
-      severity: 'warn',
-      message: `created=${frontmatter.created} is in the future`,
-    })
+  // hashtag 라인 형식 검증 (마지막 줄에 # 있으나 매칭 실패 시)
+  const lastNonBlank = content.body.split('\n').reverse().find((l) => l.trim().length > 0)
+  if (lastNonBlank && lastNonBlank.trim().startsWith('#') && content.tags.length === 0) {
+    // tag로 인식 안 됐는데 # 시작이면 — 숫자-only이거나 heading일 수 있음
+    const trimmed = lastNonBlank.trim()
+    if (/^#\d+(\s|$)/.test(trimmed)) {
+      warnings.push({
+        code: 'numeric-only-hashtag',
+        severity: 'info',
+        message: `last line has numeric-only hashtag (treated as non-tag): ${trimmed.slice(0, 40)}`,
+      })
+    } else if (!trimmed.startsWith('# ') && !trimmed.startsWith('## ')) {
+      warnings.push({
+        code: 'hashtag-line-malformed',
+        severity: 'info',
+        message: `last line starts with # but not a valid tag line: ${trimmed.slice(0, 40)}`,
+      })
+    }
   }
 
-  // 11. self-relate 제거 + warning
-  if (frontmatter.relates.includes(frontmatter.id)) {
-    warnings.push({
-      code: 'self-relate',
-      field: 'relates',
-      severity: 'info',
-      message: `relates contained self id, removed`,
-    })
-    frontmatter.relates = frontmatter.relates.filter((r) => r !== frontmatter.id)
-  }
-
-  // 12. Zod safeParse — 실패해도 best-effort
   const parsed = DocFrontmatterSchema.safeParse(frontmatter)
   const finalFm = parsed.success ? parsed.data : (frontmatter as DocFrontmatter)
   if (!parsed.success) {
@@ -436,27 +321,23 @@ export async function extractAll(
   const all = walkDocsMd(root)
 
   const results: ExtractResult[] = []
-  // 간단한 concurrency pool
   let idx = 0
   const worker = async () => {
     while (idx < all.length) {
       const i = idx++
       const relPath = all[i]
       try {
-        const r = await extractFile(relPath)
-        results[i] = r
+        results[i] = await extractFile(relPath)
       } catch (e) {
         results[i] = {
           path: relPath,
           frontmatter: fallbackFrontmatter(relPath),
           provenance: {},
-          warnings: [
-            {
-              code: 'schema-invalid',
-              severity: 'error',
-              message: `extractFile threw: ${(e as Error).message}`,
-            },
-          ],
+          warnings: [{
+            code: 'schema-invalid',
+            severity: 'error',
+            message: `extractFile threw: ${(e as Error).message}`,
+          }],
         }
       }
     }
@@ -484,25 +365,16 @@ export function extractFrontmatter(source: string): {
   }
 }
 
-// fallback — Zod 통과 보장되는 최소 frontmatter (extract 실패 시)
 function fallbackFrontmatter(relPath: string): DocFrontmatter {
-  const folder = folder0(relPath)
-  const status = FOLDER_STATUS_MAP[folder] ?? 'meta'
   const today = new Date().toISOString().slice(0, 10)
   const filename = basename(relPath).replace(/\.md$/i, '')
   return {
     id: relPath.replace(/\.md$/i, ''),
     title: filename,
-    status,
-    kind: 'note',
     created: today,
     updated: today,
     summary: undefined,
-    topics: [],
-    parent: undefined,
-    relates: [],
-    supersedes: [],
-    superseded_by: undefined,
+    tags: [],
     legacy: undefined,
   }
 }

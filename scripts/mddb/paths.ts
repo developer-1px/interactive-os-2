@@ -1,13 +1,15 @@
-// @see docs/2-areas/docs-infra/prds/mddb-phase1-prd.md
+// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
 /**
- * Path filter SSOT.
+ * Path filter SSOT + date layout helper.
  *
- * @invariant isMemoryPath가 true인 경로는 mddb 파이프라인이 절대 읽지 않는다 (불변식 #8)
- * @invariant 모든 함수는 pure — 파일시스템 IO 없음
+ * @invariant isMemoryPath가 true인 경로는 mddb 파이프라인이 절대 읽지 않는다
+ * @invariant 모든 함수는 pure — 파일시스템 IO 없음 (walkDocsMd 제외)
  * @invariant isDocsMd ∩ isMemoryPath === ∅ (상호 배타)
+ * @invariant parseDatePath ∘ dateToFolder == identity (year/month/day 일관성)
  */
 import { resolve, sep, isAbsolute, relative, extname } from 'node:path'
 import { readdirSync, statSync } from 'node:fs'
+import { DATE_FOLDER_RE } from './schema.ts'
 
 // DOCS_ROOT 계산: scripts/mddb/paths.ts → project root → docs/
 export const PROJECT_ROOT = resolve(import.meta.dirname, '../..')
@@ -118,4 +120,28 @@ export function walkDocsMd(root: string = DOCS_ROOT): string[] {
   }
   walk(root)
   return out.sort()
+}
+
+// ── Date layout helpers (mddb-lite) ────────────────────────────
+
+/**
+ * docs-relative path → { year, month, day } if matches DATE_FOLDER_RE.
+ * @invariant return null if not under YYYY/YYYY-MM/YYYY-MM-DD/
+ */
+export function parseDatePath(relPath: string): { year: string; month: string; day: string } | null {
+  const m = DATE_FOLDER_RE.exec(relPath)
+  if (!m) return null
+  const [, year, mm, dd] = m
+  return { year, month: `${year}-${mm}`, day: `${year}-${mm}-${dd}` }
+}
+
+/**
+ * ISO date (YYYY-MM-DD) → 'YYYY/YYYY-MM/YYYY-MM-DD' folder segment.
+ * @invariant input must match /^\d{4}-\d{2}-\d{2}$/ — throws otherwise
+ */
+export function dateToFolder(isoDate: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate)
+  if (!m) throw new Error(`dateToFolder: invalid date ${isoDate}`)
+  const [, y, mm, dd] = m
+  return `${y}/${y}-${mm}/${y}-${mm}-${dd}`
 }

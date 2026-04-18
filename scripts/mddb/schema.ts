@@ -1,115 +1,85 @@
-// @see docs/2-areas/docs-infra/prds/mddb-phase1-prd.md
+// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
 /**
- * mddb schema — DocFrontmatter Zod SSOT + enum/mapping tables.
+ * mddb schema — DocFrontmatter Zod SSOT (lite).
  *
- * §1 데이터 모델의 유일 진실. 다른 모든 mddb 파일이 이 파일로부터 import.
+ * Phase 1 (PARA + frontmatter inject)을 폐기하고 마지막 줄 hashtag 컨벤션으로 축소.
  *
  * @invariant DocFrontmatterSchema는 .strict() — 알 수 없는 필드는 legacy.*로 격리
- * @invariant STATUS_VALUES/KIND_VALUES/EXTRACT_SOURCES는 as const readonly tuple
- * @invariant FOLDER_STATUS_MAP은 docs/ 모든 폴더에 대해 surjective
- * @invariant SOURCE_CONFIDENCE는 모든 ExtractSource에 대해 total mapping
+ * @invariant tags 는 hashtag 토큰 배열 (# 접두어 제거됨, 슬래시 계층 보존)
+ * @invariant status/kind/topics 같은 파생은 viewer/runtime이 tags prefix 필터로 계산
+ * @invariant DATE_FOLDER_RE는 YYYY/YYYY-MM/YYYY-MM-DD/ 3단 폴더 강제
  */
 import { z } from 'zod'
 
-// ── Enums ──
+// ── Hashtag 정규식 ──────────────────────────────────────────────
+// Mastodon/Obsidian 교집합. 한글·숫자·영문·`_`·`-`·`/` 허용.
+// 줄 전체가 #토큰들(공백 구분)만으로 구성될 때만 매칭.
+export const HASHTAG_LINE_RE =
+  /^#[\p{L}\p{N}_/-]+(\s+#[\p{L}\p{N}_/-]+)*\s*$/u
 
-export const STATUS_VALUES = [
-  'inbox',       // docs/0-inbox/
-  'active',      // docs/1-projects/, docs/2-areas/
-  'reference',   // docs/3-resources/
-  'archived',    // docs/4-archive/
-  'backlog',     // docs/5-backlogs/
-  'research',    // docs/research/
-  'sample',      // docs/samples/
-  'meta',        // docs/superpowers/ | docs/birdseye/ | docs/ (root)
-] as const
-export type DocStatus = typeof STATUS_VALUES[number]
+// 단일 토큰 추출 (# 접두어 제거 후 캡처)
+export const HASHTAG_TOKEN_RE = /^#([\p{L}\p{N}_/-]+)$/u
 
-export const KIND_VALUES = [
-  // 문서 계열 (규약 높음)
-  'prd', 'plan', 'handoff', 'summary', 'readme', 'backlog',
-  // 내용 계열 (태그/내용 기반)
-  'audit', 'retro', 'explain', 'decision', 'design', 'research',
-  'methodology', 'pattern', 'tooling', 'analysis', 'report', 'protocol',
-  'i18n', 'vision', 'ideal', 'library', 'event', 'memo', 'idea', 'pyramid',
-  // 기본값
-  'note',
-] as const
-export type DocKind = typeof KIND_VALUES[number]
+// 숫자-only 토큰 (GitHub `#123` issue 링크 충돌 방지)
+export const NUMERIC_ONLY_HASHTAG_RE = /^#\d+$/
 
+// ── 경로 정규식 ────────────────────────────────────────────────
+// docs/YYYY/YYYY-MM/YYYY-MM-DD/<slug>.md
+// 백레퍼런스로 연도 일관성 강제: '2026/2026-04/2026-04-18/' OK, '2026/2025-04/...' 거부
+export const DATE_FOLDER_RE = /^(\d{4})\/\1-(\d{2})\/\1-\2-(\d{2})\//
+
+// ── ExtractSource ──────────────────────────────────────────────
 export const EXTRACT_SOURCES = [
-  'explicit', 'content', 'filename', 'folder', 'git', 'mtime', 'default',
+  'explicit', 'content', 'git', 'mtime', 'filename',
 ] as const
 export type ExtractSource = typeof EXTRACT_SOURCES[number]
 
-// source → confidence (§1.2 표)
-export const SOURCE_CONFIDENCE: Record<ExtractSource, 'high' | 'medium' | 'low'> = {
+export const SOURCE_CONFIDENCE: Record<ExtractSource, 'high' | 'low'> = {
   explicit: 'high',
   content: 'high',
-  filename: 'high',
-  folder: 'high',
   git: 'high',
+  filename: 'high',
   mtime: 'low',
-  default: 'low',
 }
 
-// ── Core schema ──
-
+// ── DocFrontmatter (Zod SSOT) ──────────────────────────────────
 export const DocFrontmatterSchema = z.object({
   id: z.string().min(1)
     .describe('Stable identifier. Default: slug from filename'),
   title: z.string().min(1)
     .describe('Display title. Derived from first H1 if absent'),
-  status: z.enum(STATUS_VALUES)
-    .describe('Lifecycle state. L0 derives from folder path'),
-  kind: z.enum(KIND_VALUES)
-    .describe('Document type. L0 derives from filename convention'),
   created: z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
-    .describe('First-known date. git log → filename date → mtime'),
+    .describe('First-known date. explicit > git --follow > mtime'),
   updated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
-    .describe('Last-known date. git log → mtime'),
+    .describe('Last-known date. explicit > git -1 > mtime'),
   summary: z.string().optional()
     .describe('1-2 sentence abstract'),
-  topics: z.array(z.string()).default([])
-    .describe('Subject tags. L0: folder + filename [tag]'),
-  parent: z.string().optional()
-    .describe('Parent doc id (knowledge hierarchy)'),
-  relates: z.array(z.string()).default([])
-    .describe('Related doc ids (loose relation)'),
-  supersedes: z.array(z.string()).default([])
-    .describe('Docs this supersedes'),
-  superseded_by: z.string().optional()
-    .describe('Doc that supersedes this'),
+  tags: z.array(z.string()).default([])
+    .describe('Hashtag tokens from last non-blank line (# stripped, slash hierarchy preserved)'),
   legacy: z.record(z.string(), z.unknown()).optional()
-    .describe('Pre-mddb fields (name/slug/layer/maturity/deps/etc). Preserved as-is'),
+    .describe('Pre-mddb fields (status/kind/topics/parent/relates/supersedes/etc) preserved as-is'),
 }).strict()
 
 export type DocFrontmatter = z.infer<typeof DocFrontmatterSchema>
 
-// ── ExtractResult + Provenance ──
-
+// ── Provenance + Warnings ──────────────────────────────────────
 export type FieldProvenance = {
   value: unknown
   source: ExtractSource
-  confidence: 'high' | 'medium' | 'low'
+  confidence: 'high' | 'low'
 }
 
 export type ExtractWarning = {
   code:
     | 'missing-frontmatter'
     | 'schema-invalid'
-    | 'status-folder-mismatch'
-    | 'kind-filename-mismatch'
-    | 'created-after-updated'
-    | 'supersede-cycle'
+    | 'date-path-mismatch'
+    | 'hashtag-line-malformed'
+    | 'numeric-only-hashtag'
     | 'untracked-mtime-fallback'
     | 'legacy-field-preserved'
-    | 'topic-fallback-empty'
-    | 'parent-not-found'
+    | 'created-after-updated'
     | 'duplicate-id'
-    | 'superseded-by-not-found'
-    | 'self-relate'
-    | 'future-date'
   field?: keyof DocFrontmatter
   message: string
   severity: 'error' | 'warn' | 'info'
@@ -122,93 +92,12 @@ export type ExtractResult = {
   warnings: ExtractWarning[]
 }
 
-// ── Mapping tables (§1.3) ──
-
-// §1.3.1 FolderStatusMap — docs/ 첫 segment → status
-export const FOLDER_STATUS_MAP: Readonly<Record<string, DocStatus>> = {
-  '0-inbox': 'inbox',
-  '1-projects': 'active',
-  '2-areas': 'active',
-  '3-resources': 'reference',
-  '4-archive': 'archived',
-  '5-backlogs': 'backlog',
-  'research': 'research',
-  'samples': 'sample',
-  'superpowers': 'meta',
-  'birdseye': 'meta',
-  '': 'meta', // docs/ 루트
-}
-
-// §1.3.2 파일명 → kind 패턴 (우선순위 순서)
-export type FilenameKindPattern = {
-  regex: RegExp
-  kind: DocKind | 'tag-lookup'
-  extract?: (match: RegExpMatchArray) => {
-    topics?: string[]
-    createdFromFilename?: string
-    sortIndex?: number
-  }
-}
-
-export const FILENAME_KIND_PATTERNS: readonly FilenameKindPattern[] = [
-  { regex: /^README\.md$/i, kind: 'readme' },
-  { regex: /^summary\.md$/i, kind: 'summary' },
-  {
-    regex: /^handoff-(\d{4}-\d{2}-\d{2})(?:-(.+))?\.md$/,
-    kind: 'handoff',
-    extract: (m) => ({ createdFromFilename: m[1] }),
-  },
-  { regex: /^pyramid-.+\.md$/, kind: 'pyramid' },
-  { regex: /^explain-.+\.md$/, kind: 'explain' },
-  {
-    regex: /^(\d+)-\[([^\]]+)\](.+)\.md$/,
-    kind: 'tag-lookup',
-    extract: (m) => ({
-      topics: [m[2].toLowerCase()],
-      sortIndex: Number(m[1]),
-    }),
-  },
-  { regex: /.*-prd\.md$/, kind: 'prd' },
-  { regex: /.*-plan\.md$/, kind: 'plan' },
-  { regex: /.*-task\.md$/, kind: 'plan' },
-]
-
-// §1.3.2 tag → kind 재귀 lookup
-export const TAG_KIND_MAP: Readonly<Record<string, DocKind>> = {
-  backlog: 'backlog',
-  audit: 'audit',
-  retro: 'retro',
-  retrospective: 'retro',
-  explain: 'explain',
-  decision: 'decision',
-  adr: 'decision',
-  design: 'design',
-  methodology: 'methodology',
-  method: 'methodology',
-  pattern: 'pattern',
-  tooling: 'tooling',
-  tool: 'tooling',
-  analysis: 'analysis',
-  report: 'report',
-  protocol: 'protocol',
-  i18n: 'i18n',
-  locale: 'i18n',
-  vision: 'vision',
-  manifesto: 'vision',
-  ideal: 'ideal',
-  library: 'library',
-  lib: 'library',
-  event: 'event',
-  memo: 'memo',
-  idea: 'idea',
-}
-
-// §1.3.3 legacy field 정규화 매핑
+// ── Legacy 필드 보존 매핑 (축소) ────────────────────────────────
+// frontmatter에 남아있는 PARA·구 mddb 필드를 legacy.* 로 옮길 때 사용.
+// rename 대상은 created/title/updated 셋만 — 나머지는 legacy로 보존.
 export const LEGACY_FIELD_RENAMES: Readonly<Record<string, keyof DocFrontmatter>> = {
   created_at: 'created',
   date: 'created',
   last_touched: 'updated',
   name: 'title',
-  slug: 'id',
-  tags: 'topics',
 }
