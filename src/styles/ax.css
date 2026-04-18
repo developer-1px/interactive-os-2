@@ -7,6 +7,29 @@
  * @layer 순서는 layers.css가 선언. state가 recipe를 이긴다.
  */
 
+/* ════════════════════════════════════════════
+ * Surface→Text pairing tokens (Material on-*)
+ * --text-on-* = surface별 기본 전경색. tone 미주입 시 fallback.
+ * surface의 color는 var(--_fg, var(--text-on-{surface}))
+ *   — tone 주입 시 --_fg 우선, 미주입 시 surface 자동 파생.
+ * inverted surface는 내부에서 --text-* 토큰 체인을 재할당하여
+ * 하위 요소 전체의 text 색상을 역전시킨다 (sf-inverted 블록 참고).
+ * ════════════════════════════════════════════ */
+
+@layer tokens {
+  :root {
+    --text-on-action:   var(--tone-primary-foreground);
+    --text-on-input:    var(--text-primary);
+    --text-on-display:  var(--text-primary);
+    --text-on-overlay:  var(--text-primary);
+    --text-on-sunken:   var(--text-primary);
+    --text-on-base:     var(--text-primary);
+    --text-on-raised:   var(--text-primary);
+    --text-on-ghost:    inherit;
+    --text-on-inverted: var(--text-bright-inverted);
+  }
+}
+
 @layer state {
 
 /* ════════════════════════════════════════════
@@ -19,7 +42,7 @@
   user-select: none;
   border: none;
   background: var(--_bg, transparent);
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-action));
   transition: color 150ms, background-color 150ms, box-shadow 150ms;
 }
 .sf-action:hover { background: var(--_bg-hover, var(--bg-hover)); }
@@ -31,7 +54,7 @@
 .sf-input {
   border: 1px solid var(--border-strong);
   background: var(--_bg, var(--surface-default));
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-input));
   box-shadow: var(--shadow-xs);
   transition: color 150ms, box-shadow 150ms, border-color 150ms;
   /* border가 role의 min-height를 깨뜨리지 않도록 padding 보정 */
@@ -47,12 +70,12 @@ textarea.sf-input { field-sizing: content; }
 .sf-display {
   border: 1px solid var(--border-subtle);
   background: var(--_bg, var(--surface-default));
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-display));
 }
 
 .sf-overlay {
   background: var(--_bg, var(--surface-overlay));
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-overlay));
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-strong);
   z-index: 10;
@@ -113,7 +136,7 @@ dialog.sf-overlay[open] {
 
 .sf-sunken {
   background: var(--_bg, var(--surface-sunken));
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-sunken));
   border: none;
   --bg-hover:  var(--depth-sunken-hover);
   --bg-active: var(--depth-sunken-active);
@@ -121,7 +144,7 @@ dialog.sf-overlay[open] {
 
 .sf-base {
   background: var(--_bg, var(--surface-base));
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-base));
   border: none;
   --bg-hover:  var(--depth-base-hover);
   --bg-active: var(--depth-base-active);
@@ -129,7 +152,7 @@ dialog.sf-overlay[open] {
 
 .sf-raised {
   background: var(--_bg, var(--surface-raised));
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-raised));
   border: none;
   box-shadow: var(--shadow-md);
   --bg-hover:  var(--depth-raised-hover);
@@ -138,7 +161,7 @@ dialog.sf-overlay[open] {
 
 .sf-inverted {
   background: var(--text-primary);
-  color: var(--surface-base);
+  color: var(--_fg, var(--text-on-inverted));
   border: none;
   /* 역전 맥락 — focus/text 모두 반전된 토큰 쓰기 (cascade로 하위 요소 자동 적용) */
   --focus:          var(--focus-inverted);
@@ -164,7 +187,7 @@ dialog.sf-overlay[open] {
   user-select: none;
   border: none;
   background: transparent;
-  color: var(--_fg, inherit);
+  color: var(--_fg, var(--text-on-ghost));
   transition: color 150ms, background-color 150ms;
 }
 .sf-ghost:hover { background: var(--bg-hover); }
@@ -476,43 +499,6 @@ dialog.sf-overlay[open] {
 :where(.tn-warning-dim) { color: var(--tone-warning-hover); }
 :where(.tn-neutral-dim) { color: var(--text-secondary); }
 
-/* ════════════════════════════════════════════
- * Text Color — 텍스트 밝기 위계 (semantic 색상은 tone이 소유)
- * ════════════════════════════════════════════ */
-
-.tx-bright    { color: var(--text-bright); }
-.tx-primary   { color: var(--text-primary); }
-.tx-secondary { color: var(--text-secondary); }
-.tx-muted     { color: var(--text-muted); }
-
-/* ════════════════════════════════════════════
- * Weight — textStyle weight와 독립적인 오버라이드
- * textStyle이 font-weight를 번들하지만, 개별 요소에서
- * weight만 바꿔야 할 때 사용 (버튼, 배지, 라벨 강조 등)
- * ════════════════════════════════════════════ */
-
-.wt-medium { font-weight: var(--weight-medium); }
-.wt-semi   { font-weight: var(--weight-semi); }
-.wt-bold   { font-weight: var(--weight-bold); }
-
-/* ════════════════════════════════════════════
- * State — surface 조립식 확장
- * focused/selected 상태의 시각 피드백
- * surface의 hover/active와 공존
- * ════════════════════════════════════════════ */
-
-.st-focused  { background: var(--tone-primary-dim); outline: var(--focus-ring) solid var(--focus); outline-offset: calc(-1 * var(--focus-ring)); }
-.st-selected { background: var(--selection); }
-
-/* ════════════════════════════════════════════
- * Opacity — 비-disabled 시각적 약화
- * disabled opacity는 surface가 소유 (aria-disabled/disabled)
- * ════════════════════════════════════════════ */
-
-.op-dim    { opacity: 0.6; }
-.op-faint  { opacity: 0.4; }
-.op-hidden { opacity: 0; pointer-events: none; }
-
 /* ── Role: Control — interactive 상태 ── */
 .rl-control:hover { background: var(--_bg-hover, var(--bg-hover)); }
 .rl-control:active { background: var(--_bg-active, var(--bg-active)); }
@@ -520,7 +506,7 @@ dialog.sf-overlay[open] {
 .rl-control[aria-disabled="true"],
 .rl-control:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
-} /* @layer state — Tone, Text Color, Weight, State, Opacity */
+} /* @layer state — Tone */
 
 @layer recipe {
 
@@ -585,6 +571,8 @@ dialog.sf-overlay[open] {
 .ly-scroll::-webkit-scrollbar { width: 6px; }
 .ly-scroll::-webkit-scrollbar-thumb { background: transparent; border-radius: 3px; }
 .ly-scroll:hover::-webkit-scrollbar-thumb { background: var(--border-default); }
+/* clip — D2: 'scroll:hidden' 대체. overflow:clip (스크롤/포커스 잠금 + 자식이 밖으로 못 나옴) */
+.ly-clip     { overflow: clip; }
 /* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
 .ly-fill     { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
 .ly-row-fill { display: flex; flex-direction: row; flex: 1; min-width: 0; min-height: 0; }
@@ -735,16 +723,6 @@ dialog.sf-overlay[open] {
 .mo-scale-in      { animation: ax-scale-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
 .mo-blink         { animation: ax-blink 0.8s step-end infinite; }
 .mo-shimmer       { animation: ax-shimmer 1.5s ease-in-out infinite; }
-
-/* ════════════════════════════════════════════
- * Scroll — overflow 제어
- * layout:scroll은 flex+overflow 번들, scroll은 순수 overflow만
- * ════════════════════════════════════════════ */
-
-.sc-hidden { overflow: hidden; }
-.sc-y      { overflow-y: auto; overflow-x: hidden; }
-.sc-x      { overflow-x: auto; overflow-y: hidden; }
-.sc-auto   { overflow: auto; }
 
 /* ════════════════════════════════════════════
  * Clamp — 텍스트 줄 수 제한
