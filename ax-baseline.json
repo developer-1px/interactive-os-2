@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T02:08:02.695Z",
+  "generatedAt": "2026-04-18T02:23:00.278Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -1069,6 +1069,22 @@
       },
       "total_violations": 0,
       "files": []
+    },
+    "line-length": {
+      "metric": "line-length",
+      "threshold": {
+        "min_ch": 45,
+        "max_ch": 75
+      },
+      "total_rules": 1,
+      "violations": 0,
+      "items": [
+        {
+          "selector": ".w-prose",
+          "max_width_ch": 72,
+          "in_range": true
+        }
+      ]
     }
   }
 }

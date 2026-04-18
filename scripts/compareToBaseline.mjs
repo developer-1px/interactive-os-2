@@ -30,6 +30,7 @@ const METRICS = [
   { name: 'text-apca', script: 'scripts/measureTextContrast.mjs' },
   { name: 'modular-scale', script: 'scripts/verifyModularScale.mjs' },
   { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
+  { name: 'line-length', script: 'scripts/verifyLineLength.mjs' },
 ]
 
 function runMetric(scriptPath) {
@@ -208,6 +209,21 @@ function diffModularScale(prev, cur) {
   return { regressions, improvements }
 }
 
+/** 단일 카운트 metric 공통 diff (field는 prev/cur의 숫자 필드명) */
+function diffCountMetric(prev, cur, field) {
+  const regressions = []
+  const improvements = []
+  if (!prev) {
+    improvements.push({ type: 'new_metric', detail: `신규 metric: ${field}=${cur[field]}` })
+    return { regressions, improvements }
+  }
+  const p = prev[field] ?? 0
+  const c = cur[field] ?? 0
+  if (c > p) regressions.push({ type: `${field}_up`, detail: `${field} ${p} → ${c} (+${c - p})` })
+  else if (c < p) improvements.push({ type: `${field}_down`, detail: `${field} ${p} → ${c} (-${p - c})` })
+  return { regressions, improvements }
+}
+
 /** spatial-grid 회귀 검사: total_violations 증감만 */
 function diffSpatialGrid(prev, cur) {
   const regressions = []
@@ -247,6 +263,7 @@ function main() {
       : { regressions: [], improvements: [{ type: 'new_metric', detail: `신규 metric: pass ${curMetrics['text-apca'].pass}/${curMetrics['text-apca'].total}` }] },
     'modular-scale': diffModularScale(prev.metrics['modular-scale'], curMetrics['modular-scale']),
     'spatial-grid': diffSpatialGrid(prev.metrics['spatial-grid'], curMetrics['spatial-grid']),
+    'line-length': diffCountMetric(prev.metrics['line-length'], curMetrics['line-length'], 'violations'),
   }
 
   const totalRegressions = Object.values(diffs).reduce((acc, d) => acc + d.regressions.length, 0)

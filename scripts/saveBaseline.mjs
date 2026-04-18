@@ -34,6 +34,7 @@ const METRICS = [
   { name: 'text-apca', script: 'scripts/measureTextContrast.mjs' },
   { name: 'modular-scale', script: 'scripts/verifyModularScale.mjs' },
   { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
+  { name: 'line-length', script: 'scripts/verifyLineLength.mjs' },
 ]
 
 /**
@@ -104,6 +105,11 @@ function main() {
       if (sgPrev && sgCur) {
         console.log(`  spatial-grid: violations ${sgPrev.total_violations} → ${sgCur.total_violations}`)
       }
+      const llPrev = prev.metrics?.['line-length']
+      const llCur = metrics['line-length']
+      if (llPrev && llCur) {
+        console.log(`  line-length: violations ${llPrev.violations} → ${llCur.violations}`)
+      }
     } catch (e) {
       console.warn(`[baseline] 이전 baseline 파싱 실패 (덮어쓰기 진행): ${e instanceof Error ? e.message : e}`)
     }
@@ -117,6 +123,7 @@ function main() {
   }
   console.log(`  modular-scale: warnings=${metrics['modular-scale'].warnings}`)
   console.log(`  spatial-grid: violations=${metrics['spatial-grid'].total_violations}`)
+  console.log(`  line-length: violations=${metrics['line-length'].violations} (${metrics['line-length'].total_rules} rules)`)
 }
 
 try {
