@@ -1,3 +1,14 @@
+---
+id: '3-resources/37-[analysis]harnessGapAudit'
+title: 'Harness Gap Audit: 기술부채와 강제 메커니즘의 빈틈'
+status: reference
+kind: analysis
+created: 2026-04-05
+updated: 2026-04-05
+topics: [3-resources, analysis]
+relates: []
+supersedes: []
+---
 # Harness Gap Audit: 기술부채와 강제 메커니즘의 빈틈
 
 ## 핵심 진단

@@ -1,3 +1,15 @@
+---
+id: '3-resources/08-[tooling]vitestBrowserEmbedding'
+title: 'Vitest Browser Mode 앱 내장 가능성 — 데모 페이지에서 테스트를 눈으로 보기'
+status: reference
+kind: tooling
+created: 2026-03-23
+updated: 2026-03-24
+summary: '작성일: 2026-03-23 맥락: interactive-os 홈페이지의 auto test 기능을 위해, vitest 테스트 코드를 실제 데모 페이지에서 브라우저로 실행할 수 있는지 조사'
+topics: [3-resources, tooling]
+relates: []
+supersedes: []
+---
 # Vitest Browser Mode 앱 내장 가능성 — 데모 페이지에서 테스트를 눈으로 보기
 
 > 작성일: 2026-03-23

@@ -1,3 +1,15 @@
+---
+id: '3-resources/12-[i18n]i18nEditorFeatures'
+title: 'i18n Editor FE 기능 — 상용 서비스 대비 갭 분석'
+status: reference
+kind: i18n
+created: 2026-03-24
+updated: 2026-03-24
+summary: '작성일: 2026-03-25 맥락: PageI18nEditor 개밥먹기 후 상용 서비스 대비 누락 기능 식별'
+topics: [3-resources, i18n]
+relates: []
+supersedes: []
+---
 # i18n Editor FE 기능 — 상용 서비스 대비 갭 분석
 
 > 작성일: 2026-03-25

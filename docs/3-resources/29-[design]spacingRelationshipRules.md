@@ -1,3 +1,15 @@
+---
+id: '3-resources/29-[design]spacingRelationshipRules'
+title: 'UI Spacing 관계 규칙의 수치화 — 값 레벨을 넘어선 공식은 존재하는가'
+status: reference
+kind: design
+created: 2026-03-25
+updated: 2026-03-25
+summary: '작성일: 2026-03-26 맥락: LLM이 spacing 값(8pt grid)은 알지만 관계/위계/조합 규칙을 못 쓰는 이유를 외부 자료에서 확인'
+topics: [3-resources, design]
+relates: []
+supersedes: []
+---
 # UI Spacing 관계 규칙의 수치화 — 값 레벨을 넘어선 공식은 존재하는가
 
 > 작성일: 2026-03-26

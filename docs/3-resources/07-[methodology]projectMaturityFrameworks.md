@@ -1,3 +1,15 @@
+---
+id: '3-resources/07-[methodology]projectMaturityFrameworks'
+title: '프로젝트 진척도/성숙도 추적 프레임워크 — 소프트웨어 모듈 단위'
+status: reference
+kind: methodology
+created: 2026-03-23
+updated: 2026-03-24
+summary: '작성일: 2026-03-23 맥락: PROGRESS.md를 체크리스트에서 아키텍처 맵으로 전환하면서, 모듈별 성숙도를 표준화된 기준으로 표현하기 위한 조사'
+topics: [3-resources, methodology]
+relates: []
+supersedes: []
+---
 # 프로젝트 진척도/성숙도 추적 프레임워크 — 소프트웨어 모듈 단위
 
 > 작성일: 2026-03-23

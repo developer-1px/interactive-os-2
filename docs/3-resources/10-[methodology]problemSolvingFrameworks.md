@@ -1,3 +1,15 @@
+---
+id: '3-resources/10-[methodology]problemSolvingFrameworks'
+title: '구조적 문제해결 프레임워크 비교 — TOC와 유사한 방법론들'
+status: reference
+kind: methodology
+created: 2026-03-24
+updated: 2026-03-24
+summary: '작성일: 2026-03-24 맥락: discussion 스킬이 TOC Thinking Processes를 기반으로 하는데, 다른 구조적 문제해결 방법론에서 차용할 수 있는 요소가 있는지 탐색'
+topics: [3-resources, methodology]
+relates: []
+supersedes: []
+---
 # 구조적 문제해결 프레임워크 비교 — TOC와 유사한 방법론들
 
 > 작성일: 2026-03-24

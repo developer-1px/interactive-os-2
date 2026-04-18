@@ -1,3 +1,15 @@
+---
+id: '3-resources/36-[library]pretext'
+title: 'Pretext — DOM-free 텍스트 측정/레이아웃 엔진'
+status: reference
+kind: library
+created: 2026-04-04
+updated: 2026-04-04
+summary: '작성일: 2026-04-04 맥락: interactive-os 프로젝트에 적용 가능한 외부 라이브러리 평가'
+topics: [3-resources, library]
+relates: []
+supersedes: []
+---
 # Pretext — DOM-free 텍스트 측정/레이아웃 엔진
 
 > 작성일: 2026-04-04

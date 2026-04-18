@@ -1,3 +1,14 @@
+---
+id: '3-resources/40-[idea]aiIncidentMonitorUI'
+title: 'AI 장애 모니터링 UI 구상 — 2026-03-26'
+status: reference
+kind: idea
+created: 2026-03-28
+updated: 2026-04-11
+topics: [3-resources, idea, tooling]
+relates: []
+supersedes: []
+---
 # AI 장애 모니터링 UI 구상 — 2026-03-26
 
 ## 배경

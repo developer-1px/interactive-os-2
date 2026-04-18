@@ -1,3 +1,15 @@
+---
+id: '3-resources/33-[methodology]aiCollaborationTipsAndInsights'
+title: 'AI 협업 실전 팁과 인사이트'
+status: reference
+kind: methodology
+created: 2026-03-25
+updated: 2026-03-28
+summary: '작성일: 2026-03-25 작성자: FE개발 대상: AI 코딩 도구를 사용하고 있거나 도입을 검토하는 개발자 성격: 3개월간 Claude Code 전면 사용에서 얻은 실전 교훈'
+topics: [3-resources, methodology]
+relates: []
+supersedes: []
+---
 # AI 협업 실전 팁과 인사이트
 
 > 작성일: 2026-03-25

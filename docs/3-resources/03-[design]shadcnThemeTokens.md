@@ -1,3 +1,15 @@
+---
+id: '3-resources/03-[design]shadcnThemeTokens'
+title: 'shadcn/ui Theme Tokens — 테마 커스터마이징 가능한 CSS 변수 전체 목록'
+status: reference
+kind: design
+created: 2026-03-22
+updated: 2026-03-24
+summary: '작성일: 2026-03-22 맥락: interactive-os UI 컴포넌트의 surface 기반 minimal design 전략에서, shadcn/ui가 노출하는 테마 토큰의 범위를 확정하기 위해 조사'
+topics: [3-resources, design]
+relates: []
+supersedes: []
+---
 # shadcn/ui Theme Tokens — 테마 커스터마이징 가능한 CSS 변수 전체 목록
 
 > 작성일: 2026-03-22

@@ -1,3 +1,14 @@
+---
+id: '3-resources/17-[design]uiComponentHierarchy'
+title: 'UI Component Hierarchy — 2026-03-23'
+status: reference
+kind: design
+created: 2026-03-23
+updated: 2026-03-25
+topics: [3-resources, design]
+relates: []
+supersedes: []
+---
 # UI Component Hierarchy — 2026-03-23
 
 ## 배경

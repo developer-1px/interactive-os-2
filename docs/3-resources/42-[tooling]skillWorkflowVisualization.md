@@ -1,3 +1,14 @@
+---
+id: '3-resources/42-[tooling]skillWorkflowVisualization'
+title: '스킬 워크플로우 전체 시각화 — 2026-04-08'
+status: reference
+kind: tooling
+created: 2026-04-09
+updated: 2026-04-11
+topics: [3-resources, tooling]
+relates: []
+supersedes: []
+---
 # 스킬 워크플로우 전체 시각화 — 2026-04-08
 
 ## 배경

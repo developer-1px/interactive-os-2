@@ -1,3 +1,15 @@
+---
+id: '3-resources/22-[design]aestheticScoring'
+title: '디자인 미감 자동 점수화 — 구조적 품질 측정 도구와 방법론'
+status: reference
+kind: design
+created: 2026-03-25
+updated: 2026-03-25
+summary: '작성일: 2026-03-25 맥락: 프리미티브 프리뷰 페이지에서 "비율이 안 좋다"는 피드백 → 사람 의존 루프를 자동 점수로 대체할 수 있는가?'
+topics: [3-resources, design]
+relates: []
+supersedes: []
+---
 # 디자인 미감 자동 점수화 — 구조적 품질 측정 도구와 방법론
 
 > 작성일: 2026-03-25

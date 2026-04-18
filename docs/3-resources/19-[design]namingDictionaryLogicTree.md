@@ -1,3 +1,14 @@
+---
+id: '3-resources/19-[design]namingDictionaryLogicTree'
+title: 'Naming Dictionary 명사 MECE 로직트리 — 2026-03-24'
+status: reference
+kind: design
+created: 2026-03-24
+updated: 2026-03-25
+topics: [3-resources, design]
+relates: []
+supersedes: []
+---
 # Naming Dictionary 명사 MECE 로직트리 — 2026-03-24
 
 ## 배경

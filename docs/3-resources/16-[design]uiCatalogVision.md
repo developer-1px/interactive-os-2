@@ -1,3 +1,14 @@
+---
+id: '3-resources/16-[design]uiCatalogVision'
+title: 'UI Catalog — 2026-03-23'
+status: reference
+kind: design
+created: 2026-03-23
+updated: 2026-03-25
+topics: [3-resources, design]
+relates: []
+supersedes: []
+---
 # UI Catalog — 2026-03-23
 
 ## 배경

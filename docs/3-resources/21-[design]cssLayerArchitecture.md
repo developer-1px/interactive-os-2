@@ -1,3 +1,14 @@
+---
+id: '3-resources/21-[design]cssLayerArchitecture'
+title: 'CSS Layer Architecture — SRP 기반 스타일링 전략 — 2026-03-25'
+status: reference
+kind: design
+created: 2026-03-25
+updated: 2026-03-25
+topics: [3-resources, data-interactive, design]
+relates: []
+supersedes: []
+---
 # CSS Layer Architecture — SRP 기반 스타일링 전략 — 2026-03-25
 
 ## 배경
