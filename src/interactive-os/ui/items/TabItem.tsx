@@ -29,13 +29,14 @@ export function TabItem(
         surface: 'ghost', role: 'control', layout: 'bar',
         interactive: 'tab', content: 'text', clamp: '1',
         textStyle: 'label', flex: '1',
-      })} ${ax.raw({ text: state.selected ? 'primary' : 'muted' })}${preview ? ' tab-item-preview' : ''}`}
+      })}${preview ? ' tab-item-preview' : ''}`}
+      data-selected={state.selected || undefined}
     >
       {icon && <span className={ax({ layout: 'center', flex: 'none' })}>{icon}</span>}
       <span>{label}</span>
       {closable && (
         <button
-          className={`${ax({ surface: 'ghost', layout: 'center', content: 'icon' })} ${ax.raw({ text: 'muted', opacity: 'dim' })}`}
+          className={ax({ role: 'control', surface: 'ghost', interactive: 'button', layout: 'center', content: 'icon' })}
           aria-label={`Close ${label}`}
           tabIndex={-1}
           onClick={(e) => {

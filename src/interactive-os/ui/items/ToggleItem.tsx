@@ -14,14 +14,15 @@ export function ToggleItem(
   return (
     <div
       {...props}
-      className={`${ax({
+      className={ax({
         role: 'control',
         interactive: 'check',
         surface: pressed ? 'action' : 'ghost',
         tone: pressed ? 'accent-dim' : undefined,
         layout: 'center',
         content: 'text',
-      })} ${ax.raw({ text: pressed ? 'bright' : 'secondary', weight: 'semi' })}`}
+        textStyle: 'label',
+      })}
       data-focused={state.focused || undefined}
       data-selected={pressed || undefined}
     >

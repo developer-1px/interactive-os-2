@@ -13,7 +13,7 @@ export function DialogItem(
   return (
     <div
       {...props}
-      className={`${ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary' })}`}
+      className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
     >
       {label}

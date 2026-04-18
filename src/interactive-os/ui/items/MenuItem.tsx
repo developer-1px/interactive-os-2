@@ -26,7 +26,7 @@ export function MenuItem(
     >
       <span>{label}</span>
       {state.expanded !== undefined && (
-        <span className={`${ax({ layout: 'bar' })} ${ax.raw({ text: 'muted' })}`}>
+        <span className={ax({ layout: 'bar' })}>
           {options?.indicator ?? <ExpandIndicator expanded={state.expanded} />}
         </span>
       )}

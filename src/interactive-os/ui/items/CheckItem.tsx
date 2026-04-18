@@ -20,7 +20,7 @@ export function CheckItem(
       data-focused={state.focused || undefined}
     >
       {isMixed ? <IndeterminateIndicator /> : <CheckIndicator />}
-      <span className={ax.raw({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+      <span>{label}</span>
     </button>
   )
 }

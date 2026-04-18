@@ -15,10 +15,10 @@ export function SwitchItem(
     <button
       type="button"
       {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-      className={`${ax({ role: 'item', interactive: 'check', layout: 'spread', width: 'full' })} ${ax.raw({ text: state.checked ? 'primary' : undefined })}`}
+      className={ax({ role: 'item', interactive: 'check', layout: 'spread', width: 'full' })}
       data-focused={state.focused || undefined}
     >
-      <span className={ax.raw({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+      <span>{label}</span>
       <SwitchIndicator />
     </button>
   )

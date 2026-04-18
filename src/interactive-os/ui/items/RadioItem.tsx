@@ -15,11 +15,11 @@ export function RadioItem(
     <button
       type="button"
       {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-      className={`${ax({ role: 'item', interactive: 'check', layout: 'row', width: 'full' })} ${ax.raw({ text: state.checked ? 'primary' : undefined })}`}
+      className={ax({ role: 'item', interactive: 'check', layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
     >
       <RadioIndicator />
-      <span className={ax.raw({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+      <span>{label}</span>
     </button>
   )
 }

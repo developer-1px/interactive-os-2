@@ -28,7 +28,7 @@ export function EditableListItem(
     >
       {options?.icon && <span className={ax({ flex: 'none' })}>{options.icon}</span>}
       <AriaEditable field={field}>
-        <span className={`${ax({ clamp: '1', flex: '1' })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary' })}`}>{label}</span>
+        <span className={ax({ clamp: '1', flex: '1' })}>{label}</span>
       </AriaEditable>
       {options?.rightContent && <span className={ax({ flex: 'none' })}>{options.rightContent}</span>}
     </div>

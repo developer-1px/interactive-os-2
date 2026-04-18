@@ -32,15 +32,17 @@ export function StepperItem(
         role: 'item',
         interactive: 'item',
         layout: isVertical ? 'stack' : 'bar',
-      })} ${ax.raw({ gap: 'xs', text: isActive ? 'primary' : completed ? 'secondary' : 'muted' })}`}
+      })} ${ax.raw({ gap: 'xs' })}`}
+      data-selected={isActive || undefined}
+      data-completed={completed || undefined}
     >
-      <span className={`${ax({ layout: isVertical ? 'bar' : 'stack', content: 'text' })} ${ax.raw({ gap: 'xs' })}`}>
+      <span className={`${ax({ layout: isVertical ? 'bar' : 'stack' })} ${ax.raw({ gap: 'xs' })}`}>
         <span className={`${ax({ layout: 'bar' })} ${ax.raw({ gap: 'xs' })}`}>
           <StepIndicator step={step} completed={completed} />
           <span className={ax({ clamp: '1' })}>{label}</span>
         </span>
         {description && (
-          <span className={`${ax({ textStyle: 'caption', clamp: '1' })} ${ax.raw({ text: 'muted' })}`}>{description}</span>
+          <span className={ax({ textStyle: 'caption', clamp: '1' })}>{description}</span>
         )}
       </span>
     </div>

@@ -29,16 +29,19 @@ export function ServiceItem(
   return (
     <span
       {...props}
-      className={`${ax({
+      className={ax({
         role: 'control',
         interactive: 'button',
+        surface: 'ghost',
         layout: 'bar',
         content: 'text', clamp: '1',
-      })} ${ax.raw({ state: state.focused ? 'focused' : state.selected ? 'selected' : undefined })}`}
+      })}
+      data-focused={state.focused || undefined}
+      data-selected={state.selected || undefined}
     >
       {status && <StatusIndicator tone={STATUS_TONE[status]} />}
-      <span className={ax.raw({ weight: 'medium' })}>{name}</span>
-      {detail && <span className={`${ax({ textStyle: 'code' })} ${ax.raw({ text: 'muted' })}`}>{detail}</span>}
+      <span className={ax({ textStyle: 'label' })}>{name}</span>
+      {detail && <span className={ax({ textStyle: 'code' })}>{detail}</span>}
     </span>
   )
 }

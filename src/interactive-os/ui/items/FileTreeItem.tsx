@@ -22,14 +22,14 @@ export function FileTreeItem(
       style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}
     >
       {data.type === 'directory' ? (
-        <span className={`${ax({ layout: 'center', flex: 'none' })} ${ax.raw({ text: 'muted' })}`}>
+        <span className={ax({ layout: 'center', flex: 'none' })}>
           <ExpandIndicator expanded={state.expanded} />
         </span>
       ) : (
-        <span className={`${ax({ layout: 'center', flex: 'none' })} ${ax.raw({ text: 'muted' })}`} />
+        <span className={ax({ layout: 'center', flex: 'none' })} />
       )}
       <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
-      <span className={`${ax({ clamp: '1' })}${data.type === 'directory' ? ` ${ax.raw({ weight: 'medium' })}` : ''}`}>
+      <span className={ax({ clamp: '1', textStyle: data.type === 'directory' ? 'label' : 'body' })}>
         {data.name}
       </span>
     </div>

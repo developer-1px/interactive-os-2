@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import type { EditKeyContext } from '../../primitives/AriaEditable'
 import { ExpandIndicator } from '../indicators'
 import { Aria } from '../../primitives/aria'
-import { ax, type Axes } from '@styles/ax'
+import { ax, type AxTone } from '@styles/ax'
 
 type SentenceRole = 'claim' | 'evidence' | 'reasoning' | 'context' | 'counter' | 'transition'
 
@@ -19,7 +19,7 @@ const roleLabel: Record<SentenceRole, string> = {
   transition: '전환',
 }
 
-const roleTone: Record<SentenceRole, Axes['tone']> = {
+const roleTone: Record<SentenceRole, AxTone> = {
   claim: 'accent',
   evidence: 'success',
   reasoning: 'warning',
@@ -45,13 +45,13 @@ export function WriterItem(
   const hasChildren = state.expanded !== undefined
   const depth = (state.level ?? 1) - 1
   const depthStyle = { paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }
-  const surface = state.selected ? 'action' as const : undefined
+  const surface = state.selected ? 'display' as const : undefined
 
   if (type === 'document') {
     return (
       <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax.raw({ text: 'muted' })}>{data?.path as string || 'Untitled'}</span>
+        <span className={ax({ textStyle: 'caption' })}>{data?.path as string || 'Untitled'}</span>
       </div>
     )
   }
@@ -61,7 +61,7 @@ export function WriterItem(
     return (
       <div {...props} className={`${ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={`${ax({ textStyle: headingStyle[level - 1] })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary' })}`}>{content}</span></Aria.Editable>
+        <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ textStyle: headingStyle[level - 1] })}>{content}</span></Aria.Editable>
       </div>
     )
   }
@@ -71,7 +71,7 @@ export function WriterItem(
     return (
       <div {...props} className={`${ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax.raw({ text: 'muted' })}>¶{state.index + 1}</span>
+        <span className={ax({ textStyle: 'caption' })}>¶{state.index + 1}</span>
       </div>
     )
   }
@@ -80,7 +80,7 @@ export function WriterItem(
     return (
       <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax.raw({ text: 'muted' })}>{(data?.ordered as boolean) ? 'ol' : 'ul'}</span>
+        <span className={ax({ textStyle: 'caption' })}>{(data?.ordered as boolean) ? 'ol' : 'ul'}</span>
       </div>
     )
   }
@@ -89,8 +89,8 @@ export function WriterItem(
     return (
       <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator hasChildren={false} />
-        <span className={ax.raw({ text: 'muted' })}>{state.index + 1}</span>
-        <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax.raw({ text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+        <span className={ax({ textStyle: 'caption' })}>{state.index + 1}</span>
+        <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span>{content}</span></Aria.Editable>
       </div>
     )
   }
@@ -104,10 +104,10 @@ export function WriterItem(
   return (
     <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
       <ExpandIndicator hasChildren={false} />
-      <span className={ax.raw({ text: 'muted' })}>{state.index + 1}</span>
-      <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax.raw({ text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+      <span className={ax({ textStyle: 'caption' })}>{state.index + 1}</span>
+      <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span>{content}</span></Aria.Editable>
       {role && (
-        <span className={`${ax({ tone: roleTone[role] })} ml-auto`}>
+        <span className={`${ax({ role: 'badge', surface: 'ghost', tone: roleTone[role] })} ml-auto`}>
           {roleLabel[role]}
         </span>
       )}

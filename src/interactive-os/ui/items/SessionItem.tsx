@@ -30,7 +30,8 @@ export function SessionItem(
       className={`${ax({
         role: 'item', interactive: 'item',
         layout: 'stack', width: 'full',
-      })} ${ax.raw({ gap: 'xs', text: state.focused ? 'primary' : 'secondary' })}`}
+      })} ${ax.raw({ gap: 'xs' })}`}
+      data-focused={state.focused || undefined}
     >
       <div className={`${ax({ layout: 'bar' })} ${ax.raw({ gap: 'sm' })}`}>
         <StatusIndicator tone={status === 'running' ? 'success' : 'info'} />

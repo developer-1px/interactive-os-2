@@ -27,13 +27,14 @@ export function TimelineItem(
     <div
       {...props}
       className={`${ax({ role: 'item', interactive: 'item', layout: 'row', width: 'full' })} ${ax.raw({ gap: 'md' })}`}
+      data-focused={state.focused || undefined}
     >
       <StatusIndicator tone={tone} />
       <div className={`${ax({ layout: 'stack', flex: '1' })} ${ax.raw({ gap: 'xs' })}`}>
-        <div className={`${ax({ clamp: '1' })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary', weight: 'medium' })}`}>{label}</div>
-        {detail && <div className={`${ax({ textStyle: 'caption', clamp: '2' })} ${ax.raw({ text: 'muted' })}`}>{detail}</div>}
+        <div className={ax({ clamp: '1', textStyle: 'label' })}>{label}</div>
+        {detail && <div className={ax({ textStyle: 'caption', clamp: '2' })}>{detail}</div>}
       </div>
-      {time && <span className={`${ax({ textStyle: 'caption', flex: 'none' })} ${ax.raw({ text: 'muted' })}`}>{time}</span>}
+      {time && <span className={ax({ textStyle: 'caption', flex: 'none' })}>{time}</span>}
     </div>
   )
 }
