@@ -78,7 +78,7 @@
   --focus:        var(--blue-400);
   --focus-idle:   var(--bg-hover);
   --focus-ring:   1px;
-  --focus-ring-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.55);
+  --focus-ring-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.70);
 
   /* ── Indicator ── */
   --indicator-width: 2px;
