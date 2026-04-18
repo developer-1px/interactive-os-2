@@ -79,7 +79,13 @@ export function ViewerPreviewWidget() {
 export function ViewerMillerWidget() {
   const { initialStore, onChange } = useViewer()
 
-  const handleRenderPreview = useCallback((nodeId: string) => <FilePanel path={nodeId} />, [])
+  // knowledge 가상 폴더에서 nodeId는 `${groupId}::${absPath}` 형태이므로
+  // entity.data.path 를 우선 사용. 일반 파일 트리는 id === path.
+  const handleRenderPreview = useCallback((nodeId: string) => {
+    const entity = initialStore?.entities[nodeId]
+    const actualPath = ((entity?.data as { path?: string } | undefined)?.path) ?? nodeId
+    return <FilePanel path={actualPath} />
+  }, [initialStore])
 
   return (
     <MillerColumns
