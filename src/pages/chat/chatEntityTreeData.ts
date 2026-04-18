@@ -20,16 +20,15 @@ import type { ChatSession } from './chatStore'
 
 interface CellNode {
   id: string
-  data: { cells: [string, string] }
+  data: { cells: string[] }
 }
 
 function pushNode(
   entities: Record<string, CellNode>,
   id: string,
-  field: string,
-  type: string,
+  ...cells: string[]
 ): void {
-  entities[id] = { id, data: { cells: [field, type] } }
+  entities[id] = { id, data: { cells } }
 }
 
 // ── Zod v4 type introspection ─────────────────────────────────
@@ -305,20 +304,16 @@ export function buildCommandsTree(): NormalizedData {
 
   for (const [name, cmd] of Object.entries(chatCommands as unknown as Record<string, CommandLike>)) {
     const id = `cmd:${name}`
-    const sig = extractParamNames(cmd.create)
-    pushNode(entities, id, name, cmd.type)
+    pushNode(
+      entities,
+      id,
+      name,
+      cmd.type,
+      extractParamNames(cmd.create),
+      extractParamNames(cmd.handler),
+      cmd.meta === true ? 'meta' : '—',
+    )
     rootChildren.push(id)
-
-    const childIds: string[] = []
-    pushNode(entities, `${id}.type`, 'type', `'${cmd.type}'`)
-    childIds.push(`${id}.type`)
-    pushNode(entities, `${id}.create`, 'create', sig)
-    childIds.push(`${id}.create`)
-    pushNode(entities, `${id}.handler`, 'handler', extractParamNames(cmd.handler))
-    childIds.push(`${id}.handler`)
-    pushNode(entities, `${id}.meta`, 'meta', cmd.meta === true ? 'true (engine-only, no undo)' : 'false (mutates store)')
-    childIds.push(`${id}.meta`)
-    relationships[id] = childIds
   }
 
   relationships[ROOT_ID] = rootChildren

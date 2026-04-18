@@ -26,8 +26,11 @@ const VALUE_COLUMNS = [
 ]
 
 const COMMAND_COLUMNS = [
-  { key: 'name', header: 'Name', width: '320px' },
-  { key: 'type', header: 'Type', width: '1fr' },
+  { key: 'name', header: 'Name', width: '200px' },
+  { key: 'type', header: 'Type', width: '260px' },
+  { key: 'create', header: 'Create', width: '1fr' },
+  { key: 'handler', header: 'Handler', width: '1fr' },
+  { key: 'meta', header: 'Meta', width: '60px' },
 ]
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {

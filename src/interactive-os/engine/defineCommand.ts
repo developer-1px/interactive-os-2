@@ -53,6 +53,9 @@ export function defineCommand(
 
   creator.type = type
   creator.handler = handler
+  // 디버그/도구 (예: /chat/entities) 가 read-only 로 introspection 할 수 있게 노출
+  creator.create = create
+  creator.meta = meta
   creator.reduce = (store: NormalizedData, ...args: unknown[]) => {
     const payload = create ? create(...args) : undefined
     return handler(store, payload)
