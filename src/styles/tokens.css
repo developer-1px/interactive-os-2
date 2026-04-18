@@ -46,6 +46,9 @@
   --text-secondary: var(--stone-200);
   --text-muted:     var(--stone-300);
 
+  /* inverted surface — 역전 면 (tooltip 등). dark 기본은 "light 분위기" (밝은 배경) */
+  --surface-inverted: var(--stone-100);
+
   /* inverted text — 역전 surface(.sf-inverted) 전용. dark 기본은 밝은 bg에 맞춘 어두운 text */
   --text-bright-inverted:    var(--stone-950);
   --text-primary-inverted:   var(--stone-900);
@@ -320,6 +323,8 @@
   --text-muted:     var(--stone-500);
 
   /* inverted text (light theme) — 어두운 bg에 맞춘 밝은 text */
+  --surface-inverted: var(--stone-900);
+
   --text-bright-inverted:    var(--stone-0);
   --text-primary-inverted:   var(--stone-100);
   --text-secondary-inverted: var(--stone-200);

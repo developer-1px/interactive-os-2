@@ -85,7 +85,9 @@ textarea.sf-input { field-sizing: content; }
   position: relative;
   --bg-hover:  var(--depth-overlay-hover);
   --bg-active: var(--depth-overlay-active);
-  /* selection은 surface 불변 — :root 값 사용 */
+  --selection:         var(--depth-overlay-sel);
+  --selection-cursor:  var(--depth-overlay-sel-cursor);
+  --selection-context: var(--depth-overlay-sel-context);
 }
 
 /* Entry animation — popover/dialog 전용, surface와 분리 */
@@ -143,6 +145,9 @@ dialog.sf-overlay[open] {
   border: none;
   --bg-hover:  var(--depth-sunken-hover);
   --bg-active: var(--depth-sunken-active);
+  --selection:         var(--depth-sunken-sel);
+  --selection-cursor:  var(--depth-sunken-sel-cursor);
+  --selection-context: var(--depth-sunken-sel-context);
 }
 
 .sf-base {
@@ -151,6 +156,9 @@ dialog.sf-overlay[open] {
   border: none;
   --bg-hover:  var(--depth-base-hover);
   --bg-active: var(--depth-base-active);
+  --selection:         var(--depth-base-sel);
+  --selection-cursor:  var(--depth-base-sel-cursor);
+  --selection-context: var(--depth-base-sel-context);
 }
 
 .sf-raised {
@@ -160,10 +168,13 @@ dialog.sf-overlay[open] {
   box-shadow: var(--shadow-md);
   --bg-hover:  var(--depth-raised-hover);
   --bg-active: var(--depth-raised-active);
+  --selection:         var(--depth-raised-sel);
+  --selection-cursor:  var(--depth-raised-sel-cursor);
+  --selection-context: var(--depth-raised-sel-context);
 }
 
 .sf-inverted {
-  background: var(--text-primary);
+  background: var(--_bg, var(--surface-inverted));
   color: var(--_fg, var(--text-on-inverted));
   border: none;
   /* 역전 맥락 — focus/text 모두 반전된 토큰 쓰기 (cascade로 하위 요소 자동 적용) */
