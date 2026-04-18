@@ -382,6 +382,34 @@ if (isTsx && /\brecipe\s*:\s*['"](?:control|control-sm|control-lg|item|item-sm|b
   )
 }
 
+// 규칙 29: Private/Removed 축을 ax()에 직접 사용 금지 — role+surface 프리셋이 주입
+// Private: padding | gap | shape | border | icon | square | motion (axPrivate.ts)
+// Removed: text | weight | state | opacity | scroll (Public에서 삭제됨)
+if (!isExempt && isTsx) {
+  const privateRe = /\bax\(\s*\{[^}]*\b(padding|gap|shape|border|icon|square|motion|text|weight|state|opacity|scroll)\s*:/
+  const m = content.match(privateRe)
+  if (m) {
+    const key = m[1]
+    const REASON = {
+      padding: 'role 프리셋이 주입 (control/item/control-group)',
+      gap: 'role+layout 프리셋이 주입',
+      shape: 'role 프리셋이 주입',
+      border: 'role+surface 프리셋이 주입',
+      icon: 'content:"icon" + role 프리셋이 주입',
+      square: 'role:"badge"/"control" icon이 주입',
+      motion: 'interactive 축이 주입',
+      text: 'tone + surface 프리셋이 주입 (직접 색 지정 금지)',
+      weight: 'textStyle 축이 주입',
+      state: 'interactive 축 + CSS pseudo-class가 소유',
+      opacity: 'surface 프리셋이 주입',
+      scroll: 'layout: "scroll" | "scroll-x" | "clip" 로 통합됨',
+    }
+    violations.push(
+      `ax({ ${key}: ... }) 직접 사용 금지 — Public 축(axPublic.ts)에 없는 키입니다. ${REASON[key] ?? ''}. role/surface/layout/textStyle 등 Public 축으로 표현하세요.`
+    )
+  }
+}
+
 // 규칙 30: controlSize 레거시 사용 금지 — role 축으로 대체 완료
 if (isTsx && /\bcontrolSize\s*:/.test(content)) {
   violations.push(

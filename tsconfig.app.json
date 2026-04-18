@@ -28,7 +28,8 @@
     "baseUrl": ".",
     "paths": {
       "@os/*": ["src/interactive-os/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+      "@entities/*": ["src/entities/*"]
     }
   },
   "include": ["src"]

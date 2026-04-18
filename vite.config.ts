@@ -21,6 +21,7 @@ export default defineConfig({
     alias: {
       '@os': path.resolve(__dirname, 'src/interactive-os'),
       '@styles': path.resolve(__dirname, 'src/styles'),
+      '@entities': path.resolve(__dirname, 'src/entities'),
     },
   },
   css: {
