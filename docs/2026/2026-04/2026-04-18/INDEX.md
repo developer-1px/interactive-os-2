@@ -30,3 +30,5 @@
 5. **여백** — padding 콘텐츠 ≥ 입력 ≥ 바. row padding tight (xs)
 6. **색 절약** — accent 1채널(selection blue), neutral 다수
 7. **깊이** — overlay/raised는 actionable에만 (Liquid Glass target = 누르는 것)
+
+#kind/note
