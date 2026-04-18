@@ -71,7 +71,6 @@ function ZoneCompositionAxis() {
                 <div
                   key={s.label}
                   className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`}
-                  tabIndex={s.attrs['aria-disabled'] ? -1 : 0}
                   {...s.attrs}
                 >
                   <span>{s.label}</span>

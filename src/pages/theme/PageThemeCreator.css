@@ -228,7 +228,7 @@
   aspect-ratio: 1;
   border-radius: var(--shape-lg);
   padding: var(--space-md);
-  gap: var(--space-2xs);
+  gap: var(--space-xs);
 }
 
 .theme-zone-label {
@@ -244,7 +244,11 @@
   line-height: var(--leading-relaxed);
 }
 
-/* static state mirror — pseudo-class를 data-attr로 표시 */
+/* static state mirror — row는 display only.
+   모든 row가 균일하게 static. 실제 pseudo-class 체험은 button row에서 */
+.theme-zone-card .ia-item {
+  pointer-events: none;
+}
 .theme-zone-card .ia-item[data-hover] {
   background: var(--bg-hover);
 }
@@ -254,13 +258,13 @@
 .theme-zone-card .ia-item[data-focus-ring] {
   box-shadow: var(--focus-ring-shadow);
   outline: none;
+  margin-block: var(--space-2xs);
 }
 .theme-zone-card .ia-item[aria-disabled="true"] {
   opacity: 0.4;
-  pointer-events: none;
 }
 
-/* button state mirror */
+/* button state mirror — button은 interactive 유지 */
 .theme-zone-card button[data-hover] {
   background: var(--bg-hover);
 }
