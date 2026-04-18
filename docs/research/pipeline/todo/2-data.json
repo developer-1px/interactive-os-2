@@ -1,0 +1,60 @@
+{
+  "stage": 2,
+  "name": "data",
+  "description": "Todo 앱의 NormalizedData 스키마 + Command 정의. entities는 각 todo 아이템을 저장하고, ROOT_ID 관계는 아이템 순서를 보관한다.",
+  "schema": {
+    "entity": {
+      "todo": {
+        "id": "string (uuid/nanoid)",
+        "data": {
+          "label": "string — 할 일 텍스트",
+          "done": "boolean — 완료 여부"
+        }
+      }
+    },
+    "relationships": {
+      "__root__": "string[] — 표시 순서대로 todo id 배열"
+    }
+  },
+  "initialData": {
+    "entities": {
+      "t-1": { "id": "t-1", "data": { "label": "우유 사기", "done": false } },
+      "t-2": { "id": "t-2", "data": { "label": "세탁물 찾기", "done": true } },
+      "t-3": { "id": "t-3", "data": { "label": "이메일 확인", "done": false } }
+    },
+    "relationships": {
+      "__root__": ["t-1", "t-2", "t-3"]
+    }
+  },
+  "commands": [
+    {
+      "type": "todo:add",
+      "payload": { "label": "string" },
+      "effect": "새 id 생성 → entities에 { label, done:false } 추가 → ROOT_ID 관계 맨 뒤에 push"
+    },
+    {
+      "type": "todo:toggle",
+      "payload": { "id": "string" },
+      "effect": "entities[id].data.done 을 not-flip — updateEntityData 로 불변 업데이트"
+    },
+    {
+      "type": "todo:remove",
+      "payload": { "id": "string" },
+      "effect": "entities에서 id 삭제 + ROOT_ID 관계에서 제거 (removeEntity)"
+    }
+  ],
+  "derivations": [
+    {
+      "name": "total",
+      "formula": "relationships[ROOT_ID].length"
+    },
+    {
+      "name": "doneCount",
+      "formula": "ROOT_ID children 중 entities[id].data.done === true 인 개수"
+    },
+    {
+      "name": "isEmpty",
+      "formula": "total === 0"
+    }
+  ]
+}
