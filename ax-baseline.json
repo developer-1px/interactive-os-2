@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T01:57:23.005Z",
+  "generatedAt": "2026-04-18T01:58:02.220Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -11,8 +11,8 @@
         "focus_alpha": 0.95
       },
       "total": 22,
-      "pass": 14,
-      "fail": 8,
+      "pass": 19,
+      "fail": 3,
       "items": [
         {
           "theme": "dark",
@@ -83,67 +83,67 @@
         {
           "theme": "light",
           "key": "action",
-          "lc": 63.13,
+          "lc": 83.88,
           "pass": true
         },
         {
           "theme": "light",
           "key": "input",
-          "lc": 63.13,
+          "lc": 83.88,
           "pass": true
         },
         {
           "theme": "light",
           "key": "display",
-          "lc": 59.17,
-          "pass": false
+          "lc": 80.21,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "overlay",
-          "lc": 63.13,
+          "lc": 83.88,
           "pass": true
         },
         {
           "theme": "light",
           "key": "trap",
-          "lc": 63.13,
+          "lc": 83.88,
           "pass": true
         },
         {
           "theme": "light",
           "key": "ghost",
-          "lc": 59.17,
-          "pass": false
+          "lc": 80.21,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "placeholder",
-          "lc": 53.41,
-          "pass": false
+          "lc": 74.15,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "sunken",
-          "lc": 53.41,
-          "pass": false
+          "lc": 74.15,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "base",
-          "lc": 59.17,
-          "pass": false
+          "lc": 80.21,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "raised",
-          "lc": 63.13,
+          "lc": 83.88,
           "pass": true
         },
         {
           "theme": "light",
           "key": "inverted",
-          "lc": 32.87,
+          "lc": 13.44,
           "pass": false
         }
       ]

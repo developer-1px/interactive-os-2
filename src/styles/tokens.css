@@ -343,7 +343,7 @@
   --tone-neutral-dim:   var(--stone-100);
 
   /* ── Focus ── */
-  --focus:      var(--blue-500);
+  --focus:      var(--blue-700);
   --focus-idle: var(--bg-hover);
 
   /* ── L1 Semantic: Elevation tier (light) ──
