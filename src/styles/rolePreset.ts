@@ -79,6 +79,12 @@ export const rolePresetTable: Partial<Record<RolePresetKey, Partial<AxPrivate>>>
   // ── item.placeholder — 스트리밍/스켈레톤 행 (shimmer) ───────
   'item.placeholder': { padding: 'sm', gap: 'sm', motion: 'shimmer' },
 
+  // ── control-group.overlay — CMS 플로팅 툴바/픽커 (★신규, ax Liquid Glass B1) ──
+  // CMS 3곳(CmsFloatingToolbar/CmsViewportBar/CmsTemplatePicker) last-mile 흡수 seed.
+  // 'control-group'은 silent role (strictRoles 미포함) — throw 유발하지 않지만
+  // primary target (§1 #1) 이므로 cascade hit을 명시 보장.
+  'control-group.overlay': { padding: 'xs', gap: 'xs', shape: 'xl' },
+
   // ── tip.* — 툴팁 preset (★신규, Bundle D Tooltip unblock) ──
   // tip.inverted — 기본 Tooltip 표면 (어두운 배경 + 밝은 텍스트, CSS layer가 색 주입)
   'tip.inverted': { padding: 'xs', shape: 'sm', motion: 'fade-slide-in' },

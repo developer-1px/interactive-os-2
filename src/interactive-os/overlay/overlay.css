@@ -5,7 +5,8 @@
 
 .overlay-modal::backdrop {
   background: var(--dialog-backdrop);
-  backdrop-filter: blur(3px);
+  backdrop-filter: var(--surface-overlay-backdrop-filter, blur(3px));
+  -webkit-backdrop-filter: var(--surface-overlay-backdrop-filter, blur(3px));
 }
 
 .overlay-modal {

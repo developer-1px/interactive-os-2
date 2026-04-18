@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Layers } from 'lucide-react'
 import { ax } from '@styles/ax'
 import { useStore } from '@os/store/useStore'
 import './PageThemeCreator.css'
@@ -41,7 +41,7 @@ function ThemePanel() {
           className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'neutral' })}
           onClick={toggle}
         >
-          {theme === 'dark' ? <><Moon size={12} /> Dark</> : <><Sun size={12} /> Light</>}
+          {theme === 'dark' ? <><Moon size={12} /> Dark</> : theme === 'light' ? <><Sun size={12} /> Light</> : <><Layers size={12} /> Lifted</>}
         </button>
       </div>
     </div>

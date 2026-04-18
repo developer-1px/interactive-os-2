@@ -120,7 +120,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
   if (hidden) return null
 
   return (
-    <div className={`cms-floating-toolbar ${ax({ surface: 'overlay', width: 'fit', layout: 'bar', padding: 'xs', gap: 'xs', shape: 'xl' })}`}>
+    <div className={`cms-floating-toolbar ${ax({ role: 'control-group', surface: 'overlay', width: 'fit', layout: 'bar' })}`}>
       <ButtonToolbar
         data={toolbarData}
         plugins={[]}

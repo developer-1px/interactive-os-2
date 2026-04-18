@@ -15,7 +15,7 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
   if (hidden) return null
 
   return (
-    <div className={`cms-viewport-bar ${ax({ surface: 'overlay', layout: 'bar', width: 'fit', padding: 'xs', gap: 'xs', shape: 'xl' })}`} aria-label="Viewport controls">
+    <div className={`cms-viewport-bar ${ax({ role: 'control-group', surface: 'overlay', layout: 'bar', width: 'fit' })}`} aria-label="Viewport controls">
       {([['mobile', Smartphone], ['tablet', Tablet], ['desktop', Monitor]] as const).map(([v, Icon]) => (
         <Button
           key={v}

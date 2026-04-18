@@ -397,4 +397,34 @@
 
   --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
+
+/* ══ Lifted theme — Liquid Glass 재질 (overlay tier 전용) ══
+   color/text/focus 토큰 불변 — 재질만 override.
+   기존 dark/light 위에 겹쳐 쓸 수 있다 (data-theme="lifted"가 우선 적용).
+   §1 #4 불변식 — text/tone/focus/border/selection/elev-base/depth 일체 불변.
+   §1 #5 불변식 — 재질 literal(blur/rgba/shadow)은 CSS 변수로만 인코딩. */
+
+[data-theme="lifted"] {
+  /* Frost: 반투명 바탕 뒤 blur (Liquid Glass 핵심, Apple HIG 2025 .regular 근사) */
+  --surface-overlay-backdrop-filter: blur(20px) saturate(180%);
+
+  /* Tint: 반투명 bg — overlay-modal/popup 배경 (기존 --surface-overlay 재활용, lifted에서만 rgba override) */
+  --surface-overlay: oklch(from var(--stone-0) l c h / 0.65);
+
+  /* Rim: top-lit edge — 기존 --overlay-edge-top 재사용 (§1 #4 색 토큰 불변 준수) */
+  --surface-overlay-border: 1px solid var(--overlay-edge-top);
+
+  /* Lift: 기존 --shadow-lg 채택 */
+  --surface-overlay-shadow: var(--shadow-lg);
+}
+
+/* ══ Accessibility fallback — prefers-reduced-transparency ══
+   §5.2 — 사용자가 투명도 감소를 요청하면 blur/반투명 대신 solid로 대체.
+   backdrop-filter 미지원 브라우저는 fallback chain(var(, none))이 자동 처리 → §5.1. */
+@media (prefers-reduced-transparency: reduce) {
+  [data-theme="lifted"] {
+    --surface-overlay-backdrop-filter: none;
+    --surface-overlay: var(--stone-0);
+  }
+}
 } /* @layer tokens */

@@ -63,7 +63,7 @@ type SurfaceDisplay    = 'display' | 'ghost' | 'overlay' | 'placeholder'  // 미
 type SurfaceRow        = 'ghost' | 'display'                               // role: 'item'
 type SurfaceBadge      = 'display' | 'ghost' | 'overlay' | 'placeholder'  // role: 'badge'
 type SurfaceTip        = 'inverted' | 'overlay'                            // role: 'tip'
-type SurfacePanel      = 'sunken' | 'base' | 'raised'                      // role: 'control-group'
+type SurfacePanel      = 'sunken' | 'base' | 'raised' | 'overlay'          // role: 'control-group'
 
 /** AxSurface — 모든 subset의 union (외부 enumeration용) */
 export type AxSurface =

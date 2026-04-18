@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react'
 
-type Theme = 'dark' | 'light'
+export type Theme = 'dark' | 'light' | 'lifted'
+
+const THEME_VALUES: readonly Theme[] = ['dark', 'light', 'lifted'] as const
+
+function isTheme(v: unknown): v is Theme {
+  return typeof v === 'string' && (THEME_VALUES as readonly string[]).includes(v)
+}
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem('theme')
-    return stored === 'light' ? 'light' : 'dark'
+    return isTheme(stored) ? stored : 'dark'
   })
 
   useEffect(() => {
@@ -15,7 +21,7 @@ export function useTheme() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  const toggle = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
+  const toggle = () => setTheme(t => t === 'dark' ? 'light' : t === 'light' ? 'lifted' : 'dark')
 
   return { theme, toggle } as const
 }

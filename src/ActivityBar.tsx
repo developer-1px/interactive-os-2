@@ -1,7 +1,7 @@
 import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
+  Sun, Moon, Layers, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
   MessageSquare, BookText, Play, Cable, PenLine, Kanban, SquareKanban, GitBranch,
   Mail, ListTree, Boxes,
 } from 'lucide-react'
@@ -18,6 +18,7 @@ import type { NormalizedData } from '@os/store/types'
 import { selectionFollowsFocusMiddleware } from '@os/axis/select'
 import { Tooltip } from '@os/ui/Tooltip'
 import { ax } from '@styles/ax'
+import type { Theme } from './hooks/useTheme'
 
 // --- Vertical toolbar pattern ---
 
@@ -133,8 +134,21 @@ function resolveActivityBarFocusId(pathname: string): string | undefined {
 // --- ActivityBar ---
 
 interface ActivityBarProps {
-  theme: 'dark' | 'light'
+  theme: Theme
   onThemeToggle: () => void
+}
+
+// 3-cycle: dark → light → lifted → dark
+const THEME_ICON: Record<Theme, LucideIcon> = {
+  dark: Sun,       // dark 상태에서는 다음 상태(light) 아이콘 노출
+  light: Layers,   // light 상태에서는 다음 상태(lifted) 아이콘 노출
+  lifted: Moon,    // lifted 상태에서는 다음 상태(dark) 아이콘 노출
+}
+
+const THEME_NEXT_LABEL: Record<Theme, string> = {
+  dark: 'light',
+  light: 'lifted',
+  lifted: 'dark',
 }
 
 export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
@@ -184,9 +198,9 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
         <div className={ax({ flex: '1' })} />
         <div role="group" aria-label="Util">
           <Aria.Item asChild ids={UTIL_IDS} render={(props, _node, state) => {
-            const ThemeIcon = theme === 'dark' ? Sun : Moon
+            const ThemeIcon = THEME_ICON[theme]
             return (
-              <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} placement="right">
+              <Tooltip content={`Switch to ${THEME_NEXT_LABEL[theme]} theme`} placement="right">
                 <div {...props} className={ax({ role: 'control', surface: state.focused ? 'display' : 'ghost', layout: 'center', content: 'icon', text: state.focused ? 'bright' : 'muted' })}>
                   {state.focused && <span className="item-indicator--active-rail" />}
                   <ThemeIcon className={ax({ icon: 'sm' })} />
