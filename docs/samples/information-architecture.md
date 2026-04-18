@@ -1,3 +1,14 @@
+---
+id: samples/information-architecture
+title: 'Information Architecture — Aria CMS'
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [samples]
+relates: []
+supersedes: []
+---
 # Information Architecture — Aria CMS
 
 ## 사이트맵

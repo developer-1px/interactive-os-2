@@ -1,3 +1,15 @@
+---
+id: samples/release-note
+title: Release Notes
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+summary: '---'
+topics: [samples]
+relates: []
+supersedes: []
+---
 # Release Notes
 
 ---

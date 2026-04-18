@@ -1,3 +1,14 @@
+---
+id: samples/design-spec
+title: Design Spec: CMS Toolbar
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [samples]
+relates: []
+supersedes: []
+---
 # Design Spec: CMS Toolbar
 
 ## 역할

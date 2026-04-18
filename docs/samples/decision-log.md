@@ -1,3 +1,15 @@
+---
+id: samples/decision-log
+title: 'Decision Log — CMS 프로젝트'
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+summary: '아키텍처 결정 기록 (ADR-lite).'
+topics: [samples]
+relates: []
+supersedes: []
+---
 # Decision Log — CMS 프로젝트
 
 아키텍처 결정 기록 (ADR-lite).

@@ -1,3 +1,14 @@
+---
+id: samples/test-spec
+title: 'Test Spec — CMS Slide CRUD'
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [samples]
+relates: []
+supersedes: []
+---
 # Test Spec — CMS Slide CRUD
 
 ## 테스트 대상

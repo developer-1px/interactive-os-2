@@ -1,3 +1,14 @@
+---
+id: samples/architecture
+title: 'CMS 모듈 아키텍처'
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [samples]
+relates: []
+supersedes: []
+---
 # CMS 모듈 아키텍처
 
 ## 시스템 개요

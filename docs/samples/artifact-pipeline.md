@@ -1,3 +1,14 @@
+---
+id: samples/artifact-pipeline
+title: '산출물 파이프라인 — N:M 관계도'
+status: sample
+kind: note
+created: 2026-04-11
+updated: 2026-04-11
+topics: [samples]
+relates: []
+supersedes: []
+---
 # 산출물 파이프라인 — N:M 관계도
 
 ## 전체 흐름

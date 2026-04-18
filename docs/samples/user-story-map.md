@@ -1,3 +1,15 @@
+---
+id: samples/user-story-map
+title: 'User Story Map — Visual CMS'
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+summary: 'Backbone: 사용자 활동 흐름 (좌→우) Walking Skeleton: 각 활동의 최소 동작 단위 Stories: 우선순위별 사용자 스토리 (P0=MVP, P1=v1, P2=후순위)'
+topics: [samples]
+relates: []
+supersedes: []
+---
 # User Story Map — Visual CMS
 
 > Backbone: 사용자 활동 흐름 (좌→우)

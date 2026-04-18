@@ -1,3 +1,14 @@
+---
+id: samples/wireframe
+title: 'Visual CMS 와이어프레임'
+status: sample
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [samples]
+relates: []
+supersedes: []
+---
 # Visual CMS 와이어프레임
 
 ## 1. 기본 편집 화면
