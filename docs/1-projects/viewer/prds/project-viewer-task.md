@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/prds/project-viewer-task
+title: Project Viewer Task
+status: active
+kind: plan
+created: 2026-04-06
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Project Viewer Task
 
 ## 목표

@@ -1,3 +1,15 @@
+---
+id: 1-projects/cms/prds/meta-editable-ssot-prd
+title: '`.meta({ fieldType })` 편집 SSOT — PRD'
+status: active
+kind: prd
+created: 2026-04-14
+updated: 2026-04-14
+summary: 'Discussion: CMS 캔버스에서 편집 불필요 노드까지 포커스되는 문제. `.meta({ fieldType })`를 편집 가능 여부의 단일 기준(SSOT)으로 격상하고, `isFocusable` visibility filter로 포커스 skip.'
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # `.meta({ fieldType })` 편집 SSOT — PRD
 
 > Discussion: CMS 캔버스에서 편집 불필요 노드까지 포커스되는 문제. `.meta({ fieldType })`를 편집 가능 여부의 단일 기준(SSOT)으로 격상하고, `isFocusable` visibility filter로 포커스 skip.

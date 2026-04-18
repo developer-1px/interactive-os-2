@@ -1,3 +1,15 @@
+---
+id: '1-projects/feAiUiLayer/26-[design]generativeInteractiveUi'
+title: 'Generative Interactive UI — AI가 만드는 인터랙티브 인터페이스'
+status: active
+kind: design
+created: 2026-03-25
+updated: 2026-03-25
+summary: '작성일: 2026-03-25 맥락: 채팅 블록 UI가 미래라는 결론 도출 후, "정적 블록을 넘어 인터랙티브 위젯을 생성하는" 실제 사례와 기술 조사'
+topics: [1-projects, design]
+relates: []
+supersedes: []
+---
 # Generative Interactive UI — AI가 만드는 인터랙티브 인터페이스
 
 > 작성일: 2026-03-25

@@ -1,22 +1,27 @@
 ---
-name: Visual CMS
-slug: visual-cms
-layer: service
+id: visual-cms
+title: Visual CMS
 status: operational
-maturity: 4
-parent: null
-deps: [flatlayout-engine]
-routes: [/]
-prds:
-  - docs/1-projects/cms/prds/2026-03-24-cms-editorial-content-prd.md
-  - docs/1-projects/cms/prds/2026-03-27-cms-image-field-prd.md
-  - docs/1-projects/cms/prds/meta-editable-ssot-prd.md
-handoffs: []
-tags: [cms, flatlayout, landing, i18n]
+kind: note
 created: 2025-11
-last_touched: 2026-04-15
+updated: 2026-04-17
+summary: '랜딩 페이지 자체를 편집 대상으로 삼는 Visual CMS. Figma Slides 레이아웃 영감, 하나의 앱 = 하나의 store 원칙 준수.'
+topics: [1-projects, cms, flatlayout, i18n, landing]
+parent: null
+relates: []
+supersedes: []
+legacy:
+  name: Visual CMS
+  slug: visual-cms
+  layer: service
+  maturity: 4
+  deps: [flatlayout-engine]
+  routes: ['/']
+  prds: [docs/1-projects/cms/prds/2026-03-24-cms-editorial-content-prd.md, docs/1-projects/cms/prds/2026-03-27-cms-image-field-prd.md, docs/1-projects/cms/prds/meta-editable-ssot-prd.md]
+  handoffs: []
+  tags: [cms, flatlayout, landing, i18n]
+  last_touched: 2026-04-15
 ---
-
 # Visual CMS
 
 랜딩 페이지 자체를 편집 대상으로 삼는 Visual CMS. Figma Slides 레이아웃 영감, 하나의 앱 = 하나의 store 원칙 준수.

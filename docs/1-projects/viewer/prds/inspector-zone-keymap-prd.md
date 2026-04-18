@@ -1,3 +1,15 @@
+---
+id: 1-projects/viewer/prds/inspector-zone-keymap-prd
+title: 'Inspector 새 창 + Zone 계층 KeyMap 노출 — PRD'
+status: active
+kind: prd
+created: 2026-04-04
+updated: 2026-04-08
+summary: 'Discussion: Inspector에서 AriaRoute 전역키만 보이고 Zone별 keyMap이 누락됨. 새 창 전용으로 전환.'
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Inspector 새 창 + Zone 계층 KeyMap 노출 — PRD
 
 > Discussion: Inspector에서 AriaRoute 전역키만 보이고 Zone별 keyMap이 누락됨. 새 창 전용으로 전환.

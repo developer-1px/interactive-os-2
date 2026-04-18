@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/prds/inspector-overview-task
+title: 'Inspector Overview 리디자인'
+status: active
+kind: plan
+created: 2026-04-04
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Inspector Overview 리디자인
 
 ## 배경

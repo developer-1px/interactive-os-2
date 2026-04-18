@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/stories/doc-browsing/features/miller-columns/3-spec
+title: 'Miller Columns — Spec'
+status: active
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Miller Columns — Spec
 
 ## 배경

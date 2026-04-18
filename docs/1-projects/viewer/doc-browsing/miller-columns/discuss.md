@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/doc-browsing/miller-columns/discuss
+title: 'Doc Browsing — Strategy'
+status: active
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Doc Browsing — Strategy
 
 ## 유저스토리

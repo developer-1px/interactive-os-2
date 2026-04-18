@@ -1,3 +1,14 @@
+---
+id: 1-projects/cms/stories
+title: 'Visual CMS — User Story Map'
+status: active
+kind: note
+created: 2026-03-27
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Visual CMS — User Story Map
 
 ## Needs (욕구)

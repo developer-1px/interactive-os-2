@@ -1,3 +1,14 @@
+---
+id: 1-projects/chat/prds/writer-xray-task
+title: 'Writer 엑스레이 — 구조 시각화 Phase 1'
+status: active
+kind: plan
+created: 2026-04-06
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Writer 엑스레이 — 구조 시각화 Phase 1
 
 ## 배경

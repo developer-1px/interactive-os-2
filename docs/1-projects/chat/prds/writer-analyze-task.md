@@ -1,3 +1,14 @@
+---
+id: 1-projects/chat/prds/writer-analyze-task
+title: Writer Sentence Role Analysis
+status: active
+kind: plan
+created: 2026-04-04
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Writer Sentence Role Analysis
 
 ## 요약

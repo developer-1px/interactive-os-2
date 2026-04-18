@@ -1,3 +1,14 @@
+---
+id: 1-projects/chat/prds/writer-multiselect-clipboard-task
+title: Writer Multi-Select Clipboard
+status: active
+kind: plan
+created: 2026-04-04
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Writer Multi-Select Clipboard
 
 ## 목표

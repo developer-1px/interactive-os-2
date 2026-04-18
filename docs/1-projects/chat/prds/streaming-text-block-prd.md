@@ -1,3 +1,15 @@
+---
+id: 1-projects/chat/prds/streaming-text-block-prd
+title: 'StreamingTextBlock — PRD'
+status: active
+kind: prd
+created: 2026-03-30
+updated: 2026-04-08
+summary: 'Discussion: streamingText가 매 토큰마다 MarkdownViewer 전체 재파싱 → 끊김 발생. 줄 단위(\n) flush + 200ms timeout fallback. 완료 후 MarkdownViewer 1회 파싱.'
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # StreamingTextBlock — PRD
 
 > Discussion: streamingText가 매 토큰마다 MarkdownViewer 전체 재파싱 → 끊김 발생.

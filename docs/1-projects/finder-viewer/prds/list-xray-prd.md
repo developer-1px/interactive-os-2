@@ -1,3 +1,15 @@
+---
+id: 1-projects/finder-viewer/prds/list-xray-prd
+title: 'List X-ray — PRD'
+status: active
+kind: prd
+created: 2026-04-11
+updated: 2026-04-11
+summary: 'Discussion: 리스트뷰를 "프로젝트 X-ray"로 — TreeGrid 메타데이터 컬럼 + 정렬 + 필터'
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # List X-ray — PRD
 
 > Discussion: 리스트뷰를 "프로젝트 X-ray"로 — TreeGrid 메타데이터 컬럼 + 정렬 + 필터

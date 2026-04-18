@@ -1,3 +1,14 @@
+---
+id: 1-projects/aestheticScoring
+title: '미감 점수화 — 2축 분석과 방향 — 2026-03-25'
+status: active
+kind: note
+created: 2026-03-25
+updated: 2026-03-25
+topics: [1-projects, design]
+relates: []
+supersedes: []
+---
 # 미감 점수화 — 2축 분석과 방향 — 2026-03-25
 
 ## 핵심 발견

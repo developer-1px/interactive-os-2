@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/prds/inspector-improve-task
+title: 'Inspector Improve — Task'
+status: active
+kind: plan
+created: 2026-04-05
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Inspector Improve — Task
 
 ## 배경

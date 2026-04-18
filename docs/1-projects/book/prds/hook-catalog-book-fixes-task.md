@@ -1,3 +1,14 @@
+---
+id: 1-projects/book/prds/hook-catalog-book-fixes-task
+title: Hook Catalog + Book Fixes
+status: active
+kind: plan
+created: 2026-04-07
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Hook Catalog + Book Fixes
 
 ## 작업 1: 훅 카탈로그 삽입

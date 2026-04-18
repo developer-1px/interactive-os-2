@@ -1,3 +1,15 @@
+---
+id: 1-projects/viewer/prds/inspector-aria-xray-prd
+title: 'Inspector ARIA X-Ray — PRD'
+status: active
+kind: prd
+created: 2026-04-05
+updated: 2026-04-08
+summary: 'Discussion: OS가 생산하는 ARIA를 노드별로 x-ray — Chrome DevTools Accessibility Tree급 세밀도'
+topics: [1-projects, id, nodeid]
+relates: []
+supersedes: []
+---
 # Inspector ARIA X-Ray — PRD
 
 > Discussion: OS가 생산하는 ARIA를 노드별로 x-ray — Chrome DevTools Accessibility Tree급 세밀도

@@ -1,3 +1,14 @@
+---
+id: 1-projects/cms/prds/miller-columns-task
+title: 'Miller Columns — Finder 스타일 문서 탐색기'
+status: active
+kind: plan
+created: 2026-04-09
+updated: 2026-04-09
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Miller Columns — Finder 스타일 문서 탐색기
 
 ## 배경

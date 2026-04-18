@@ -1,3 +1,14 @@
+---
+id: 1-projects/book/prds/book-floating-chrome-task
+title: Book UI Floating Chrome
+status: active
+kind: plan
+created: 2026-04-02
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Book UI Floating Chrome
 
 ## 배경

@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/0-discovery
+title: 'Viewer — Discovery'
+status: active
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Viewer — Discovery
 
 ## 왜 하는가

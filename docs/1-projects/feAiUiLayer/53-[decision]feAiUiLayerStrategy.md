@@ -1,3 +1,14 @@
+---
+id: '1-projects/feAiUiLayer/53-[decision]feAiUiLayerStrategy'
+title: 'FE × AI UI Layer 전략 — 2026-03-25'
+status: active
+kind: decision
+created: 2026-03-25
+updated: 2026-03-25
+topics: [1-projects, decision, design, p0, p1, p2]
+relates: []
+supersedes: []
+---
 # FE × AI UI Layer 전략 — 2026-03-25
 
 ## 배경

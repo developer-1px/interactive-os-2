@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/prds/project-viewer-improve-task
+title: Project Viewer /improve Task
+status: active
+kind: plan
+created: 2026-04-06
+updated: 2026-04-08
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Project Viewer /improve Task
 
 ## Feature 1: 시각 계층 — 그룹 분리 + 크기/긴급도 시각화

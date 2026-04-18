@@ -1,3 +1,15 @@
+---
+id: 1-projects/cms/prds/linear-component-gap-task
+title: 'Linear 벤치마크 — 컴포넌트 갭 해소'
+status: active
+kind: plan
+created: 2026-04-07
+updated: 2026-04-08
+summary: '프로젝트 관리 + AI 가시화 도구를 위한 ui/ 컴포넌트 확충'
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Linear 벤치마크 — 컴포넌트 갭 해소
 
 > 프로젝트 관리 + AI 가시화 도구를 위한 ui/ 컴포넌트 확충

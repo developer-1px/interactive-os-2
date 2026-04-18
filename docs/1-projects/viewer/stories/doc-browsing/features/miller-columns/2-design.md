@@ -1,3 +1,14 @@
+---
+id: 1-projects/viewer/stories/doc-browsing/features/miller-columns/2-design
+title: 'Miller Columns — Design'
+status: active
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Miller Columns — Design
 
 ## 현재 상태

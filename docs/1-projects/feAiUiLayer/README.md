@@ -1,3 +1,15 @@
+---
+id: 1-projects/feAiUiLayer/README
+title: 'FE × AI UI Layer'
+status: active
+kind: readme
+created: 2026-03-25
+updated: 2026-03-25
+summary: '클라우드팀 FE 성과 아이템: AI 에이전트 출력을 사람이 쓸 수 있는 UI로 바꾸는 레이어.'
+topics: [1-projects, decision, design, p0, p1, p2]
+relates: []
+supersedes: []
+---
 # FE × AI UI Layer
 
 클라우드팀 FE 성과 아이템: AI 에이전트 출력을 사람이 쓸 수 있는 UI로 바꾸는 레이어.

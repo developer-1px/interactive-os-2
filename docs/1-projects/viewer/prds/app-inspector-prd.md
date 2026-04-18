@@ -1,3 +1,15 @@
+---
+id: 1-projects/viewer/prds/app-inspector-prd
+title: 'App Inspector — PRD'
+status: active
+kind: prd
+created: 2026-04-03
+updated: 2026-04-08
+summary: 'Discussion: engine.inspect()로 앱의 capability(keyMap, commands, schema, state)를 직렬화 데이터로 노출하고, devtools UI로 출력'
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # App Inspector — PRD
 
 > Discussion: engine.inspect()로 앱의 capability(keyMap, commands, schema, state)를 직렬화 데이터로 노출하고, devtools UI로 출력

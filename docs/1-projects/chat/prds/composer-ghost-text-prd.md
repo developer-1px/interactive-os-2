@@ -1,3 +1,15 @@
+---
+id: 1-projects/chat/prds/composer-ghost-text-prd
+title: 'Composer Ghost Text Autocomplete — PRD'
+status: active
+kind: prd
+created: 2026-03-30
+updated: 2026-04-08
+summary: 'Discussion: 스킬 자동완성 — `/` 타이핑 시 고스트 텍스트로 첫 매칭 스킬명 힌트, Tab으로 완성, 매칭 커맨드 하이라이트'
+topics: [1-projects]
+relates: []
+supersedes: []
+---
 # Composer Ghost Text Autocomplete — PRD
 
 > Discussion: 스킬 자동완성 — `/` 타이핑 시 고스트 텍스트로 첫 매칭 스킬명 힌트, Tab으로 완성, 매칭 커맨드 하이라이트
