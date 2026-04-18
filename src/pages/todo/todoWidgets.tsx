@@ -1,5 +1,6 @@
-// ⑦ Pipeline Todo — Stage 4 widgets (static fixtures, store 배선 전)
-import { useMemo } from 'react'
+// Pipeline Todo — Stage 5 widgets (store + commands via TodoContext)
+import { useMemo, useCallback } from 'react'
+import type React from 'react'
 import { ax } from '@styles/ax'
 import { getChildren, getEntityData, ROOT_ID } from '@os/schema'
 import type { NormalizedData } from '@os/schema'
@@ -11,10 +12,11 @@ import { CheckIndicator } from '@os/ui/indicators/CheckIndicator'
 import { CloseIndicator } from '@os/ui/indicators/CloseIndicator'
 import { TextInput } from '@os/ui/TextInput'
 import { Button } from '@os/ui/Button'
-import { buildTodoData } from './todoFixtures'
+import { useTodo } from './todoContext'
+import { todoCommands } from './todoStore'
 import type { TodoData } from './todoFixtures'
 
-// ── shared derivation (Stage 4: 고정 fixture) ─────────────
+// ── derivations ───────────────────────────────────────────
 
 function countDone(store: NormalizedData): { done: number; total: number } {
   const ids = getChildren(store, ROOT_ID)
@@ -26,14 +28,11 @@ function countDone(store: NormalizedData): { done: number; total: number } {
   return { done, total: ids.length }
 }
 
-// Stage 4는 위젯 간 공유를 위해 module-level singleton fixture 사용.
-// Stage 5에서 context/store로 교체된다.
-const STAGE_4_DATA = buildTodoData()
-
 // ── TodoHeader ────────────────────────────────────────────
 
 export function TodoHeader() {
-  const { done, total } = countDone(STAGE_4_DATA)
+  const { store } = useTodo()
+  const { done, total } = countDone(store)
   return (
     <div
       className={ax({
@@ -53,40 +52,56 @@ export function TodoHeader() {
 
 // ── TodoList ──────────────────────────────────────────────
 
-function makeTodoSlots(): ItemSlots {
-  return {
-    icon: (node) => {
-      const data = (node.data ?? {}) as TodoData
-      return (
-        <span
-          data-done={data.done || undefined}
-          className={ax({
-            layout: 'center',
-            flex: 'none',
-          })}
-        >
-          <CheckIndicator />
-        </span>
-      )
-    },
-    rightContent: (node) => {
-      const data = (node.data ?? {}) as TodoData
-      return (
-        <Button
-          variant="ghost"
-          icon
-          aria-label={`${data.label} 삭제`}
-        >
-          <CloseIndicator />
-        </Button>
-      )
-    },
-  }
-}
-
 export function TodoList() {
-  const slots = useMemo(() => makeTodoSlots(), [])
-  const ids = getChildren(STAGE_4_DATA, ROOT_ID)
+  const { engine, store } = useTodo()
+
+  const handleRemove = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+      e.preventDefault()
+      engine.dispatch(todoCommands.remove(id))
+    },
+    [engine],
+  )
+
+  const handleActivate = useCallback(
+    (id: string) => {
+      engine.dispatch(todoCommands.toggle(id))
+    },
+    [engine],
+  )
+
+  const slots: ItemSlots = useMemo(
+    () => ({
+      icon: (node) => {
+        const data = (node.data ?? {}) as TodoData
+        return (
+          <span
+            data-done={data.done || undefined}
+            className={ax({ layout: 'center', flex: 'none' })}
+          >
+            <CheckIndicator />
+          </span>
+        )
+      },
+      rightContent: (node) => {
+        const data = (node.data ?? {}) as TodoData
+        const id = node.id as string
+        return (
+          <Button
+            variant="ghost"
+            icon
+            aria-label={`${data.label} 삭제`}
+            onClick={(e) => handleRemove(e, id)}
+          >
+            <CloseIndicator />
+          </Button>
+        )
+      },
+    }),
+    [handleRemove],
+  )
+
+  const ids = getChildren(store, ROOT_ID)
   const isEmpty = ids.length === 0
 
   return (
@@ -101,8 +116,9 @@ export function TodoList() {
         />
       ) : (
         <ListBox
-          data={STAGE_4_DATA}
+          data={store}
           itemSlots={slots}
+          onActivate={handleActivate}
           aria-label="Todo list"
         />
       )}
@@ -113,10 +129,24 @@ export function TodoList() {
 // ── TodoComposer ──────────────────────────────────────────
 
 export function TodoComposer() {
-  // Stage 4: 입력 배선은 Stage 5에서 store command로 전환된다.
-  // 현재는 정적 placeholder만 렌더한다.
+  const { engine } = useTodo()
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      const form = e.currentTarget
+      const formData = new FormData(form)
+      const label = String(formData.get('label') ?? '').trim()
+      if (!label) return
+      engine.dispatch(todoCommands.add(label))
+      form.reset()
+    },
+    [engine],
+  )
+
   return (
-    <div
+    <form
+      onSubmit={handleSubmit}
       className={ax({
         layout: 'row',
         gap: 'sm',
@@ -126,13 +156,14 @@ export function TodoComposer() {
     >
       <span className={ax({ flex: '1' })}>
         <TextInput
+          name="label"
           placeholder="새 할 일..."
           aria-label="새 할 일 입력"
         />
       </span>
-      <Button variant="accent">
+      <Button type="submit" variant="accent">
         추가
       </Button>
-    </div>
+    </form>
   )
 }
