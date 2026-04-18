@@ -17,6 +17,7 @@ interface FinderToolbarProps {
   onSearchClick: () => void
   onBack?: () => void
   onForward?: () => void
+  path?: string
 }
 
 const iconFor: Record<string, React.ReactNode> = {
@@ -34,7 +35,7 @@ function buildCluster(ids: string[]) {
   })
 }
 
-export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick, onBack, onForward }: FinderToolbarProps) {
+export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick, onBack, onForward, path }: FinderToolbarProps) {
   const navData = useMemo(() => buildCluster(['nav-back', 'nav-forward']), [])
   const viewData = useMemo(() => buildCluster(['view-list', 'view-columns']), [])
   const searchData = useMemo(() => buildCluster(['search']), [])
@@ -70,6 +71,11 @@ export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick, onBac
       <div className={cluster}>
         <Toolbar data={viewData} onActivate={handleView} renderItem={renderItem} aria-label="View mode" />
       </div>
+      {path && (
+        <div className={ax({ role: 'badge', surface: 'overlay', textStyle: 'caption', clamp: '1', flex: '1' })} title={path}>
+          {path}
+        </div>
+      )}
       <div className={cluster}>
         <Toolbar data={searchData} onActivate={handleSearch} renderItem={renderItem} aria-label="Search" />
       </div>

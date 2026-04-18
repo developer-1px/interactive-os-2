@@ -96,7 +96,7 @@ export function NavList({
         if (isGroup(entity)) {
           const groupChildren = getChildren(store, id)
           return (
-            <div key={id} role="group" aria-label={getLabel(entity)} className={`navlist-group ${ax({ layout: 'stack', gap: 'xs' })}`}>
+            <div key={id} role="group" aria-label={getLabel(entity)} className={`navlist-group ${ax({ layout: 'stack', gap: 'sm' })}`}>
               {renderGroupLabel(getLabel(entity))}
               {renderItems(groupChildren)}
             </div>

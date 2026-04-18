@@ -37,28 +37,30 @@ import {
 
 const VIEWMODE_KEY = 'viewer-viewmode'
 
-type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode }
+type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode; hint: string }
 
 const ICON_SIZE = 14
 
 const FAVORITES: FavoriteRoot[] = [
-  { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} /> },
-  { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} /> },
-  { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs`,             icon: <BookText size={ICON_SIZE} /> },
-  { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} /> },
+  { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} />,   hint: 'all' },
+  { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} />,    hint: 'app' },
+  { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs`,             icon: <BookText size={ICON_SIZE} />, hint: 'PARA' },
+  { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} />,    hint: 'snap' },
 ]
 
 const DEFAULT_FAVORITE_ID = 'src'
 
 const KNOWLEDGE_ID = 'knowledge'
 
+const hintHtml = (text: string) => <span className={ax({ textStyle: 'caption' })}>{text}</span>
+
 const sidebarData = createStore({
   entities: {
     'favorites': { id: 'favorites', data: { type: 'group', label: 'Favorites' } },
     ...Object.fromEntries(
-      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: f.icon } }]),
+      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: f.icon, rightContent: hintHtml(f.hint) } }]),
     ),
-    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'Knowledge', type: 'directory', icon: <Boxes size={ICON_SIZE} /> } },
+    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'Knowledge', type: 'directory', icon: <Boxes size={ICON_SIZE} />, rightContent: hintHtml('mddb') } },
   },
   relationships: {
     [ROOT_ID]: ['favorites'],

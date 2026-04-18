@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { MillerColumns } from '@os/ui/MillerColumns'
 import { Button } from '@os/ui/Button'
@@ -27,8 +28,10 @@ export function ViewerSidebarWidget() {
 
 export function ViewerToolbarWidget() {
   const { viewMode, setViewMode, onSearchClick } = useViewer()
+  const { pathname } = useLocation()
   const handleBack = useCallback(() => window.history.back(), [])
   const handleForward = useCallback(() => window.history.forward(), [])
+  const path = pathname.replace(/^\/viewer\/?/, '') || '/'
   return (
     <FinderToolbar
       viewMode={viewMode}
@@ -36,6 +39,7 @@ export function ViewerToolbarWidget() {
       onSearchClick={onSearchClick}
       onBack={handleBack}
       onForward={handleForward}
+      path={path}
     />
   )
 }
