@@ -1,7 +1,7 @@
 // ② finder-viewer-prd.md
-/** @catalog Finder 스타일 floating toolbar — viewmode 토글 + 검색 트리거 */
+/** @catalog Finder 스타일 toolbar — nav/view/search 3 floating glass cluster */
 import React, { useMemo, useCallback } from 'react'
-import { List, Columns3, Search } from 'lucide-react'
+import { List, Columns3, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 
 import type { NodeState } from '../pattern/types'
 import { createStore } from '../store/createStore'
@@ -15,51 +15,64 @@ interface FinderToolbarProps {
   viewMode: 'list' | 'columns'
   onViewModeChange: (mode: 'list' | 'columns') => void
   onSearchClick: () => void
+  onBack?: () => void
+  onForward?: () => void
 }
 
 const iconFor: Record<string, React.ReactNode> = {
+  'nav-back': <ChevronLeft size={18} />,
+  'nav-forward': <ChevronRight size={18} />,
   'view-list': <List size={18} />,
   'view-columns': <Columns3 size={18} />,
   'search': <Search size={18} />,
 }
 
-export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick }: FinderToolbarProps) {
-  const data = useMemo(() => createStore({
-    entities: {
-      'view-list': { id: 'view-list', data: { name: 'List', icon: 'list' } },
-      'view-columns': { id: 'view-columns', data: { name: 'Columns', icon: 'columns' } },
-      'search': { id: 'search', data: { name: 'Search', icon: 'search' } },
-    },
-    relationships: { [ROOT_ID]: ['view-list', 'view-columns', 'search'] },
-  }), [])
+function buildCluster(ids: string[]) {
+  return createStore({
+    entities: Object.fromEntries(ids.map((id) => [id, { id, data: { name: id } }])),
+    relationships: { [ROOT_ID]: ids },
+  })
+}
+
+export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick, onBack, onForward }: FinderToolbarProps) {
+  const navData = useMemo(() => buildCluster(['nav-back', 'nav-forward']), [])
+  const viewData = useMemo(() => buildCluster(['view-list', 'view-columns']), [])
+  const searchData = useMemo(() => buildCluster(['search']), [])
 
   const renderItem = useCallback((props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
     const id = item.id as string
-    const isViewButton = id === 'view-list' || id === 'view-columns'
-    const isSelected = isViewButton && (
-      (id === 'view-list' && viewMode === 'list') ||
-      (id === 'view-columns' && viewMode === 'columns')
-    )
-    const effectiveState: NodeState = isSelected
-      ? { ...state, selected: true }
-      : state
+    const isSelected = (id === 'view-list' && viewMode === 'list') || (id === 'view-columns' && viewMode === 'columns')
+    const effectiveState: NodeState = isSelected ? { ...state, selected: true } : state
     return ToolbarItem(props, item, effectiveState, { icon: iconFor[id] })
   }, [viewMode])
 
-  const handleActivate = useCallback((nodeId: string) => {
+  const handleNav = useCallback((nodeId: string) => {
+    if (nodeId === 'nav-back') onBack?.()
+    else if (nodeId === 'nav-forward') onForward?.()
+  }, [onBack, onForward])
+
+  const handleView = useCallback((nodeId: string) => {
     if (nodeId === 'view-list') onViewModeChange('list')
     else if (nodeId === 'view-columns') onViewModeChange('columns')
-    else if (nodeId === 'search') onSearchClick()
-  }, [onViewModeChange, onSearchClick])
+  }, [onViewModeChange])
+
+  const handleSearch = useCallback(() => onSearchClick(), [onSearchClick])
+
+  const cluster = ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })
 
   return (
-    <div className={`finder-toolbar ${ax({ placement: 'sticky', surface: 'display', padding: 'xs', border: 'bottom' })}`}>
-      <Toolbar
-        data={data}
-        onActivate={handleActivate}
-        renderItem={renderItem}
-        aria-label="View controls"
-      />
+    <div className={`finder-toolbar ${ax({ layout: 'bar' })}`}>
+      {(onBack || onForward) && (
+        <div className={cluster}>
+          <Toolbar data={navData} onActivate={handleNav} renderItem={renderItem} aria-label="Navigation" />
+        </div>
+      )}
+      <div className={cluster}>
+        <Toolbar data={viewData} onActivate={handleView} renderItem={renderItem} aria-label="View mode" />
+      </div>
+      <div className={cluster}>
+        <Toolbar data={searchData} onActivate={handleSearch} renderItem={renderItem} aria-label="Search" />
+      </div>
     </div>
   )
 }

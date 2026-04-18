@@ -27,11 +27,15 @@ export function ViewerSidebarWidget() {
 
 export function ViewerToolbarWidget() {
   const { viewMode, setViewMode, onSearchClick } = useViewer()
+  const handleBack = useCallback(() => window.history.back(), [])
+  const handleForward = useCallback(() => window.history.forward(), [])
   return (
     <FinderToolbar
       viewMode={viewMode}
       onViewModeChange={setViewMode}
       onSearchClick={onSearchClick}
+      onBack={handleBack}
+      onForward={handleForward}
     />
   )
 }
