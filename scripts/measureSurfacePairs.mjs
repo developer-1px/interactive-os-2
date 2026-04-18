@@ -115,21 +115,30 @@ const SURFACE_VARS = {
   inverted:    { dark: '--stone-0',   light: '--stone-950' },
 }
 
-/** 인접 쌍 — depth ladder + 기능 대비 */
+/** 인접 쌍 — depth ladder + 기능 대비.
+ *  raised↔overlay, ghost↔base 같이 의도적으로 동일 stone을 공유하는 쌍은 제외.
+ *  surface 구분은 "의미가 다른 쌍" 사이에서만 의미 있음. */
 const PAIRS = [
   // Depth ladder (세로 계층)
   { a: 'sunken',  b: 'base',    kind: 'depth', note: 'sidebar ↔ page' },
   { a: 'base',    b: 'raised',  kind: 'depth', note: 'page ↔ card' },
-  { a: 'raised',  b: 'overlay', kind: 'depth', note: 'card ↔ popover' },
   { a: 'overlay', b: 'trap',    kind: 'depth', note: 'popover ↔ dialog' },
-  // Feature 대비 (수평 관계)
+  // Feature 대비 (수평 관계, 의도적 다른 stone)
   { a: 'base',    b: 'placeholder', kind: 'feature', note: 'page ↔ empty' },
   { a: 'base',    b: 'input',       kind: 'feature', note: 'page ↔ input' },
   { a: 'base',    b: 'inverted',    kind: 'feature', note: 'page ↔ tooltip' },
-  { a: 'ghost',   b: 'base',        kind: 'feature', note: 'transparent ↔ parent' },
 ]
 
+/**
+ * 판정 기준 (OR):
+ *   - APCA Lc ≥ LC_MIN — perceptual contrast (text 기준이지만 큰 차이에 민감)
+ *   - OKLCH L delta ≥ L_DELTA_MIN — surface 구분용 (APCA가 낮은 contrast에서 0으로 clip하는 한계 보완)
+ *
+ * 이유: APCA는 텍스트 대비 기준이라 surface 간 중간 lightness 비교에서 usable threshold 이하를 0으로 처리.
+ * surface 구분 ≠ 텍스트 가독성이므로 L delta 기반 병행이 UI 현실 부합.
+ */
 const LC_MIN = 10
+const L_DELTA_MIN = 0.05
 
 function loadVars() {
   const palette = parseCssVars(readFileSync(PALETTE_CSS, 'utf-8'))
@@ -139,12 +148,14 @@ function loadVars() {
   return { root, light }
 }
 
-function lcPair(aVar, bVar, vars) {
+function measurePair(aVar, bVar, vars) {
   const aO = varToOklch(aVar, vars), bO = varToOklch(bVar, vars)
   if (!aO || !bO) return null
   const aY = sRGBtoY(oklchToRgb(aO))
   const bY = sRGBtoY(oklchToRgb(bO))
-  return Math.abs(Number(APCAcontrast(aY, bY)))
+  const lc = Math.abs(Number(APCAcontrast(aY, bY)))
+  const lDelta = Math.abs(aO.l - bO.l)
+  return { lc, lDelta }
 }
 
 function main() {
@@ -157,9 +168,16 @@ function main() {
     for (const p of PAIRS) {
       const aVar = SURFACE_VARS[p.a][theme]
       const bVar = SURFACE_VARS[p.b][theme]
-      const lc = lcPair(aVar, bVar, vars)
-      const pass = lc !== null && lc >= LC_MIN
-      rows.push({ theme, pairA: p.a, pairB: p.b, kind: p.kind, note: p.note, lc: lc !== null ? Number(lc.toFixed(2)) : null, pass })
+      const m = measurePair(aVar, bVar, vars)
+      const lc = m?.lc ?? null
+      const lDelta = m?.lDelta ?? null
+      const pass = m !== null && (lc >= LC_MIN || lDelta >= L_DELTA_MIN)
+      rows.push({
+        theme, pairA: p.a, pairB: p.b, kind: p.kind, note: p.note,
+        lc: lc !== null ? Number(lc.toFixed(2)) : null,
+        l_delta: lDelta !== null ? Number(lDelta.toFixed(3)) : null,
+        pass,
+      })
     }
   }
 
@@ -170,7 +188,7 @@ function main() {
     process.stdout.write(
       JSON.stringify({
         metric: 'surface-pairs',
-        threshold: { lc_min: LC_MIN },
+        threshold: { lc_min: LC_MIN, l_delta_min: L_DELTA_MIN },
         total: rows.length,
         pass: passCount,
         fail: failCount,
@@ -179,6 +197,7 @@ function main() {
           pair: `${r.pairA}↔${r.pairB}`,
           kind: r.kind,
           lc: r.lc,
+          l_delta: r.l_delta,
           pass: r.pass,
         })),
       }),

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T02:32:57.390Z",
+  "generatedAt": "2026-04-18T02:39:11.316Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -1089,38 +1089,35 @@
     "surface-pairs": {
       "metric": "surface-pairs",
       "threshold": {
-        "lc_min": 10
+        "lc_min": 10,
+        "l_delta_min": 0.05
       },
-      "total": 16,
-      "pass": 2,
-      "fail": 14,
+      "total": 12,
+      "pass": 5,
+      "fail": 7,
       "items": [
         {
           "theme": "dark",
           "pair": "sunken↔base",
           "kind": "depth",
           "lc": 0,
-          "pass": false
+          "l_delta": 0.07,
+          "pass": true
         },
         {
           "theme": "dark",
           "pair": "base↔raised",
           "kind": "depth",
           "lc": 0,
-          "pass": false
-        },
-        {
-          "theme": "dark",
-          "pair": "raised↔overlay",
-          "kind": "depth",
-          "lc": 0,
-          "pass": false
+          "l_delta": 0.087,
+          "pass": true
         },
         {
           "theme": "dark",
           "pair": "overlay↔trap",
           "kind": "depth",
           "lc": 0,
+          "l_delta": 0.039,
           "pass": false
         },
         {
@@ -1128,13 +1125,15 @@
           "pair": "base↔placeholder",
           "kind": "feature",
           "lc": 0,
-          "pass": false
+          "l_delta": 0.07,
+          "pass": true
         },
         {
           "theme": "dark",
           "pair": "base↔input",
           "kind": "feature",
           "lc": 0,
+          "l_delta": 0.019,
           "pass": false
         },
         {
@@ -1142,20 +1141,15 @@
           "pair": "base↔inverted",
           "kind": "feature",
           "lc": 103.66,
+          "l_delta": 0.767,
           "pass": true
-        },
-        {
-          "theme": "dark",
-          "pair": "ghost↔base",
-          "kind": "feature",
-          "lc": 0,
-          "pass": false
         },
         {
           "theme": "light",
           "pair": "sunken↔base",
           "kind": "depth",
           "lc": 0,
+          "l_delta": 0.032,
           "pass": false
         },
         {
@@ -1163,13 +1157,7 @@
           "pair": "base↔raised",
           "kind": "depth",
           "lc": 0,
-          "pass": false
-        },
-        {
-          "theme": "light",
-          "pair": "raised↔overlay",
-          "kind": "depth",
-          "lc": 0,
+          "l_delta": 0.02,
           "pass": false
         },
         {
@@ -1177,6 +1165,7 @@
           "pair": "overlay↔trap",
           "kind": "depth",
           "lc": 0,
+          "l_delta": 0,
           "pass": false
         },
         {
@@ -1184,6 +1173,7 @@
           "pair": "base↔placeholder",
           "kind": "feature",
           "lc": 0,
+          "l_delta": 0.032,
           "pass": false
         },
         {
@@ -1191,6 +1181,7 @@
           "pair": "base↔input",
           "kind": "feature",
           "lc": 0,
+          "l_delta": 0.02,
           "pass": false
         },
         {
@@ -1198,14 +1189,8 @@
           "pair": "base↔inverted",
           "kind": "feature",
           "lc": 103.09,
+          "l_delta": 0.817,
           "pass": true
-        },
-        {
-          "theme": "light",
-          "pair": "ghost↔base",
-          "kind": "feature",
-          "lc": 0,
-          "pass": false
         }
       ]
     },
