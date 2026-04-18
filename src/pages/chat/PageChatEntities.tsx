@@ -1,7 +1,8 @@
 /**
- * /chat/entities — 두 단의 디버그 뷰:
- *   상단: Zod 스키마 (Field | Type)
- *   하단: 실제 값 (Key | Value) — 라이브 chatStore 우선, 비어있으면 fixtures 폴백
+ * /chat/entities — entities/chat 엔티티 시각화 디버그 뷰어 (3단):
+ *   1) Schema  (Field | Type)         — Zod introspection
+ *   2) Value   (Key | Value)          — 라이브 chatStore 우선, fixtures 폴백
+ *   3) Commands (Name | Type)         — defineCommands 로 등록된 모든 명령
  */
 import { useMemo } from 'react'
 import { TreeGrid } from '@os/ui/TreeGrid'
@@ -11,6 +12,7 @@ import {
   buildSchemaTree,
   buildLiveStateTree,
   buildFixtureTree,
+  buildCommandsTree,
 } from './chatEntityTreeData'
 
 const SCHEMA_COLUMNS = [
@@ -21,6 +23,11 @@ const SCHEMA_COLUMNS = [
 const VALUE_COLUMNS = [
   { key: 'key', header: 'Key', width: '320px' },
   { key: 'value', header: 'Value', width: '1fr' },
+]
+
+const COMMAND_COLUMNS = [
+  { key: 'name', header: 'Name', width: '320px' },
+  { key: 'type', header: 'Type', width: '1fr' },
 ]
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
@@ -46,14 +53,15 @@ export default function PageChatEntities() {
     [sessions, active],
   )
   const fixtureData = useMemo(() => buildFixtureTree(), [])
+  const commandsData = useMemo(() => buildCommandsTree(), [])
 
   const isEmpty = sessions.length === 0
   const valueSource = isEmpty ? 'fixtures' : 'live'
   const valueData = isEmpty ? fixtureData : liveData
+  const commandCount = useMemo(() => Object.keys(commandsData.entities).filter(k => k.startsWith('cmd:') && !k.includes('.')).length, [commandsData])
 
   return (
     <div className={ax({ layout: 'stack', width: 'full' })}>
-      {/* Schema 단 */}
       <SectionHeader title="Schema" subtitle="@entities/chat — Zod" />
       <div className={ax({ layout: 'stack', width: 'full' })}>
         <TreeGrid
@@ -64,7 +72,6 @@ export default function PageChatEntities() {
         />
       </div>
 
-      {/* Value 단 */}
       <SectionHeader title="Value" subtitle={`source: ${valueSource} · sessions: ${sessions.length}`} />
       <div className={ax({ layout: 'stack', width: 'full' })}>
         <TreeGrid
@@ -72,6 +79,16 @@ export default function PageChatEntities() {
           columns={VALUE_COLUMNS}
           header
           aria-label={`Chat ${valueSource} values`}
+        />
+      </div>
+
+      <SectionHeader title="Commands" subtitle={`@entities/chat — ${commandCount} commands`} />
+      <div className={ax({ layout: 'stack', width: 'full' })}>
+        <TreeGrid
+          data={commandsData}
+          columns={COMMAND_COLUMNS}
+          header
+          aria-label="Chat commands"
         />
       </div>
     </div>

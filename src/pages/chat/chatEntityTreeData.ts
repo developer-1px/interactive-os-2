@@ -14,6 +14,7 @@ import {
   chatSessionFixtures,
   chatUiStateFixture,
   CHAT_UI_STATE_ID,
+  chatCommands,
 } from '@entities/chat'
 import type { ChatSession } from './chatStore'
 
@@ -279,4 +280,47 @@ export function buildFixtureTree(): NormalizedData {
     data: chatUiStateFixture as unknown as Record<string, unknown>,
   })
   return buildValueTree(groups)
+}
+
+// ── Commands tree ─────────────────────────────────────────────
+
+interface CommandLike {
+  type: string
+  meta?: boolean
+  create?: (...args: unknown[]) => unknown
+  handler: (...args: unknown[]) => unknown
+}
+
+function extractParamNames(fn?: (...args: unknown[]) => unknown): string {
+  if (!fn) return '()'
+  const src = fn.toString()
+  const m = src.match(/^[^(]*\(([^)]*)\)/)
+  return m ? `(${m[1].trim()})` : '()'
+}
+
+export function buildCommandsTree(): NormalizedData {
+  const entities: Record<string, CellNode> = {}
+  const relationships: Record<string, string[]> = {}
+  const rootChildren: string[] = []
+
+  for (const [name, cmd] of Object.entries(chatCommands as unknown as Record<string, CommandLike>)) {
+    const id = `cmd:${name}`
+    const sig = extractParamNames(cmd.create)
+    pushNode(entities, id, name, cmd.type)
+    rootChildren.push(id)
+
+    const childIds: string[] = []
+    pushNode(entities, `${id}.type`, 'type', `'${cmd.type}'`)
+    childIds.push(`${id}.type`)
+    pushNode(entities, `${id}.create`, 'create', sig)
+    childIds.push(`${id}.create`)
+    pushNode(entities, `${id}.handler`, 'handler', extractParamNames(cmd.handler))
+    childIds.push(`${id}.handler`)
+    pushNode(entities, `${id}.meta`, 'meta', cmd.meta === true ? 'true (engine-only, no undo)' : 'false (mutates store)')
+    childIds.push(`${id}.meta`)
+    relationships[id] = childIds
+  }
+
+  relationships[ROOT_ID] = rootChildren
+  return createStore({ entities: entities as unknown as Record<string, Entity>, relationships })
 }
