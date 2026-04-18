@@ -228,7 +228,7 @@
   aspect-ratio: 1;
   border-radius: var(--shape-lg);
   padding: var(--space-md);
-  gap: var(--space-xs);
+  gap: var(--space-2xs);
 }
 
 .theme-zone-label {
@@ -242,4 +242,33 @@
   padding-top: var(--space-sm);
   color: var(--text-muted);
   line-height: var(--leading-relaxed);
+}
+
+/* static state mirror — pseudo-class를 data-attr로 표시 */
+.theme-zone-card .ia-item[data-hover] {
+  background: var(--bg-hover);
+}
+.theme-zone-card .ia-item[data-active] {
+  background: var(--bg-active);
+}
+.theme-zone-card .ia-item[data-focus-ring] {
+  box-shadow: var(--focus-ring-shadow);
+  outline: none;
+}
+.theme-zone-card .ia-item[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* button state mirror */
+.theme-zone-card button[data-hover] {
+  background: var(--bg-hover);
+}
+.theme-zone-card button[data-focus-ring] {
+  box-shadow: var(--focus-ring-shadow);
+  outline: none;
+}
+.theme-zone-card button[data-disabled] {
+  opacity: 0.5;
+  pointer-events: none;
 }

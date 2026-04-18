@@ -28,10 +28,38 @@ function AxisRow({ label, children }: { label: string; children: React.ReactNode
  * 같은 `aria-selected="true"` 아이템이 4 zone에서 각자 다른 배경을 받음.
  * (feedback_contextual_zone_cascade · P-26) */
 
+type ItemStateAttrs = {
+  'aria-selected'?: 'true'
+  'aria-disabled'?: 'true'
+  'aria-checked'?: 'true'
+  'data-focused'?: boolean
+  'data-hover'?: boolean
+  'data-active'?: boolean
+  'data-focus-ring'?: boolean
+}
+
+const itemStates: Array<{ label: string; attrs: ItemStateAttrs }> = [
+  { label: 'default', attrs: {} },
+  { label: 'hover', attrs: { 'data-hover': true } },
+  { label: 'active', attrs: { 'data-active': true } },
+  { label: 'focus ring', attrs: { 'data-focus-ring': true } },
+  { label: 'selected', attrs: { 'aria-selected': 'true' } },
+  { label: 'sel + focus', attrs: { 'aria-selected': 'true', 'data-focused': true } },
+  { label: 'checked', attrs: { 'aria-checked': 'true' } },
+  { label: 'disabled', attrs: { 'aria-disabled': 'true' } },
+]
+
+const buttonStates: Array<{ label: string; attrs: Record<string, boolean | string> }> = [
+  { label: 'default', attrs: {} },
+  { label: 'hover', attrs: { 'data-hover': true } },
+  { label: 'focus', attrs: { 'data-focus-ring': true } },
+  { label: 'off', attrs: { 'data-disabled': true } },
+]
+
 function ZoneCompositionAxis() {
   const zones = ['sunken', 'base', 'raised', 'overlay'] as const
   return (
-    <Section title="ZONE × INTERACTIVE — 배경 위의 법도">
+    <Section title="ZONE × INTERACTIVE — 모든 state">
       <div className="theme-zone-grid">
         {zones.map(z => (
           <div key={z} className={ax({ layout: 'stack' })}>
@@ -39,26 +67,34 @@ function ZoneCompositionAxis() {
             <div
               className={`${ax({ role: 'control-group', surface: z, layout: 'stack' })} ax-interactive theme-zone-card`}
             >
-              <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`}>
-                <span>default</span>
-              </div>
-              <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} aria-selected="true">
-                <span>selected</span>
-              </div>
-              <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} aria-selected="true" data-focused>
-                <span>selected + focused</span>
-              </div>
+              {itemStates.map(s => (
+                <div
+                  key={s.label}
+                  className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`}
+                  {...s.attrs}
+                >
+                  <span>{s.label}</span>
+                </div>
+              ))}
 
               <div className={ax({ layout: 'row' })}>
-                <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })}>Action</button>
-                <button className={ax({ role: 'control', surface: 'ghost', content: 'text' })}>Ghost</button>
+                {buttonStates.map(b => (
+                  <button
+                    key={b.label}
+                    className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })}
+                    {...b.attrs}
+                  >
+                    {b.label}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         ))}
         <span className={`${ax({ textStyle: 'caption' })} theme-zone-caption`}>
-          동일한 aria-selected가 sunken/base/raised/overlay 각 zone에서 다른 배경을 받는다 —
-          .sf-{'{'}z{'}'} 클래스가 --selection을 --depth-{'{'}z{'}'}-sel로 재바인딩 (Zone cascade).
+          모든 state(default / hover / active / focus ring / selected / sel+focus / checked / disabled)가
+          sunken/base/raised/overlay 각 zone에서 어떻게 다르게 렌더되는지 동시 비교.
+          `.sf-{'{'}z{'}'}` 클래스가 --bg-hover · --bg-active · --selection · --selection-cursor 전부 zone별로 재바인딩 (Zone cascade).
         </span>
       </div>
     </Section>
