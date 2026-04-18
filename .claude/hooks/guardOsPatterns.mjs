@@ -466,6 +466,21 @@ if (isTsx && /\bdata-checked\s*=\s*\{/.test(content)) {
   )
 }
 
+// 규칙 35: role:'control-group' + surface:'ghost' 금지 — ghost는 독립 버튼/컨트롤 전용
+// .sf-ghost의 :hover/:active/:focus-visible이 컨테이너 전역에 발동하여 sidebar/toolbar 전체가 어두워짐
+if (isTsx) {
+  const ghostGroupRe1 = /\bax\s*\(\s*\{[^}]*\brole\s*:\s*['"]control-group['"][^}]*\bsurface\s*:\s*['"]ghost['"]/
+  const ghostGroupRe2 = /\bax\s*\(\s*\{[^}]*\bsurface\s*:\s*['"]ghost['"][^}]*\brole\s*:\s*['"]control-group['"]/
+  if (ghostGroupRe1.test(content) || ghostGroupRe2.test(content)) {
+    violations.push(
+      "ax({ role: 'control-group', surface: 'ghost' }) 금지 — surface:'ghost'는 독립 버튼/컨트롤 전용입니다. " +
+      'control-group 같은 컨테이너에 부착되면 .sf-ghost의 :hover/:active/:focus-visible이 컨테이너 전역에 발동하여 ' +
+      'sidebar/toolbar 전체가 어두워지는 부작용이 발생합니다. ' +
+      "대안: surface 생략(투명, 부모 배경 상속) 또는 SurfacePanel subset('sunken'|'base'|'raised'|'overlay')"
+    )
+  }
+}
+
 // 규칙 34: src/main.tsx 의 첫 import 는 ./styles/layers.css 여야 함 — @layer 순서 보장
 if (filePath.endsWith('/src/main.tsx')) {
   const lines = content.split('\n')
