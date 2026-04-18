@@ -481,6 +481,22 @@ if (isTsx) {
   }
 }
 
+// 규칙 36: ax({ role: 'control-group', ... }) 변수 추출 금지 — "group을 영역으로 나누기" 안티패턴
+// const cluster = ax(...) → 여러 <div>에 재사용하면 시각적 cluster 분리(영역 나누기)로 이어짐
+if (isTsx) {
+  const clusterExtractRe = /\bconst\s+\w+\s*=\s*ax\s*\(\s*\{[^}]*\brole\s*:\s*['"]control-group['"]/
+  if (clusterExtractRe.test(content)) {
+    violations.push(
+      "ax({ role: 'control-group', ... }) 결과를 const 변수로 추출 금지 — " +
+      '"분리 가능한 group을 시각 영역으로 나누기" 안티패턴입니다. ' +
+      '변수 추출 → 여러 div에 재사용 → 시각적 cluster 분리로 이어집니다. ' +
+      '대안: (1) Toolbar/TabList 등 ui/ 컴포넌트가 이미 ARIA group이므로 wrapper 불필요, ' +
+      '(2) 그룹 경계는 divider/spacing으로 표현, ' +
+      '(3) 정말 분리된 group이면 별도 컴포넌트로 분리.'
+    )
+  }
+}
+
 // 규칙 34: src/main.tsx 의 첫 import 는 ./styles/layers.css 여야 함 — @layer 순서 보장
 if (filePath.endsWith('/src/main.tsx')) {
   const lines = content.split('\n')
