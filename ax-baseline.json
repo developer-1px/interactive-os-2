@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T02:42:31.917Z",
+  "generatedAt": "2026-04-18T02:46:41.913Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -155,8 +155,8 @@
         "lc_min_muted": 60
       },
       "total": 88,
-      "pass": 71,
-      "fail": 17,
+      "pass": 88,
+      "fail": 0,
       "items": [
         {
           "theme": "dark",
@@ -338,15 +338,15 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "action",
-          "lc": 74.05,
+          "lc": 84.74,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "secondary",
           "surface": "input",
-          "lc": 78.66,
+          "lc": 89.35,
           "threshold": 75,
           "pass": true
         },
@@ -354,7 +354,7 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "display",
-          "lc": 78.08,
+          "lc": 88.77,
           "threshold": 75,
           "pass": true
         },
@@ -362,23 +362,23 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "overlay",
-          "lc": 74.05,
+          "lc": 84.74,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "secondary",
           "surface": "trap",
-          "lc": 71.09,
+          "lc": 81.78,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "secondary",
           "surface": "ghost",
-          "lc": 78.08,
+          "lc": 88.77,
           "threshold": 75,
           "pass": true
         },
@@ -386,7 +386,7 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "placeholder",
-          "lc": 79.58,
+          "lc": 90.27,
           "threshold": 75,
           "pass": true
         },
@@ -394,7 +394,7 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "sunken",
-          "lc": 79.58,
+          "lc": 90.27,
           "threshold": 75,
           "pass": true
         },
@@ -402,7 +402,7 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "base",
-          "lc": 78.08,
+          "lc": 88.77,
           "threshold": 75,
           "pass": true
         },
@@ -410,9 +410,9 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "raised",
-          "lc": 74.05,
+          "lc": 84.74,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
@@ -426,81 +426,81 @@
           "theme": "dark",
           "text": "muted",
           "surface": "action",
-          "lc": 48.81,
+          "lc": 74.05,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "input",
-          "lc": 53.42,
+          "lc": 78.66,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "display",
-          "lc": 52.84,
+          "lc": 78.08,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "overlay",
-          "lc": 48.81,
+          "lc": 74.05,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "trap",
-          "lc": 45.85,
+          "lc": 71.09,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "ghost",
-          "lc": 52.84,
+          "lc": 78.08,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "placeholder",
-          "lc": 54.34,
+          "lc": 79.58,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "sunken",
-          "lc": 54.34,
+          "lc": 79.58,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "base",
-          "lc": 52.84,
+          "lc": 78.08,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
           "text": "muted",
           "surface": "raised",
-          "lc": 48.81,
+          "lc": 74.05,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
@@ -690,7 +690,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "action",
-          "lc": 83.51,
+          "lc": 95.21,
           "threshold": 75,
           "pass": true
         },
@@ -698,7 +698,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "input",
-          "lc": 83.51,
+          "lc": 95.21,
           "threshold": 75,
           "pass": true
         },
@@ -706,7 +706,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "display",
-          "lc": 79.45,
+          "lc": 91.15,
           "threshold": 75,
           "pass": true
         },
@@ -714,7 +714,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "overlay",
-          "lc": 83.51,
+          "lc": 95.21,
           "threshold": 75,
           "pass": true
         },
@@ -722,7 +722,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "trap",
-          "lc": 83.51,
+          "lc": 95.21,
           "threshold": 75,
           "pass": true
         },
@@ -730,7 +730,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "ghost",
-          "lc": 79.45,
+          "lc": 91.15,
           "threshold": 75,
           "pass": true
         },
@@ -738,23 +738,23 @@
           "theme": "light",
           "text": "secondary",
           "surface": "placeholder",
-          "lc": 73.34,
+          "lc": 85.04,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "light",
           "text": "secondary",
           "surface": "sunken",
-          "lc": 73.34,
+          "lc": 85.04,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "light",
           "text": "secondary",
           "surface": "base",
-          "lc": 79.45,
+          "lc": 91.15,
           "threshold": 75,
           "pass": true
         },
@@ -762,7 +762,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "raised",
-          "lc": 83.51,
+          "lc": 95.21,
           "threshold": 75,
           "pass": true
         },
@@ -770,7 +770,7 @@
           "theme": "light",
           "text": "secondary",
           "surface": "inverted",
-          "lc": 79.58,
+          "lc": 90.27,
           "threshold": 75,
           "pass": true
         },
@@ -858,9 +858,9 @@
           "theme": "light",
           "text": "muted",
           "surface": "inverted",
-          "lc": 54.34,
+          "lc": 79.58,
           "threshold": 60,
-          "pass": false
+          "pass": true
         }
       ]
     },
