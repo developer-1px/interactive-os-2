@@ -62,7 +62,7 @@ export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick, onBac
   const cluster = ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })
 
   return (
-    <div className={`finder-toolbar ${ax({ layout: 'bar' })}`}>
+    <div className={`finder-toolbar ${ax({ role: 'control-group', surface: 'ghost', layout: 'bar', cs: 'sm' })}`}>
       {(onBack || onForward) && (
         <div className={cluster}>
           <Toolbar data={navData} onActivate={handleNav} renderItem={renderItem} aria-label="Navigation" />

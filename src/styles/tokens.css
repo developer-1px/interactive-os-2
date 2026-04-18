@@ -373,9 +373,9 @@
 
   --elev-step-direction: -1;
 
-  /* ── Interactive (base depth default) ── */
-  --bg-hover:          var(--depth-base-hover);
-  --bg-active:         var(--depth-base-active);
+  /* ── Interactive (base depth default) — light: stone-100 hover, slightly stronger ── */
+  --bg-hover:          var(--stone-100);
+  --bg-active:         var(--stone-200);
 
   /* ── Selection — light: inactive=stone, active=primary tint (Apple Finder accent) ── */
   --selection-context: var(--depth-base-sel-context);

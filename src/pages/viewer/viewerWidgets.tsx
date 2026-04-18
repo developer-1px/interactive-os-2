@@ -56,7 +56,7 @@ export function ViewerSortBarWidget() {
   // Container row stays solid; the clusters are the "things you press" → glass.
   return (
     <div className={ax({ layout: 'bar' })}>
-      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', cs: 'sm' })}>
         <Button onClick={() => onSort('name')}>
           Name <SortIndicator direction={sortDirection('name')} />
         </Button>
@@ -67,7 +67,7 @@ export function ViewerSortBarWidget() {
           LOC <SortIndicator direction={sortDirection('loc')} />
         </Button>
       </div>
-      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', cs: 'sm' })}>
         {['.tsx', '.ts', '.css', '.md'].map(ext => (
           <Button
             key={ext}
