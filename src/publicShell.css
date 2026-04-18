@@ -1,0 +1,12 @@
+/* Public shell overrides — dev 앱용 reset.css의 body{overflow:hidden} 해제.
+   Public 모드는 스크롤 가능한 문서형 페이지이므로 전역 overflow 차단 불필요. */
+@layer reset {
+  html, body {
+    overflow: auto;
+    height: auto;
+    min-height: 100%;
+  }
+  #root {
+    min-height: 100svh;
+  }
+}

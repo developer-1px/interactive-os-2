@@ -12,6 +12,7 @@ import './styles/interactive.css'
 import './interactive-os/ui/indicators/indicators.css'
 import './styles/layout.css'
 import './styles/app.css'
+import './publicShell.css'  // reset override — scroll 허용
 
 const NAV = [
   { to: '/',              label: 'Home' },
