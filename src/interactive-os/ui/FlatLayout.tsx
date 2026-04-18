@@ -1,4 +1,4 @@
-// ② flat-layout-engine-prd.md  ② flatlayout-resizable-split-prd.md
+// ② flat-layout-engine-prd.md  ② flatlayout-resizable-split-prd.md  ② cmux-layout-prd.md
 import React, { useMemo, useRef, useCallback } from 'react'
 import type { NormalizedData, PaneSize } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
@@ -8,13 +8,28 @@ import { useAria } from '@os/primitives/useAria'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
 import { layout } from '@os/layout/layoutPlugin'
-import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode, FloatingNode } from '@os/layout/flatLayout'
+import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode, FloatingNode, TabgroupNode, TabNode } from '@os/layout/flatLayout'
+import { layoutCommands } from '@os/layout/layoutCommands'
 import { ax, type Axes } from '@styles/ax'
 import styles from './FlatLayout.module.css'
 import { NavLayoutContext } from './NavLayoutContext'
 import { SplitPane } from './SplitPane'
 import { workspaceCommands } from '@os/plugins/workspaceStore'
 import { FlatLayoutContext } from './useFlatLayout'
+import { ViewerTabList } from './ViewerTabList'
+
+// ── Surface context ───────────────────────────────────
+// ② cmux-layout-prd.md — tab 노드 아래 widget이 surrounding tab data를 pull
+
+export interface FlatLayoutSurfaceCtx {
+  tabNodeId: string
+  tabData: TabNode
+}
+
+const FlatLayoutSurfaceContext = React.createContext<FlatLayoutSurfaceCtx | null>(null)
+
+export const useFlatLayoutSurface = (): FlatLayoutSurfaceCtx | null =>
+  React.useContext(FlatLayoutSurfaceContext)
 
 // ── Types ─────────────────────────────────────────────
 

@@ -1,12 +1,25 @@
 /**
- * /chat/entities — entities/chat 엔티티 시각화 디버그 뷰어 (3단):
- *   1) Schema  (Field | Type)         — Zod introspection
- *   2) Value   (Key | Value)          — 라이브 chatStore 우선, fixtures 폴백
- *   3) Commands (Name | Type)         — defineCommands 로 등록된 모든 명령
+ * /chat/entities — entities/chat 엔티티 시각화 디버그 뷰어 (split 2단):
+ *   왼쪽:  Schema · Value · Commands  (메타 정보)
+ *   오른쪽: Components                   (entities/chat fixture → 실제 UI 렌더)
  */
 import { useMemo } from 'react'
 import { TreeGrid } from '@os/ui/TreeGrid'
+import { SessionList } from '@os/ui/SessionList'
+import { NavList } from '@os/ui/NavList'
+import { SplitPane } from '@os/ui/SplitPane'
+import type { PaneSize } from '@os/ui/SplitPane'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { ax } from '@styles/ax'
+import { createStore, ROOT_ID } from '@os/schema'
+import {
+  chatSessionFixtures,
+  chatUiStateFixture,
+  previewTextFixtures,
+  selectCard,
+  SessionCard,
+} from '@entities/chat'
+import type { SessionItemOptions } from '@os/ui/items'
 import { useChatSessions, useActiveSession } from './chatStore'
 import {
   buildSchemaTree,
@@ -42,6 +55,55 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle: string })
   )
 }
 
+const fixtureSessionListData = createStore({
+  entities: Object.fromEntries(
+    Object.entries(chatSessionFixtures).map(([id, s]) => [
+      id,
+      { id, data: { label: s.title ?? id.slice(0, 8) } },
+    ]),
+  ),
+  relationships: { [ROOT_ID]: Object.keys(chatSessionFixtures) },
+})
+
+function fixtureItemOptions(id: string): SessionItemOptions {
+  const s = chatSessionFixtures[id]
+  return { status: s?.state === 'running' ? 'running' : 'idle' }
+}
+
+const FIXTURE_NOW = 1745000000000 + 5 * 60_000
+
+const fixtureSessionCardData = createStore({
+  entities: Object.fromEntries(
+    Object.entries(chatSessionFixtures).map(([id, session]) => [
+      id,
+      {
+        id,
+        data: {
+          card: selectCard({
+            session,
+            isActive: id === chatUiStateFixture.activeSessionId,
+            previewText: previewTextFixtures[id] ?? '',
+            now: FIXTURE_NOW,
+          }),
+        },
+      },
+    ]),
+  ),
+  relationships: { [ROOT_ID]: Object.keys(chatSessionFixtures) },
+})
+
+function ComponentPreview({ name, source, children }: { name: string; source: string; children: React.ReactNode }) {
+  return (
+    <div className={ax({ role: 'control-group', surface: 'sunken', layout: 'stack', width: 'full' })}>
+      <div className={ax({ layout: 'bar', width: 'full' })}>
+        <span className={ax({ textStyle: 'label', flex: '1' })}>{name}</span>
+        <span className={ax({ textStyle: 'caption' })}>{source}</span>
+      </div>
+      {children}
+    </div>
+  )
+}
+
 export default function PageChatEntities() {
   const sessions = useChatSessions()
   const active = useActiveSession()
@@ -64,36 +126,57 @@ export default function PageChatEntities() {
   const commandCount = useMemo(() => Object.keys(commandsData.entities).filter(k => k.startsWith('cmd:') && !k.includes('.')).length, [commandsData])
 
   return (
-    <div className={ax({ layout: 'stack', width: 'full' })}>
-      <SectionHeader title="Schema" subtitle="@entities/chat — Zod" />
-      <div className={ax({ layout: 'stack', width: 'full' })}>
-        <TreeGrid
-          data={schemaData}
-          columns={SCHEMA_COLUMNS}
-          header
-          aria-label="Chat Zod schemas"
-        />
-      </div>
+    <SplitPane direction="horizontal" sizes={SPLIT_SIZES} onResize={NOOP_RESIZE} minRatio={0.2}>
+      <ScrollArea className={ax({ layout: 'fill' })}>
+        <div className={ax({ layout: 'stack', width: 'full' })}>
+          <SectionHeader title="Schema" subtitle="@entities/chat — Zod" />
+          <TreeGrid
+            data={schemaData}
+            columns={SCHEMA_COLUMNS}
+            header
+            aria-label="Chat Zod schemas"
+          />
 
-      <SectionHeader title="Value" subtitle={`source: ${valueSource} · sessions: ${sessions.length}`} />
-      <div className={ax({ layout: 'stack', width: 'full' })}>
-        <TreeGrid
-          data={valueData}
-          columns={VALUE_COLUMNS}
-          header
-          aria-label={`Chat ${valueSource} values`}
-        />
-      </div>
+          <SectionHeader title="Value" subtitle={`source: ${valueSource} · sessions: ${sessions.length}`} />
+          <TreeGrid
+            data={valueData}
+            columns={VALUE_COLUMNS}
+            header
+            aria-label={`Chat ${valueSource} values`}
+          />
 
-      <SectionHeader title="Commands" subtitle={`@entities/chat — ${commandCount} commands`} />
-      <div className={ax({ layout: 'stack', width: 'full' })}>
-        <TreeGrid
-          data={commandsData}
-          columns={COMMAND_COLUMNS}
-          header
-          aria-label="Chat commands"
-        />
-      </div>
-    </div>
+          <SectionHeader title="Commands" subtitle={`@entities/chat — ${commandCount} commands`} />
+          <TreeGrid
+            data={commandsData}
+            columns={COMMAND_COLUMNS}
+            header
+            aria-label="Chat commands"
+          />
+        </div>
+      </ScrollArea>
+
+      <ScrollArea className={ax({ layout: 'fill' })}>
+        <div className={ax({ layout: 'stack', width: 'full' })}>
+          <SectionHeader title="Components" subtitle="entities/chat fixture → renderer" />
+          <ComponentPreview name="SessionList (Generic)" source="@os/ui/SessionList ← label + state only">
+            <SessionList
+              data={fixtureSessionListData}
+              itemOptions={fixtureItemOptions}
+              aria-label="chat fixture sessions"
+            />
+          </ComponentPreview>
+          <ComponentPreview name="SessionCard (Domain)" source="@entities/chat/ui ← selectCard(SessionCardModel)">
+            <NavList
+              data={fixtureSessionCardData}
+              renderItem={SessionCard}
+              aria-label="chat fixture session cards"
+            />
+          </ComponentPreview>
+        </div>
+      </ScrollArea>
+    </SplitPane>
   )
 }
+
+const SPLIT_SIZES: PaneSize[] = [0.5, 'flex']
+function NOOP_RESIZE() {}

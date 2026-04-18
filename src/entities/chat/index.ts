@@ -41,6 +41,9 @@ export {
 export { chatCommands, resetChatIdCounter } from './chatCommands'
 export { chatPlugin } from './chatPlugin'
 
+// Domain UI (entities-only renderable)
+export { SessionCard } from './ui/SessionCard'
+
 // Selectors
 export {
   selectUiState,

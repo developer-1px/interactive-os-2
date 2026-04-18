@@ -1,6 +1,8 @@
 ---
 created_at: 2026-04-18
 session_id: chat-redesign-cmux-pipeline
+consumed_by: 2026-04-18-session-card
+consumed_at: 2026-04-18
 ---
 
 # Handoff: 개발 파이프라인 5단계 + 게이트 + 엔티티 레이어 고정 + cmux식 /chat 재설계 시작

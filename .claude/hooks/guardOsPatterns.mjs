@@ -186,7 +186,7 @@ if (!isExempt && isTsx && /\.current\??\.\bfocus\s*\(/.test(content)) {
 // 규칙 9: useState 전면 금지 — .tsx(컴포넌트)만. .ts(커스텀훅)는 허용
 if (!isExempt && /\.tsx$/.test(filePath) && /\buseState\b/.test(content) && !/\/\/\s*@useState-hatch/.test(content)) {
   violations.push(
-    'useState 금지 — OS가 모든 상태를 소유합니다. 인터랙션→축(select/expand/activate/dismiss/tab/value), 데이터→store Command, 뷰→engine. 축에 없는 상태가 필요하면 // @useState-hatch 주석으로 해치 선언하세요'
+    'useState 금지 — OS가 모든 상태를 소유합니다.\n  먼저: 그 상태를 관리하는 부품이 src/interactive-os/ui/ 에 이미 있을 가능성이 높습니다 (예: 사이즈 → SplitPane, 탭 → TabList, 모달 → Dialog, 입력 → Combobox). CATALOG.md 또는 ui/ 디렉토리를 먼저 확인하세요.\n  매핑: 인터랙션→축(select/expand/activate/dismiss/tab/value), 데이터→store Command, 뷰→engine.\n  진짜로 축에 없고 부품도 없으면: // @useState-hatch 주석을 useState 호출 같은 라인 또는 바로 윗 라인에 선언하세요'
   )
 }
 

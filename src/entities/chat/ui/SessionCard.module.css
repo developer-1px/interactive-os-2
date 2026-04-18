@@ -1,0 +1,6 @@
+/* Last-mile: unread badge 색상 — ax()에 도메인 색상 축이 없어 module.css로 표현. */
+
+.unread {
+  color: var(--axe-tone-warning, #d97706);
+  font-variant-numeric: tabular-nums;
+}
