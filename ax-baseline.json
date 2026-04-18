@@ -1,0 +1,350 @@
+{
+  "generatedAt": "2026-04-18T01:44:28.777Z",
+  "date": "2026-04-18",
+  "metrics": {
+    "focus-apca": {
+      "metric": "focus-apca",
+      "threshold": {
+        "lc_min": 60
+      },
+      "params": {
+        "focus_alpha": 0.55
+      },
+      "total": 22,
+      "pass": 0,
+      "fail": 22,
+      "items": [
+        {
+          "theme": "dark",
+          "key": "action",
+          "lc": 18.55,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "input",
+          "lc": 18.68,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "display",
+          "lc": 18.85,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "overlay",
+          "lc": 18.55,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "trap",
+          "lc": 17.67,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "ghost",
+          "lc": 18.85,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "placeholder",
+          "lc": 17.65,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "sunken",
+          "lc": 17.65,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "base",
+          "lc": 18.85,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "raised",
+          "lc": 18.55,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "key": "inverted",
+          "lc": 31.87,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "action",
+          "lc": 39.03,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "input",
+          "lc": 39.03,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "display",
+          "lc": 36.63,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "overlay",
+          "lc": 39.03,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "trap",
+          "lc": 39.03,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "ghost",
+          "lc": 36.63,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "placeholder",
+          "lc": 32.79,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "sunken",
+          "lc": 32.79,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "base",
+          "lc": 36.63,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "raised",
+          "lc": 39.03,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "key": "inverted",
+          "lc": 13,
+          "pass": false
+        }
+      ]
+    },
+    "modular-scale": {
+      "metric": "modular-scale",
+      "threshold": {
+        "ratio_min": 1.067,
+        "ratio_max": 2
+      },
+      "warnings": 11,
+      "scales": [
+        {
+          "name": "Space",
+          "steps": [
+            {
+              "step": "xs",
+              "px": 4,
+              "ratio": null,
+              "status": "first"
+            },
+            {
+              "step": "sm",
+              "px": 8,
+              "ratio": 2,
+              "status": "boundary_high"
+            },
+            {
+              "step": "md",
+              "px": 16,
+              "ratio": 2,
+              "status": "boundary_high"
+            },
+            {
+              "step": "lg",
+              "px": 24,
+              "ratio": 1.5,
+              "status": "boundary_high"
+            },
+            {
+              "step": "xl",
+              "px": 32,
+              "ratio": 1.333,
+              "status": "ok"
+            },
+            {
+              "step": "2xl",
+              "px": 48,
+              "ratio": 1.5,
+              "status": "boundary_high"
+            },
+            {
+              "step": "3xl",
+              "px": 64,
+              "ratio": 1.333,
+              "status": "ok"
+            },
+            {
+              "step": "4xl",
+              "px": 80,
+              "ratio": 1.25,
+              "status": "ideal"
+            },
+            {
+              "step": "5xl",
+              "px": 96,
+              "ratio": 1.2,
+              "status": "ok"
+            }
+          ]
+        },
+        {
+          "name": "Shape radius",
+          "steps": [
+            {
+              "step": "2xs",
+              "px": 2,
+              "ratio": null,
+              "status": "first"
+            },
+            {
+              "step": "xs",
+              "px": 4,
+              "ratio": 2,
+              "status": "boundary_high"
+            },
+            {
+              "step": "sm",
+              "px": 6,
+              "ratio": 1.5,
+              "status": "boundary_high"
+            },
+            {
+              "step": "md",
+              "px": 8,
+              "ratio": 1.333,
+              "status": "ok"
+            },
+            {
+              "step": "lg",
+              "px": 12,
+              "ratio": 1.5,
+              "status": "boundary_high"
+            },
+            {
+              "step": "xl",
+              "px": 16,
+              "ratio": 1.333,
+              "status": "ok"
+            }
+          ]
+        },
+        {
+          "name": "Icon",
+          "steps": [
+            {
+              "step": "xs",
+              "px": 14,
+              "ratio": null,
+              "status": "first"
+            },
+            {
+              "step": "sm",
+              "px": 16,
+              "ratio": 1.143,
+              "status": "ok"
+            },
+            {
+              "step": "md",
+              "px": 18,
+              "ratio": 1.125,
+              "status": "ok"
+            },
+            {
+              "step": "lg",
+              "px": 24,
+              "ratio": 1.333,
+              "status": "ok"
+            }
+          ]
+        },
+        {
+          "name": "Typography",
+          "steps": [
+            {
+              "step": "code",
+              "px": 12,
+              "ratio": null,
+              "status": "first"
+            },
+            {
+              "step": "caption",
+              "px": 12,
+              "ratio": 1,
+              "status": "too_small"
+            },
+            {
+              "step": "control",
+              "px": 14,
+              "ratio": 1.167,
+              "status": "ok"
+            },
+            {
+              "step": "body",
+              "px": 14,
+              "ratio": 1,
+              "status": "too_small"
+            },
+            {
+              "step": "section",
+              "px": 16,
+              "ratio": 1.143,
+              "status": "ok"
+            },
+            {
+              "step": "prose",
+              "px": 16,
+              "ratio": 1,
+              "status": "too_small"
+            },
+            {
+              "step": "page",
+              "px": 24,
+              "ratio": 1.5,
+              "status": "boundary_high"
+            },
+            {
+              "step": "display",
+              "px": 32,
+              "ratio": 1.333,
+              "status": "ok"
+            },
+            {
+              "step": "hero",
+              "px": 40,
+              "ratio": 1.25,
+              "status": "ideal"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
