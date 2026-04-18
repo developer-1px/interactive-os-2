@@ -1,14 +1,15 @@
 ---
 id: 0-inbox/explain-camera-component
 title: 'Camera — 뷰포트 프리미티브 해설'
-status: inbox
-kind: explain
 created: 2026-04-18
 updated: 2026-04-18
 summary: '작성일: 2026-04-17 대상: `src/interactive-os/ui/Camera.tsx` (598줄)'
-topics: [0-inbox, mode]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: explain
+  topics: [0-inbox, mode]
+  relates: []
+  supersedes: []
 ---
 # Camera — 뷰포트 프리미티브 해설
 
@@ -377,3 +378,5 @@ flowchart TD
 | Focus 결과 지향 | target 부재 시 rAF 재시도 → warn+skip |
 
 → Camera는 단순히 "줌+팬" 컴포넌트가 아니라, **3방향 입력을 하나의 transform으로 수렴시키는 상태 기계**다.
+
+#kind/explain

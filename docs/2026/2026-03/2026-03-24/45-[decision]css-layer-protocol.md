@@ -1,13 +1,14 @@
 ---
 id: '2-areas/45-[decision]css-layer-protocol'
 title: 'CSS Layer Protocol — SRP 기반 스타일링 설계문서 제안 — 2026-03-25 (v2)'
-status: active
-kind: decision
 created: 2026-03-24
 updated: 2026-04-05
-topics: [2-areas, data-aria-container, data-focused, decision, role]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: decision
+  topics: [2-areas, data-aria-container, data-focused, decision, role]
+  relates: []
+  supersedes: []
 ---
 # CSS Layer Protocol — SRP 기반 스타일링 설계문서 제안 — 2026-03-25 (v2)
 
@@ -196,3 +197,5 @@ button:active { transform: scale(var(--motion-press-scale)); }
 - 이 제안 승인 시 → DESIGN.md에 § CSS Layers 섹션 작성
 - `/design-implement` 스킬이 이 섹션을 참조하도록 연결
 - 파일 분리(Step 2~5)는 별도 PRD로 분리 가능
+
+#kind/decision

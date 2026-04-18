@@ -1,14 +1,15 @@
 ---
 id: '3-resources/02-[design]headlessUiDesignCustomization'
 title: 'Headless UI 위의 디자인 커스터마이제이션 패턴'
-status: reference
-kind: design
 created: 2026-03-23
 updated: 2026-03-24
 summary: '작성일: 2026-03-22 맥락: interactive-os(headless) 위에 shadcn/ui 모델의 UI 레이어를 만들 때, 디자인 커스텀을 어떤 방식으로 제공할지 레퍼런스 조사'
-topics: [3-resources, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, design]
+  relates: []
+  supersedes: []
 ---
 # Headless UI 위의 디자인 커스터마이제이션 패턴
 
@@ -395,3 +396,5 @@ graph TD
 | 11 | [Base UI v1 (InfoQ)](https://www.infoq.com/news/2026/02/baseui-v1-accessible/) | 뉴스 | Base UI 1.0 출시, shadcn/ui 공식 지원 |
 | 12 | [Pigment (Kobalte)](https://pigment.kobalte.dev/docs/core/overview/introduction) | 공식 문서 | Solid 생태계의 headless→styled 레이어 |
 | 13 | [React UI Libraries 2026 (Makers Den)](https://makersden.io/blog/react-ui-libs-2025-comparing-shadcn-radix-mantine-mui-chakra) | 비교 분석 | 2025-2026 UI 라이브러리 트렌드 |
+
+#kind/note #topic/design

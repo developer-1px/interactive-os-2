@@ -1,13 +1,14 @@
 ---
 id: '4-archive/ui/archive/62-[retro]workspaceSync'
 title: 'Retro: Workspace Sync — 2026-03-28'
-status: archived
-kind: retro
 created: 2026-03-27
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: Workspace Sync — 2026-03-28
 
@@ -62,3 +63,5 @@ supersedes: []
 - L1 백로그 항목 저장
 - Areas 갱신
 - PRD 아카이브
+
+#kind/retro #archived

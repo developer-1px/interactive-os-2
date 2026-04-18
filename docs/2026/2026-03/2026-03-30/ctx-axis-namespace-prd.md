@@ -1,14 +1,15 @@
 ---
 id: 2-areas/pattern/prds/ctx-axis-namespace-prd
 title: 'createPatternContext 축 namespace 분산 — PRD'
-status: active
-kind: prd
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: createPatternContext가 6축을 하드코딩하는 god object. 축이 aria-* 변화 단위로 ctx factory를 소유하고, createPatternContext는 base + merge만 수행하도록 분산.'
-topics: [2-areas, focusedid]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas, focusedid]
+  relates: []
+  supersedes: []
 ---
 # createPatternContext 축 namespace 분산 — PRD
 
@@ -207,3 +208,5 @@ composePattern이 ctxFactory를 수집 → createPatternContext가 호출하여 
 | flat 메서드 제거 | `toggleSelect`, `expand()`, `collapse()` 등 flat 메서드 grep 0건 (namespace로 전환) |
 
 **실행 방식:** 에이전트 위임 아님. 사람과 함께 단계별 확인하며 점진적 수정.
+
+#kind/prd #topic/pattern

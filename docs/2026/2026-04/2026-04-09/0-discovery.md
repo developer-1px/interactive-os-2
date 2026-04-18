@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/0-discovery
 title: 'Viewer — Discovery'
-status: active
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Viewer — Discovery
 
@@ -34,3 +35,5 @@ Mac Finder에서 영감받은 콘텐츠 뷰어. 프로젝트의 문서, 코드 �
 - interactive-os 기반 (ax() + ui/ 컴포넌트만)
 - 읽기 전용 (편집은 CMS 도메인)
 - 기존 라우트: `/viewer/*`, `/docs`
+
+#kind/note #topic/viewer

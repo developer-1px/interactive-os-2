@@ -1,14 +1,15 @@
 ---
 id: '3-resources/34-[methodology]aiCollaborationPlaybook'
 title: 'AI한테 일 잘 시키는 법 — 3개월간 Claude Code 전면 사용 후기'
-status: reference
-kind: methodology
 created: 2026-03-25
 updated: 2026-03-28
 summary: '작성일: 2026-03-25 작성자: FE개발'
-topics: [3-resources, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: methodology
+  topics: [3-resources, methodology]
+  relates: []
+  supersedes: []
 ---
 # AI한테 일 잘 시키는 법 — 3개월간 Claude Code 전면 사용 후기
 
@@ -348,3 +349,5 @@ AI에게 거절 권한을 주는 건, **guardrail을 코드가 아니라 대화 
 ## 더 알고 싶으면
 
 위 내용의 이론적 기반(TOC, OODA, Double-Loop Learning 등)이나 실제 스킬 구현 세부사항이 궁금하시면 말씀해주세요.
+
+#kind/note #topic/methodology

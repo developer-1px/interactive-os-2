@@ -1,13 +1,14 @@
 ---
 id: '4-archive/axis/archive/35-[retro]tab-axis'
 title: 'Retro: tab-axis — 2026-03-24'
-status: archived
-kind: retro
 created: 2026-03-23
 updated: 2026-04-11
-topics: [4-archive, retro, x]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro, x]
+  relates: []
+  supersedes: []
 ---
 # Retro: tab-axis — 2026-03-24
 
@@ -49,3 +50,5 @@ supersedes: []
 
 ## 다음 행동
 - L2 보강: PRD 스킬에 "테스트 코드 영향" 체크리스트 검토 (이미 존재하나 focusStrategy→tabIndex 연쇄를 구체적으로 명시 필요)
+
+#kind/retro #archived

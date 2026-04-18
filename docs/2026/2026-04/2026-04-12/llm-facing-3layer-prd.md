@@ -1,14 +1,15 @@
 ---
 id: 2-areas/distribution/prds/llm-facing-3layer-prd
 title: 'LLM-facing 3층 (data/pick/place) — PRD'
-status: active
-kind: prd
 created: 2026-04-12
 updated: 2026-04-12
 summary: 'Discussion: 바이브코딩 제품(v0/Bolt/Lovable/Cursor류)의 메인 UI 엔진으로 ARIA OS를 채택시키기 위한 LLM-facing 표면. LLM이 다루는 면을 데이터 정의 / 컴포넌트 선택 / FlatLayout 배치 3개로 좁히고, 엔진 내부(ax/축/플러그인/useAria)는 비노출.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # LLM-facing 3층 (data/pick/place) — PRD
 
@@ -202,3 +203,5 @@ supersedes: []
 5. **원칙 대조 ↔ 전체**: 위험 3건(⑤#3, #4, #11)이 ② 산출물에 수정 반영(빌더 파일 분리, 매트릭스 markdown SSOT, ax() LLM 비노출 명시) ✅
 
 **교차 검증: 통과**
+
+#kind/prd #topic/distribution

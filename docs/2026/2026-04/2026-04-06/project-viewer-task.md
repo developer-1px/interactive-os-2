@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/prds/project-viewer-task
 title: Project Viewer Task
-status: active
-kind: plan
 created: 2026-04-06
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Project Viewer Task
 
@@ -49,3 +50,5 @@ Backlog (드릴다운 시 표시)
 - import.meta.glob(`/src/pages/**/*`) → 프로젝트별 파일 수
 - import.meta.glob(`/docs/BACKLOGS.md`, { query: '?raw' }) → 백로그 파싱
 - PROGRESS.md → 성숙도 (선택)
+
+#kind/plan #topic/viewer

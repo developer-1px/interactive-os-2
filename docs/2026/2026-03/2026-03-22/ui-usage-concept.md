@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui-usage-concept
 title: 'UI Usage Concept — 예상도'
-status: active
-kind: note
 created: 2026-03-22
 updated: 2026-03-23
 summary: '**이 문서는 실제 존재하는 코드가 아닙니다.** interactive-os UI 컴포넌트를 사용자에게 어떻게 제공할지 구상하는 컨셉 문서입니다. "이렇게 제공해볼 생각입니다"의 밑그림.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # UI Usage Concept — 예상도
 
@@ -426,3 +427,5 @@ renderItem={(item, state) => (
   </span>
 )}
 ```
+
+#kind/note

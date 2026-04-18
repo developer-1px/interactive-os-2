@@ -1,14 +1,15 @@
 ---
 id: research/ax/02-principles
 title: '02 Principles — ax 메타 원리 카드'
-status: research
-kind: note
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**작성일:** 2026-04-18 **상태:** 초안 v1. 20개 카드. 03 매핑 작업 전 검토 필요. **포맷:** 6항목 Principle Card (원리 / 정의 / 업계 증거 / 수학·인지 근거 / 반증 조건 / ax 매핑 + Examples)'
-topics: [research]
-relates: []
-supersedes: []
+legacy:
+  status: research
+  kind: note
+  topics: [research]
+  relates: []
+  supersedes: []
 ---
 # 02 Principles — ax 메타 원리 카드
 
@@ -793,3 +794,5 @@ icon 축 또는 typography composite token의 optical flag. 대부분 폰트/아
 
 - Task 4: `03-ax-mapping.md` — 20개 원리 × ax 24축 Locked/Exposed/Missing 매트릭스
 - Task 5: `04-gap-plan.md` + `DESIGN.md` 재편
+
+#kind/note #topic/research

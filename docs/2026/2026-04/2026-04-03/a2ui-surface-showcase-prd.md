@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/a2ui-surface-showcase-prd
 title: 'A2UI Surface Showcase — PRD'
-status: active
-kind: prd
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: A2UI 프로토콜의 세부 스펙을 조사하여 우리 interactive-os UI 컴포넌트와 매핑 가능성을 분석. 읽기 전용 showcase로 첫 통로를 만든다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # A2UI Surface Showcase — PRD
 
@@ -131,3 +132,5 @@ A2UISurface는 순수 변환 레이어. 키보드 인터랙션은 각 UI 컴포�
 3. **경계 ↔ 검증**: 빈list→V6, 순환→V5, 누락childId→V7 ✅
 4. **금지 ↔ 출처**: 4개 금지 모두 출처 명시 ✅
 5. **원칙 대조 ↔ 전체**: ⑤#7 부분 허용(읽기 전용)은 ① Non-Goals과 정합 ✅
+
+#kind/prd #topic/ui

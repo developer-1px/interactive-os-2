@@ -1,13 +1,14 @@
 ---
 id: 2-areas/design/prds/markdown-prose-tokens-task
 title: 'Markdown Prose 토큰 분리 및 base 정리'
-status: active
-kind: plan
 created: 2026-04-02
 updated: 2026-04-08
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Markdown Prose 토큰 분리 및 base 정리
 
@@ -19,3 +20,5 @@ supersedes: []
    - max-width: `65ch` → `48rem`
    - table: `width: max-content` + `min-width: 100%` 제거 → 본문 폭 내 제한
 3. 앱 UI(14px) 불변, chat variant 영향 없음
+
+#kind/plan #topic/design

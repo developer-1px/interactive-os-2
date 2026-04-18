@@ -1,14 +1,15 @@
 ---
 id: 2-areas/pattern/prds/compose-pattern-recursive-prd
 title: 'composePattern 재귀 오버라이드 — PRD'
-status: active
-kind: prd
 created: 2026-03-28
 updated: 2026-04-08
 summary: 'Discussion: v3 대규모 마이그레이션 실패 → 점진 전환 전략. 첫 단계로 keyMap 소유권을 composePattern에 확립하고, 패턴-on-패턴 재귀 합성을 지원한다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # composePattern 재귀 오버라이드 — PRD
 
@@ -128,3 +129,5 @@ supersedes: []
 | 커밋 | `70cb8eb feat: composePattern recursive override — pattern-on-pattern composition` |
 | 현재 상태 | `composePattern.ts` — 3arg 시그니처 `(identity, required[], inputMap)`로 진화 |
 | base 패턴 지원 | 3arg 형태에서 base 패턴 확장은 required[] merge로 자연스럽게 동작 |
+
+#kind/prd #topic/pattern

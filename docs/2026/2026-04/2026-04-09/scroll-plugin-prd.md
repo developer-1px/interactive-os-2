@@ -1,14 +1,15 @@
 ---
 id: 2-areas/engine/prds/scroll-plugin-prd
 title: 'Scroll Plugin — PRD'
-status: active
-kind: prd
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: MD viewer에서 Space/Shift+Space로 반페이지 스크롤. scroll axis 대신 plugin으로 구현 (축 상한 P7 준수, DOM side-effect 전용)'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Scroll Plugin — PRD
 
@@ -140,3 +141,5 @@ supersedes: []
 3. **경계 ↔ 검증**: ④-1→V5, ④-3→V6 ✅
 4. **금지 ↔ 출처**: 4개 금지 모두 ⑤/WHY에서 파생 ✅
 5. **원칙 대조 ↔ 전체**: 위반 없음 ✅
+
+#kind/prd #topic/engine

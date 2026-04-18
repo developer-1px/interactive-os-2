@@ -1,14 +1,15 @@
 ---
 id: 2-areas/axis/prds/selection-neutral-prd
 title: 'Selection Neutral — PRD'
-status: active
-kind: prd
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: selected를 accent→neutral로 전환하여, accent 예산을 activate에 확보'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Selection Neutral — PRD
 
@@ -141,3 +142,5 @@ supersedes: []
 3. ✅ 경계 6개 → 검증 V6~V8 포함
 4. ✅ 금지 4개 → 출처(⑤/③) 유효
 5. ✅ 원칙 대조 위반 없음, #5 주석 갱신은 ② 산출물에 포함
+
+#kind/prd #topic/axis

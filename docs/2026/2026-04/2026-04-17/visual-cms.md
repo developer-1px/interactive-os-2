@@ -1,15 +1,9 @@
 ---
 id: visual-cms
 title: Visual CMS
-status: operational
-kind: note
 created: 2025-11
 updated: 2026-04-17
 summary: '랜딩 페이지 자체를 편집 대상으로 삼는 Visual CMS. Figma Slides 레이아웃 영감, 하나의 앱 = 하나의 store 원칙 준수.'
-topics: [1-projects, cms, flatlayout, i18n, landing]
-parent: null
-relates: []
-supersedes: []
 legacy:
   name: Visual CMS
   slug: visual-cms
@@ -21,6 +15,12 @@ legacy:
   handoffs: []
   tags: [cms, flatlayout, landing, i18n]
   last_touched: 2026-04-15
+  status: operational
+  kind: note
+  topics: [1-projects, cms, flatlayout, i18n, landing]
+  parent: null
+  relates: []
+  supersedes: []
 ---
 # Visual CMS
 
@@ -37,3 +37,5 @@ legacy:
 ## Gaps
 - [ ] Detail 패널 resizer
 - [ ] Viewer 채널(CMS → viewer 브릿지) 실전 검증
+
+#kind/note #topic/features

@@ -1,14 +1,15 @@
 ---
 id: 2-areas/styles/prds/ax-pit-of-success-prd
 title: 'ax() Pit of Success 불변량 — PRD'
-status: active
-kind: prd
 created: 2026-04-10
 updated: 2026-04-10
 summary: 'Discussion: ax() 축 간 관계(불변량)가 없어서 조합이 깨질 수 있다. 페어링/레벨/시드 3가지 불변량을 도입하여 어떤 조합도 안전한 시스템을 만든다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # ax() Pit of Success 불변량 — PRD
 
@@ -154,3 +155,5 @@ supersedes: []
 1. **Phase 1 (페어링)**: ax.css surface 8곳에 `color: var(--_fg, inherit)` 추가. sf-placeholder 제외.
 2. **Phase 2 (레벨)**: tokens.css에 5단계 레벨 토큰 + depth surface가 레벨 매핑. DESIGN.md 갱신.
 3. **Phase 3 (시드)**: tokens.css에 `--radius-seed` + calc 파생. ax.css recipe/cs 하드코딩 교체. 4px/8px 토큰 추가.
+
+#kind/prd #topic/styles

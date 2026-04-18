@@ -1,14 +1,15 @@
 ---
 id: 2-areas/axis/prds/axis-handlers-export-prd
 title: '축 handlers 정적 export — PRD'
-status: active
-kind: prd
 created: 2026-03-28
 updated: 2026-04-08
 summary: 'Discussion: APG Grid 증거 — 같은 키(ArrowRight)가 맥락마다 다른 의미. 축이 keyMap을 소유하면 패턴이 맥락별 바인딩을 결정할 수 없다. handlers를 정적 export하여 패턴이 직접 key→handler 바인딩 구성 가능하게.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # 축 handlers 정적 export — PRD
 
@@ -167,3 +168,5 @@ supersedes: []
 | 증거 파일 | `src/interactive-os/axis/tab.ts` — `focusNextWrap`, `focusPrevWrap` static export 잔존 |
 | 대체 PRD | `2026-03-29-compose-pattern-3arg-prd.md` — AxisInstance가 config+handler 소유 |
 | 하위 호환 | 기존 테스트 전체 통과 (3arg 전환 시 원자적 변환) |
+
+#kind/prd #topic/axis

@@ -1,14 +1,15 @@
 ---
 id: '4-archive/engine/archive/30-[explain]clipboard-singleton-contamination'
 title: 'Clipboard Singleton 오염 — module-level 전역 상태가 paste 동작을 페이지 간 오염시킨다'
-status: archived
-kind: explain
 created: 2026-03-23
 updated: 2026-04-11
 summary: '작성일: 2026-03-23 맥락: `/plugin/history` 페이지에서 paste가 항상 리스트 마지막에 삽입되는 현상을 추적하다 발견한 구조적 결함'
-topics: [4-archive, explain]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: explain
+  topics: [4-archive, explain]
+  relates: []
+  supersedes: []
 ---
 # Clipboard Singleton 오염 — module-level 전역 상태가 paste 동작을 페이지 간 오염시킨다
 
@@ -152,3 +153,5 @@ flowchart LR
 4. **관찰**: 새 항목이 리스트 **마지막**에 추가됨 (커서 뒤가 아님)
 5. **대조**: `http://localhost:5173/plugin/clipboard`에서 같은 동작 → 역시 마지막에 추가됨 (동일 버그)
 6. **원인 확인**: 브라우저 콘솔에서 `clipboard.ts`의 `canAcceptFn`이 `cmsCanAccept` 함수인지 확인
+
+#kind/explain #archived

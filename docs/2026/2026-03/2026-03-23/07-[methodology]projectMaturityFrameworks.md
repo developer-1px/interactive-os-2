@@ -1,14 +1,15 @@
 ---
 id: '3-resources/07-[methodology]projectMaturityFrameworks'
 title: '프로젝트 진척도/성숙도 추적 프레임워크 — 소프트웨어 모듈 단위'
-status: reference
-kind: methodology
 created: 2026-03-23
 updated: 2026-03-24
 summary: '작성일: 2026-03-23 맥락: PROGRESS.md를 체크리스트에서 아키텍처 맵으로 전환하면서, 모듈별 성숙도를 표준화된 기준으로 표현하기 위한 조사'
-topics: [3-resources, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: methodology
+  topics: [3-resources, methodology]
+  relates: []
+  supersedes: []
 ---
 # 프로젝트 진척도/성숙도 추적 프레임워크 — 소프트웨어 모듈 단위
 
@@ -219,3 +220,5 @@ NASA TRL 9단계는 우주 프로그램용이라 과하다. 소프트웨어 모�
 | 6 | [CMMI Institute](https://cmmiinstitute.com/) | 공식 | CMMI v3.0, 5단계 조직 성숙도 |
 | 7 | [DORA Metrics - Four Keys](https://dora.dev/guides/dora-metrics-four-keys/) | 공식 | 소프트웨어 배포 성과 4대 지표 |
 | 8 | [Open Source Maturity Model - FINOS](https://osr.finos.org/docs/bok/osmm/introduction) | OSS 표준 | 오픈소스 채택 성숙도 프레임워크 |
+
+#kind/note #topic/methodology

@@ -1,14 +1,15 @@
 ---
 id: 2-areas/engine/prds/replay-edit-animation-prd
 title: 'Session Replay Phase B+ — 편집 애니메이션 PRD'
-status: active
-kind: prd
 created: 2026-04-02
 updated: 2026-04-08
 summary: 'Discussion: replay에서 Edit이 휙 넘어가서 뭘 수정했는지 모름 → CodeBlock 하이라이트 확장 + 파일 상태 누적 + 편집 애니메이션 시퀀스'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Session Replay Phase B+ — 편집 애니메이션 PRD
 
@@ -160,3 +161,5 @@ PageReplay
 5. **원칙 대조 ↔ 전체**: 위반 없음 ✅
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/engine

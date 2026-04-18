@@ -1,13 +1,14 @@
 ---
 id: 1-projects/chat/prds/writer-interaction-task
 title: 'Writer 인터랙션 확장 — scope + focusHistory + writer keyMap'
-status: active
-kind: plan
 created: 2026-04-06
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Writer 인터랙션 확장 — scope + focusHistory + writer keyMap
 
@@ -22,3 +23,5 @@ Discussion에서 수렴: 글쓰기 특유 인지 패턴에 맞는 조작이 부�
 ## Agent B: focusHistory 플러그인
 1. `src/interactive-os/plugins/focusHistory.ts` — 포커스 이동 이력 스택
 2. PageWriter에 focusHistory 플러그인 등록
+
+#kind/plan #topic/chat

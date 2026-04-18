@@ -1,13 +1,14 @@
 ---
 id: BACKLOGS
 title: BACKLOGS
-status: meta
-kind: note
 created: 2026-03-21
 updated: 2026-04-17
-topics: [p0, p1, p2, retro, x]
-relates: []
-supersedes: []
+legacy:
+  status: meta
+  kind: note
+  topics: [p0, p1, p2, retro, x]
+  relates: []
+  supersedes: []
 ---
 ## Backlog
 
@@ -74,3 +75,5 @@ supersedes: []
 - [ ] CodeViewer V16 11곳 사용처 screenshot 회귀 — 출처: code-viewer-prd.md ⑧V16 (2026-04-17)
 - [ ] `keylineMap.json:609` VirtualCodeBlock 잔재 (자동생성) — 다음 keyline 갱신에서 자연 제거 확인 — 출처: retro G6 (2026-04-17)
 - [ ] CodeViewerMagicMove 별도 컴포넌트 discuss/PRD/구현 — shiki-magic-move 래핑, before/after 입력 — 출처: code-viewer-prd.md Non-Goals (2026-04-17)
+
+#kind/note

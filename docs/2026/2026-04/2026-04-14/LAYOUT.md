@@ -1,14 +1,15 @@
 ---
 id: LAYOUT
 title: 'FlatLayout — 선언적 페이지 레이아웃'
-status: meta
-kind: note
 created: 2026-04-14
 updated: 2026-04-14
 summary: 'SSOT: `src/interactive-os/layout/`'
-topics: []
-relates: []
-supersedes: []
+legacy:
+  status: meta
+  kind: note
+  topics: []
+  relates: []
+  supersedes: []
 ---
 # FlatLayout — 선언적 페이지 레이아웃
 
@@ -53,3 +54,5 @@ const layout = definePage({
 - **widget = React, layout = 엔진**: widget만 React 컴포넌트. 나머지는 엔진이 렌더.
 - **pull 모델**: widget이 `useFlatLayout()`으로 필요한 데이터를 읽는다.
 - **XY 배치 + Z 깊이**: split/stack/bar가 XY 배치, surface가 Z 깊이.
+
+#kind/note

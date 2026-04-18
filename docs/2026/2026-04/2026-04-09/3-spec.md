@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/stories/doc-browsing/features/miller-columns/3-spec
 title: 'Miller Columns — Spec'
-status: active
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Miller Columns — Spec
 
@@ -39,3 +40,5 @@ AI 생성 문서(docs/)를 편하게 탐색·열람할 Finder 스타일 Miller C
 - 로딩: SpinnerIndicator 표시
 - 파일 선택: 프리뷰 패널 활성
 - 폴더 선택: 자식 컬럼 생성
+
+#kind/note #topic/viewer

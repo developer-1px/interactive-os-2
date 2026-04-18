@@ -1,13 +1,14 @@
 ---
 id: '0-inbox/79-[backlog]grid-subgrid-ax-migration'
 title: 'Grid Subgrid → ax() 축 승격 마이그레이션 — 2026-04-16'
-status: inbox
-kind: backlog
 created: 2026-04-18
 updated: 2026-04-18
-topics: [0-inbox, backlog]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: backlog
+  topics: [0-inbox, backlog]
+  relates: []
+  supersedes: []
 ---
 # Grid Subgrid → ax() 축 승격 마이그레이션 — 2026-04-16
 
@@ -38,3 +39,5 @@ shadcn 매핑 작업 중 PipelineGrid 스크린샷에서 그리드 구조 깨짐
 
 - /discuss로 축 설계 방향 결정 (layout 확장 vs 새 축)
 - /do로 마이그레이션 실행
+
+#kind/note #topic/backlog

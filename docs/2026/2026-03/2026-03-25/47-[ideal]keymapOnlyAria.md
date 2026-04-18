@@ -1,14 +1,15 @@
 ---
 id: '2-areas/primitives/47-[ideal]keymapOnlyAria'
 title: 'keyMap-only Aria — 선언적 OCP로 전역 단축키 처리'
-status: active
-kind: ideal
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 맥락: CMS에 `Cmd+\` preview 토글을 추가하면서, engine 없이 keyMap만으로 동작하는 Aria의 이상적 사용 패턴을 시뮬레이션한다. 선행 문서: `46-[explain]declarativeOcp.md` (선언적 OCP 3원칙)'
-topics: [2-areas, explain, ideal]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: ideal
+  topics: [2-areas, explain, ideal]
+  relates: []
+  supersedes: []
 ---
 # keyMap-only Aria — 선언적 OCP로 전역 단축키 처리
 
@@ -210,3 +211,5 @@ parseKeyCombo('Mod+\\')
 편집 모드의 `cmsGlobalKeyMap`과 present 모드의 `keyMap`이 각각 다른 컴포넌트에 선언된다. `Mod+\\`가 양쪽에 중복 선언되는데, 이것이 DRY 위반인지 아니면 각 모드의 독립적 선언인지.
 
 → **제 판단:** 각 모드가 자신의 keyMap을 독립적으로 소유하는 것이 맞다. Present 모드의 `Mod+\\`은 "exit"이고, 편집 모드의 `Mod+\\`은 "enter presenting"이다. 의미가 다르므로 중복이 아니라 각자의 선언이다.
+
+#kind/note #topic/ideal #topic/primitives

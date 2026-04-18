@@ -1,13 +1,14 @@
 ---
 id: 2-areas/engine/prds/engine-subscribe-task
 title: 'engine.subscribe — Task'
-status: active
-kind: plan
 created: 2026-04-07
 updated: 2026-04-08
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # engine.subscribe — Task
 
@@ -31,3 +32,5 @@ engine에 subscribe API를 추가하여 모든 command dispatch 이벤트를 외
 ## 파일 변경
 - `src/interactive-os/engine/types.ts`
 - `src/interactive-os/engine/createCommandEngine.ts`
+
+#kind/plan #topic/engine

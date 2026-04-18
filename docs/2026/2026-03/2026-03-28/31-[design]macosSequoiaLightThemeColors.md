@@ -1,14 +1,15 @@
 ---
 id: '3-resources/31-[design]macosSequoiaLightThemeColors'
 title: 'macOS Sequoia Light Theme Colors — 시스템 앱 색상 실측'
-status: reference
-kind: design
 created: 2026-03-28
 updated: 2026-03-28
 summary: '작성일: 2026-03-26 맥락: Light theme surface 톤이 부자연스러워서, macOS 최신 네이티브 앱의 실제 색상을 레퍼런스로 조사'
-topics: [3-resources, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, design]
+  relates: []
+  supersedes: []
 ---
 # macOS Sequoia Light Theme Colors — 시스템 앱 색상 실측
 
@@ -155,3 +156,5 @@ graph TD
 2. Finder 사이드바 위에 마우스 올리기 → RGB 값 확인 (R≈G≈B, 무채색 확인)
 3. Notes 앱 열어서 3-column 레이아웃 관찰 → sidebar/list/content 경계의 미묘한 차이
 4. 우리 앱과 나란히 놓고 비교 → chroma 차이가 즉각 보임
+
+#kind/note #topic/design

@@ -1,14 +1,15 @@
 ---
 id: 2-areas/axis/prds/axis-v3-architecture-plan
 title: Axis v3 Architecture Implementation Plan
-status: active
-kind: plan
 created: 2026-03-29
 updated: 2026-04-08
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
-topics: [2-areas, x]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas, x]
+  relates: []
+  supersedes: []
 ---
 # Axis v3 Architecture Implementation Plan
 
@@ -1157,3 +1158,5 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 - [x] **Placeholder scan:** All tasks contain code or exact commands
 - [x] **Type consistency:** `AxisDefinition` used consistently across all axis files, `composePattern` signature matches usage in patterns
 - [x] **PRD verification scenarios:** V1 (tree vs accordion expand) in Task 7 Steps 4-5, V2 (treegrid ArrowRight) in Task 7 Step 6, V3 (new pattern) in Task 6, V4 (tree → treegrid extension) in Task 7 Step 6, V5 (OCP) by design
+
+#kind/plan #topic/axis

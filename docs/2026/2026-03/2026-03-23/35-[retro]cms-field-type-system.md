@@ -1,13 +1,14 @@
 ---
 id: '4-archive/cms/archive/35-[retro]cms-field-type-system'
 title: 'Retro: CMS Field Type System — 2026-03-24'
-status: archived
-kind: retro
 created: 2026-03-23
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: CMS Field Type System — 2026-03-24
 
@@ -61,3 +62,5 @@ supersedes: []
 ## 다음 행동
 - L1 백로그 없음
 - PRD 아카이브 진행
+
+#kind/retro #archived

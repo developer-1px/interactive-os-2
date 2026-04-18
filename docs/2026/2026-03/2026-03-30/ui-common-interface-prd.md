@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/ui-common-interface-prd
 title: 'UI 완성품 공통 인터페이스 — PRD'
-status: active
-kind: prd
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: UI 완성품의 3축 모델(Pattern/Plugin/Renderer) 도출. 소비자 커스텀 cliff 해소를 위해 공통 인터페이스 + Plugin renderer 슬롯 + Renderer 주입점 확립.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # UI 완성품 공통 인터페이스 — PRD
 
@@ -144,3 +145,5 @@ supersedes: []
 ---
 
 **역PRD 요약:** ② 산출물 9/9 ✅, ⑧ 검증 3/8 ✅ (V3,V4 미구현 — rename renderer 후속, V1,V2,V6 테스트 후속)
+
+#kind/prd #topic/ui

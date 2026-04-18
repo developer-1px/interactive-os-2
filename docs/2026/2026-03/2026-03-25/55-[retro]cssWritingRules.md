@@ -1,13 +1,14 @@
 ---
 id: '4-archive/design/archive/55-[retro]cssWritingRules'
 title: 'Retro: CSS Writing Rules — 2026-03-25'
-status: archived
-kind: retro
 created: 2026-03-25
 updated: 2026-04-11
-topics: [4-archive, data-aria-container, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, data-aria-container, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: CSS Writing Rules — 2026-03-25
 
@@ -56,3 +57,5 @@ supersedes: []
 ## 다음 행동
 - L1 3개 항목을 `/backlog`에 저장
 - 시각 검증은 다음 CSS 작업 시 함께 실시
+
+#kind/retro #archived

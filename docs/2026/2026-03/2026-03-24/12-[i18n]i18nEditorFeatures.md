@@ -1,14 +1,15 @@
 ---
 id: '3-resources/12-[i18n]i18nEditorFeatures'
 title: 'i18n Editor FE 기능 — 상용 서비스 대비 갭 분석'
-status: reference
-kind: i18n
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-25 맥락: PageI18nEditor 개밥먹기 후 상용 서비스 대비 누락 기능 식별'
-topics: [3-resources, i18n]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: i18n
+  topics: [3-resources, i18n]
+  relates: []
+  supersedes: []
 ---
 # i18n Editor FE 기능 — 상용 서비스 대비 갭 분석
 
@@ -184,3 +185,5 @@ P0 기능 중 **검색/필터**는 Grid 컴포넌트의 범용 기능이 될 수
 4. **특정 key를 찾고 싶다** → Ctrl+F가 브라우저 검색을 트리거함, Grid 내 검색 아님 (갭 #4)
 5. **전체 진행률을 보고 싶다** → 표시 없음 (갭 #5)
 6. **다음 빈 셀로 바로 가고 싶다** → Enter가 모든 행을 순회함, 빈 셀만 건너뛰기 불가 (갭 #6)
+
+#kind/note #topic/i18n

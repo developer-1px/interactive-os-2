@@ -22,3 +22,5 @@
 - **G3 위계**: pass - "Props", "Usage", "Demo"와 같이 주요 콘텐츠 섹션 제목은 글자 크기나 굵기를 통해 본문 콘텐츠보다 높은 위계를 점유하고 있음.
 
 ## Overall: good
+
+#kind/note #topic/research

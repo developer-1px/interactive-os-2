@@ -1,14 +1,15 @@
 ---
 id: ARCHITECTURE
 title: 'interactive-os — Architecture'
-status: meta
-kind: note
 created: 2026-03-23
 updated: 2026-04-13
 summary: 'Living snapshot. 고정이 아니라 "지금까지 발견된 것"의 스냅샷. **갱신 시점:** 레이어 경계 변경, 새 축/플러그인 추가, /retro 시 gap 반영. **재료:** naming-dictionary.md (식별자) + PROGRESS.md (maturity) + BACKLOGS.md (gap)'
-topics: []
-relates: []
-supersedes: []
+legacy:
+  status: meta
+  kind: note
+  topics: []
+  relates: []
+  supersedes: []
 ---
 # interactive-os — Architecture
 
@@ -248,3 +249,5 @@ graph TB
 | `PROGRESS.md` | 모듈 maturity + gap | 레이어 안의 모듈 상태 |
 | `BACKLOGS.md` | 미해결 과제 | 🔴 Gap의 상세 |
 | `.claude/naming-dictionary.md` | 식별자 전수 목록 | 레이어 내부 채우기 재료 |
+
+#kind/note

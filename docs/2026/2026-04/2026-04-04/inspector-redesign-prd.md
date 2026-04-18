@@ -1,14 +1,15 @@
 ---
 id: 1-projects/viewer/prds/inspector-redesign-prd
 title: 'Inspector 리디자인 — PRD'
-status: active
-kind: prd
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: 통합 ARIA 트리 + SplitPane + 3섹션 우측 패널 + ASCII 복사'
-topics: [1-projects, childrole, role]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects, childrole, role]
+  relates: []
+  supersedes: []
 ---
 # Inspector 리디자인 — PRD
 
@@ -126,3 +127,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟡 1/8
+
+#kind/prd #topic/viewer

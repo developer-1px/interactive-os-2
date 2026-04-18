@@ -1,14 +1,15 @@
 ---
 id: research/ax/README
 title: 'ax 메타 원리 연구 (research/ax/)'
-status: research
-kind: readme
 created: 2026-04-18
 updated: 2026-04-18
 summary: 'ax()를 "현대 UI 디자인 메타 원리의 공식 좌표계"로 정립하기 위한 연구 산출물 모음.'
-topics: [research]
-relates: []
-supersedes: []
+legacy:
+  status: research
+  kind: readme
+  topics: [research]
+  relates: []
+  supersedes: []
 ---
 # ax 메타 원리 연구 (research/ax/)
 
@@ -44,3 +45,5 @@ DESIGN.md 재편 (메타 원리 선언 → 24축 파생 증명)
 - `feedback_ax_semantic_not_css` — ax 축은 의도·역할 기준 (CSS 1:1 아님)
 - `feedback_role_axis_design` — role축=크기SSOT
 - `feedback_color_system` — 3층 색상 + accent + chroma 5단계
+
+#kind/note #topic/research

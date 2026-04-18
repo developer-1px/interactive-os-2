@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/prds/project-viewer-improve-task
 title: Project Viewer /improve Task
-status: active
-kind: plan
 created: 2026-04-06
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Project Viewer /improve Task
 
@@ -39,3 +40,5 @@ supersedes: []
 - 브라우저 스크린샷: 그룹 분리, P0 강조, open 강조 확인
 - Enter로 프로젝트 이동 확인
 - typecheck 통과
+
+#kind/plan #topic/viewer

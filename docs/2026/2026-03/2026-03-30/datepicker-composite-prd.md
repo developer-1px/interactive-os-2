@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/datepicker-composite-prd
 title: 'DatePicker Composite — PRD'
-status: active
-kind: prd
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: Gap 3 해소 — 바이브코딩에서 `<DatePicker />` 한 줄로 접근성 완전한 date picker 생산'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # DatePicker Composite — PRD
 
@@ -171,3 +172,5 @@ supersedes: []
 | CalendarGrid ui/ 완성품 | `src/interactive-os/ui/CalendarGrid.tsx` |
 | DatePicker ui/ 조합 완성품 | `src/interactive-os/ui/DatePicker.tsx` |
 | DatePicker 스타일 | `src/interactive-os/ui/DatePicker.module.css` |
+
+#kind/prd #topic/ui

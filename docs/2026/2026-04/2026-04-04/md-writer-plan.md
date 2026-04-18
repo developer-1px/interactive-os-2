@@ -1,14 +1,15 @@
 ---
 id: 1-projects/chat/prds/md-writer-plan
 title: MD Writer Implementation Plan
-status: active
-kind: plan
 created: 2026-04-04
 updated: 2026-04-08
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # MD Writer Implementation Plan
 
@@ -874,3 +875,5 @@ Expected: PASS
 git add src/__tests__/route-writer.screen.test.tsx
 git commit -m "test: PageWriter screen tests — empty state, tree load, view toggle"
 ```
+
+#kind/plan #topic/chat

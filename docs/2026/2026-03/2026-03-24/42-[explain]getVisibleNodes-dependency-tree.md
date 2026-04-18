@@ -1,14 +1,15 @@
 ---
 id: '4-archive/engine/archive/42-[explain]getVisibleNodes-dependency-tree'
 title: 'getVisibleNodes는 tree-only 가시성 함수인데 범용으로 쓰이고 있다'
-status: archived
-kind: explain
 created: 2026-03-24
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 맥락: NavList 사이드바에서 ArrowDown이 동작하지 않는 버그를 추적하다, getVisibleNodes의 설계 한계를 발견'
-topics: [4-archive, explain]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: explain
+  topics: [4-archive, explain]
+  relates: []
+  supersedes: []
 ---
 # getVisibleNodes는 tree-only 가시성 함수인데 범용으로 쓰이고 있다
 
@@ -184,3 +185,5 @@ flowchart TD
 2. `src/interactive-os/pattern/createPatternContext.ts:40-42` — lazy 캐시로 호출
 3. 쇼케이스에서 재현: `http://localhost:5173/ui/NavList` → Tab으로 사이드바 진입 → ArrowDown → 이동 안 됨
 4. 정상 동작 시: ArrowDown → `navlist` → `tab-list` → `menu-list` 순서로 포커스 이동
+
+#kind/explain #archived

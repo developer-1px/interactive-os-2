@@ -1,14 +1,15 @@
 ---
 id: '3-resources/06-[tooling]namingReport'
 title: Naming Report
-status: reference
-kind: tooling
 created: 2026-03-22
 updated: 2026-04-18
 summary: 'Generated: 2026-03-22'
-topics: [3-resources, tooling]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: tooling
+  topics: [3-resources, tooling]
+  relates: []
+  supersedes: []
 ---
 # Naming Report
 
@@ -304,3 +305,5 @@ supersedes: []
 | ToastData | 5 | getToasts(), next, snapshot, toast, toasts |
 | UseAriaReturn | 3 | useAria(), useAriaZone(), useControlledAria() |
 | ValueRange | 2 | range, valueRange |
+
+#kind/note #topic/tooling

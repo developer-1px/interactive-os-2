@@ -1,13 +1,14 @@
 ---
 id: 5-backlogs/modalPluginFlatLayout
 title: 'Modal을 os plugin + FlatLayout overlay로 통일 — 2026-04-11'
-status: backlog
-kind: note
 created: 2026-04-11
 updated: 2026-04-11
-topics: [5-backlogs]
-relates: []
-supersedes: []
+legacy:
+  status: backlog
+  kind: note
+  topics: [5-backlogs]
+  relates: []
+  supersedes: []
 ---
 # Modal을 os plugin + FlatLayout overlay로 통일 — 2026-04-11
 
@@ -32,3 +33,5 @@ Lightbox에서 dialog close 시 inline style 잔재 버그를 발견하면서, 4
 ## 출처
 
 Lightbox mermaid lightbox 구현 세션에서 발견 (2026-04-11). FlatLayout Phase2(ui/) 범위.
+
+#kind/note

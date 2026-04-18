@@ -1,14 +1,15 @@
 ---
 id: '4-archive/primitives/archive/33-[explain]useAria-triad'
 title: 'useAria · useAriaZone · useAriaView — 라인별 해설'
-status: archived
-kind: explain
 created: 2026-03-23
 updated: 2026-04-11
 summary: '작성일: 2026-03-23 맥락: useAria 리팩터 후 3개 hook의 역할 분담을 라인 단위로 해설'
-topics: [4-archive, explain]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: explain
+  topics: [4-archive, explain]
+  relates: []
+  supersedes: []
 ---
 # useAria · useAriaZone · useAriaView — 라인별 해설
 
@@ -668,3 +669,5 @@ graph LR
 | DOM focus sync | useAriaView.ts |
 | 새 NodeState 필드 추가 | useAriaView.ts |
 | containerProps 모드 추가 | useAriaView.ts |
+
+#kind/explain #archived

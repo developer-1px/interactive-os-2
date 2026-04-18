@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/a2ui-composites-prd
 title: 'A2UI Composites — PRD'
-status: active
-kind: prd
 created: 2026-04-07
 updated: 2026-04-08
 summary: 'Discussion: LLM이 Row/Column/Card 수준 레이아웃을 직접 설계하면 와이어프레임 수준에 머문다. 의도 수준 컴포넌트(composites)를 ui/ 하위에 추가하여 Pit of Success를 구조적으로 해결한다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # A2UI Composites — PRD
 
@@ -174,3 +175,5 @@ A2UI JSON → 렌더러 함수 인터페이스. 각 composite는 `A2UIComponentR
 3. **경계 ↔ 검증**: 8개 경계 → V6~V10으로 주요 엣지케이스 커버 ✅
 4. **금지 ↔ 출처**: 6개 금지 모두 ⑤/⑥에서 파생, 출처 유효 ✅
 5. **원칙 대조 ↔ 전체**: 위반 없음, 수정 불필요 ✅
+
+#kind/prd #topic/ui

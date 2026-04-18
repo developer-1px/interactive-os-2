@@ -1,13 +1,14 @@
 ---
 id: '4-archive/ui/archive/60-[retro]chatModule'
 title: 'Retro: Gen UI Chat Module — 2026-03-27'
-status: archived
-kind: retro
 created: 2026-03-27
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: Gen UI Chat Module — 2026-03-27
 
@@ -69,3 +70,5 @@ supersedes: []
 ## 다음 행동
 - L1 백로그 → viewer 기능 복원은 별도 사이클
 - CSS 토큰 위반 → 이미 수정 완료
+
+#kind/retro #archived

@@ -1,14 +1,15 @@
 ---
 id: '3-resources/39-[methodology]universalProjectProfile'
 title: '범용 프로젝트 프로필의 이상적 모습'
-status: reference
-kind: methodology
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 맥락: 스킬 에코시스템 범용화를 위해, "프로젝트 설정 레이어"가 어떤 모습이어야 하는지를 시뮬레이션'
-topics: [3-resources, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: methodology
+  topics: [3-resources, methodology]
+  relates: []
+  supersedes: []
 ---
 # 범용 프로젝트 프로필의 이상적 모습
 
@@ -302,3 +303,5 @@ stateDiagram-v2
 2. **첫 번째 조작**: inbox 스킬에서 경로 하드코딩을 `project.yml 참조`로 교체
 3. **핵심 시나리오**: 새 프로젝트(project.yml 없음)에서 `/inbox` 실행 → 기본값으로 동작 확인
 4. **확인 포인트**: 같은 스킬이 aria에서는 `docs/0-inbox/`에, 빈 프로젝트에서는 `./`에 저장
+
+#kind/note #topic/methodology

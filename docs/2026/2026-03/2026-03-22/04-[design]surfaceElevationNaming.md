@@ -1,14 +1,15 @@
 ---
 id: '3-resources/04-[design]surfaceElevationNaming'
 title: 'Surface/Elevation 네이밍 체계 — 주요 디자인 시스템 비교'
-status: reference
-kind: design
 created: 2026-03-22
 updated: 2026-03-24
 summary: '작성일: 2026-03-22 맥락: interactive-os의 surface level 이름을 업계 표준에 맞추기 위해, 주요 디자인 시스템의 네이밍 체계를 비교 조사'
-topics: [3-resources, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, design]
+  relates: []
+  supersedes: []
 ---
 # Surface/Elevation 네이밍 체계 — 주요 디자인 시스템 비교
 
@@ -241,3 +242,5 @@ interactive-os가 원하는 "surface 하나로 bg+border+shadow 번들"은 **Atl
 | 5 | [Primer Color Overview](https://primer.style/foundations/color/overview/) | 공식 문서 | bgColor-default/muted/inset 3단계 |
 | 6 | [Apple HIG Materials](https://developer.apple.com/design/human-interface-guidelines/materials) | 공식 문서 | ultra-thin~ultra-thick 물리적 두께 메타포 |
 | 7 | [Elevation Design Patterns](https://designsystems.surf/articles/depth-with-purpose-how-elevation-adds-realism-and-hierarchy) | 블로그 | 시스템 간 비교, semantic vs numeric 전략 분석 |
+
+#kind/note #topic/design

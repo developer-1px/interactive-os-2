@@ -1,14 +1,15 @@
 ---
 id: 2-areas/axis/prds/spatial-navigate-prd
 title: 'Spatial Navigate — PRD'
-status: active
-kind: prd
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: 2D 공간 탐색(TV 리모컨 방향키)을 os 기본기로 승격. navigate 축에 spatial 전략 추가, DOM rect 기반 방향키 이동 + cross-boundary + sticky cursor를 os가 자동 처리.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Spatial Navigate — PRD
 
@@ -146,3 +147,5 @@ supersedes: []
 | spatialAlgorithm | `primitives/spatialAlgorithm.ts` — 순수 공간 탐색 알고리즘 |
 | misc/spatial 마이그레이션 | `misc/spatial.ts` — navigate('spatial') 사용 |
 | 테스트 | `__tests__/spatial-navigate.test.tsx` |
+
+#kind/prd #topic/axis

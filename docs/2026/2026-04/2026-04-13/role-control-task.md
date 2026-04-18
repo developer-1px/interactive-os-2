@@ -1,13 +1,14 @@
 ---
 id: 0-inbox/role-control-task
 title: 'role: ''control'' 축 도입 — size: ''md'' 단일 크기'
-status: inbox
-kind: plan
 created: 2026-04-13
 updated: 2026-04-13
-topics: [0-inbox]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: plan
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # role: 'control' 축 도입 — size: 'md' 단일 크기
 
@@ -169,3 +170,5 @@ const axes = { ...variantAxes[variant], role: 'control' } as Axes
 - StreamFeed FAB → pill shape 컨트롤 필요
 - FlatLayout.tsx:85-101 탭 버튼 → role: 'item' 영역 (control 아님)
 - pages/ 마이그레이션
+
+#kind/plan

@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/workspace
 title: Workspace
-status: active
-kind: note
 created: 2026-03-27
 updated: 2026-03-27
 summary: 'SplitPane + TabGroup 재귀 오케스트레이터. cmux/IDE 스타일 분할 워크스페이스.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Workspace
 
@@ -177,3 +178,5 @@ WorkspaceNode(nodeId)
 | PageAgentChat | 채팅 세션 멀티플렉서 | syncFromExternal(sessions) | splitAndAddTab |
 | PageAgentViewer | Agent 세션 + 파일 뷰어 | syncFromExternal(sessions, filter) + openTab(files) | splitAndAddTab |
 | PageComponentCreator | 고정 3-pane (Canvas \| Code \| Chat) | createCreatorWorkspace 초기 데이터 | — |
+
+#kind/note #topic/ui

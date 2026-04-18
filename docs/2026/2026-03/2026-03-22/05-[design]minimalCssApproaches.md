@@ -1,14 +1,15 @@
 ---
 id: '3-resources/05-[design]minimalCssApproaches'
 title: 'Minimal CSS 접근법 — 최소한의 CSS로 기본 UI를 커버하는 방법론'
-status: reference
-kind: design
 created: 2026-03-22
 updated: 2026-03-24
 summary: '작성일: 2026-03-22 맥락: interactive-os UI 컴포넌트의 base 디자인을 잡되, 22개 개별 CSS를 관리하지 않고 최소한의 공통 CSS로 전체를 커버하는 방법을 찾기 위해'
-topics: [3-resources, data-focused, data-pressed, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, data-focused, data-pressed, design]
+  relates: []
+  supersedes: []
 ---
 # Minimal CSS 접근법 — 최소한의 CSS로 기본 UI를 커버하는 방법론
 
@@ -217,3 +218,5 @@ surface + semantic color + spacing + radius = Open Props의 핵심 카테고리�
 | 5 | [Radix Primitives Styling](https://www.radix-ui.com/primitives/docs/guides/styling) | 공식 문서 | data-state 속성 기반 스타일링, unstyled primitives |
 | 6 | [Classless CSS List](https://github.com/dbohdan/classless-css) | GitHub | classless CSS 프레임워크 목록과 비교 |
 | 7 | [The wasted potential of CSS attribute selectors](https://elisehe.in/2022/10/16/attribute-selectors) | 블로그 | CSS attribute 셀렉터의 활용 가능성 분석 |
+
+#kind/note #topic/design

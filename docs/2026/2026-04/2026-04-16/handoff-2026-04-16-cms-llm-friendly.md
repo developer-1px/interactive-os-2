@@ -1,16 +1,16 @@
 ---
 id: 0-inbox/handoff-2026-04-16-cms-llm-friendly
 title: 'Handoff: CMS LLM 친화적 접근성 개선'
-status: inbox
-kind: handoff
 created: 2026-04-16
 updated: 2026-04-18
 summary: 'LLM 브라우저 자동화 에이전트가 CMS를 효율적으로 조작할 수 있도록 aria-label, field name, breadcrumb, window.cms API 4가지를 추가했다.'
-topics: [0-inbox]
-relates: []
-supersedes: []
 legacy:
   created_at: 2026-04-16
+  status: inbox
+  kind: handoff
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Handoff: CMS LLM 친화적 접근성 개선
 
@@ -56,3 +56,5 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: `window.cms.list()` 콘솔 실행으로 API 동작 확인
+
+#kind/handoff

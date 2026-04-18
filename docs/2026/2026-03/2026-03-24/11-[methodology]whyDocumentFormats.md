@@ -1,14 +1,15 @@
 ---
 id: '3-resources/11-[methodology]whyDocumentFormats'
 title: 'WHY를 구조적으로 기록하는 IT 문서 산출물 — 비교 분석'
-status: reference
-kind: methodology
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-24 맥락: PRD에 discuss의 WHY가 구조적으로 이식되도록 개선하려는 논의에서, 업계 대표 WHY 기록 형식을 조사'
-topics: [3-resources, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: methodology
+  topics: [3-resources, methodology]
+  relates: []
+  supersedes: []
 ---
 # WHY를 구조적으로 기록하는 IT 문서 산출물 — 비교 분석
 
@@ -289,3 +290,5 @@ graph TB
 2. **discuss 이해도 테이블 대조** — 같은 주제의 discuss 대화에서 "목적, 원인, 제약, 목표"가 PRD에 얼마나 이식됐는지 비교
 3. **Y-Statement 시도** — 하나의 동기 행을 "In the context of X, facing Y, we decided for Z, accepting W, because U" 패턴으로 다시 써보기
 4. **갭 확인** — Forces(충돌하는 힘)와 Decision Rationale(기각된 대안)이 어디에도 없다면, 그게 현재 구조의 정확한 빈칸
+
+#kind/note #topic/methodology

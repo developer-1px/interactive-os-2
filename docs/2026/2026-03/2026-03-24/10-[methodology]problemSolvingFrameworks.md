@@ -1,14 +1,15 @@
 ---
 id: '3-resources/10-[methodology]problemSolvingFrameworks'
 title: '구조적 문제해결 프레임워크 비교 — TOC와 유사한 방법론들'
-status: reference
-kind: methodology
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-24 맥락: discussion 스킬이 TOC Thinking Processes를 기반으로 하는데, 다른 구조적 문제해결 방법론에서 차용할 수 있는 요소가 있는지 탐색'
-topics: [3-resources, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: methodology
+  topics: [3-resources, methodology]
+  relates: []
+  supersedes: []
 ---
 # 구조적 문제해결 프레임워크 비교 — TOC와 유사한 방법론들
 
@@ -231,3 +232,5 @@ graph LR
 2. 원인(6)이 🟡 정체하면 "어디서는 되고 어디서는 안 되는가?" (IS/IS NOT) 질문을 시도한다
 3. `/conflict`에서 전제를 깬 후 해결책이 안 나오면, TRIZ 분리 원리(시간/공간/조건/부분-전체)를 힌트로 활용한다
 4. 대화가 산만해지면 "지금 발산 모드인가 수렴 모드인가?"를 자문한다
+
+#kind/note #topic/methodology

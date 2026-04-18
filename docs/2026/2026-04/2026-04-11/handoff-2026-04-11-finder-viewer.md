@@ -1,14 +1,15 @@
 ---
 id: 4-archive/meta/archive/handoff-2026-04-11-finder-viewer
 title: 'Handoff: Finder Viewer'
-status: archived
-kind: handoff
 created: 2026-04-11
 updated: 2026-04-18
 summary: 'consumed_by: 7a4c6d1d (FilePreview OCP 통합)'
-topics: [4-archive]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: handoff
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 # Handoff: Finder Viewer
 
@@ -53,3 +54,5 @@ consumed_by: 7a4c6d1d (FilePreview OCP 통합)
 
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 구체적으로: 사이드바 Recents + Layers 추가 (기획 합의 완료, sidebarData 확장만으로 구현 가능)
+
+#kind/handoff #archived

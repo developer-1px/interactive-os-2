@@ -1,14 +1,15 @@
 ---
 id: superpowers/specs/2026-04-17-catalog-unified-studio-design
 title: 'Catalog 통합뷰 설계 (Unified Studio)'
-status: meta
-kind: note
 created: 2026-04-17
 updated: 2026-04-17
 summary: '- 작성일: 2026-04-17 - 라우트: `/catalog` 확장 - 목표: 컴포넌트 demo·커버리지·문서를 한 화면에서 보고 편집'
-topics: [superpowers]
-relates: []
-supersedes: []
+legacy:
+  status: meta
+  kind: note
+  topics: [superpowers]
+  relates: []
+  supersedes: []
 ---
 # Catalog 통합뷰 설계 (Unified Studio)
 
@@ -130,3 +131,5 @@ src/server/
 - 스캐너 단위 테스트: 샘플 fixture 컴포넌트 → 예상 `CatalogEntry` 일치
 - 통합 테스트: `/catalog` 라우트 행 선택 → 우측 탭 렌더 검증
 - scaffold API는 임시 디렉토리에서 파일 쓰기 검증
+
+#kind/note

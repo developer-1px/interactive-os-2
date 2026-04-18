@@ -1,14 +1,15 @@
 ---
 id: 3-resources/featureLedger
 title: 'Feature Ledger — 누적적 자기설명 문서의 기존 개념 지도'
-status: reference
-kind: note
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-25 맥락: interactive-os 스킬 파이프라인에서 "MD를 쓰면 끝"을 만들려는데, feature 단위의 누적 관리 개념이 필요'
-topics: [3-resources]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: note
+  topics: [3-resources]
+  relates: []
+  supersedes: []
 ---
 # Feature Ledger — 누적적 자기설명 문서의 기존 개념 지도
 
@@ -224,3 +225,5 @@ graph TD
 2. Living Documentation이 작동하는 곳: `ShowcaseDemo`가 실제 컴포넌트를 렌더 → 코드 변경 시 데모도 자동 변경
 3. **빠진 곳**: `docs/2-areas/ui/` 23개 MD 중 데모 블록이 있는 것과 없는 것을 비교하면 완전성 갭이 보임
 4. 확인 포인트: `/ui/listbox`에서 Demo + Test + Keyboard + Props가 모두 보이면 해당 feature는 "완전". 하나라도 비면 feature ledger에 ❌
+
+#kind/note

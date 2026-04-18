@@ -1,13 +1,14 @@
 ---
 id: 1-projects/chat/prds/writer-multiselect-clipboard-task
 title: Writer Multi-Select Clipboard
-status: active
-kind: plan
 created: 2026-04-04
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Writer Multi-Select Clipboard
 
@@ -23,3 +24,5 @@ Writer에서 멀티 셀렉트 후 copy/cut/paste가 기존 clipboard plugin으�
 2. **Mod+D multi-select 대응** — `clipboard.ts` keyMap
    - `ctx.selected?.ids` 있으면 전체 복제
 3. **Verify** — typecheck, lint, test 통과
+
+#kind/plan #topic/chat

@@ -1,15 +1,15 @@
 ---
 id: 0-inbox/minto-ai-dev-mentoring
 title: 'AI 시대 개발자 지망생을 위한 멘토링'
-status: inbox
-kind: note
 created: 2026-04-12
 updated: 2026-04-12
-topics: [0-inbox]
-relates: []
-supersedes: []
 legacy:
   stage: phase2
+  status: inbox
+  kind: note
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 ## 의도
 
@@ -389,3 +389,5 @@ LLM 모델의 성능이 좋아지고 AI를 다루는 노하우들이 쌓이면�
 | 미배치-11 | — | 결혼정보회사 비유 — 후보를 줘도 선택은 내가 | 🔴 | P3-1 D3 부속 비유 제목만 존재, 실제 원문 없음 |
 | 미배치-12 | — | 개발자 역할 계층 — 불편/워크플로/물건/서빙/도구/인프라/복잡성 | 🔴 | P3-1 결론 직후 마무리 훅 제목만 존재, 실제 원문 없음 |
 | 미배치-13 | — | 주어진 대로 쓰려 하지 마십시오. 스킬로 만들어 보시고, 스킬로 인해 나아지는 점과 오히려 안 좋아지는 점을 직접 체득하십시오. 왜냐하면 우리는 개발자이지 유저가 아니니까요 | 🟡 | 4.2.3으로 실질 흡수됨, 엄밀히는 별도 문장 |
+
+#kind/note

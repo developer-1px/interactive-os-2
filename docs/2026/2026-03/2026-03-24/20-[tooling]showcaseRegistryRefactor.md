@@ -1,13 +1,14 @@
 ---
 id: '3-resources/20-[tooling]showcaseRegistryRefactor'
 title: 'showcaseRegistry 의존성 트리 — 2026-03-25'
-status: reference
-kind: tooling
 created: 2026-03-24
 updated: 2026-03-25
-topics: [3-resources, tooling]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: tooling
+  topics: [3-resources, tooling]
+  relates: []
+  supersedes: []
 ---
 # showcaseRegistry 의존성 트리 — 2026-03-25
 
@@ -57,3 +58,5 @@ MD SSOT 전환을 위해 `showcaseRegistry.tsx`의 각 필드가 어디서 소�
 - name/description/usage는 MD에서만 관리
 - apg는 별도 매핑(`apgBySlug`)으로 분리하면 registry 의존 끊김
 - `slugToMdFile` 매핑은 convention(`slug → PascalCase`) 자동화 검토
+
+#kind/note #topic/tooling

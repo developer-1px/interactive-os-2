@@ -1,14 +1,15 @@
 ---
 id: '3-resources/26-[pattern]globalShortcutArchitecture'
 title: '전역 키보드 단축키 아키텍처 — 업계 패턴 조사'
-status: reference
-kind: pattern
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: interactive-os의 keyMap-only Aria가 DOM 서브트리 스코프라서 전역 단축키에 도달하지 못하는 문제. 설계 원칙(선언적 OCP)을 지키면서 전역 도달을 양립시키는 패턴을 조사.'
-topics: [3-resources, pattern]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: pattern
+  topics: [3-resources, pattern]
+  relates: []
+  supersedes: []
 ---
 # 전역 키보드 단축키 아키텍처 — 업계 패턴 조사
 
@@ -227,3 +228,5 @@ flowchart TD
 2. **react-hotkeys 코드 확인**: [GitHub README](https://github.com/greena13/react-hotkeys) → `<GlobalHotKeys>` vs `<HotKeys>` 사용 예시 비교
 3. **tinykeys 코드 확인**: [GitHub source](https://github.com/jamiebuilds/tinykeys/blob/main/src/tinykeys.ts) → 100줄 미만의 전체 구현 읽기
 4. **프로젝트 대입**: `src/interactive-os/primitives/useAriaView.ts:258-265` (keyMap-only 경로) → 이것이 react-hotkeys의 `<HotKeys>` (Scoped)에 해당. `<GlobalHotKeys>`에 해당하는 것이 없음을 확인
+
+#kind/note #topic/pattern

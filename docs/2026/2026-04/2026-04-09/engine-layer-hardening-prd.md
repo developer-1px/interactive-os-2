@@ -1,14 +1,15 @@
 ---
 id: 2-areas/engine/prds/engine-layer-hardening-prd
 title: 'Engine Layer Hardening — PRD'
-status: active
-kind: prd
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: 3-에이전트 엔진 검토에서 도출. 레이어 의존 역전, 정확성 버그, 타입 안전성 갭 7건을 구조적으로 수정한다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Engine Layer Hardening — PRD
 
@@ -141,3 +142,5 @@ supersedes: []
 | 1 | inspectToTree + computeNodeAriaProps → devtools/ 이동 | Low | 5 |
 | 2 | useEngine axis import 제거 → coreRegistry 주입 | High | 6 |
 | 3 | Plugin/buildRegistry 타입 강화 + defineCommand as never 제거 | Medium | 3 |
+
+#kind/prd #topic/engine

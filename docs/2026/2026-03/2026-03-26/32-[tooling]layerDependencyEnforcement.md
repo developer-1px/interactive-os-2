@@ -1,14 +1,15 @@
 ---
 id: '3-resources/32-[tooling]layerDependencyEnforcement'
 title: 'TS 레이어 의존성 강제 도구 — 자체 스크립트 vs 표준 도구'
-status: reference
-kind: tooling
 created: 2026-03-26
 updated: 2026-03-26
 summary: '작성일: 2026-03-26 맥락: checkLayerDeps.mjs 자체 스크립트(147줄)로 레이어 역참조를 감지 중. 표준 도구로 교체 가능한지 조사.'
-topics: [3-resources, tooling]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: tooling
+  topics: [3-resources, tooling]
+  relates: []
+  supersedes: []
 ---
 # TS 레이어 의존성 강제 도구 — 자체 스크립트 vs 표준 도구
 
@@ -213,3 +214,5 @@ npx depcruise src/interactive-os --config .dependency-cruiser.cjs --output-type 
 3. `npx depcruise src/interactive-os --config .dependency-cruiser.cjs` 실행 — 현재 위반 확인
 4. 위반 0개이면 `package.json` scripts에 등록, `checkLayerDeps.mjs` 제거
 5. `npx depcruise src/interactive-os --output-type dot | dot -T svg > deps.svg`로 의존 그래프 시각화 확인
+
+#kind/note #topic/tooling

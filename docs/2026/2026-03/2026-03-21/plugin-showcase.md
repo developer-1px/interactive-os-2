@@ -1,14 +1,15 @@
 ---
 id: 2-areas/plugin-showcase
 title: Plugin Showcase
-status: active
-kind: note
 created: 2026-03-21
 updated: 2026-03-21
 summary: '최종 갱신: 2026-03-21 (retro: plugin-showcase-gap-phase2)'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Plugin Showcase
 
@@ -41,3 +42,5 @@ supersedes: []
 
 - experience_db #1: showcase 데모 데이터가 텍스트 최소 조건 미충족
 - experience_db #2: 키힌트와 UI 래퍼 불일치
+
+#kind/note

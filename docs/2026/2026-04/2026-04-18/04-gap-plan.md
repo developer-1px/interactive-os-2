@@ -1,14 +1,15 @@
 ---
 id: research/ax/04-gap-plan
 title: '04 Gap Plan — 원리 × 7 Enforcement Layer + 보정 로드맵'
-status: research
-kind: plan
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**작성일:** 2026-04-18 **입력:** `02-principles.md` (20 원리) + `03-ax-mapping.md` (현재 상태 판정) + `feedback_enforcement_multilayer` memory **목적:** 원리별 **7 enforcement layer** 현재/이상 상태 매핑 → 보정 액션 P0~P3 우선순위화 → DESIGN.md 재편 플랜'
-topics: [research]
-relates: []
-supersedes: []
+legacy:
+  status: research
+  kind: plan
+  topics: [research]
+  relates: []
+  supersedes: []
 ---
 # 04 Gap Plan — 원리 × 7 Enforcement Layer + 보정 로드맵
 
@@ -397,3 +398,5 @@ Q1~Q4는 원리 자체 해석보다 **구현 선택지**. 02 카드는 "원리"�
 - `docs/DESIGN.md` (재편, §6)
 - `02-principles.md` P-16 카드 (P0)
 - `agents/design-review.md` 프롬프트 (P3)
+
+#kind/plan #topic/research

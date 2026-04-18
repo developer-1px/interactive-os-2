@@ -1,18 +1,18 @@
 ---
 id: 0-inbox/handoff-2026-04-16-keyline-audit
 title: 'Handoff: keyline audit 파이프라인 구축'
-status: inbox
-kind: handoff
 created: 2026-04-16
 updated: 2026-04-16
 summary: 'keylineCheck.mjs에 --audit 모드를 추가하고 /keyline-audit 스킬을 만들어, AI가 시각적 완성도 판정 → 정적 keyline 검증 → 토큰 수정 리포트를 자율 실행하는 수렴 루프 인프라를 구축했다.'
-topics: [0-inbox]
-relates: []
-supersedes: []
 legacy:
   created_at: 2026-04-16
   consumed_by: 2026-04-16-handoff-resume
   consumed_at: 2026-04-16
+  status: inbox
+  kind: handoff
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Handoff: keyline audit 파이프라인 구축
 
@@ -59,3 +59,5 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: `cd ~/Desktop/plugin-repo && git add skills/keyline-audit/ && git commit`
+
+#kind/handoff

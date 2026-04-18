@@ -1,13 +1,14 @@
 ---
 id: 2-areas/design/prds/keyline-audit-task
 title: 'Keyline Audit 파이프라인'
-status: active
-kind: plan
 created: 2026-04-15
 updated: 2026-04-15
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Keyline Audit 파이프라인
 
@@ -55,3 +56,5 @@ discuss 결론: keyline 기반 수렴 루프를 만든다.
 - [ ] badge의 minHeight 기대값이 ROLE_KEYLINES에 추가된다
 - [ ] /keyline-audit 스킬이 전체 파이프라인을 오케스트레이션한다
 - [ ] pnpm typecheck 0 에러
+
+#kind/plan #topic/design

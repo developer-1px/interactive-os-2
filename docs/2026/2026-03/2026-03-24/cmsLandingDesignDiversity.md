@@ -1,13 +1,14 @@
 ---
 id: 5-backlogs/cmsLandingDesignDiversity
 title: 'CMS 랜딩 디자인 다양화 — 2026-03-24'
-status: backlog
-kind: note
 created: 2026-03-24
 updated: 2026-03-24
-topics: [5-backlogs, explain]
-relates: []
-supersedes: []
+legacy:
+  status: backlog
+  kind: note
+  topics: [5-backlogs, explain]
+  relates: []
+  supersedes: []
 ---
 # CMS 랜딩 디자인 다양화 — 2026-03-24
 
@@ -86,3 +87,5 @@ supersedes: []
 - `src/styles/landingTokens.css` — 랜딩 전용 번들 토큰 (독자 관리)
 - `DESIGN.md` — 디자인 시스템 명세
 - `docs/0-inbox/39-[explain]interactive-os-architecture.md` — 컨텐츠 소스
+
+#kind/note

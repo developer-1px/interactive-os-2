@@ -1,13 +1,14 @@
 ---
 id: 1-projects/chat/prds/writer-xray-task
 title: 'Writer 엑스레이 — 구조 시각화 Phase 1'
-status: active
-kind: plan
 created: 2026-04-06
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Writer 엑스레이 — 구조 시각화 Phase 1
 
@@ -46,3 +47,5 @@ Discussion에서 수렴: "글의 엑스레이" — 문장 역할을 색으로, �
 - `src/pages/writer/writerChatBridge.ts` — applyRoles → applyAnalysis
 - `src/pages/writer/PageWriter.tsx` — Command 추가, 시각화
 - `src/interactive-os/ui/WriterTreeGrid.tsx` — role 색상 렌더링 (있다면)
+
+#kind/plan #topic/chat

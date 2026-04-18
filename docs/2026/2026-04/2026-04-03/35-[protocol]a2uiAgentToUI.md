@@ -1,14 +1,15 @@
 ---
 id: '3-resources/35-[protocol]a2uiAgentToUI'
 title: 'A2UI (Agent-to-UI) Protocol — 에이전트가 선언적 JSON으로 UI를 말하는 프로토콜'
-status: reference
-kind: protocol
 created: 2026-04-03
 updated: 2026-04-03
 summary: '작성일: 2026-04-04 맥락: interactive-os의 ARIA-first UI 컴포넌트가 A2UI 렌더러가 될 수 있는지 매핑 가능성 분석'
-topics: [3-resources, parentid, protocol, slotname]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: protocol
+  topics: [3-resources, parentid, protocol, slotname]
+  relates: []
+  supersedes: []
 ---
 # A2UI (Agent-to-UI) Protocol — 에이전트가 선언적 JSON으로 UI를 말하는 프로토콜
 
@@ -311,3 +312,5 @@ graph TB
 2. **우리 store와 비교**: `src/interactive-os/store/types.ts`의 `NormalizedData`를 열고, A2UI의 flat component list가 entities + relationships로 어떻게 변환되는지 머릿속으로 매핑한다
 3. **컴포넌트 대조**: `src/interactive-os/ui/` 디렉토리를 열고, 위 매핑 테이블의 15종이 실제로 존재하는지 확인한다
 4. **커스텀 카탈로그 구상**: A2UI Basic Catalog에 없는 TreeView, Combobox, Grid를 JSON Schema로 정의하면 어떤 props가 필요한지 스케치한다
+
+#kind/note #topic/protocol

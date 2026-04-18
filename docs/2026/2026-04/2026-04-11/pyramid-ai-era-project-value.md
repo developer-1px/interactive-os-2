@@ -1,13 +1,14 @@
 ---
 id: 0-inbox/pyramid-ai-era-project-value
 title: 'AI 시대 이 프로젝트가 중요한 이유'
-status: building
-kind: pyramid
 created: 2026-04-11
 updated: 2026-04-18
-topics: [0-inbox]
-relates: []
-supersedes: []
+legacy:
+  status: building
+  kind: pyramid
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # AI 시대 이 프로젝트가 중요한 이유
 
@@ -263,3 +264,5 @@ graph TD
 
 - [ ] 🏗️ D 타입 위계 불일치 — D28@3,D25@3,D26@3,D27@3,D23@3,D22@3,D24@3 vs D10@8, depth 차이 5
 - [ ] 📊 A1(LLM이 UI를 조립할 수 있는 선언적 기반을…) 자손 25개 — 서브 슬라이드 분할 검토
+
+#kind/pyramid

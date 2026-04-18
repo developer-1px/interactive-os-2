@@ -1,14 +1,15 @@
 ---
 id: 1-projects/chat/prds/streaming-text-block-prd
 title: 'StreamingTextBlock — PRD'
-status: active
-kind: prd
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: streamingText가 매 토큰마다 MarkdownViewer 전체 재파싱 → 끊김 발생. 줄 단위(\n) flush + 200ms timeout fallback. 완료 후 MarkdownViewer 1회 파싱.'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # StreamingTextBlock — PRD
 
@@ -118,3 +119,5 @@ supersedes: []
 - ②↔③: StreamingTextBlock이 content prop으로 flush 로직 소유 ✅
 - ④↔⑧: 미완성 코드 펜스, 잔여 버퍼 모두 검증에 포함 ✅
 - ⑦↔⑤⑥: 금지 출처 전부 유효 ✅
+
+#kind/prd #topic/chat

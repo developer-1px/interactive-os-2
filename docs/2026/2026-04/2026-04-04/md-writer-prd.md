@@ -1,14 +1,15 @@
 ---
 id: 1-projects/chat/prds/md-writer-prd
 title: 'MD Writer — PRD'
-status: active
-kind: prd
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: MD 파일 기반 구조적 글쓰기 + AI 보조 캔버스. 트리로 구조 편집, viewer로 산문 프리뷰, chat으로 AI 수정, 파일 양방향 동기화.'
-topics: [1-projects, x]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects, x]
+  relates: []
+  supersedes: []
 ---
 # MD Writer — PRD
 
@@ -157,3 +158,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🔴 1/8
+
+#kind/prd #topic/chat

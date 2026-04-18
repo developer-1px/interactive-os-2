@@ -1,14 +1,15 @@
 ---
 id: 2-areas/styles/prds/ax-public-private-split-prd
 title: 'ax Public/Private 2계층 분리 — Blueprint'
-status: active
-kind: prd
 created: 2026-04-17
 updated: 2026-04-17
 summary: '**Discussion**: 이번 세션 /discuss 결과 — ax 24축 → Public 3축 + Private 프리셋 주입 **산출물 유형**: 엔진 / 리팩토링 **규모 추정**: 파일 ~5개 신규, ~10개 수정, 마이그레이션 139 데모'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # ax Public/Private 2계층 분리 — Blueprint
 
@@ -933,3 +934,4 @@ flowchart LR
 
 감사 기준: CLAUDE.md §2·§3 + DESIGN.md SSOT 존중 + MEMORY.md feedback 번들(ax/css/role/harness). 본 PRD는 엔진 레이어 리팩토링으로 UI 카탈로그 영향 없음.
 
+#kind/prd #topic/styles

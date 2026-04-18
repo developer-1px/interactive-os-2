@@ -1,13 +1,14 @@
 ---
 id: 4-archive/primitives/archive/listboxGroupedApgStructure
 title: 'listboxGrouped APG 구조 불일치 — 2026-03-28'
-status: archived
-kind: note
 created: 2026-03-28
 updated: 2026-04-11
-topics: [4-archive]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: note
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 > ✅ 완료 — 2026-03-29
 
@@ -55,3 +56,5 @@ APG Listbox Grouped Example의 실제 HTML을 확인한 결과, 현재 구현과
 ## 출처
 
 2026-03-28 세션 — APG 원본 HTML 확인 결과
+
+#kind/note #archived

@@ -1,15 +1,9 @@
 ---
 id: chat-module
 title: 'Agent Chat (Gen UI)'
-status: prototype
-kind: note
 created: 2026-01
 updated: 2026-04-17
 summary: 'Anthropic Agent SDK + WebSocket 기반 채팅. Phase A는 텍스트, Phase B/C에서 tool UI·permission·인터랙티브 Gen UI 블록.'
-topics: [1-projects, agent-sdk, chat, gen-ui, websocket]
-parent: null
-relates: []
-supersedes: []
 legacy:
   name: 'Agent Chat (Gen UI)'
   slug: chat-module
@@ -21,6 +15,12 @@ legacy:
   handoffs: []
   tags: [chat, gen-ui, agent-sdk, websocket]
   last_touched: 2026-04-10
+  status: prototype
+  kind: note
+  topics: [1-projects, agent-sdk, chat, gen-ui, websocket]
+  parent: null
+  relates: []
+  supersedes: []
 ---
 # Agent Chat
 
@@ -37,3 +37,5 @@ Anthropic Agent SDK + WebSocket 기반 채팅. Phase A는 텍스트, Phase B/C�
 ## Gaps
 - [ ] tool_use / tool_result 인터랙티브 블록 UI
 - [ ] permission 모달 (도구 실행 사전 승인)
+
+#kind/note #topic/features

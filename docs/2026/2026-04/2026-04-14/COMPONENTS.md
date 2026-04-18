@@ -1,14 +1,15 @@
 ---
 id: COMPONENTS
 title: Universal Component Domain Dictionary
-status: meta
-kind: note
 created: 2026-04-14
 updated: 2026-04-14
 summary: 'aria-os 컴포넌트와 7개 주요 라이브러리의 교차 매핑 사전. 생성일: 2026-04-14'
-topics: []
-relates: []
-supersedes: []
+legacy:
+  status: meta
+  kind: note
+  topics: []
+  relates: []
+  supersedes: []
 ---
 # Universal Component Domain Dictionary
 
@@ -235,3 +236,5 @@ supersedes: []
 | **Total** | **124** | **75** | **60%** |
 
 > **Note**: 2026-04-14 — 10개 GAP 컴포넌트 일괄 구현으로 52% → 60% 달성. 남은 GAP은 ax()로 대체 가능한 CSS 유틸(Typography, Stack)뿐.
+
+#kind/note

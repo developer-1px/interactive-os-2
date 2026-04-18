@@ -1,13 +1,14 @@
 ---
 id: '4-archive/meta/archive/28-[vision]architecture-snapshot'
 title: 'Architecture Snapshot — 2026-03-23'
-status: archived
-kind: vision
 created: 2026-03-23
 updated: 2026-04-11
-topics: [4-archive, vision]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: vision
+  topics: [4-archive, vision]
+  relates: []
+  supersedes: []
 ---
 # Architecture Snapshot — 2026-03-23
 
@@ -218,3 +219,5 @@ graph TB
 ## 다음 행동
 
 - 이 그림을 기반으로 discussion 계속 — gap의 우선순위, 계층 경계의 근거 정리
+
+#kind/note #topic/vision #archived

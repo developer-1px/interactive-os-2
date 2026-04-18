@@ -1,14 +1,15 @@
 ---
 id: '3-resources/22-[design]aestheticScoring'
 title: '디자인 미감 자동 점수화 — 구조적 품질 측정 도구와 방법론'
-status: reference
-kind: design
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: 프리미티브 프리뷰 페이지에서 "비율이 안 좋다"는 피드백 → 사람 의존 루프를 자동 점수로 대체할 수 있는가?'
-topics: [3-resources, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, design]
+  relates: []
+  supersedes: []
 ---
 # 디자인 미감 자동 점수화 — 구조적 품질 측정 도구와 방법론
 
@@ -239,3 +240,5 @@ pnpm score:aesthetics → 점수(0~100) → /improve가 낮은 항목 식별 →
 2. `src/styles/tokens.css`의 DESIGN.md §3 조합 규칙 10개 → 각각 grep/AST로 검사 가능한지 판단
 3. Stylelint 설정(`stylelint.config.js`) 확인 — 커스텀 플러그인 추가 지점
 4. `/improve` 스킬의 루프 구조 확인 — score 스크립트 교체만으로 aesthetics 루프 가능
+
+#kind/note #topic/design

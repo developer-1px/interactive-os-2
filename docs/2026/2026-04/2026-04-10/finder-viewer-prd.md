@@ -1,14 +1,15 @@
 ---
 id: 1-projects/finder-viewer/prds/finder-viewer-prd
 title: 'Finder Viewer — PRD'
-status: active
-kind: prd
 created: 2026-04-10
 updated: 2026-04-10
 summary: 'Discussion: viewer + docs를 Finder 스타일 단일 탐색 UI로 통합. Apple 미니멀 컨셉.'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Finder Viewer — PRD
 
@@ -148,3 +149,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/finder-viewer

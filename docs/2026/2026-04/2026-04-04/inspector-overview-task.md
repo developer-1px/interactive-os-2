@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/prds/inspector-overview-task
 title: 'Inspector Overview 리디자인'
-status: active
-kind: plan
 created: 2026-04-04
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Inspector Overview 리디자인
 
@@ -27,3 +28,5 @@ supersedes: []
 T1 → T2 (DOM element 있어야 위계 구성)
 T3 → T4 (clickMap 있어야 Interaction탭에 표시)
 T5, T6은 T4와 병렬 가능
+
+#kind/plan #topic/viewer

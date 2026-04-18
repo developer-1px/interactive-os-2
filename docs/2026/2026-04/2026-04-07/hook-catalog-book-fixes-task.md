@@ -1,13 +1,14 @@
 ---
 id: 1-projects/book/prds/hook-catalog-book-fixes-task
 title: Hook Catalog + Book Fixes
-status: active
-kind: plan
 created: 2026-04-07
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Hook Catalog + Book Fixes
 
@@ -25,3 +26,5 @@ supersedes: []
 ## 제약
 - pages/에서 raw <input>, onKeyDown, addEventListener 금지 (훅)
 - os 부품 재사용 우선
+
+#kind/plan #topic/book

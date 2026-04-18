@@ -1,13 +1,14 @@
 ---
 id: '3-resources/40-[idea]aiIncidentMonitorUI'
 title: 'AI 장애 모니터링 UI 구상 — 2026-03-26'
-status: reference
-kind: idea
 created: 2026-03-28
 updated: 2026-04-11
-topics: [3-resources, idea, tooling]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: idea
+  topics: [3-resources, idea, tooling]
+  relates: []
+  supersedes: []
 ---
 # AI 장애 모니터링 UI 구상 — 2026-03-26
 
@@ -95,3 +96,5 @@ supersedes: []
 - 팀장 기존 데모의 데이터 구조 파악
 - 핵심 시나리오 3개로 PoC 범위 확정
 - interactive-os 위에서 프로토타입
+
+#kind/note #topic/idea

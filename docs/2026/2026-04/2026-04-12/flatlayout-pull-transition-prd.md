@@ -1,14 +1,15 @@
 ---
 id: 1-projects/book/prds/flatlayout-pull-transition-prd
 title: 'BookViewer FlatLayout Pull 전환 — PRD'
-status: active
-kind: prd
 created: 2026-04-12
 updated: 2026-04-12
 summary: 'Discussion: FlatLayout은 배치 엔진이지 props 운반선이 아니다. BookViewer의 `updateEntityData × 9` Push 체이닝을 제거하고, Cms가 증명한 Pull 패턴(Context + hook pull)으로 전환한다.'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # BookViewer FlatLayout Pull 전환 — PRD
 
@@ -158,3 +159,5 @@ supersedes: []
 - widget 레이어 공식 위치(GAP #6) → 별도 `/discuss`
 - `warnFlatLayout.mjs` 정적 검사 추가 → 별도 `/antipattern`
 - Cms 외 다른 FlatLayout 사용처(SkillKanban/Catalog/Creator/Incident) Pull 검증 → 이 PRD 완료 후 점진
+
+#kind/prd #topic/book

@@ -1,16 +1,16 @@
 ---
 id: 4-archive/meta/archive/handoff-2026-04-11-skill-kanban
 title: 'Handoff: Skill Kanban v1 완성 → 상품성 개선 계속'
-status: archived
-kind: handoff
 created: 2026-04-10
 updated: 2026-04-11
 summary: '2026-04-11 세션에서 Skill Kanban 페이지를 discuss→PRD→구현→상품성 개선까지 진행'
-topics: [4-archive]
-relates: []
-supersedes: []
 legacy:
   consumed_by: '38aac4f5 — Agent Dashboard 재설계로 v1 handoff 항목 해소'
+  status: archived
+  kind: handoff
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 # Handoff: Skill Kanban v1 완성 → 상품성 개선 계속
 
@@ -54,3 +54,5 @@ legacy:
 
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 구체적으로: `/simplify` → `/naming-audit` → useActiveSessions 필터링 수정 (비활성 세션도 포함)
+
+#kind/handoff #archived

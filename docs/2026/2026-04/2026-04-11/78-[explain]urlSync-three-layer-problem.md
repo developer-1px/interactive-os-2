@@ -1,14 +1,15 @@
 ---
 id: '0-inbox/78-[explain]urlSync-three-layer-problem'
 title: 'urlSync 보강 논의의 실제 문제 — 3층을 구별하지 못했다'
-status: inbox
-kind: explain
 created: 2026-04-11
 updated: 2026-04-11
 summary: '작성일: 2026-04-11 맥락: viewer URL 딥링크 미작동에서 출발한 urlSync 보강 논의'
-topics: [0-inbox, explain]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: explain
+  topics: [0-inbox, explain]
+  relates: []
+  supersedes: []
 ---
 # urlSync 보강 논의의 실제 문제 — 3층을 구별하지 못했다
 
@@ -159,3 +160,5 @@ flowchart LR
 2. **L2 urlSync 보강**: pathname 모드 + push/replace 옵션 + serializer
 3. **L2 popstate**: `useUrlSync` 훅 또는 페이지 레벨 popstate → onChange 패턴 정립
 4. **L3 불필요**: EffectContext, onExternalEvent 확장 없음
+
+#kind/explain

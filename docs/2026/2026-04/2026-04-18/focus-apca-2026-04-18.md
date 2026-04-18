@@ -1,14 +1,15 @@
 ---
 id: research/ax/reports/focus-apca-2026-04-18
 title: 'Focus APCA Measurement — 2026-04-18'
-status: research
-kind: note
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**기준:** APCA Lc ≥ 60 (24px body, P-08 Focus Visibility)'
-topics: [research]
-relates: []
-supersedes: []
+legacy:
+  status: research
+  kind: note
+  topics: [research]
+  relates: []
+  supersedes: []
 ---
 # Focus APCA Measurement — 2026-04-18
 
@@ -84,3 +85,5 @@ supersedes: []
 
 > 측정: `apca-w3` 0.1.9 · 스크립트: `scripts/measureFocusContrast.mjs`
 > 참고: `docs/research/ax/04-gap-plan.md` §3.1
+
+#kind/note #topic/research

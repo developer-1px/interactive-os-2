@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/stories/doc-browsing/features/miller-columns/5-review/review
 title: 'Miller Columns — Design Review'
-status: active
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
-topics: [1-projects, x]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [1-projects, x]
+  relates: []
+  supersedes: []
 ---
 # Miller Columns — Design Review
 
@@ -87,3 +88,5 @@ supersedes: []
 
 - [ ] /improve-design 루프 진입 (평균 4.5/10 < 9/10)
 - [ ] 우선순위 1~3 수정 후 재리뷰
+
+#kind/note #topic/viewer

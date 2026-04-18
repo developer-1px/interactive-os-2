@@ -1,14 +1,15 @@
 ---
 id: 2-areas/interactiveOsArchitectureVision
 title: 'interactive-os — Architecture Vision'
-status: active
-kind: note
 created: 2026-03-17
 updated: 2026-03-25
 summary: '작성일: 2026-03-17 현재 상태가 아닌, 프로젝트의 이상적 완성 형태를 그린 로드맵 구조도'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # interactive-os — Architecture Vision
 
@@ -753,3 +754,5 @@ LLM이 이 프레임워크 위에서 코드를 생성할 때, 완성품 1줄이 
 4. **ARIA 축 체감**: `/internals/axis/navigate` → 각 축의 키바인딩과 ARIA 속성 변화를 개별 확인
 5. **실전 조합**: `/cms` → TreeGrid + spatial + clipboard + history + zodSchema가 조합된 Visual CMS
 6. **확인 포인트**: 아무 데모에서 키보드만으로 CRUD + undo/redo + copy/paste가 전부 동작하면 정상
+
+#kind/note

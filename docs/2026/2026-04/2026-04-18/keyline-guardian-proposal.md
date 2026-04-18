@@ -1,13 +1,14 @@
 ---
 id: 0-inbox/keyline-guardian-proposal
 title: 'Keyline Guardian: LLM이 keyline을 유지하면서 컴포넌트를 만들 수 있는 3층 방어 아키텍처'
-status: inbox
-kind: note
 created: 2026-04-18
 updated: 2026-04-18
-topics: [0-inbox]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: note
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Keyline Guardian: LLM이 keyline을 유지하면서 컴포넌트를 만들 수 있는 3층 방어 아키텍처
 
@@ -207,3 +208,5 @@ module.css에서 role 소유 속성(`padding*`, `min-height`, `font-size`, `gap`
 - **Layer 3 (Runtime Gate)**: **잡히게** -- 우회해도 CI에서 발각된다
 
 이것은 "Make Illegal States Unrepresentable" 원칙의 3계층 확장이다. 불가능한 것은 타입으로(Layer 1), 어려운 것은 API로(Layer 2), 나머지는 측정으로(Layer 3). 타입 시스템의 표현력이 닿는 곳까지 밀어 넣고, 닿지 않는 곳은 lint로 채우고, lint도 못 잡는 렌더링 결과는 실측으로 검증한다. 이 구조에서 LLM은 규칙을 "알" 필요 없이 규칙을 "따르게" 된다.
+
+#kind/note

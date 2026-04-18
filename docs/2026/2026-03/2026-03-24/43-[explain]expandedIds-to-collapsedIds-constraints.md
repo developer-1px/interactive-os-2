@@ -1,14 +1,15 @@
 ---
 id: '4-archive/engine/archive/43-[explain]expandedIds-to-collapsedIds-constraints'
 title: 'expandedIds→collapsedIds 전환은 8개 파일에 닿고, 핵심 제약은 2개다'
-status: archived
-kind: explain
 created: 2026-03-24
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 맥락: NavList 그룹 버그에서 출발, getVisibleNodes의 가시성 모델을 화이트리스트→블랙리스트로 전환하기로 결정'
-topics: [4-archive, explain]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: explain
+  topics: [4-archive, explain]
+  relates: []
+  supersedes: []
 ---
 # expandedIds→collapsedIds 전환은 8개 파일에 닿고, 핵심 제약은 2개다
 
@@ -146,3 +147,5 @@ entity key `'__expanded__'`를 `'__collapsed__'`로 바꿀지는 별개 판단. 
 2. `src/interactive-os/engine/getVisibleNodes.ts` — 27줄, 가시성 판정의 단일 지점
 3. `src/interactive-os/plugins/focusRecovery.ts:22-33` — treeReachable, 제약의 핵심
 4. 나머지 5개 파일 — store에서 읽기만 하므로 기계적 반전
+
+#kind/explain #archived

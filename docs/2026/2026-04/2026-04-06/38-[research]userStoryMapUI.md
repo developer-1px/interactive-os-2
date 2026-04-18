@@ -1,14 +1,15 @@
 ---
 id: '3-resources/38-[research]userStoryMapUI'
 title: 'User Story Map UI in Production Services — 상용 도구들의 레이아웃·인터랙션 패턴'
-status: reference
-kind: note
 created: 2026-04-06
 updated: 2026-04-06
 summary: '작성일: 2026-04-05 맥락: 스토리맵 페이지 재구현 전, 상용 서비스의 시각 구조와 인터랙션 패턴을 파악하기 위함'
-topics: [3-resources, research]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: note
+  topics: [3-resources, research]
+  relates: []
+  supersedes: []
 ---
 # User Story Map UI in Production Services — 상용 도구들의 레이아웃·인터랙션 패턴
 
@@ -224,3 +225,5 @@ block-beta
 2. **데이터 모델 설계** — NormalizedData로 Journey > Step > Story 3계층 + Release 그룹 모델링
 3. **핵심 인터랙션 우선순위** — (1) 키보드 카드 생성, (2) 드래그앤드롭 재배치, (3) 릴리즈 슬라이스 분할
 4. **검증 포인트** — Walking Skeleton(첫 번째 수평 슬라이스)이 시각적으로 즉시 식별 가능한가?
+
+#kind/research

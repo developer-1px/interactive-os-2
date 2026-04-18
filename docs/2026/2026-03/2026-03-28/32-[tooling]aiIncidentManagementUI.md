@@ -1,14 +1,15 @@
 ---
 id: '3-resources/32-[tooling]aiIncidentManagementUI'
 title: 'AI Incident Management UI — 장애 도구들이 LLM/AI를 시각화와 조작에 엮는 방향'
-status: reference
-kind: tooling
 created: 2026-03-28
 updated: 2026-03-28
 summary: '작성일: 2026-03-26 맥락: interactive-os 기반 장애 모니터링 도구 구상에 앞서, 시장의 AI+시각화 통합 방향을 파악'
-topics: [3-resources, tooling]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: tooling
+  topics: [3-resources, tooling]
+  relates: []
+  supersedes: []
 ---
 # AI Incident Management UI — 장애 도구들이 LLM/AI를 시각화와 조작에 엮는 방향
 
@@ -294,3 +295,5 @@ graph LR
 3. **핵심 시나리오 3개**: (1) 장애 타임라인 탐색, (2) 캡쳐 비교 + AI 분석, (3) 실시간 모니터링 + 알림 트리아지
 4. **프로토타입**: 위 3개 시나리오를 interactive-os 위에서 하나의 화면으로 엮는 PoC를 만든다
 5. **데모 임팩트 검증**: "이 화면은 Slack 봇으로 안 된다"가 3초 안에 전달되는지 확인한다
+
+#kind/note #topic/tooling

@@ -1,17 +1,17 @@
 ---
 id: 0-inbox/handoff-2026-04-17-subagent-viewer
 title: 'Handoff: SubAgent Viewer (Blueprint PRD 파이프라인 첫 완주)'
-status: inbox
-kind: handoff
 created: 2026-04-17
 updated: 2026-04-18
 summary: 'replay/live에서 SubAgent(Task) 내부 tool 동작을 부모 옆 가로 고정폭 viewer로 띄우는 기능 구현. 동시에 /prd 스킬을 Blueprint 형식으로 재설계하고 /handoff에 A0 역PRD 감사 게이트 전면 배치.'
-topics: [0-inbox]
-relates: []
-supersedes: []
 legacy:
   created_at: 2026-04-17
   session_id: subagent-viewer-blueprint
+  status: inbox
+  kind: handoff
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Handoff: SubAgent Viewer (Blueprint PRD 파이프라인 첫 완주)
 
@@ -58,3 +58,5 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: `pnpm dev` 후 replay 페이지에서 실제 Task 도구 사용하는 세션 live 관찰, SubAgent row 자동 추가 여부 확인.
+
+#kind/handoff

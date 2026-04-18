@@ -1,13 +1,14 @@
 ---
 id: '4-archive/meta/archive/65-[question]claudeCodeWebUiReadability'
 title: '클로드 코드 웹 UI 가독성 — 2026-03-30'
-status: archived
-kind: note
 created: 2026-03-31
 updated: 2026-04-11
-topics: [4-archive, question]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: note
+  topics: [4-archive, question]
+  relates: []
+  supersedes: []
 ---
 # 클로드 코드 웹 UI 가독성 — 2026-03-30
 
@@ -50,3 +51,5 @@ Claude Code 출력 3종류를 DM UI에서 어떻게 처리할 것인가:
 
 - Tool call / 코드 결과 표현 방식 결정 후 `/prd`로 전환
 - 관련 메모리: `project_chat_module_gen_ui`, `project_fe_value_ai_ui_layer`, `feedback_animation_buys_time`
+
+#kind/note #topic/question #archived

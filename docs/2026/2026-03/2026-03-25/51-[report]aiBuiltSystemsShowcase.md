@@ -1,14 +1,15 @@
 ---
 id: '4-archive/meta/archive/51-[report]aiBuiltSystemsShowcase'
 title: '내가 구축한 AI 협업 시스템 — 실물 쇼케이스'
-status: archived
-kind: report
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 작성자: FE개발 성격: "이런 걸 만들었다"를 실물 위주로 보여주는 문서'
-topics: [4-archive, report]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: report
+  topics: [4-archive, report]
+  relates: []
+  supersedes: []
 ---
 # 내가 구축한 AI 협업 시스템 — 실물 쇼케이스
 
@@ -256,3 +257,5 @@ mock 호출 검증 → 금지
 ### 프로젝트 프로필 설계
 
 CLAUDE.md(행동 지시), MEMORY.md(대화 기억)와 별도로, **project.yml(프로젝트 구조 선언)** 제3의 설정 레이어를 설계 중. 관심사(문서/네이밍/테스트/디자인/품질)별로 철학→구조→도구를 선언하는 방식.
+
+#kind/note #topic/report #archived

@@ -1,14 +1,15 @@
 ---
 id: '2-areas/pattern/58-[explain]remainingL4L5Violations'
 title: 'L4→L5 잔존 위반 2개 — createPatternContext가 spatial·rename plugin을 직접 import한다'
-status: active
-kind: explain
 created: 2026-03-26
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: 26개 역참조를 정리하여 2개까지 줄였으나, spatial·rename의 command 팩토리가 여전히 L4에서 직접 import됨'
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # L4→L5 잔존 위반 2개 — createPatternContext가 spatial·rename plugin을 직접 import한다
 
@@ -201,3 +202,5 @@ export function getVisibleNodes(
 | 핵심 전환 | engine이 "어떤 plugin이 있는지" 몰라도 됨 | 아직 "spatial이 있다", "rename이 있다"를 알아야 함 |
 
 → getVisibleNodes의 성공 패턴이 createPatternContext에도 적용 가능하다. **plugin이 ctx 확장을 선언하고, createPatternContext는 합성만 하는 구조.**
+
+#kind/explain #topic/pattern

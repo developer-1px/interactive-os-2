@@ -1,13 +1,14 @@
 ---
 id: 4-archive/engine/summary
 title: 'Engine — 결정 요약'
-status: archived
-kind: summary
 created: 2026-04-11
 updated: 2026-04-11
-topics: [4-archive, explain, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: summary
+  topics: [4-archive, explain, retro]
+  relates: []
+  supersedes: []
 ---
 # Engine — 결정 요약
 
@@ -123,3 +124,5 @@ flowchart TD
 ```
 
 > 원본: [archive/42-[explain]getVisibleNodes-dependency-tree.md](archive/42-[explain]getVisibleNodes-dependency-tree.md), [archive/43-[explain]expandedIds-to-collapsedIds-constraints.md](archive/43-[explain]expandedIds-to-collapsedIds-constraints.md)
+
+#kind/note #archived

@@ -1,13 +1,14 @@
 ---
 id: '4-archive/ui/archive/63-[retro]uiIndicators'
 title: 'Retro: UI Indicators Phase 1 — 2026-03-28'
-status: archived
-kind: retro
 created: 2026-03-28
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: UI Indicators Phase 1 — 2026-03-28
 
@@ -57,3 +58,5 @@ supersedes: []
 ## 다음 행동
 - L1 backlog 2건은 Phase 2에서 함께 처리
 - PRD → archive 이동 (Phase 1 완료)
+
+#kind/retro #archived

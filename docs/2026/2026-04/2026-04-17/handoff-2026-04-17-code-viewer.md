@@ -1,17 +1,17 @@
 ---
 id: 0-inbox/handoff-2026-04-17-code-viewer
 title: 'Handoff: CodeViewer — preset 4종 + ARIA + VirtualCodeBlock 흡수'
-status: inbox
-kind: handoff
 created: 2026-04-17
 updated: 2026-04-17
 summary: 'CodeBlock → CodeViewer 원자적 rename. VirtualCodeBlock을 `virtualized` prop으로 흡수. preset 4종(presentation/doc/chat/replay)으로 용도 레시피 도입. ARIA 기본(figure + role="region" 조건부). 11곳 사용처 일괄 전환. 통합 테스트 10건 신규.'
-topics: [0-inbox]
-relates: []
-supersedes: []
 legacy:
   created_at: 2026-04-17
   session_topic: 'CodeViewer 대대적 개선'
+  status: inbox
+  kind: handoff
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Handoff: CodeViewer — preset 4종 + ARIA + VirtualCodeBlock 흡수
 
@@ -79,3 +79,5 @@ legacy:
 ## 이어받는 법
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다. CodeViewer 확장이 필요하면 backlog의 항목을 꺼내 새 discuss/PRD 사이클 시작.
+
+#kind/handoff

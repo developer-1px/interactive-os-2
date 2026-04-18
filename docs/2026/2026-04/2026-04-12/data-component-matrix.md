@@ -1,14 +1,15 @@
 ---
 id: 2-areas/distribution/data-component-matrix
 title: 'Data → Component Matrix'
-status: active
-kind: note
 created: 2026-04-12
 updated: 2026-04-12
 summary: 'ARIA OS LLM-facing 카탈로그 SSOT. LLM이 요구사항으로부터 데이터 형태를 식별하면, 이 표가 사용할 컴포넌트를 가리킨다. aria.md(시스템 프롬프트)가 이 매트릭스를 직접 인용한다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Data → Component Matrix
 
@@ -171,3 +172,5 @@ CI 검증:
 - 매트릭스의 컴포넌트명이 모두 `aria-os/ui` 실 export와 매칭되는지
 - aria.md(Plan 5)의 인용이 본 파일과 일치하는지
 - 매트릭스 빈칸 표는 갭이 해결되면 갱신
+
+#kind/note #topic/distribution

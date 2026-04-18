@@ -1,13 +1,14 @@
 ---
 id: 2-areas/ui/prds/virtual-code-block-task
 title: 'FilePanel 대규모 파일 가상화'
-status: active
-kind: plan
 created: 2026-04-04
 updated: 2026-04-17
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # FilePanel 대규모 파일 가상화
 
@@ -39,3 +40,5 @@ supersedes: []
 ## 2026-04-17 — CodeViewer 흡수
 
 `VirtualCodeBlock`은 `CodeViewer`로 흡수되었다. `<CodeViewer virtualized />` 단일 prop으로 내부에서 `codeToTokens` + `useVirtualScrollState` 경로가 활성화된다. 자동 임계값 500줄. 상세는 `code-viewer-prd.md` 참조.
+
+#kind/plan #topic/ui

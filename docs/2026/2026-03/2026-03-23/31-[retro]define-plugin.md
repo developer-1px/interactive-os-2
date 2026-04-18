@@ -1,13 +1,14 @@
 ---
 id: '4-archive/engine/archive/31-[retro]define-plugin'
 title: 'Retro: definePlugin — 2026-03-23'
-status: archived
-kind: retro
 created: 2026-03-23
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: definePlugin — 2026-03-23
 
@@ -57,3 +58,5 @@ supersedes: []
 | 도메인 | 상황 | 교훈 |
 |--------|------|------|
 | plugin/focusRecovery | crud가 focusRecovery 번들 시 기본 isReachable=treeReachable | 기본값 번들 시 다른 모델(spatial)의 기본값과 충돌 가능. 사용처별 isReachable 전달 필요 |
+
+#kind/retro #archived

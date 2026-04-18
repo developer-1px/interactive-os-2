@@ -1,13 +1,14 @@
 ---
 id: '0-inbox/80-[backlog]shadcn-ui-parity-checklist'
 title: 'shadcn/ui Parity Checklist — 2026-04-16'
-status: inbox
-kind: backlog
 created: 2026-04-16
 updated: 2026-04-16
-topics: [0-inbox, backlog, placeholder]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: backlog
+  topics: [0-inbox, backlog, placeholder]
+  relates: []
+  supersedes: []
 ---
 # shadcn/ui Parity Checklist — 2026-04-16
 
@@ -308,3 +309,5 @@ shadcn: Radix ScrollArea with custom scrollbar styling
 - A 그룹(ax.css 공통)부터 시작 — 이것만으로 전체 룩이 크게 개선됨
 - 각 B 항목은 1 커밋 단위로 진행
 - 완료 후 demo 스크린샷으로 before/after 검증
+
+#kind/note #topic/backlog

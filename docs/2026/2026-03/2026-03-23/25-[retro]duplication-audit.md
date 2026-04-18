@@ -1,13 +1,14 @@
 ---
 id: '4-archive/meta/archive/25-[retro]duplication-audit'
 title: '중복 현황 조사 보고서 — 2026-03-23'
-status: archived
-kind: retro
 created: 2026-03-23
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # 중복 현황 조사 보고서 — 2026-03-23
 
@@ -97,3 +98,5 @@ showcase 제작·내부 코드 작업이 진행되면서 코드·쓰임·문서�
 
 - 각 범주별 정리 방향 결정 (discussion 계속)
 - 범주 1, 2가 핵심 — "페이지 구조를 어떻게 재설계할 것인가"
+
+#kind/retro #archived

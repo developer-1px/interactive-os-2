@@ -1,14 +1,15 @@
 ---
 id: '4-archive/meta/archive/47-[audit]skillEcosystemReport'
 title: '스킬 에코시스템 현황 보고서'
-status: archived
-kind: audit
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 목적: 범용 플러그인 설계 전 현황 파악 — 설계 제안이 아니라 있는 그대로의 지형도'
-topics: [4-archive, audit, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: audit
+  topics: [4-archive, audit, methodology]
+  relates: []
+  supersedes: []
 ---
 # 스킬 에코시스템 현황 보고서
 
@@ -247,3 +248,5 @@ docs/3-resources/23-[methodology]discussFirstWorkflowTheory.md에서 분석한 5
 2. 프로젝트 의존은 대부분 **경로 + 문서 구조** — 로직이 아님
 3. 반복 참조되는 설정 항목은 12개로 수렴한다
 4. 이론적 기반이 있는 스킬(코어 루프)과 도메인 도구 스킬은 성격이 다르다
+
+#kind/audit #archived

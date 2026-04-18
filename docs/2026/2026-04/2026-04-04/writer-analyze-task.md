@@ -1,13 +1,14 @@
 ---
 id: 1-projects/chat/prds/writer-analyze-task
 title: Writer Sentence Role Analysis
-status: active
-kind: plan
 created: 2026-04-04
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Writer Sentence Role Analysis
 
@@ -25,3 +26,5 @@ supersedes: []
 ## 제약
 - role은 MD에 없는 파생 데이터 → storeToMd에 포함 안 됨
 - role은 sentence.data.role에만 존재
+
+#kind/plan #topic/chat

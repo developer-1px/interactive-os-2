@@ -1,14 +1,15 @@
 ---
 id: '3-resources/18-[methodology]pitOfSuccessPrinciples'
 title: 'interactive-os Pit of Success — LLM이 올바른 코드로 수렴하는 설계 원리'
-status: reference
-kind: methodology
 created: 2026-03-23
 updated: 2026-03-25
 summary: '작성일: 2026-03-23 맥락: interactive-os를 "LLM이 위에서 개발하면 올바른 형태의 코드로 수렴할 수밖에 없는" 프레임워크로 만들기 위한 설계 원리 정립과 현재 상태 감사'
-topics: [3-resources, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: methodology
+  topics: [3-resources, methodology]
+  relates: []
+  supersedes: []
 ---
 # interactive-os Pit of Success — LLM이 올바른 코드로 수렴하는 설계 원리
 
@@ -282,3 +283,5 @@ flowchart TD
 3. **P3 확인**: 컴포넌트 내부에서 `behavior.ariaAttributes()` 호출 → ARIA 속성 자동 주입 확인
 4. **P2 갭 확인**: `src/interactive-os/hooks/useAria.ts`가 같은 패키지에서 직접 import 가능 — 경계 없음
 5. **P4 갭 확인**: 아무 쇼케이스 페이지에서 `NormalizedData` 구성 코드를 보면, 파일마다 다른 방식으로 데이터를 만들고 있음
+
+#kind/note #topic/methodology

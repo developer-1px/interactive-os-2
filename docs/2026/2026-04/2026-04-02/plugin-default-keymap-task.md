@@ -1,13 +1,14 @@
 ---
 id: 2-areas/engine/prds/plugin-default-keymap-task
 title: Plugin Default KeyMap + CMS Sidebar Cleanup
-status: active
-kind: plan
 created: 2026-04-02
 updated: 2026-04-08
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Plugin Default KeyMap + CMS Sidebar Cleanup
 
@@ -29,3 +30,5 @@ crud/dnd/clipboard 플러그인이 commands만 갖고 keyMap이 없어서, 사�
 - `src/interactive-os/plugins/clipboard.ts`
 - `src/pages/cms/CmsLayout.tsx`
 - `src/pages/cms/CmsSidebar.tsx`
+
+#kind/plan #topic/engine

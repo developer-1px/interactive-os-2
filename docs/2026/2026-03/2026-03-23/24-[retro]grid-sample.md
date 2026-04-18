@@ -1,13 +1,14 @@
 ---
 id: '4-archive/axis/archive/24-[retro]grid-sample'
 title: 'Retro: Grid 샘플 보강 — 2026-03-23'
-status: archived
-kind: retro
 created: 2026-03-23
 updated: 2026-04-11
-topics: [4-archive, retro, x]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro, x]
+  relates: []
+  supersedes: []
 ---
 # Retro: Grid 샘플 보강 — 2026-03-23
 
@@ -55,3 +56,5 @@ supersedes: []
 
 ## 다음 행동
 - L1 수정 완료 → 커밋 필요
+
+#kind/retro #archived

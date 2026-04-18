@@ -1,13 +1,14 @@
 ---
 id: '0-inbox/69-[backlog]childrenApiForStructuralComponents'
 title: 'Children API for Structural Components — 2026-03-31'
-status: inbox
-kind: backlog
 created: 2026-03-31
 updated: 2026-03-31
-topics: [0-inbox, backlog]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: backlog
+  topics: [0-inbox, backlog]
+  relates: []
+  supersedes: []
 ---
 # Children API for Structural Components — 2026-03-31
 
@@ -65,3 +66,5 @@ children API가 내부에서 NormalizedData로 자동 변환. engine + pattern �
 ## 다음 행동
 
 /discuss → /prd → /go 파이프라인으로 진행 시 이 문서를 입력으로 사용.
+
+#kind/note #topic/backlog

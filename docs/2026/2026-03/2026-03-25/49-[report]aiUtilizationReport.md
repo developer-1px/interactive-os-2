@@ -1,14 +1,15 @@
 ---
 id: '4-archive/meta/archive/49-[report]aiUtilizationReport'
 title: 'AI 개발 협업 현황 보고서'
-status: archived
-kind: report
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 작성자: FE개발 대상: 사내 기술 공유 분류: AI 활용 사례 보고'
-topics: [4-archive, audit, ideal, methodology, report]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: report
+  topics: [4-archive, audit, ideal, methodology, report]
+  relates: []
+  supersedes: []
 ---
 # AI 개발 협업 현황 보고서
 
@@ -292,3 +293,5 @@ AI에게 "고쳐줘"라고 말하는 것이 아니라, **구조화된 4단계**�
 | **TOC** | Theory of Constraints — 제약 이론 (Eliyahu Goldratt) |
 | **PRD** | Product Requirements Document — 구현 명세서 |
 | **역PRD** | git diff에서 자동 생성한 "실제로 구현된 것"의 명세 |
+
+#kind/note #topic/report #archived

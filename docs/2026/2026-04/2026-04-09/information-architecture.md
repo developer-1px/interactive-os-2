@@ -1,13 +1,14 @@
 ---
 id: samples/information-architecture
 title: 'Information Architecture — Aria CMS'
-status: sample
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
-topics: [samples]
-relates: []
-supersedes: []
+legacy:
+  status: sample
+  kind: note
+  topics: [samples]
+  relates: []
+  supersedes: []
 ---
 # Information Architecture — Aria CMS
 
@@ -61,3 +62,5 @@ graph LR
 - **CMS ↔ Viewer**: CMS 노드에 연결된 문서를 Viewer에서 열람
 - **Stories → Pipeline → CMS**: 기획(스토리) → 실행(파이프라인) → 결과물(CMS 노드) 순환
 - **Chat → CMS**: Agent가 CMS 노드를 직접 조작 가능
+
+#kind/note

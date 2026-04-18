@@ -1,13 +1,14 @@
 ---
 id: 4-archive/axis/archive/axisV2FiveAxesModel
 title: 'Axis v2: 5축 모델 — 2026-03-20'
-status: archived
-kind: note
 created: 2026-03-21
 updated: 2026-04-11
-topics: [4-archive]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: note
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 # Axis v2: 5축 모델 — 2026-03-20
 
@@ -125,3 +126,5 @@ interface Axis {
 4. 기존 11축 deprecate → 삭제
 5. 쇼케이스 재설계 (5축 × 옵션 토글)
 6. activateFollowFocus 삭제
+
+#kind/note #archived

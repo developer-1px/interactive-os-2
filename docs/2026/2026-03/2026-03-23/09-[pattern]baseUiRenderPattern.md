@@ -1,14 +1,15 @@
 ---
 id: '3-resources/09-[pattern]baseUiRenderPattern'
 title: 'Base UI Render Prop 패턴 — interactive-os에 적용할 힌트'
-status: reference
-kind: pattern
 created: 2026-03-23
 updated: 2026-03-24
 summary: '작성일: 2026-03-23 맥락: AriaItem wrapper 제거 후, render API를 Base UI 방식으로 개선하기 위한 근거 수집'
-topics: [3-resources, checked, pattern]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: pattern
+  topics: [3-resources, checked, pattern]
+  relates: []
+  supersedes: []
 ---
 # Base UI Render Prop 패턴 — interactive-os에 적용할 힌트
 
@@ -196,3 +197,5 @@ return render(optionProps, entity, state)
 2. `src/interactive-os/ui/ListBox.tsx` → defaultRenderItem에서 props spread 패턴 확인
 3. `src/AppShell.tsx` → renderNavItem에서 Tooltip + props 배치 확인 (복잡한 케이스)
 4. 확인 포인트: 모든 defaultRenderItem이 `(props, item, state)` 순서로 props-first 되어 있으면 적용 완료
+
+#kind/note #topic/pattern

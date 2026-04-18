@@ -1,13 +1,14 @@
 ---
 id: 2-areas/pattern/patternCompositionLogicTree
 title: 'Pattern Composition 로직트리 — 2026-03-20'
-status: active
-kind: note
 created: 2026-03-21
 updated: 2026-03-24
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Pattern Composition 로직트리 — 2026-03-20
 
@@ -95,3 +96,5 @@ grid     = metadata(grid/row/vertical/colCount:N)
 
 - `activateFollowFocus` 축은 `activate`와 코드 100% 동일. followFocus는 metadata 속성이지 축 동작이 아님. 삭제 후 `activate`로 통합 검토 필요.
 - metadata 내 행동 플래그(followFocus, activateOnClick, selectionMode)는 축이 아닌 비-키보드 행동. 쇼케이스에서 이 구분이 보이지 않음.
+
+#kind/note #topic/pattern

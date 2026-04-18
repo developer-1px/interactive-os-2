@@ -1,14 +1,15 @@
 ---
 id: DESIGN
 title: 'Design System — interactive-os'
-status: meta
-kind: note
 created: 2026-03-24
 updated: 2026-04-17
 summary: 'SSOT: `src/styles/ax.ts` (축 타입) + `src/styles/ax.css` (CSS 구현) 이 문서는 **디자인 철학 + 축 조합 규칙 + CSS 레이어**를 정의한다. 토큰 값은 `tokens.css`가 SSOT.'
-topics: []
-relates: []
-supersedes: []
+legacy:
+  status: meta
+  kind: note
+  topics: []
+  relates: []
+  supersedes: []
 ---
 # Design System — interactive-os
 
@@ -307,3 +308,5 @@ ax() 축으로 표현 불가능한 CSS만 module.css에 작성한다. 예: 복�
 | padding/margin 직접 값 | ax() padding/gap 축 |
 | background/color 직접 값 | ax() surface/tone/text 축 |
 | position/inset | ax() placement 축 |
+
+#kind/note

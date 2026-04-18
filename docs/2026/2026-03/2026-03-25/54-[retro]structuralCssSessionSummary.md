@@ -1,13 +1,14 @@
 ---
 id: '4-archive/design/archive/54-[retro]structuralCssSessionSummary'
 title: '구조적 CSS의 LLM 한계 + 설계 방향 미결정 — 2026-03-25'
-status: archived
-kind: retro
 created: 2026-03-25
 updated: 2026-04-11
-topics: [4-archive, explain, ideal, pattern, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, explain, ideal, pattern, retro]
+  relates: []
+  supersedes: []
 ---
 # 구조적 CSS의 LLM 한계 + 설계 방향 미결정 — 2026-03-25
 
@@ -54,3 +55,5 @@ Cmd+\ 전역 단축키 구현 → AriaRoute 설계 → page grid→flex 전환 �
 
 - 구조적 CSS 해결 방향을 열린 마음으로 재논의 (Layout 컴포넌트 외 대안 탐색)
 - 현재 `.page-content` overflow:hidden은 임시 — clean CSS 원칙에 어긋남
+
+#kind/retro #archived

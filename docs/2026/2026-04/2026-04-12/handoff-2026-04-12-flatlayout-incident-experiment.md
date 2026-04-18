@@ -1,19 +1,19 @@
 ---
 id: 4-archive/handoffs/handoff-2026-04-12-flatlayout-incident-experiment
 title: 'FlatLayout incident 재현 실험 — widget 합성 한계 발견'
-status: archived
-kind: handoff
 created: 2026-04-12
 updated: 2026-04-15
 summary: '2026-04-12 세션에서 FlatLayout이 어디까지 incident 수준 화면을 표현할 수 있는지 실험하고 10개 GAP을 발견·일부 해결.'
-topics: [4-archive]
-relates: []
-supersedes: []
 legacy:
   name: 'FlatLayout incident 재현 실험 — widget 합성 한계 발견'
   date: 2026-04-12
   consumed_by: 2026-04-15-archived
   consumed_at: 2026-04-15
+  status: archived
+  kind: handoff
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 # Handoff: FlatLayout incident 재현 실험
 
@@ -92,3 +92,5 @@ legacy:
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 
 구체적으로: **GAP #6 widget 레이어 위치 결정** — `/discuss`로 시작하여 `src/widgets/` vs `ui/composites/` vs 다른 옵션 중 결정한 뒤, `experiments/incidentWidgets.tsx`를 정식 위치로 이동하고, pages/ 훅 규칙도 그에 맞게 조정.
+
+#kind/handoff #archived

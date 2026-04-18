@@ -1,14 +1,15 @@
 ---
 id: 1-projects/chat/prds/chat-perf-prd
 title: 'Chat Performance Optimization — PRD'
-status: active
-kind: prd
 created: 2026-03-31
 updated: 2026-04-08
 summary: 'Discussion: 채팅 UI 퍼포먼스 병목 제거 + 스트리밍 줄바꿈 pacing'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Chat Performance Optimization — PRD
 
@@ -146,3 +147,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/chat

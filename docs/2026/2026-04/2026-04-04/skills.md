@@ -1,14 +1,15 @@
 ---
 id: 2-areas/harness/skills
 title: 'Skills — 워크플로우 강제'
-status: active
-kind: note
 created: 2026-04-04
 updated: 2026-04-04
 summary: '스킬은 강제력 ~80%. LLM의 행동 패턴을 구조화하지만, 텍스트 기반이라 100% 보장은 아님. 모든 스킬은 `.claude/skills/{name}/SKILL.md`.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Skills — 워크플로우 강제
 
@@ -84,3 +85,5 @@ supersedes: []
   워크플로우 필요?  → 스킬 (~80%)
   배경 지식?       → memory (~50%)
 ```
+
+#kind/note #topic/harness

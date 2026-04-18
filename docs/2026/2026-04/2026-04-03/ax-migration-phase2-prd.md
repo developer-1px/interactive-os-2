@@ -1,14 +1,15 @@
 ---
 id: 2-areas/design/prds/ax-migration-phase2-prd
 title: 'ax() 마이그레이션 Phase 2 — PRD'
-status: active
-kind: prd
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: module.css last-mile을 줄이기 위해 새 축 발견 + surface 정합성 재스캔'
-topics: [2-areas, aria-disabled, prop]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas, aria-disabled, prop]
+  relates: []
+  supersedes: []
 ---
 # ax() 마이그레이션 Phase 2 — PRD
 
@@ -152,3 +153,5 @@ supersedes: []
 3. ✅ 경계 ↔ 검증: E1~E5 → V4,V6,V8,V9 커버
 4. ✅ 금지 ↔ 출처: D1~D7 출처 유효
 5. ✅ 원칙 대조 ↔ 전체: 위반 없음
+
+#kind/prd #topic/design

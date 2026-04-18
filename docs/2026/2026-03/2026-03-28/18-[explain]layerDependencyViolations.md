@@ -1,14 +1,15 @@
 ---
 id: '2-areas/engine/18-[explain]layerDependencyViolations'
 title: '레이어 의존 위반 — L4 Pattern ↔ L5 Plugins 순환과 L2 Engine 점프'
-status: active
-kind: explain
 created: 2026-03-28
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: 도메인 개념 순서(L1→L7) 확정 후 코드 import와의 정합성 검증'
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # 레이어 의존 위반 — L4 Pattern ↔ L5 Plugins 순환과 L2 Engine 점프
 
@@ -166,3 +167,5 @@ Engine은 Store 위의 상태 변환 레이어다. 어떤 플러그인이 존재
 **총계: 26 runtime 위반 + 3 type-only 위반**
 
 → 이 중 **Entity ID 상수 8종**과 **Command 팩토리 9종**이 핵심이다. 이 17개를 올바른 레이어로 옮기면 26개 runtime 위반 중 대부분이 해소된다.
+
+#kind/explain #topic/engine

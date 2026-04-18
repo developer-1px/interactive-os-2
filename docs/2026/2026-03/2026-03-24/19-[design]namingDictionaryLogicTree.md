@@ -1,13 +1,14 @@
 ---
 id: '3-resources/19-[design]namingDictionaryLogicTree'
 title: 'Naming Dictionary 명사 MECE 로직트리 — 2026-03-24'
-status: reference
-kind: design
 created: 2026-03-24
 updated: 2026-03-25
-topics: [3-resources, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, design]
+  relates: []
+  supersedes: []
 ---
 # Naming Dictionary 명사 MECE 로직트리 — 2026-03-24
 
@@ -106,3 +107,5 @@ naming-dictionary.md의 명사 ~90개를 MECE(상호배타·전체포괄)로 분
 ## 다음 행동
 
 - 이 트리를 기준으로 폴더 구조·라우트·문서의 MECE 정렬 검토 (discuss 계속)
+
+#kind/note #topic/design

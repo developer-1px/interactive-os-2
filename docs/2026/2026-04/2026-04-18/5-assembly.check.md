@@ -24,3 +24,5 @@
 ## 파이프라인 의미
 
 이 게이트가 통과했다는 것은 Stage 3 선언과 Stage 5 구현이 **구조적으로 일치**함을 뜻합니다. 부품 누락 · 수동 ARIA · NormalizedData 우회 세 축이 모두 clean.
+
+#kind/note #topic/research

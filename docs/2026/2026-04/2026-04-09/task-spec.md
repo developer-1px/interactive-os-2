@@ -1,14 +1,15 @@
 ---
 id: samples/task-spec
 title: 'TRD: 슬라이드 복제 기능'
-status: sample
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
 summary: '**요약**: 선택된 section(슬라이드)을 자식 노드 포함 deep copy하여 바로 아래에 삽입한다.'
-topics: [samples]
-relates: []
-supersedes: []
+legacy:
+  status: sample
+  kind: note
+  topics: [samples]
+  relates: []
+  supersedes: []
 ---
 # TRD: 슬라이드 복제 기능
 
@@ -115,3 +116,5 @@ it('선택 없이 duplicate하면 상태 변화 없다', () => {
 | `src/interactive-os/store/createStore.ts` | addNode, addChild, removeNode 등 저수준 command |
 | `src/interactive-os/engine/plugins/clipboard.ts` | copy/paste command 참조 구현 |
 | `src/interactive-os/engine/createCommandEngine.ts` | command dispatch, undo/redo |
+
+#kind/note

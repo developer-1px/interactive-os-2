@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/component-catalog-prd
 title: 'Component Catalog — PRD'
-status: active
-kind: prd
 created: 2026-04-10
 updated: 2026-04-10
 summary: 'Discussion: ui/ 75개 중 24개만 showcase 등록. 수동 fixture 비용이 병목. *.demo.tsx 컨벤션 + FlatLayout 자동 카탈로그 + visual UI 레이어 + ax() 승격 루프.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Component Catalog — PRD
 
@@ -160,3 +161,5 @@ Badge, Avatar, Kbd, Skeleton, EmptyState, Divider, FileIcon, CodeBlock, Progress
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/ui

@@ -1,14 +1,15 @@
 ---
 id: '3-resources/27-[pattern]routeScopedKeybinding'
 title: '라우트 기반 키바인딩 — 페이지/모드 단위 단축키 스코핑 패턴'
-status: reference
-kind: pattern
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: interactive-os에서 전역 단축키를 라우트 단위로 활성화/비활성화하는 설계를 검토 중. "AriaRoute" 개념의 외부 선행 사례를 조사.'
-topics: [3-resources, pattern]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: pattern
+  topics: [3-resources, pattern]
+  relates: []
+  supersedes: []
 ---
 # 라우트 기반 키바인딩 — 페이지/모드 단위 단축키 스코핑 패턴
 
@@ -184,3 +185,5 @@ KeyboardRoute는 기능이 제한적이지만 핵심 인사이트를 제공: **R
 | 4 | [UE Enhanced Input](https://www.unrealdirective.com/articles/enhanced-input-what-you-need-to-know/) | 공식 문서 | Input Mapping Context 스택, 우선순위 기반 충돌 해결 |
 | 5 | [react-hotkeys-hook Scoping](https://react-hotkeys-hook.vercel.app/docs/documentation/useHotkeys/scoping-hotkeys) | 라이브러리 문서 | ref 기반 스코핑, tabIndex={-1} 패턴 |
 | 6 | [VS Code when-clause contexts](https://code.visualstudio.com/api/references/when-clause-contexts) | 공식 API 문서 | activeViewlet, sideBarFocus 등 뷰 기반 context key |
+
+#kind/note #topic/pattern

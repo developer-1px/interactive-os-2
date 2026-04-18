@@ -1,14 +1,15 @@
 ---
 id: 2-areas/primitives/osMultiViewGap
 title: 'os multi-view gap — 1 Store, 2 Widgets 충돌 해설'
-status: active
-kind: note
 created: 2026-03-20
 updated: 2026-03-24
 summary: '작성일: 2026-03-20 맥락: CMS sidebar를 os aria로 전환하면서 드러난 구조적 갭. 수동 구현보다 글루코드가 오히려 증가하여 "세련되지 않다"는 문제 제기.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # os multi-view gap — 1 Store, 2 Widgets 충돌 해설
 
@@ -289,3 +290,5 @@ useAria.ts:272  el.focus({ preventScroll: false })
 ```
 
 `data-aria-container`로 소유권을 확인하지만, `querySelector`가 전역이므로 **다른 container의 요소를 먼저 찾으면 소유권 체크 자체가 잘못된 대상에서 실행**된다. scope 옵션은 이 탐색을 container 내부로 한정함으로써 근본적으로 해결한다.
+
+#kind/note #topic/primitives

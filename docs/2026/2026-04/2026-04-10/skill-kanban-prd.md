@@ -1,14 +1,15 @@
 ---
 id: 2-areas/devtools/prds/skill-kanban-prd
 title: 'Skill Kanban — PRD'
-status: active
-kind: prd
 created: 2026-04-10
 updated: 2026-04-10
 summary: 'Discussion: 대화 중 실행되는 스킬들을 칸반으로 실시간 시각화. 훅 기반 결정적 스크립트, AI 추론 없음, API 비용 없음.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Skill Kanban — PRD
 
@@ -150,3 +151,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/devtools

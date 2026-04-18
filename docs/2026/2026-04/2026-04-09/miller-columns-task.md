@@ -1,13 +1,14 @@
 ---
 id: 1-projects/cms/prds/miller-columns-task
 title: 'Miller Columns — Finder 스타일 문서 탐색기'
-status: active
-kind: plan
 created: 2026-04-09
 updated: 2026-04-09
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Miller Columns — Finder 스타일 문서 탐색기
 
@@ -42,3 +43,5 @@ AI 생성 문서(docs/)를 편하게 탐색·열람할 Finder 스타일 Miller C
 - `src/pages/viewer/PageViewer.tsx` (수정)
 - `src/pages/docs/PageDocs.tsx` (신규)
 - `src/router.tsx` (수정)
+
+#kind/plan #topic/cms

@@ -1,14 +1,15 @@
 ---
 id: 2-areas/engine/prds/useCommandBind-prd
 title: 'useCommandBind — PRD'
-status: active
-kind: prd
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: ExpandIndicator 클릭 시 expand toggle. 이벤트와 커맨드를 선언적으로 바인딩하는 hook.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # useCommandBind — PRD
 
@@ -121,3 +122,5 @@ supersedes: []
 3. **경계 ↔ 검증**: 경계 4개 → 검증 #4,#5,#6 커버 ✓
 4. **금지 ↔ 출처**: 모든 금지의 출처(⑤/⑥) 유효 ✓
 5. **원칙 대조 ↔ 전체**: 위반 없음. ⑤-6 주의사항은 ui/ 내부 사용으로 해결 ✓
+
+#kind/prd #topic/engine

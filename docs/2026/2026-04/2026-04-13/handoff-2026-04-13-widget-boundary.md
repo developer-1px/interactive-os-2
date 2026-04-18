@@ -1,17 +1,17 @@
 ---
 id: 4-archive/handoffs/handoff-2026-04-13-widget-boundary
 title: 'Handoff: 위젯/컴포넌트 경계 구조적 강제'
-status: archived
-kind: handoff
 created: 2026-04-13
 updated: 2026-04-15
 summary: '2026-04-13 세션에서 ui→pages 역방향 의존 제거 + 위젯 경계 차단 규칙 추가'
-topics: [4-archive]
-relates: []
-supersedes: []
 legacy:
   consumed_by: 2026-04-15-archived
   consumed_at: 2026-04-15
+  status: archived
+  kind: handoff
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 # Handoff: 위젯/컴포넌트 경계 구조적 강제
 
@@ -51,3 +51,5 @@ legacy:
 
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 구체적으로: 2종 위반 파일(bookWidgets, i18nWidgets, incidentWidgets)부터 FlatLayout 노드로 전환
+
+#kind/handoff #archived

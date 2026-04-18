@@ -1,14 +1,15 @@
 ---
 id: 2-areas/harness/hooks
 title: 'Hooks — 기계적 강제'
-status: active
-kind: note
 created: 2026-04-04
 updated: 2026-04-04
 summary: '훅은 강제력 100%. regex/파일 체크로 위반을 감지하고 block 또는 warning을 반환한다. 모든 훅은 `.claude/hooks/*.mjs` (ESM), stdin으로 JSON 입력, stdout/stderr로 출력.'
-topics: [2-areas, async]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas, async]
+  relates: []
+  supersedes: []
 ---
 # Hooks — 기계적 강제
 
@@ -127,3 +128,5 @@ Write/Edit → 파일 경로, Bash → 커맨드를 로깅. stopTestGate의 판�
 3. 수정 있고 테스트 없으면 → block
 
 **조건:** `stop_reason === 'end_turn'`일 때만 (tool_use 중에는 무시)
+
+#kind/note #topic/harness

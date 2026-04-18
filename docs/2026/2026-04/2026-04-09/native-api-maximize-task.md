@@ -1,13 +1,14 @@
 ---
 id: 2-areas/engine/prds/native-api-maximize-task
 title: 'Native CSS/DOM API 극대화'
-status: active
-kind: plan
 created: 2026-04-09
 updated: 2026-04-09
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Native CSS/DOM API 극대화
 
@@ -44,3 +45,5 @@ supersedes: []
 
 ### 7. `field-sizing: content`
 - rename input에 자동 크기 CSS 추가
+
+#kind/plan #topic/engine

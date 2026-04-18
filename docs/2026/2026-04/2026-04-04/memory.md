@@ -1,14 +1,15 @@
 ---
 id: 2-areas/harness/memory
 title: 'Memory — 프로젝트 지식 영속화'
-status: active
-kind: note
 created: 2026-04-04
 updated: 2026-04-04
 summary: 'Memory는 강제력 ~50%. 매 세션 시작 시 MEMORY.md 인덱스가 로딩되지만, 개별 파일은 필요 시에만 읽힌다. **반복 3회 이상이면 feedback 승격, 기계적 감지 가능하면 훅 승격.**'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Memory — 프로젝트 지식 영속화
 
@@ -52,3 +53,5 @@ feedback memory 승격
 - 코드에서 파악 가능한 것은 저장하지 않음
 - 상대 날짜는 절대 날짜로 변환
 - memory보다 훅/스킬이 우선
+
+#kind/note #topic/harness

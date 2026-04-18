@@ -1,14 +1,15 @@
 ---
 id: 1-projects/viewer/prds/app-inspector-prd
 title: 'App Inspector — PRD'
-status: active
-kind: prd
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: engine.inspect()로 앱의 capability(keyMap, commands, schema, state)를 직렬화 데이터로 노출하고, devtools UI로 출력'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # App Inspector — PRD
 
@@ -149,3 +150,5 @@ supersedes: []
 3. **경계 ↔ 검증**: 에러 격리(V5), 빈 상태(V6) ✅
 4. **금지 ↔ 출처**: 3개 모두 ④/⑤ 파생 ✅
 5. **원칙 대조 ↔ 전체**: 위반 없음 ✅
+
+#kind/prd #topic/viewer

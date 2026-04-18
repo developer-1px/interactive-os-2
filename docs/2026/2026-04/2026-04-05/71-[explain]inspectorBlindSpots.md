@@ -1,14 +1,15 @@
 ---
 id: '2-areas/devtools/71-[explain]inspectorBlindSpots'
 title: 'Inspector Blind Spots — command/keyMap이 inspector에 도달하지 못하는 5가지 구조적 결함'
-status: active
-kind: explain
 created: 2026-04-05
 updated: 2026-04-11
 summary: '작성일: 2026-04-05 맥락: inspector가 route:Writer의 Mod+\ command를 빈칸으로 표시���는 버그를 수정하면서, 동일한 패턴의 구조적 결함이 더 있는지 전수 조사'
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # Inspector Blind Spots — command/keyMap이 inspector에 도달하지 못하는 5가지 구조적 결함
 
@@ -269,3 +270,5 @@ flowchart TD
 | **route-engine 분리** (5) | route command가 engine 밖 | 설계 판단 필요 |
 
 결함 1,2,4는 **동일한 해결 패턴**으로 풀린다: axis의 `key()` 팩토리처럼, plugin keyMap과 override도 command 메타데이터를 선언하는 팩토리를 거치게 하면 된다. `definePlugin`의 keyMap entry가 `key('writer:insert-after', handler)` 형태가 되면 `.commands`가 자동으로 붙는다.
+
+#kind/explain #topic/devtools

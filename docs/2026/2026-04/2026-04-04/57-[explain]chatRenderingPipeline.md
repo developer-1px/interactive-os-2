@@ -1,14 +1,15 @@
 ---
 id: '2-areas/ui/57-[explain]chatRenderingPipeline'
 title: 'Chat 렌더링 파이프라인 — 3계층 변환이 tool_group을 재생산한다'
-status: active
-kind: explain
 created: 2026-04-04
 updated: 2026-04-11
 summary: '작성일: 2026-04-03 맥락: timelineAdapter에서 tool_group을 제거했지만 ChatFeed 내부에서 재그룹핑이 발생하여 여전히 그룹 카드가 보임'
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # Chat 렌더링 파이프라인 — 3계층 변환이 tool_group을 재생산한다
 
@@ -253,3 +254,5 @@ flowchart TD
 **해결 지점:** ChatFeed의 `mergeConsecutiveSystem`과 `groupSystemBlocks`를 제어할 수 있어야 한다. 현재 하드코딩이라 소비측(replay/live)이 이 동작을 끌 수 없다.
 
 → ChatFeed에 `grouping?: boolean` prop을 추가하거나, system 메시지 렌더링 전략을 blockRenderers처럼 주입 가능하게 바꾸면 해결된다.
+
+#kind/explain #topic/ui

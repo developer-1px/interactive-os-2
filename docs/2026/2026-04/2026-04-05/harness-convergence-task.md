@@ -1,13 +1,14 @@
 ---
 id: 2-areas/harness/prds/harness-convergence-task
 title: '하네스 수렴 구조 개선'
-status: active
-kind: plan
 created: 2026-04-05
 updated: 2026-04-08
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # 하네스 수렴 구조 개선
 
@@ -32,3 +33,5 @@ guard hook의 block 메시지를 하드코딩에서 동적 디렉토리 스캔�
 ## 제약
 - .mjs → readdirSync만
 - 기존 차단 로직 불변, 메시지만 변경
+
+#kind/plan #topic/harness

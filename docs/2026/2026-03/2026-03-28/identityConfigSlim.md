@@ -1,13 +1,14 @@
 ---
 id: 5-backlogs/identityConfigSlim
 title: 'Identity Config 축소 — 2026-03-29'
-status: backlog
-kind: note
 created: 2026-03-28
 updated: 2026-03-28
-topics: [5-backlogs]
-relates: []
-supersedes: []
+legacy:
+  status: backlog
+  kind: note
+  topics: [5-backlogs]
+  relates: []
+  supersedes: []
 ---
 # Identity Config 축소 — 2026-03-29
 
@@ -68,3 +69,5 @@ export function grid(columns: number, tabCycle = false): AriaPattern {
 ## 출처
 
 2026-03-29 세션 — APG 원문 비교 + config 설계 점검 discuss
+
+#kind/note

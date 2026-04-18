@@ -1,14 +1,15 @@
 ---
 id: 2-areas/store/prds/clipboard-serialize-prd
 title: 'Clipboard Serialize/Deserialize — PRD'
-status: active
-kind: prd
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: clipboard plugin에 serialize/deserialize 옵션을 추가하여 시스템 클립보드 양방향 통합. Writer는 MD 직렬화 주입.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Clipboard Serialize/Deserialize — PRD
 
@@ -127,3 +128,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/store

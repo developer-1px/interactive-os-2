@@ -1,13 +1,14 @@
 ---
 id: 1-projects/book/prds/book-floating-chrome-task
 title: Book UI Floating Chrome
-status: active
-kind: plan
 created: 2026-04-02
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Book UI Floating Chrome
 
@@ -23,3 +24,5 @@ book viewer의 header bar가 전체 너비를 차지하며 컨텐츠를 가림. 
 ## 파일
 - `src/pages/book/PageBookViewer.tsx` — JSX 구조 변경
 - `src/pages/book/PageBookViewer.module.css` — 스타일 전환
+
+#kind/plan #topic/book

@@ -1,14 +1,15 @@
 ---
 id: 0-inbox/experiment-flatlayout-incident-gaps
 title: 'FlatLayout 깊이 한계 실험 — incident 재현'
-status: inbox
-kind: note
 created: 2026-04-12
 updated: 2026-04-12
 summary: '**날짜**: 2026-04-12 **목적**: FlatLayout + ui 부품 조합만으로 incident 데모를 재현하여 gap을 발견'
-topics: [0-inbox]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: note
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # FlatLayout 깊이 한계 실험 — incident 재현
 
@@ -157,3 +158,5 @@ FlatLayout + command + shared store로 incident 수준 화면을 **거의** 선�
 1. **widget 레이어**: pages/도 ui/도 아닌 중간 계층이 필요
 2. **React 상태 ↔ store 경계**: useStreamFeed 같은 React 훅 상태는 store에 넣을 수 없어 props 우회 필요
 3. **StreamFeed renderItem**: items/ 패턴과 시그니처 불일치
+
+#kind/note

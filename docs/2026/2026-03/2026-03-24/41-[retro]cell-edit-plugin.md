@@ -1,13 +1,14 @@
 ---
 id: '4-archive/engine/archive/41-[retro]cell-edit-plugin'
 title: 'Retro: cellEdit Plugin — 2026-03-25'
-status: archived
-kind: retro
 created: 2026-03-24
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: cellEdit Plugin — 2026-03-25
 
@@ -54,3 +55,5 @@ PRD 촘촘함 충분, 스킬 구조 문제 없음, 새 원칙 발견 없음.
 ## 다음 행동
 - BACKLOGS.md에서 #14, #15, #16 체크 완료 처리
 - PRD → specs/archive/ 이동
+
+#kind/retro #archived

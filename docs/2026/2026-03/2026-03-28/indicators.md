@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/indicators
 title: Indicators
-status: active
-kind: note
 created: 2026-03-28
 updated: 2026-03-28
 summary: 'UI 완성품 내부에서 상태를 시각화하는 비-인터랙티브 요소 모음. 단독 사용 불가 — 항상 완성품(TreeView, Checkbox, Grid 등)이 소비한다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Indicators
 
@@ -86,3 +87,5 @@ supersedes: []
 | # | 갭 | 영향 | 상태 |
 |---|-----|------|------|
 | — | — | — | — |
+
+#kind/note #topic/ui

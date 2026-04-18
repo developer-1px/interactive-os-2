@@ -1,14 +1,15 @@
 ---
 id: 2-areas/devtools/prds/skill-kanban-v2-prd
 title: 'Skill Kanban v2 — PRD'
-status: active
-kind: prd
 created: 2026-04-11
 updated: 2026-04-11
 summary: 'Discussion: 칸반 카드에서 세션의 산출물(파일)과 스킬 여정을 한눈에 보고, 카드 클릭 시 풀스크린 2패널 모달(좌=채팅, 우=파일 프리뷰)로 터미널 없이 리뷰.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Skill Kanban v2 — PRD
 
@@ -149,3 +150,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/devtools

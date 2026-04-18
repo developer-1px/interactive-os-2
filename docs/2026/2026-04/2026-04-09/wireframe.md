@@ -1,13 +1,14 @@
 ---
 id: samples/wireframe
 title: 'Visual CMS 와이어프레임'
-status: sample
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
-topics: [samples]
-relates: []
-supersedes: []
+legacy:
+  status: sample
+  kind: note
+  topics: [samples]
+  relates: []
+  supersedes: []
 ---
 # Visual CMS 와이어프레임
 
@@ -122,3 +123,5 @@ supersedes: []
 | 속성 편집 | - | 실시간 반영 | - | 폼 값 변경 |
 | 미리보기 토글 | Sidebar 숨김 | 전체 너비 + 읽기 전용 | 모드 표시 변경 | Panel 숨김 |
 | `Escape` | 선택 해제 | 오버레이 제거 | 비활성화 | 폼 초기화 |
+
+#kind/note

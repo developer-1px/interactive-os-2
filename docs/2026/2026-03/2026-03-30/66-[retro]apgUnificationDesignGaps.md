@@ -1,13 +1,14 @@
 ---
 id: '2-areas/ui/66-[retro]apgUnificationDesignGaps'
 title: 'APG 전수 전환 설계 갭 리포트 — 2026-03-30'
-status: active
-kind: retro
 created: 2026-03-30
 updated: 2026-04-11
-topics: [2-areas, retro]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: retro
+  topics: [2-areas, retro]
+  relates: []
+  supersedes: []
 ---
 # APG 전수 전환 설계 갭 리포트 — 2026-03-30
 
@@ -95,3 +96,5 @@ AriaComponentProps에 `className`과 `onFocusChange`가 정의되어 있지만, 
 ## 남은 행동
 
 모든 갭 해결 완료. Carousel 2종(CarouselTabs, CarouselPrevNext)은 실전 빈도 낮아 의도적 제외.
+
+#kind/retro #topic/ui

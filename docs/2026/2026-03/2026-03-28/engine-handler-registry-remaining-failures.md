@@ -1,14 +1,15 @@
 ---
 id: 2-areas/engine/prds/engine-handler-registry-remaining-failures
 title: 'Engine Handler Registry — 잔여 테스트 실패 보고'
-status: active
-kind: note
 created: 2026-03-28
 updated: 2026-04-08
 summary: 'Phase 2 수정 후 15건 실패. Cynefin 분석 기반, 확실한 1건(use-aria-zone)은 수정 완료.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Engine Handler Registry — 잔여 테스트 실패 보고
 
@@ -73,3 +74,5 @@ supersedes: []
 1. **spatial plugin** (`src/interactive-os/plugins/spatial.ts`) — defineCommand 사용 여부 확인 → 12건 해소 가능
 2. **dialog expand 초기화** — expand command registry 등록 확인 → 2건 해소 가능
 3. **cms-detail-panel** — 위 2개 해결 후 재확인
+
+#kind/note #topic/engine

@@ -1,14 +1,15 @@
 ---
 id: 2-areas/primitives/prds/aria-panel-trigger-prd
 title: 'Aria.Panel + Aria.Trigger — PRD'
-status: active
-kind: prd
 created: 2026-03-28
 updated: 2026-04-08
 summary: 'Discussion: 축 v3에서 capability 분리는 완성됐지만, 소비측(Aria 컴포넌트)이 `<Aria><Aria.Item/>` 단일 구조로 고정되어 multi-zone 패턴(Tabs, Accordion, MenuButton, Combobox, Dialog)의 DOM 구조/ARIA 관계를 표현할 수 없다.'
-topics: [2-areas, x]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas, x]
+  relates: []
+  supersedes: []
 ---
 # Aria.Panel + Aria.Trigger — PRD
 
@@ -235,3 +236,5 @@ export const combobox = composePattern(
 3. **경계 ↔ 검증**: E1→V5, E2→V6, E3→V7, E6→V8, E8→V9 ✅
 4. **금지 ↔ 출처**: X1←P1, X2←P4, X3←Non-Goals, X4←S3, X5←P8 전부 유효 ✅
 5. **원칙 대조 ↔ 전체**: P8 주의사항(ui/ 완성품 래핑)은 별도 PRD로 분리 ✅
+
+#kind/prd #topic/primitives

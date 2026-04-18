@@ -1,15 +1,9 @@
 ---
 id: flatlayout-engine
 title: FlatLayout Engine
-status: operational
-kind: note
 created: 2025-10
 updated: 2026-04-17
 summary: '유일 레이아웃 엔진. JSX 트리 대신 flat 선언(`definePage`)으로 XY+Z 배치 소유권을 엔진에 위임. widget은 React 책임, layout은 엔진 책임으로 경계 분리.'
-topics: [1-projects, definepage, flatlayout, pull-model, widget]
-parent: null
-relates: []
-supersedes: []
 legacy:
   name: FlatLayout Engine
   slug: flatlayout-engine
@@ -21,6 +15,12 @@ legacy:
   handoffs: []
   tags: [flatlayout, definePage, widget, pull-model]
   last_touched: 2026-04-16
+  status: operational
+  kind: note
+  topics: [1-projects, definepage, flatlayout, pull-model, widget]
+  parent: null
+  relates: []
+  supersedes: []
 ---
 # FlatLayout Engine
 
@@ -37,3 +37,5 @@ legacy:
 ## Gaps
 - [ ] resizer(SplitPane) 공식 지원
 - [ ] nested 9-variant 시 keyboard 네비 일관성 회귀 테스트
+
+#kind/note #topic/features

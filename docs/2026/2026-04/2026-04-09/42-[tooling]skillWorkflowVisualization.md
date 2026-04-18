@@ -1,13 +1,14 @@
 ---
 id: '3-resources/42-[tooling]skillWorkflowVisualization'
 title: '스킬 워크플로우 전체 시각화 — 2026-04-08'
-status: reference
-kind: tooling
 created: 2026-04-09
 updated: 2026-04-11
-topics: [3-resources, tooling]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: tooling
+  topics: [3-resources, tooling]
+  relates: []
+  supersedes: []
 ---
 # 스킬 워크플로우 전체 시각화 — 2026-04-08
 
@@ -186,3 +187,5 @@ design-extract → design-implement → design-review → improve-design ⟳ (9/
 
 - 이 다이어그램을 기반으로 누락된 연결이나 불필요한 스킬이 없는지 `/doubt` 검증
 - 파이프라인 진입점 가이드 문서 작성 (어떤 상황에서 어떤 스킬로 시작?)
+
+#kind/note #topic/tooling

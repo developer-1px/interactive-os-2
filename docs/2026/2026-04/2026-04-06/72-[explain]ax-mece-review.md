@@ -1,13 +1,14 @@
 ---
 id: '2-areas/styles/72-[explain]ax-mece-review'
 title: 'ax() 24축 MECE 검토 — 2026-04-06'
-status: active
-kind: explain
 created: 2026-04-06
 updated: 2026-04-11
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # ax() 24축 MECE 검토 — 2026-04-06
 
@@ -163,3 +164,5 @@ ax()는 "시각 6축 + 구조 6축 = 12축, 이게 전부"로 시작했지만, �
 
 - 위 이슈들을 하나씩 discuss하며 해결 방향 확정
 - 확정된 변경사항을 PRD로 작성 후 실행
+
+#kind/explain #topic/styles

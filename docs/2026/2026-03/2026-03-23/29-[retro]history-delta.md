@@ -1,13 +1,14 @@
 ---
 id: '4-archive/engine/archive/29-[retro]history-delta'
 title: 'Retro: History Delta-Based Undo/Redo — 2026-03-23'
-status: archived
-kind: retro
 created: 2026-03-23
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: retro
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Retro: History Delta-Based Undo/Redo — 2026-03-23
 
@@ -64,3 +65,5 @@ supersedes: []
 ## 다음 행동
 - L1 백로그 없음
 - PRD 아카이브 실행
+
+#kind/retro #archived

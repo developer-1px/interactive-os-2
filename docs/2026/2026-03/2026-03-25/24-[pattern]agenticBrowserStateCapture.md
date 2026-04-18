@@ -1,14 +1,15 @@
 ---
 id: '3-resources/24-[pattern]agenticBrowserStateCapture'
 title: 'Agentic Browser State Capture — Accessibility Tree 기반 페이지 상태 표현'
-status: reference
-kind: pattern
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: REC(재현 녹화) 기능에 ARIA tree 스냅샷을 도입하기 위해, 에이전틱 브라우저들이 실제로 페이지 상태를 어떻게 캡처하는지 조사'
-topics: [3-resources, checked, disabled, expanded, pattern, pressed, selected]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: pattern
+  topics: [3-resources, checked, disabled, expanded, pattern, pressed, selected]
+  relates: []
+  supersedes: []
 ---
 # Agentic Browser State Capture — Accessibility Tree 기반 페이지 상태 표현
 
@@ -208,3 +209,5 @@ interactive-os는 **모든 인터랙티브 요소에 ARIA 속성이 이미 있�
 2. **ARIA 스냅샷 비교**: 데모 페이지에서 REC 녹화 후 JSON 결과의 `aria` 필드(타겟 1개)와 Playwright YAML 형식(전체 트리)의 정보량 차이를 비교
 3. **브라우저 내장 확인**: Chrome DevTools → Elements → Accessibility 패널에서 전체 accessibility tree 확인. 이것이 에이전틱 브라우저가 읽는 것
 4. **토큰 추정**: 데모 페이지의 accessibility tree를 YAML로 직렬화하면 대략 수십~수백 줄. DOM 전체 대비 10~100배 경량
+
+#kind/note #topic/pattern

@@ -1,14 +1,15 @@
 ---
 id: '3-resources/36-[library]pretext'
 title: 'Pretext — DOM-free 텍스트 측정/레이아웃 엔진'
-status: reference
-kind: library
 created: 2026-04-04
 updated: 2026-04-04
 summary: '작성일: 2026-04-04 맥락: interactive-os 프로젝트에 적용 가능한 외부 라이브러리 평가'
-topics: [3-resources, library]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: library
+  topics: [3-resources, library]
+  relates: []
+  supersedes: []
 ---
 # Pretext — DOM-free 텍스트 측정/레이아웃 엔진
 
@@ -177,3 +178,5 @@ flowchart TB
 2. `prepare('한국어 텍스트 테스트', '16px sans-serif')` 호출하여 PreparedText 획득
 3. `layout(prepared, 200, 24)` — 200px 폭에서의 높이/줄 수 확인
 4. 브라우저 DevTools에서 `performance.now()`로 DOM 측정 vs Pretext 속도 비교
+
+#kind/note #topic/library

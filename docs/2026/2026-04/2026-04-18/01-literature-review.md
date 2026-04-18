@@ -1,14 +1,15 @@
 ---
 id: research/ax/01-literature-review
 title: '01 Literature Review — 1·2·3군 외부 탐색 통합'
-status: research
-kind: note
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**작성일:** 2026-04-18 **조사 방법:** 3개 independent agent 병렬 탐색 (WebSearch + WebFetch) **조사 대상:** 1군 업계 표준 / 2군 현업·도구 / 3군 원리·수학·인지'
-topics: [research]
-relates: []
-supersedes: []
+legacy:
+  status: research
+  kind: note
+  topics: [research]
+  relates: []
+  supersedes: []
 ---
 # 01 Literature Review — 1·2·3군 외부 탐색 통합
 
@@ -383,3 +384,5 @@ supersedes: []
 - **Task 3** — `02-principles.md` 원리 카드 작성 (최대 20개 규모)
 - **Task 4** — `03-ax-mapping.md` 원리 × 24축 매트릭스
 - **Task 5** — `04-gap-plan.md` + `DESIGN.md` 재편
+
+#kind/note #topic/research

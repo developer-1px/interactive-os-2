@@ -1,14 +1,15 @@
 ---
 id: 2-areas/engine/prds/live-session-monitor-plan
 title: Live Session Monitor Implementation Plan
-status: active
-kind: plan
 created: 2026-04-02
 updated: 2026-04-08
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Live Session Monitor Implementation Plan
 
@@ -402,3 +403,5 @@ Run: `pnpm dev` — CLI 세션에서 Edit/Read/Write 수행 시 코드 뷰어 �
 git add src/pages/replay/LiveSessionPanel.tsx
 git commit -m "fix: improve live file content tracking for Read/Edit/Write"
 ```
+
+#kind/plan #topic/engine

@@ -1,17 +1,17 @@
 ---
 id: features-pm-layer
 title: 'Handoff: Feature Management 뷰 + PM 레이어 신설'
-status: inbox
-kind: handoff
 created: 2026-04-17
 updated: 2026-04-18
 summary: 'MEMORY가 PM 도구로 오남용되던 문제를 frontmatter DB + `/features` 뷰로 해결. PRD 🟢 8/8, UI 6버그 수정 후 브라우저 실사용 검증 완료.'
-topics: [0-inbox]
-relates: []
-supersedes: []
 legacy:
   created_at: 2026-04-17
   slug: features-pm-layer
+  status: inbox
+  kind: handoff
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Handoff: Feature Management 뷰 + PM 레이어 신설
 
@@ -69,3 +69,5 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: 사용자에게 `git push` 승인받기 → 그다음 MEMORY 이관 스크립트 설계.
+
+#kind/handoff

@@ -1,14 +1,15 @@
 ---
 id: samples/decision-log
 title: 'Decision Log — CMS 프로젝트'
-status: sample
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
 summary: '아키텍처 결정 기록 (ADR-lite).'
-topics: [samples]
-relates: []
-supersedes: []
+legacy:
+  status: sample
+  kind: note
+  topics: [samples]
+  relates: []
+  supersedes: []
 ---
 # Decision Log — CMS 프로젝트
 
@@ -77,3 +78,5 @@ supersedes: []
   - 중첩 트리 구조 — 깊은 불변 업데이트 비용, 순환 참조 위험.
   - 관계형 테이블 (정규화 3NF) — 클라이언트에 과도한 조인 비용.
 - **결과**: O(1) 노드 접근, 불변 업데이트가 단순(스프레드 1단계). `getVisibleNodes` 순회도 ID 배열 기반으로 효율적.
+
+#kind/note

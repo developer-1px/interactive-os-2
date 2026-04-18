@@ -1,13 +1,14 @@
 ---
 id: 1-projects/cms/stories
 title: 'Visual CMS — User Story Map'
-status: active
-kind: note
 created: 2026-03-27
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Visual CMS — User Story Map
 
@@ -92,3 +93,5 @@ supersedes: []
 | W6 | 번역 시트 | F21 | — |
 | W7 | 템플릿 선택 | F9 | — |
 | W8 | 프레젠트 모드 | F16 | — |
+
+#kind/note #topic/cms

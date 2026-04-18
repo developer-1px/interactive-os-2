@@ -1,14 +1,15 @@
 ---
 id: '4-archive/meta/archive/39-[explain]interactive-os-architecture'
 title: 'interactive-os — GUI 구축 비용을 0으로 만드는 ARIA 프레임워크'
-status: archived
-kind: explain
 created: 2026-03-24
 updated: 2026-04-11
 summary: '작성일: 2026-03-24 맥락: 프로젝트 전체 아키텍처 해설. 디자인 시스템 구축과 UI 완성품 양산을 앞두고, 현재까지의 설계 의도와 구조를 정리한다.'
-topics: [4-archive, explain]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: explain
+  topics: [4-archive, explain]
+  relates: []
+  supersedes: []
 ---
 # interactive-os — GUI 구축 비용을 0으로 만드는 ARIA 프레임워크
 
@@ -296,3 +297,5 @@ LLM이 이 프레임워크 위에서 코드를 생성할 때, 완성품 1줄이 
 4. **ARIA 축 체감**: `/internals/axis/navigate` → 각 축의 키바인딩과 ARIA 속성 변화를 개별 확인
 5. **실전 조합**: `/cms` → TreeGrid + spatial + clipboard + history + zodSchema가 조합된 Visual CMS
 6. **확인 포인트**: 아무 데모에서 키보드만으로 CRUD + undo/redo + copy/paste가 전부 동작하면 정상
+
+#kind/explain #archived

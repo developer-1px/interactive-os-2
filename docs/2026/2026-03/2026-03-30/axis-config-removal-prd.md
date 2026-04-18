@@ -1,14 +1,15 @@
 ---
 id: 2-areas/axis/prds/axis-config-removal-prd
 title: 'AxisConfig 제거 — PRD'
-status: active
-kind: prd
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: AxisConfig 19필드가 v2 운반체 잔재. 축이 플래그를 설정하고 useAria가 해석하는 중간 해석 계층 = OCP 위반.'
-topics: [2-areas, expanded_id]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas, expanded_id]
+  relates: []
+  supersedes: []
 ---
 # AxisConfig 제거 — PRD
 
@@ -152,3 +153,5 @@ supersedes: []
 | requiredEntities | `composePattern.ts:163+` — AriaPattern에 entities 합성 |
 | clickMap 이관 | `composePattern.ts` — `splitInputMap`으로 keyMap/clickMap 분리 |
 | 축 middleware | `src/interactive-os/axis/select.ts` — `ctx.selected.*` namespace |
+
+#kind/prd #topic/axis

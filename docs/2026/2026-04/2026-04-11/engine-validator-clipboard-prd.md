@@ -1,14 +1,15 @@
 ---
 id: 2-areas/engine/prds/engine-validator-clipboard-prd
 title: 'Engine Validator + Clipboard NormalizedData 수렴 — PRD'
-status: active
-kind: prd
 created: 2026-04-11
 updated: 2026-04-12
 summary: 'Discussion: clipboard를 NormalizedData 연산으로 수렴시키고, validator를 engine 기본 레이어로 내려서 모든 mutation command가 자동 검증되게 한다. zod는 validator를 engine에 등록하는 플러그인 역할.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Engine Validator + Clipboard NormalizedData 수렴 — PRD
 
@@ -175,3 +176,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/engine

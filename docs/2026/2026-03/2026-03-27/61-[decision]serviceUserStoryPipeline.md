@@ -1,13 +1,14 @@
 ---
 id: '2-areas/61-[decision]serviceUserStoryPipeline'
 title: 'Service User Story Pipeline — 2026-03-27'
-status: active
-kind: decision
 created: 2026-03-27
 updated: 2026-03-28
-topics: [2-areas, decision]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: decision
+  topics: [2-areas, decision]
+  relates: []
+  supersedes: []
 ---
 # Service User Story Pipeline — 2026-03-27
 
@@ -59,3 +60,5 @@ discuss → [유저스토리 맵] → PRD → Plan → Go
 ## 다음 단계
 
 /prd로 스킬 명세 작성
+
+#kind/decision

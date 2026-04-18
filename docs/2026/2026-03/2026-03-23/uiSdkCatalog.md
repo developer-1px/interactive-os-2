@@ -1,13 +1,14 @@
 ---
 id: 5-backlogs/uiSdkCatalog
 title: 'UI SDK 카탈로그 장기 플랜 — 2026-03-23'
-status: backlog
-kind: note
 created: 2026-03-23
 updated: 2026-03-23
-topics: [5-backlogs, vision, x]
-relates: []
-supersedes: []
+legacy:
+  status: backlog
+  kind: note
+  topics: [5-backlogs, vision, x]
+  relates: []
+  supersedes: []
 ---
 # UI SDK 카탈로그 장기 플랜 — 2026-03-23
 
@@ -106,3 +107,5 @@ SplitPane/Popover는 위계상 Pattern이지만 os 미지원 축(drag/resize, an
 
 - UI SDK discussion + NavList 구현 세션 (2026-03-23)
 - 카탈로그 발견 테이블: docs/0-inbox/27-[vision]ui-catalog.md
+
+#kind/note

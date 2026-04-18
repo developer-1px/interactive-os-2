@@ -1,14 +1,15 @@
 ---
 id: 1-projects/cms/prds/pipeline-dashboard-prd
 title: 'Pipeline Dashboard — PRD'
-status: active
-kind: prd
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: 스킬 파이프라인 산출물을 트리×단계 매트릭스로 가시화하여 누락/다음 행동을 한눈에 파악. 작업 순서는 자유, 구조는 자동.'
-topics: [1-projects, project]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects, project]
+  relates: []
+  supersedes: []
 ---
 # Pipeline Dashboard — PRD
 
@@ -235,3 +236,5 @@ stages:
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/cms

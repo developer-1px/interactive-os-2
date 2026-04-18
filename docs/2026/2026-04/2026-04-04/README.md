@@ -1,14 +1,15 @@
 ---
 id: 2-areas/harness/README
 title: 'Claude Harness — Area Overview'
-status: active
-kind: readme
 created: 2026-04-04
 updated: 2026-04-04
 summary: 'AI 협업의 품질을 **기계적으로 강제**하는 하네스 시스템. CLAUDE.md/Memory는 참고 수준(~50%), 스킬은 워크플로우 강제(~80%), 훅은 기계적 차단(100%).'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: readme
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Claude Harness — Area Overview
 
@@ -47,3 +48,5 @@ Pre (차단)  ──→  Post (피드백)  ──→  Stop (최종 게이트)
 ```
 
 retro가 갭을 발견하면, improve-skill이 강제력 위계에 따라 훅(기계적) 또는 스킬(워크플로우)을 패치한다.
+
+#kind/note #topic/harness

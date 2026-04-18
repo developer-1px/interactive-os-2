@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/slot-children-visual-render-design
 title: 'Slot Children 시각적 렌더링 + Auto-drill'
-status: active
-kind: note
 created: 2026-04-06
 updated: 2026-04-08
 summary: '**Date:** 2026-04-07 **Status:** Approved'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Slot Children 시각적 렌더링 + Auto-drill
 
@@ -138,3 +139,5 @@ export function getSlotName(store: NormalizedData, parentId: string, childId: st
 - 데이터 모델 변경 (slot 시스템 그대로 유지)
 - container childRules 변경 없음
 - 새 노드 타입 추가 없음
+
+#kind/note #topic/ui

@@ -1,13 +1,14 @@
 ---
 id: 2-areas/axis/prds/v3-migration-plan
 title: 'v3 Migration Plan — 2026-03-29'
-status: active
-kind: plan
 created: 2026-03-28
 updated: 2026-04-08
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # v3 Migration Plan — 2026-03-29
 
@@ -101,3 +102,5 @@ Config-only 함수는 유지: `selectConfig()`, `expandConfig()`
    - Agent C: slider, spinbutton, checkbox, checkboxMixed, switch, buttonToggle, link, feed
 3. Task 3 (bundle 제거) — 직접 (전환 후)
 4. Verify — typecheck + lint + test + deps
+
+#kind/plan #topic/axis

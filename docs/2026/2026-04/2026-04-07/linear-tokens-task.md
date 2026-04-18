@@ -1,14 +1,15 @@
 ---
 id: 1-projects/cms/prds/linear-tokens-task
 title: 'Linear 실측 → tokens.css 적용'
-status: active
-kind: plan
 created: 2026-04-07
 updated: 2026-04-08
 summary: 'DESIGN.md L-5 적용 우선순위 기반'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Linear 실측 → tokens.css 적용
 
@@ -28,3 +29,5 @@ supersedes: []
 - `src/styles/tokens.css` — 토큰 값 변경
 - `src/styles/axes.css` — 축 CSS에서 토큰 소비하는 부분 확인
 - `src/interactive-os/ui/*` — 완성품 컴포넌트 기본값 확인
+
+#kind/plan #topic/cms

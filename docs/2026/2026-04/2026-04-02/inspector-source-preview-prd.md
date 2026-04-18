@@ -1,14 +1,15 @@
 ---
 id: 1-projects/viewer/prds/inspector-source-preview-prd
 title: 'Inspector Source Preview — PRD'
-status: active
-kind: prd
 created: 2026-04-02
 updated: 2026-04-08
 summary: 'Discussion: inspector lock 상태에서 모달 없이 소스코드를 즉시 확인 — 탐색 흐름 유지'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Inspector Source Preview — PRD
 
@@ -132,3 +133,5 @@ supersedes: []
 | computePlacement | `src/misc/computePlacement.ts` — 순수 배치 함수 |
 | SourcePreview | `src/devtools/inspector/SourcePreview.tsx` — ~5줄 코드 preview |
 | InspectorOverlay 통합 | `src/devtools/inspector/InspectorOverlay.tsx` — SourcePreview 참조 |
+
+#kind/prd #topic/viewer

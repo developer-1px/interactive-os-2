@@ -1,14 +1,15 @@
 ---
 id: '3-resources/01-[event]aiSprintConcept'
 title: 'AI 스프린트 — AI 스프린트 AI 버전 행사 기획안'
-status: reference
-kind: event
 created: 2026-03-20
 updated: 2026-03-24
 summary: '작성일: 2026-03-19 맥락: 7월 AI 스프린트 행사를 위해 행사 담당자와의 미팅 준비 자료'
-topics: [3-resources, event]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: event
+  topics: [3-resources, event]
+  relates: []
+  supersedes: []
 ---
 # AI 스프린트 — AI 스프린트 AI 버전 행사 기획안
 
@@ -221,3 +222,5 @@ flowchart TD
 3. **왜 2~4명 소규모인가** — AI 프로젝트는 역할 분담보다 함께 이터레이션이 핵심. 무기명 아이디어 선택으로 자연 매칭
 4. **왜 1박2일인가** — 토요일 설계, 일요일 구현, 다음주 발표/체험. 밤새지 않아도 되는 여유 있는 구조
 5. **왜 아무나인가** — 프롬프트만 써도 기여 가능. "AI로 뭔가 만드는 체험" 자체가 가치
+
+#kind/note #topic/event

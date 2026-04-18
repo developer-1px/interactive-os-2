@@ -1,13 +1,14 @@
 ---
 id: 4-archive/meta/archive/skill-kanban-v2-review
 title: 'Skill Kanban v2 — Review'
-status: archived
-kind: note
 created: 2026-04-11
 updated: 2026-04-11
-topics: [4-archive]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: note
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 # Skill Kanban v2 — Review
 
@@ -58,3 +59,5 @@ flowchart LR
   style 출력 fill:#2a2a1a,stroke:#8a8a4a,color:#ddddaa
   style 제약 fill:#2a1a1a,stroke:#ff6b6b,color:#ff9999
 ```
+
+#kind/note #archived

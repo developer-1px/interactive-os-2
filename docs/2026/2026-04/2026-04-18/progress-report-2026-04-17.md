@@ -1,14 +1,15 @@
 ---
 id: 0-inbox/progress-report-2026-04-17
 title: 'Aria Progress Report — 2026-04-17'
-status: inbox
-kind: note
 created: 2026-04-18
 updated: 2026-04-18
 summary: '본인 회고용 정식 보고서. 범위: 2025-10-01 ~ 2026-04-17 (약 6.5개월, 1443 커밋). 출처: `docs/PROGRESS.md`, `MEMORY.md`, `.claude/CLAUDE.md`, `docs/DESIGN.md`, `git log`, `src/` 디렉토리 스캔.'
-topics: [0-inbox]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: note
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Aria Progress Report — 2026-04-17
 
@@ -108,3 +109,5 @@ supersedes: []
 ---
 
 *작성: 2026-04-17 / 본인 회고용. 마케팅 톤 제거, 증거 우선.*
+
+#kind/note

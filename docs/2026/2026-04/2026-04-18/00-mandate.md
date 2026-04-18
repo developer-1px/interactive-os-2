@@ -1,14 +1,15 @@
 ---
 id: research/ax/00-mandate
 title: '00 Mandate — ax 메타 원리 연구'
-status: research
-kind: note
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**선언일:** 2026-04-18 **이전 상태:** ax = 24축 CSS-in-JS 시스템 (실험 중) **재정의 후:** ax = **현대 UI 디자인 메타 원리의 공식 좌표계**'
-topics: [research]
-relates: []
-supersedes: []
+legacy:
+  status: research
+  kind: note
+  topics: [research]
+  relates: []
+  supersedes: []
 ---
 # 00 Mandate — ax 메타 원리 연구
 
@@ -94,3 +95,5 @@ shadcn의 "구조 잠금 + 스타일 개방"의 심화판 — shadcn이 Radix로
 - [project_ax_codification](../../../.claude/projects/-Users-user-Desktop-aria/memory/project_ax_codification.md) — 이 연구의 정체성 선언
 - [project_ax_design_system](../../../.claude/projects/-Users-user-Desktop-aria/memory/project_ax_design_system.md) — 24축 설계 결정 기록
 - [feedback_ax_semantic_not_css](../../../.claude/projects/-Users-user-Desktop-aria/memory/feedback_ax_semantic_not_css.md) — 의도 기준 원칙
+
+#kind/note #topic/research

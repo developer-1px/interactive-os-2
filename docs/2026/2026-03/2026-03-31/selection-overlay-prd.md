@@ -1,14 +1,15 @@
 ---
 id: 2-areas/axis/prds/selection-overlay-prd
 title: 'SelectionOverlay — PRD'
-status: active
-kind: prd
 created: 2026-03-31
 updated: 2026-04-08
 summary: 'Discussion: 포커스/선택 표현을 콘텐츠에서 분리하여 독립 overlay로 전환. 범용 selection 도구.'
-topics: [2-areas, data-node-id, nodeidattr]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas, data-node-id, nodeidattr]
+  relates: []
+  supersedes: []
 ---
 # SelectionOverlay — PRD
 
@@ -145,3 +146,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/axis

@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/splitPane
 title: SplitPane
-status: active
-kind: note
 created: 2026-03-28
 updated: 2026-03-28
 summary: 'Ratio 기반 리사이즈 가능한 분할 컨테이너. 수평/수직 방향, 키보드/포인터 리사이즈 지원.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # SplitPane
 
@@ -82,3 +83,5 @@ div.splitPane (flex-row | flex-col)
 - separator 커서: `col-resize` (horizontal) / `row-resize` (vertical)
 - separator 배경: `--border-default`, hover 시 `--focus`
 - motion: `--motion-instant-duration` + `--motion-instant-easing`
+
+#kind/note #topic/ui

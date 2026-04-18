@@ -1,14 +1,15 @@
 ---
 id: '4-archive/primitives/archive/32-[explain]useAria'
 title: 'useAria.ts — 442줄의 해부'
-status: archived
-kind: explain
 created: 2026-03-23
 updated: 2026-04-11
 summary: '작성일: 2026-03-23 맥락: 중간 점검에서 "접착층(L5-L6)이 1,501 LOC로 무겁다"는 지적. useAria 442줄이 커져야 할 이유가 있는지 해부.'
-topics: [4-archive, explain]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: explain
+  topics: [4-archive, explain]
+  relates: []
+  supersedes: []
 ---
 # useAria.ts — 442줄의 해부
 
@@ -308,3 +309,5 @@ graph LR
 2. ① 엔진 생성(63-101) → ② 외부 싱크(106-149) → ③ KeyMap(151-192) → ④ 상태(199-256) → ⑤ 이벤트(258-302) → ⑥ props(306-388) → ⑦ container(390-431) 순서로 색이 바뀌는 것을 확인
 3. `src/interactive-os/hooks/useAriaZone.ts`를 나란히 놓고, ③④⑤⑥⑦이 거의 복사된 것을 확인
 4. 두 파일에서 `getNodeState`를 검색하면 — 동일한 트리 순회 로직이 양쪽에 있다
+
+#kind/explain #archived

@@ -1,13 +1,14 @@
 ---
 id: 4-archive/axis/summary
 title: 'Axis — 결정 요약'
-status: archived
-kind: summary
 created: 2026-04-11
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: summary
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Axis — 결정 요약
 
@@ -101,3 +102,5 @@ flowchart TD
 ```
 
 > 원본: [archive/35-[retro]tab-axis.md](archive/35-[retro]tab-axis.md)
+
+#kind/note #archived

@@ -1,14 +1,15 @@
 ---
 id: '3-resources/13-[design]cssTokenNamingConventions'
 title: 'CSS 디자인 토큰 네이밍 약어 관행 — 주요 시스템 비교'
-status: reference
-kind: design
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-25 맥락: DESIGN.md 5개 번들의 축 이름에 통용 약어 vs 자의적 약어를 구분하기 위한 근거 조사'
-topics: [3-resources, data-surface, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, data-surface, design]
+  relates: []
+  supersedes: []
 ---
 # CSS 디자인 토큰 네이밍 약어 관행 — 주요 시스템 비교
 
@@ -184,3 +185,5 @@ graph TB
 2. 🔴 판정 약어 검색: `--shape-xs-r`, `--type-hero-lh` 등
 3. 위 "적용 규칙 제안" 표에 따라 rename 대상 식별
 4. rename 후 `[data-surface]` 등 소비자 CSS에서 깨지는 곳 없는지 grep
+
+#kind/note #topic/design

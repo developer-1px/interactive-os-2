@@ -1,14 +1,15 @@
 ---
 id: 2-areas/store/prds/command-unification-task
 title: 'Command Unification — Task'
-status: active
-kind: plan
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'PRD: `2026-04-03-command-unification-prd.md` 빅뱅 1커밋. 모든 useState → NormalizedData + Command.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Command Unification — Task
 
@@ -50,3 +51,5 @@ supersedes: []
 - [ ] 기존 테스트 통과
 - [ ] V1~V15 시나리오 검증
 - [ ] chat 30블록 렌더 성능 실측
+
+#kind/plan #topic/store

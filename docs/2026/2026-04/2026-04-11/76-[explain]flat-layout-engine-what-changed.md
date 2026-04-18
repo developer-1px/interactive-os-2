@@ -1,13 +1,14 @@
 ---
 id: '2-areas/layout/76-[explain]flat-layout-engine-what-changed'
 title: 'FlatLayout 엔진 — 뭐가 달라졌나 — 2026-04-10'
-status: active
-kind: explain
 created: 2026-04-11
 updated: 2026-04-11
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # FlatLayout 엔진 — 뭐가 달라졌나 — 2026-04-10
 
@@ -119,3 +120,5 @@ src/interactive-os/
 - Phase 2: ui/ 내부 컴포넌트도 FlatLayout으로 재귀 적용 (tab, tree 등)
 - 위젯 props를 command dispatch로 전환 (콜백 배선 제거)
 - 다른 pages/ 점진적 마이그레이션 (PageCms, PageAgentChat)
+
+#kind/explain #topic/layout

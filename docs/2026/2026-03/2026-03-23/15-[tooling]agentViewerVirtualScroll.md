@@ -1,14 +1,15 @@
 ---
 id: '3-resources/15-[tooling]agentViewerVirtualScroll'
 title: 'Agent Viewer 가상스크롤 — height cache + linear scan 기반 윈도잉'
-status: reference
-kind: tooling
 created: 2026-03-23
 updated: 2026-03-25
 summary: '작성일: 2026-03-23 맥락: Agent Viewer의 타임라인 렌더링 성능 메커니즘 해설'
-topics: [3-resources, tooling]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: tooling
+  topics: [3-resources, tooling]
+  relates: []
+  supersedes: []
 ---
 # Agent Viewer 가상스크롤 — height cache + linear scan 기반 윈도잉
 
@@ -235,3 +236,5 @@ stateDiagram-v2
 2. **활성 세션 선택**: 좌측 archive 패널에서 live 세션 클릭 → `TimelineColumn` 추가됨
 3. **핵심 시나리오**: 에이전트가 작업 중인 세션을 열면 SSE 스트림으로 이벤트가 실시간 append되고, 하단에 고정된 상태로 자동 스크롤됨. 위로 스크롤하면 자동 추적이 멈추고, `scrollTop < 200`이 되면 과거 이벤트가 자동 로드됨.
 4. **확인 포인트**: 브라우저 DevTools Performance 탭에서 스크롤 시 렌더되는 DOM 노드 수가 visible range + overscan(20개 내외)으로 제한되는 것을 확인. 수백 개 이벤트가 있어도 DOM 노드 수는 일정.
+
+#kind/note #topic/tooling

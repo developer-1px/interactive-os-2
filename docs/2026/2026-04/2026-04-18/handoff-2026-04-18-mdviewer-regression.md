@@ -34,3 +34,5 @@ session_id: mdviewer-regression
 ## 이어받는 법
 
 작업 종료. 다음 세션은 새 주제로 시작.
+
+#kind/handoff

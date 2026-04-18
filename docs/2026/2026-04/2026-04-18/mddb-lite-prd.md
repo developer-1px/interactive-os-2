@@ -1,14 +1,15 @@
 ---
 id: 2-areas/docs-infra/prds/mddb-lite-prd
 title: 'mddb lite — 연월일 물리 + 하단 hashtag 논리 (Phase 1 승계)'
-status: active
-kind: prd
 created: 2026-04-18
 updated: 2026-04-18
 summary: 'PARA 이동식 + frontmatter 자동주입 Phase 1을 철회하고 time-stamped immovable 경로 + 마지막 줄 hashtag 컨벤션으로 재구성한다. 재사용 9 / 신규 1 / 삭제 2 / 수정 7.'
-topics: [docs-infra, mddb, prd]
-relates: [2-areas/docs-infra/prds/mddb-phase1-prd]
-supersedes: [2-areas/docs-infra/prds/mddb-phase1-prd]
+legacy:
+  status: active
+  kind: prd
+  topics: [docs-infra, mddb, prd]
+  relates: [2-areas/docs-infra/prds/mddb-phase1-prd]
+  supersedes: [2-areas/docs-infra/prds/mddb-phase1-prd]
 ---
 
 # mddb lite — PRD
@@ -568,3 +569,5 @@ export async function relocate({ dryRun = false } = {}) {
 ---
 
 **전체 완성도**: 🟢
+
+#kind/prd #topic/docs-infra

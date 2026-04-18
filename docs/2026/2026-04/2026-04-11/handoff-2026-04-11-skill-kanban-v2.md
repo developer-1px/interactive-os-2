@@ -1,16 +1,16 @@
 ---
 id: 4-archive/meta/archive/handoff-2026-04-11-skill-kanban-v2
 title: 'Handoff: Skill Kanban v2 — 2패널 모달 + 산출물 표시'
-status: archived
-kind: handoff
 created: 2026-04-11
 updated: 2026-04-11
 summary: '2026-04-11 세션에서 Skill Kanban v2 discuss→PRD→구현→simplify 완료. 브라우저 실사용 검증과 디자인 개선이 남음.'
-topics: [4-archive]
-relates: []
-supersedes: []
 legacy:
   consumed_by: '38aac4f5 — Agent Dashboard 재설계로 v2 handoff 항목 해소'
+  status: archived
+  kind: handoff
+  topics: [4-archive]
+  relates: []
+  supersedes: []
 ---
 # Handoff: Skill Kanban v2 — 2패널 모달 + 산출물 표시
 
@@ -51,3 +51,5 @@ legacy:
 ## 다음 행동 제안
 
 `/use /kanban`으로 실사용 검증 먼저. 동작 확인 후 `/improve`로 디자인 품질 개선.
+
+#kind/handoff #archived

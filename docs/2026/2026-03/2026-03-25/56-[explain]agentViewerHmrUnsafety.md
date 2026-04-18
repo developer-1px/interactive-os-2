@@ -1,14 +1,15 @@
 ---
 id: '4-archive/ui/archive/56-[explain]agentViewerHmrUnsafety'
 title: 'AgentViewer HMR 비안전성 — 왜 코드 수정 시 타임라인이 날아가는가'
-status: archived
-kind: explain
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: agentViewer 개발 중 파일 수정 시 축적된 타임라인 데이터와 스크롤 위치가 소실된다'
-topics: [4-archive, explain]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: explain
+  topics: [4-archive, explain]
+  relates: []
+  supersedes: []
 ---
 # AgentViewer HMR 비안전성 — 왜 코드 수정 시 타임라인이 날아가는가
 
@@ -233,3 +234,5 @@ flowchart TD
 ```
 
 1층(전파)과 2층(데이터)을 해결하면 3층(불일치)은 부수적으로 해소된다. 핵심은 **timeline 데이터를 React state 밖으로 꺼내는 것**이다.
+
+#kind/explain #archived

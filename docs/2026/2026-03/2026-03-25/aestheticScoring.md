@@ -1,13 +1,14 @@
 ---
 id: 1-projects/aestheticScoring
 title: '미감 점수화 — 2축 분석과 방향 — 2026-03-25'
-status: active
-kind: note
 created: 2026-03-25
 updated: 2026-03-25
-topics: [1-projects, design]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [1-projects, design]
+  relates: []
+  supersedes: []
 ---
 # 미감 점수화 — 2축 분석과 방향 — 2026-03-25
 
@@ -79,3 +80,5 @@ supersedes: []
 - [ ] Prose 렌더러 통일 (MdPage로) — 별도 PRD
 - [ ] DESIGN.md §3에 배치 규칙 추가
 - [ ] `pnpm score:aesthetics` 스크립트 — lint 층부터 시작
+
+#kind/note

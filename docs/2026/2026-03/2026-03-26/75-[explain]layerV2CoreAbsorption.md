@@ -1,14 +1,15 @@
 ---
 id: '2-areas/engine/75-[explain]layerV2CoreAbsorption'
 title: '레이어 v2: core 흡수 — 구체적 변경 계획'
-status: active
-kind: explain
 created: 2026-03-26
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: plugins/core.ts의 commands+entities를 axis/로 이동하여 L4→L5 역참조 제거'
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # 레이어 v2: core 흡수 — 구체적 변경 계획
 
@@ -212,3 +213,5 @@ pattern/
 18개 APG 파일이 examples/로 이동. import 경로 변경: `../pattern/listbox` → `../pattern/roles/listbox`.
 
 → pattern/의 본문(composePattern, createPatternContext, types)과 사용 예시(APG)가 분리된다.
+
+#kind/explain #topic/engine

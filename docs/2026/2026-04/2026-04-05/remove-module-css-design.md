@@ -1,13 +1,14 @@
 ---
 id: 2-areas/design/prds/remove-module-css-design
 title: 'module.css 전면 제거 — ax() 디자인 언어 고도화'
-status: active
-kind: note
 created: 2026-04-05
 updated: 2026-04-08
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # module.css 전면 제거 — ax() 디자인 언어 고도화
 
@@ -109,3 +110,5 @@ scroll?: 'hidden' | 'y' | 'x' | 'auto'
 - `src/**/*.module.css` = 0개
 - typecheck, lint, lint:css, test 모두 통과
 - 시각적 regression 없음 (score:design 점수 유지 또는 상승)
+
+#kind/note #topic/design

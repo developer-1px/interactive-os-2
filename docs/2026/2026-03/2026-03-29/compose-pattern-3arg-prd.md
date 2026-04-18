@@ -1,14 +1,15 @@
 ---
 id: 2-areas/pattern/prds/compose-pattern-3arg-prd
 title: 'composePattern 3인자 리팩토링 — PRD'
-status: active
-kind: prd
 created: 2026-03-29
 updated: 2026-04-08
 summary: 'Discussion: Identity 14필드 god object → 축 인스턴스 SSOT + required 배열 + APG 3섹션 1:1 매핑'
-topics: [2-areas, axes, newaxes, newaxis, sel]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas, axes, newaxes, newaxis, sel]
+  relates: []
+  supersedes: []
 ---
 # composePattern 3인자 리팩토링 — PRD
 
@@ -166,3 +167,5 @@ supersedes: []
 | popup() 축 | `axis/popup.ts` — popup 인스턴스 |
 | grid() 축 | `navigate.ts:175` — `grid(columns, opts?)` |
 | 31개 role 변환 | `pattern/roles/*.ts` 전부 `composePattern(identity, [axes], keyMap)` 형태 |
+
+#kind/prd #topic/pattern

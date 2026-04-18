@@ -1,14 +1,15 @@
 ---
 id: 2-areas/distribution/plans/2026-04-12-single-entry-refactor
 title: 'Single Entry Refactor — Implementation Plan'
-status: active
-kind: note
 created: 2026-04-12
 updated: 2026-04-12
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Single Entry Refactor — Implementation Plan
 
@@ -900,3 +901,5 @@ Plan complete and saved to `docs/2-areas/distribution/plans/2026-04-12-single-en
 **2. Inline Execution** — 본 세션에서 직접 실행. Task별 checkpoint.
 
 Which approach?
+
+#kind/note #topic/distribution

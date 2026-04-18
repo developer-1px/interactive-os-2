@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/a2ui-declarative-surface-prd
 title: 'A2UI Declarative Surface — PRD'
-status: active
-kind: prd
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: React를 내부 구현으로 숨기고, flat 선언만으로 접근성 완비 UI를 조립하는 A2UI 호환 표면 제공'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # A2UI Declarative Surface — PRD
 
@@ -164,3 +165,5 @@ function parseSurface(stream: ReadableStream<string>): AsyncIterable<NormalizedD
 | Q2 | 커스텀 카탈로그 JSON을 a2ui.org에 공개 등록? | P1 이후 검토. 먼저 로컬 카탈로그로 증명 |
 | Q3 | A2UI v0.9 → v1.0 스펙 변경 대응 | parseSurface에 version 분기. 현재는 v0.9 타겟 |
 | Q4 | 스트리밍 중 에러 처리 (잘못된 JSON, 없는 ID 참조) | 해당 줄 skip + console.warn. 나머지는 정상 렌더 |
+
+#kind/prd #topic/ui

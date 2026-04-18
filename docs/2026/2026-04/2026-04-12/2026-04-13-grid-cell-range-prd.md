@@ -1,14 +1,15 @@
 ---
 id: 2-areas/axis/prds/2026-04-13-grid-cell-range-prd
 title: 'Grid 2D Cell Range Selection — PRD'
-status: active
-kind: prd
 created: 2026-04-12
 updated: 2026-04-12
 summary: 'Discussion: i18n 편집기에서 Shift+←/→ 미작동 발견 → grid 축 공통 미구현 확정 → 키보드 4방향 + Shift+Click + Drag로 2D 사각 셀 영역 선택을 grid 축에 주입. clipboard/Delete가 영역에 작동.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Grid 2D Cell Range Selection — PRD
 
@@ -217,3 +218,5 @@ supersedes: []
 - 원칙 대조 ↔ 전체: meta prefix 주의 1건 외 전부 준수, 수정 없이 설계 유지 ✅
 
 **주요 추측(?) 항목**: 없음. 전부 기존 코드베이스와 APG 표준에서 도출.
+
+#kind/prd #topic/axis

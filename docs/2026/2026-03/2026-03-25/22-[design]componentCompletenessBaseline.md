@@ -1,14 +1,15 @@
 ---
 id: '3-resources/22-[design]componentCompletenessBaseline'
 title: 'Component Completeness Baseline — UI 라이브러리 횡단 조사'
-status: reference
-kind: design
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: CSS Layer Protocol은 정의됐지만, grep compliance만으로는 "디자인이 좋아졌는가"를 측정 못 함. "컴포넌트가 뭘 갖춰야 완성인가"의 레퍼런스가 필요.'
-topics: [3-resources, data-aria-container, data-pressed, design]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: design
+  topics: [3-resources, data-aria-container, data-pressed, design]
+  relates: []
+  supersedes: []
 ---
 # Component Completeness Baseline — UI 라이브러리 횡단 조사
 
@@ -309,3 +310,5 @@ grep으로 자동 체크 가능한 항목:
 2. `scripts/scoreComponentCompleteness.mjs` 생성 — 각 module.css를 grep해서 필수 항목 존재 여부 카운트
 3. `pnpm score:completeness` 실행 → 컴포넌트별 점수 출력
 4. `/improve` 스킬로 점수가 낮은 컴포넌트부터 자율 개선 루프
+
+#kind/note #topic/design

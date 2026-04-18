@@ -1,14 +1,15 @@
 ---
 id: 0-inbox/mddb-audit-2026-04-18
 title: 'mddb 소급 설계용 docs/ 현황 감사'
-status: inbox
-kind: note
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**날짜**: 2026-04-18 **목적**: file 기반 md DB 시스템 소급 적용 전 `docs/` 하위 현황 파악 **scope**: `docs/**/*.md` (335 파일) — `memory/`는 Claude 자동 관리 영역이라 제외'
-topics: [0-inbox, tag]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: note
+  topics: [0-inbox, tag]
+  relates: []
+  supersedes: []
 ---
 # mddb 소급 설계용 docs/ 현황 감사
 
@@ -108,3 +109,5 @@ supersedes: []
 - [ ] Phase 1 MVP 범위: Zod schema + `extract.ts` + pre-commit hook (memory/ 제외, docs/ 한정)
 - [ ] Phase 2: 로컬 Gemma 분류 — **별도 PRD** 또는 같은 PRD의 Phase 2 섹션
 - [ ] Phase 3: `/knowledge` 라우트 뷰어 — 별도 PRD
+
+#kind/note

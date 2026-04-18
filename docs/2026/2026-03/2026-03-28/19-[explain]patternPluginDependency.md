@@ -1,14 +1,15 @@
 ---
 id: '2-areas/pattern/19-[explain]patternPluginDependency'
 title: 'Pattern→Plugin 의존 구조 — createPatternContext가 모든 위반의 허브다'
-status: active
-kind: explain
 created: 2026-03-28
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: L4 Pattern이 L5 Plugins를 runtime import하는 구조적 위반 분석'
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # Pattern→Plugin 의존 구조 — createPatternContext가 모든 위반의 허브다
 
@@ -218,3 +219,5 @@ flowchart TD
 ```
 
 → **세 줄기를 독립적으로 풀 수 있다.** 줄기 1(Entity ID)이 가장 단순하고, 줄기 3(getVisibleNodes)이 가장 격리된 변경이고, 줄기 2(Command 팩토리)가 가장 구조적인 변경이다.
+
+#kind/explain #topic/pattern

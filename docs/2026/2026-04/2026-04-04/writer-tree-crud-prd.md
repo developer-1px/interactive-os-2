@@ -1,14 +1,15 @@
 ---
 id: 1-projects/chat/prds/writer-tree-crud-prd
 title: 'Writer Tree CRUD 완성 — PRD'
-status: active
-kind: prd
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: 구조적 글쓰기 트리에서 문서를 온전히 만들고 수정할 수 있는 CRUD 조작 완성. OS 기반(keyMap + command + plugin).'
-topics: [1-projects, x]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects, x]
+  relates: []
+  supersedes: []
 ---
 # Writer Tree CRUD 완성 — PRD
 
@@ -188,3 +189,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/chat

@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/prds/inspector-improve-task
 title: 'Inspector Improve — Task'
-status: active
-kind: plan
 created: 2026-04-05
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Inspector Improve — Task
 
@@ -39,3 +40,5 @@ supersedes: []
 ## 의존 순서
 F1 → F2 (Pick이 있어야 DOM element를 찾아서 비교 가능)
 B1, B2는 독립 — F1/F2와 병렬 가능
+
+#kind/plan #topic/viewer

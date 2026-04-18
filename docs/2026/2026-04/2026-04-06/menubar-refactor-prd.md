@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/prds/menubar-refactor-prd
 title: 'MenuBar 리팩토링 — PRD'
-status: active
-kind: prd
 created: 2026-04-06
 updated: 2026-04-08
 summary: 'Discussion: MenuBar가 ax() + 부품 분리 원칙을 위반. levelMap + CSS Anchor + interactive CSS로 재설계.'
-topics: [2-areas, aria-expanded, data-focused]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas, aria-expanded, data-focused]
+  relates: []
+  supersedes: []
 ---
 # MenuBar 리팩토링 — PRD
 
@@ -136,3 +137,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/ui

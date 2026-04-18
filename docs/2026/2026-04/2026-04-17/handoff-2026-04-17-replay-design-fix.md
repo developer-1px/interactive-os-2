@@ -1,17 +1,17 @@
 ---
 id: 0-inbox/handoff-2026-04-17-replay-design-fix
 title: 'Handoff: /replay 디자인 5 결함 수정'
-status: inbox
-kind: handoff
 created: 2026-04-17
 updated: 2026-04-18
 summary: 'Shorts 스타일 /replay 뷰어의 5개 결함(사이드바·하단UI·하이라이트·scroll/zoom·search)을 수정하고 SlotCtxRegistry 누수를 리팩토링. cf10a6fa로 커밋 완료, 브라우저 시각 재확인 남음.'
-topics: [0-inbox]
-relates: []
-supersedes: []
 legacy:
   created_at: 2026-04-17
   session_id: 2026-04-17-replay-design-fix
+  status: inbox
+  kind: handoff
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Handoff: /replay 디자인 5 결함 수정
 
@@ -73,3 +73,5 @@ legacy:
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 
 **구체적 첫 행동**: `pnpm dev`로 서버 확인 후 `localhost:5173/replay` 브라우저 열기. 재생되는 동안 5 지점 시각 smoke (특히 Search 스테이지가 떠야 히어로 타이포 확인 가능 — 세션 2~3 정도 기다릴 것).
+
+#kind/handoff

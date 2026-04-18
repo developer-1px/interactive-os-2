@@ -1,14 +1,15 @@
 ---
 id: samples/user-story-map
 title: 'User Story Map — Visual CMS'
-status: sample
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Backbone: 사용자 활동 흐름 (좌→우) Walking Skeleton: 각 활동의 최소 동작 단위 Stories: 우선순위별 사용자 스토리 (P0=MVP, P1=v1, P2=후순위)'
-topics: [samples]
-relates: []
-supersedes: []
+legacy:
+  status: sample
+  kind: note
+  topics: [samples]
+  relates: []
+  supersedes: []
 ---
 # User Story Map — Visual CMS
 
@@ -86,3 +87,5 @@ supersedes: []
 | **MVP (P0)** | 페이지 CRUD + 15 노드 편집 + Undo/Redo + 미리보기 |
 | **v1 (P1)** | DnD 재배치 + 일괄 편집 + 디자인 조정 + 공유 링크 |
 | **v2 (P2)** | 다국어 + 테마 + 내보내기 + 버전 관리 |
+
+#kind/note

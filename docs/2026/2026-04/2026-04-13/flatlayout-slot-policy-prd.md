@@ -1,14 +1,15 @@
 ---
 id: 2-areas/layout/prds/flatlayout-slot-policy-prd
 title: 'FlatLayout Slot Policy — PRD'
-status: active
-kind: prd
 created: 2026-04-13
 updated: 2026-04-13
 summary: 'Discussion: FlatLayout 위젯 컨테이너를 Swing식 "슬롯이 정책 소유" 2층 구조로 전환하여, 스크롤/flex를 엔진이 자동 보장. LLM 결정 지점 0.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # FlatLayout Slot Policy — PRD
 
@@ -172,3 +173,5 @@ export interface WidgetNode extends LayoutBase {
   scroll?: boolean  // 기본 true, false면 스크롤 비활성
 }
 ```
+
+#kind/prd #topic/layout

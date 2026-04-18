@@ -1,14 +1,15 @@
 ---
 id: '3-resources/41-[methodology]skillHarnessVision'
 title: 'AI 협업 하네스 — 세션이 쌓일수록 똑똑해지는 사고 운영체제'
-status: reference
-kind: methodology
 created: 2026-03-29
 updated: 2026-04-11
 summary: '작성일: 2026-03-29 맥락: 22개 커스텀 스킬, 130개+ memory, 이번 세션의 prd/retrospect 수정 의도에서 역추론'
-topics: [3-resources, methodology]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: methodology
+  topics: [3-resources, methodology]
+  relates: []
+  supersedes: []
 ---
 # AI 협업 하네스 — 세션이 쌓일수록 똑똑해지는 사고 운영체제
 
@@ -202,3 +203,5 @@ flowchart LR
 interactive-os는 "ARIA 선언 → 올바른 UI"를 보장하는 엔진이고, 스킬 하네스는 "촘촘한 명세 → 올바른 코드"를 보장하는 엔진이다. 둘 다 **선언적 입력이 올바른 출력을 강제하는 구조**이며, 둘 다 **자기 자신을 측정하고 고치는 루프**를 갖는다.
 
 → 사용자가 만들고 있는 것은 제품이 아니라 **"올바름을 선언으로 보장하는" 패러다임**이고, 그 패러다임을 두 개의 축(UI + AI 협업)에 동시에 적용하고 있다.
+
+#kind/note #topic/methodology

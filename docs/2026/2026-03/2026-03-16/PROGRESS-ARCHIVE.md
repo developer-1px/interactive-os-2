@@ -1,14 +1,15 @@
 ---
 id: PROGRESS-ARCHIVE
 title: 'interactive-os — Progress Tracker'
-status: meta
-kind: note
 created: 2026-03-16
 updated: 2026-03-23
 summary: '**For LLMs:** 작업 시작 시 이 문서를 읽고 현황을 파악하세요. 기능 완료 및 커밋 시 체크를 업데이트하세요. **For humans:** 우선순위 태그 `[P0]`~`[P2]`는 수시로 조절 가능합니다.'
-topics: [data-surface, data-theme, p0, p1, p2, x]
-relates: []
-supersedes: []
+legacy:
+  status: meta
+  kind: note
+  topics: [data-surface, data-theme, p0, p1, p2, x]
+  relates: []
+  supersedes: []
 ---
 # interactive-os — Progress Tracker
 
@@ -314,3 +315,5 @@ supersedes: []
 - [x] Agent Viewer — Tool Call 카드 그룹핑. Bot 아이콘 제거, 연속 tool_use를 rounded border 카드(ToolGroupCard)로 묶어 LLM 응답과 구조적 분리. groupEvents 순수 함수 + 7 unit tests, virtual scroll 호환
 
 *Last updated: 2026-03-22 — Agent Viewer Tool Card Grouping*
+
+#kind/note

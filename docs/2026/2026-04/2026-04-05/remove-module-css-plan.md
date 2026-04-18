@@ -1,14 +1,15 @@
 ---
 id: 2-areas/design/prds/remove-module-css-plan
 title: 'module.css 전면 제거 Implementation Plan'
-status: active
-kind: plan
 created: 2026-04-05
 updated: 2026-04-17
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
-topics: [2-areas, data-compact]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [2-areas, data-compact]
+  relates: []
+  supersedes: []
 ---
 # module.css 전면 제거 Implementation Plan
 
@@ -411,3 +412,5 @@ vite.config에서 CSS Modules 설정이 있다면 CmsLanding 1개만 남으므�
 ```bash
 git commit -m "chore: module.css 전면 제거 완료 검증"
 ```
+
+#kind/plan #topic/design

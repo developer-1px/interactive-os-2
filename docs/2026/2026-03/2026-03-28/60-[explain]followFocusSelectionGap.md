@@ -1,14 +1,15 @@
 ---
 id: '2-areas/axis/60-[explain]followFocusSelectionGap'
 title: 'followFocus Selection Gap — APG "selection follows focus"와 우리 구현의 구조적 불일치'
-status: active
-kind: explain
 created: 2026-03-28
 updated: 2026-04-11
 summary: '작성일: 2026-03-28 맥락: APG Conformance Phase 1에서 RadioGroup, Tabs 두 패턴이 🟡 판정'
-topics: [2-areas, explain]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: explain
+  topics: [2-areas, explain]
+  relates: []
+  supersedes: []
 ---
 # followFocus Selection Gap — APG "selection follows focus"와 우리 구현의 구조적 불일치
 
@@ -163,3 +164,5 @@ function selectOnFocusMiddleware(): Middleware {
 **C. 별도 axis** — `selectFollowFocus()` axis를 만들어 composePattern에서 조합. 새 개념 추가의 비용.
 
 → **A(middleware)가 가장 자연스럽다**: engine 레이어에서 완결되고, onActivate 유무와 무관하며, 기존 anchorResetMiddleware와 동일한 패턴이다. activate axis의 followFocus는 "외부 통보"용으로 그대로 두고, selection 동기화는 select axis의 middleware가 담당하면 관심사가 분리된다.
+
+#kind/explain #topic/axis

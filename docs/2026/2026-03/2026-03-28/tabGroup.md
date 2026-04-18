@@ -1,14 +1,15 @@
 ---
 id: 2-areas/ui/tabGroup
 title: TabGroup
-status: active
-kind: note
 created: 2026-03-28
 updated: 2026-03-28
 summary: '탭 내비게이션 + 패널 렌더링. os의 tabs pattern 기반, 활성화/삭제/순서 변경 지원.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # TabGroup
 
@@ -109,3 +110,5 @@ div.tabGroup (flex-col)
 - 선택 상태: `--surface-raised` 배경 + `--text-primary` 색상
 - close 버튼: hover/selected 시 `opacity: 0.6`
 - motion: `--motion-instant-*`
+
+#kind/note #topic/ui

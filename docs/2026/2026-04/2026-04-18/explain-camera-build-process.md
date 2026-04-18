@@ -1,14 +1,15 @@
 ---
 id: 0-inbox/explain-camera-build-process
 title: 'Camera 프리미티브 — 어떻게 만들었는가'
-status: inbox
-kind: explain
 created: 2026-04-18
 updated: 2026-04-18
 summary: '작성일: 2026-04-17 맥락: ZoomPane+ZoomPanCanvas 통합 작업(commit c9460d06)의 제작 과정 해설'
-topics: [0-inbox]
-relates: []
-supersedes: []
+legacy:
+  status: inbox
+  kind: explain
+  topics: [0-inbox]
+  relates: []
+  supersedes: []
 ---
 # Camera 프리미티브 — 어떻게 만들었는가
 
@@ -251,3 +252,5 @@ flowchart TD
 - Monitor — 장시간 명령 스트리밍
 
 **커밋**: [c9460d06](c9460d06) `feat(ui): Camera 프리미티브 — ZoomPane/ZoomPanCanvas 통합` (12 files, +1172 / -392)
+
+#kind/explain

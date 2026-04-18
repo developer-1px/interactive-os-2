@@ -1,14 +1,15 @@
 ---
 id: 1-projects/chat/prds/writer-chat-prd
 title: 'Writer Chat Panel — PRD'
-status: active
-kind: prd
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: Writer 앱에 채팅 패널을 추가하여 AI가 열린 MD 파일을 직접 수정하는 편집 경험. MD가 SSOT.'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Writer Chat Panel — PRD
 
@@ -121,3 +122,5 @@ supersedes: []
 ---
 
 **전체 완성도:** 🟢 8/8
+
+#kind/prd #topic/chat

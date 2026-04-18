@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/prds/project-viewer-redesign-task
 title: 'Project Viewer 재설계 — 도메인 서비스 UI 언어'
-status: active
-kind: plan
 created: 2026-04-06
 updated: 2026-04-08
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: plan
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Project Viewer 재설계 — 도메인 서비스 UI 언어
 
@@ -35,3 +36,5 @@ TreeView → ListBox 기반 프로젝트 리스트로 재구성. 도메인 서�
 ```
 [StatusIndicator] [Name bold] [Maturity badge] [kind tag]  ··· [metrics] [time]
 ```
+
+#kind/plan #topic/viewer

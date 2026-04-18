@@ -1,14 +1,15 @@
 ---
 id: 2-areas/harness/settings
 title: 'Settings — 훅 등록'
-status: active
-kind: note
 created: 2026-04-04
 updated: 2026-04-04
 summary: '`.claude/settings.json`이 훅의 등록/매칭/실행 방식을 결정한다.'
-topics: [2-areas]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [2-areas]
+  relates: []
+  supersedes: []
 ---
 # Settings — 훅 등록
 
@@ -73,3 +74,5 @@ supersedes: []
 ## 실행 순서
 
 같은 이벤트 내에서 훅은 등록 순서대로 실행된다. Pre 훅이 block을 반환하면 이후 훅은 실행되지 않고 도구 실행도 중단된다.
+
+#kind/note #topic/harness

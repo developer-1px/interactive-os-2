@@ -1,14 +1,15 @@
 ---
 id: 1-projects/replay/prds/subagent-viewer-prd
 title: 'SubAgent Viewer — Blueprint'
-status: active
-kind: prd
 created: 2026-04-17
 updated: 2026-04-17
 summary: '**Discussion**: replay/live에서 Task(Agent) tool의 내부 tool 동작이 안 보임 → SubAgent 파일을 독립 viewer에 띄우기. 연결선 없이 가로 나열 고정폭. **산출물 유형**: UI 기능 (엔진 일부 확장) **규모 추정**: 파일 3~5개 수정, 1~2개 신규'
-topics: [1-projects, i]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: prd
+  topics: [1-projects, i]
+  relates: []
+  supersedes: []
 ---
 # SubAgent Viewer — Blueprint
 
@@ -966,3 +967,5 @@ _(/go·/retro·/handoff가 채움)_
 - 한 줄 권고: **P0 교정 완료, P1 진행 가능** — 설계 골격(매칭 SSOT, hook 분리, Widget 수렴, meta-is-core, 자동 파생)은 feedback 원칙과 정렬. 잔여 경고(W1~W6)는 P1에서 개별 판단.
 
 **위반 4 ✅ / 경고 6 (P1 재검토) / §간 불일치 6 ✅ / CATALOG 재사용 후보 8건 검토**
+
+#kind/prd #topic/replay

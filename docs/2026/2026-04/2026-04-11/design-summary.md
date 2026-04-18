@@ -1,13 +1,14 @@
 ---
 id: 4-archive/design/summary
 title: 'Design — 결정 요약'
-status: archived
-kind: summary
 created: 2026-04-11
 updated: 2026-04-11
-topics: [4-archive, retro]
-relates: []
-supersedes: []
+legacy:
+  status: archived
+  kind: summary
+  topics: [4-archive, retro]
+  relates: []
+  supersedes: []
 ---
 # Design — 결정 요약
 
@@ -55,3 +56,5 @@ flowchart TD
 ```
 
 > 원본: [archive/55-[retro]cssWritingRules.md](archive/55-[retro]cssWritingRules.md)
+
+#kind/note #archived

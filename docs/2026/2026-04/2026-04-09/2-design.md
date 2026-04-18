@@ -1,13 +1,14 @@
 ---
 id: 1-projects/viewer/stories/doc-browsing/features/miller-columns/2-design
 title: 'Miller Columns — Design'
-status: active
-kind: note
 created: 2026-04-09
 updated: 2026-04-09
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: note
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Miller Columns — Design
 
@@ -25,3 +26,5 @@ supersedes: []
 - [ ] 시각 계층 (선택/포커스/호버 상태 구분)
 - [ ] 레이아웃/비율 (컬럼 너비, 프리뷰 비율)
 - [ ] 전체 톤 (색상, 타이포, 간격)
+
+#kind/note #topic/viewer

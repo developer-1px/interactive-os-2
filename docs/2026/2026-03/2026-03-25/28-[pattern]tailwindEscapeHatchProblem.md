@@ -1,14 +1,15 @@
 ---
 id: '3-resources/28-[pattern]tailwindEscapeHatchProblem'
 title: 'Tailwind의 Escape Hatch 문제 — 디자인 시스템 프로젝트에서의 충돌과 대안'
-status: reference
-kind: pattern
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: interactive-os는 자체 CSS 변수 토큰 시스템(DESIGN.md)을 가지고 있다. 구조적 CSS(레이아웃)를 LLM이 파악하기 어려워서 Tailwind 도입을 검토했으나, escape hatch 남용과 토큰 이중 관리가 우려됨.'
-topics: [3-resources, pattern]
-relates: []
-supersedes: []
+legacy:
+  status: reference
+  kind: pattern
+  topics: [3-resources, pattern]
+  relates: []
+  supersedes: []
 ---
 # Tailwind의 Escape Hatch 문제 — 디자인 시스템 프로젝트에서의 충돌과 대안
 
@@ -174,3 +175,5 @@ function ContentArea({ children }) {
 | 5 | [Arbitrary values discussion](https://github.com/tailwindlabs/tailwindcss/discussions/18748) | GitHub | 토큰 vs arbitrary value 가이드라인 |
 | 6 | [Panda CSS Origin Story](https://www.adebayosegun.com/blog/panda-css-the-origin-story) | 블로그 | Chakra UI → Panda CSS 설계 동기 |
 | 7 | [React CSS in 2026](https://medium.com/@imranmsa93/react-css-in-2026-best-styling-approaches-compared-d5e99a771753) | 블로그 | Tailwind 62% 만족도, CSS Module과의 비교 |
+
+#kind/note #topic/pattern

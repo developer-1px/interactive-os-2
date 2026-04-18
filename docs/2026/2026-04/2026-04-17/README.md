@@ -1,14 +1,15 @@
 ---
 id: 1-projects/features/README
 title: 'Features — PM Layer'
-status: active
-kind: readme
 created: 2026-04-17
 updated: 2026-04-17
 summary: '1인 개발자용 feature 상태 DB. MEMORY(경험/원칙), PROGRESS(concept map), prds(스펙)과 별개로 **진행 상태·관계·수명주기**만 담는 얇은 레이어.'
-topics: [1-projects]
-relates: []
-supersedes: []
+legacy:
+  status: active
+  kind: readme
+  topics: [1-projects]
+  relates: []
+  supersedes: []
 ---
 # Features — PM Layer
 
@@ -84,3 +85,5 @@ Insight 한 줄 문법: `{date} · {kind}: {text} (출처: {source})`. 날짜/�
 
 - **Feature** (대문자) — 이 레이어의 레코드
 - **feature** (소문자) — 일반 "기능"
+
+#kind/note #topic/features
