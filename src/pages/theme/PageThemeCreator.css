@@ -257,25 +257,24 @@
 .theme-zone-card .ia-item[data-active] {
   background: var(--tone-primary-bright);
 }
-/* :focus (active pane) → bg tone-primary-dim + outline-color focus (Mac Finder 모델) */
+/* :focus → bg tone-primary-dim + outline ring (2px 띄움으로 확실히 ring처럼) */
 .theme-zone-card .ia-item[data-focus-ring] {
   background: var(--tone-primary-dim);
   color: var(--text-bright);
-  outline-color: var(--focus);
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  margin-block: var(--space-sm);
 }
 .theme-zone-card .ia-item[aria-disabled="true"] {
   opacity: 0.4;
 }
 
-/* button state mirror — button은 interactive 유지 */
-.theme-zone-card button[data-hover] {
-  background: var(--bg-hover);
-}
-.theme-zone-card button[data-focus-ring] {
-  box-shadow: var(--focus-ring-shadow);
-  outline: none;
-}
-.theme-zone-card button[data-disabled] {
-  opacity: 0.5;
-  pointer-events: none;
+/* button — 버튼다운 shape/padding 확실히 */
+.theme-zone-card button {
+  border-radius: var(--shape-md);
+  padding-inline: var(--space-sm);
+  padding-block: var(--space-2xs);
+  border: none;
+  cursor: pointer;
+  font: inherit;
 }

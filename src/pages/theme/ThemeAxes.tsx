@@ -49,12 +49,7 @@ const itemStates: Array<{ label: string; attrs: ItemStateAttrs }> = [
   { label: 'disabled', attrs: { 'aria-disabled': 'true' } },
 ]
 
-const buttonStates: Array<{ label: string; attrs: Record<string, boolean | string> }> = [
-  { label: 'default', attrs: {} },
-  { label: 'hover', attrs: { 'data-hover': true } },
-  { label: 'focus', attrs: { 'data-focus-ring': true } },
-  { label: 'off', attrs: { 'data-disabled': true } },
-]
+const buttonTones = ['accent', 'danger', 'success', 'warning', 'neutral'] as const
 
 function ZoneCompositionAxis() {
   const zones = ['sunken', 'base', 'raised', 'overlay'] as const
@@ -78,13 +73,22 @@ function ZoneCompositionAxis() {
               ))}
 
               <div className={ax({ layout: 'row' })}>
-                {buttonStates.map(b => (
+                {buttonTones.map(t => (
                   <button
-                    key={b.label}
-                    className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })}
-                    {...b.attrs}
+                    key={t}
+                    className={ax({ role: 'control', surface: 'action', content: 'text', tone: t, cs: 'xs' })}
                   >
-                    {b.label}
+                    {t}
+                  </button>
+                ))}
+              </div>
+              <div className={ax({ layout: 'row' })}>
+                {buttonTones.map(t => (
+                  <button
+                    key={t}
+                    className={ax({ role: 'control', surface: 'ghost', content: 'text', tone: t, cs: 'xs' })}
+                  >
+                    {t}
                   </button>
                 ))}
               </div>
