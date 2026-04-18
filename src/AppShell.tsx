@@ -26,9 +26,12 @@ import './styles/layout.css'       // App layout (sidebar, page grid)
 import './styles/app.css'          // App-level utilities
 import './styles/inspect.css'      // Keyline inspector (?inspect)
 
+const MOBILE_ROUTES = ['/todo']
+
 export default function AppShell() {
   const { theme, toggle: toggleTheme } = useTheme()
-  const { search } = useLocation()
+  const { search, pathname } = useLocation()
+  const isMobileRoute = MOBILE_ROUTES.some(p => pathname === p || pathname.startsWith(`${p}/`))
 
   useEffect(() => {
     const params = new URLSearchParams(search)
@@ -60,7 +63,7 @@ export default function AppShell() {
       <div className={`page ${ax({ layout: 'row', scroll: 'hidden' })}`}>
         <ReproRecorderOverlay />
         <KeylineOverlay />
-        <ActivityBar theme={theme} onThemeToggle={toggleTheme} />
+        {!isMobileRoute && <ActivityBar theme={theme} onThemeToggle={toggleTheme} />}
         <div className={`page-content ${ax({ layout: 'scroll', flex: '1' })}`}>
           <Outlet />
         </div>
