@@ -1,6 +1,8 @@
 /** @catalog 마크다운 frontmatter 메타 카드 — 의도별 티어(title header / body) + 카드 전체 접기 */
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { ChevronDown } from 'lucide-react'
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { ax } from '@styles/ax'
 import { usePersistedState } from '../primitives/usePersistedState'
 import { Badge } from './Badge'
@@ -158,7 +160,9 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
       {open && hasBody && (
         <>
           {typeof subtitle === 'string' && (
-            <div className={ax({ textStyle: 'caption' })}>{subtitle}</div>
+            <div className={ax({ textStyle: 'caption' })}>
+              <Markdown remarkPlugins={[remarkGfm]} components={{ p: Fragment }}>{subtitle}</Markdown>
+            </div>
           )}
           {(byline.length > 0 || others.length > 0) && (
             <div className={ax({ layout: 'stack', gap: 'xs' })}>
