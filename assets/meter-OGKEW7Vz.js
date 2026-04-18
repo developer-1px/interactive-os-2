@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./composePattern-fnrkFOju.js";var n=t({role:`none`,childRole:`meter`,ariaAttributes:e=>{let t=e.data;return{"aria-valuenow":String(t?.value??0),"aria-valuemin":String(t?.min??0),"aria-valuemax":String(t?.max??100)}}},[e(`natural`)],{});export{n as t};

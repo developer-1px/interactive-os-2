@@ -1,1 +1,0 @@
-import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({children:t}){return(0,n.jsx)(`kbd`,{className:e({surface:`overlay`,shape:`sm`,textStyle:`code`,text:`secondary`,padding:`xs`,content:`text`,border:`default`}),children:t})}export{r as t};

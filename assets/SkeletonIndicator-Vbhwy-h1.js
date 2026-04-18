@@ -1,1 +1,0 @@
-import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({width:t,height:r,className:i}){return(0,n.jsx)(`div`,{className:[e({shape:`sm`}),`item-indicator--skeleton`,i].filter(Boolean).join(` `),style:{width:t,height:r}})}export{r as t};

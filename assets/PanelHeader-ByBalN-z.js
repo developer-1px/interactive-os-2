@@ -1,1 +1,0 @@
-import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({children:t,className:r,axes:i,...a}){return(0,n.jsx)(`div`,{className:`${e({role:`item`,content:`text`,layout:`bar`,flex:`none`,textStyle:`overline`,text:`muted`,border:`bottom`,width:`full`,...i})}${r?` ${r}`:``}`,...a,children:t})}export{r as t};

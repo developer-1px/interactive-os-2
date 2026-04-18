@@ -1,4 +1,0 @@
-import{r as e}from"./chunk-CFjPhJqf.js";import{t}from"./jsx-runtime-BJXw1wCY.js";import{t as n}from"./SearchResults-CWdGdqEL.js";var r=e({Demo:()=>s,meta:()=>a}),i=t(),a={slug:`search-results`,category:`ui`,label:`SearchResults`},o=`src/ui/ListBox.tsx:12:import { listbox } from '../pattern/roles/listbox'
-src/ui/ListBox.tsx:45:  const pattern = listbox()
-src/ui/Grid.tsx:8:import { grid as gridBehavior } from '../pattern/roles/grid'
-src/ui/Grid.tsx:52:  const pattern = gridBehavior({ columns: columns.length })`;function s(){return(0,i.jsx)(n,{query:`pattern`,output:o})}export{r as n,a as r,s as t};

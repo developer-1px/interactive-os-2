@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./composePattern-fnrkFOju.js";import{t as n}from"./checked-Hs04poqg.js";var r=e(`natural`),i=n(),a=t({role:`switch`,childRole:`switch`},[r,i],{Enter:i.toggle,Space:i.toggle,Click:i.toggle});export{a as t};

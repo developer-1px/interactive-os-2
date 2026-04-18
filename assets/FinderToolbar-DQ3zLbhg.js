@@ -1,8 +1,0 @@
-var e=`/* ② finder-viewer-prd.md */
-@layer component {
-  .finder-toolbar {
-    backdrop-filter: blur(20px) saturate(180%);
-    z-index: 10;
-  }
-}
-`;export{e as default};

@@ -1,1 +1,0 @@
-import{r as e,t}from"./SpinnerIndicator.demo-DVvfNgpq.js";export{t as Demo,e as meta};

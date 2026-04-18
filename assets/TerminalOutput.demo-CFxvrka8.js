@@ -1,0 +1,1 @@
+import{t as e}from"./index-CZ4T_dVD.js";import{TerminalOutput as t}from"./TerminalOutput-BX4C6A_G.js";var n=e(),r={slug:`terminal-output`,category:`ui`,label:`TerminalOutput`};function i(){return(0,n.jsx)(t,{command:`pnpm typecheck`,output:`src/index.ts - no errors found`})}export{i as Demo,r as meta};

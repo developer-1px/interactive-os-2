@@ -1,1 +1,0 @@
-import{t as e}from"./TabGroup-CM_JK31G.js";export{e as TabGroup};

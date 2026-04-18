@@ -1,1 +1,0 @@
-import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({count:t,className:r}){return t<=0?null:(0,n.jsx)(`span`,{className:[e({role:`badge`,flex:`none`,surface:`display`,tone:`danger`,content:`text`,clamp:`1`}),`item-indicator--badge`,r].filter(Boolean).join(` `),children:t>=100?`99+`:t})}export{r as t};

@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./expand-Br3FBXh4.js";import{t as n}from"./composePattern-fnrkFOju.js";var r=e(`natural`),i=t({allExpandable:!0}),a=n({role:`group`,childRole:`button`},[r,i],{Enter:i.toggle,Space:i.toggle,Click:i.toggle});export{a as t};

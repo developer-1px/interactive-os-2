@@ -1,1 +1,0 @@
-function e(e,t){return Object.assign(t,{commands:e})}function t(e,t){let{meta:n,create:r,handler:i}=t,a=(...t)=>({type:e,payload:r?r(...t):void 0,meta:n});return a.type=e,a.handler=i,a.reduce=(e,...t)=>i(e,r?r(...t):void 0),a}function n(e){let n={};for(let[r,i]of Object.entries(e))n[r]=t(i.type,i);return n}export{n,e as r,t};

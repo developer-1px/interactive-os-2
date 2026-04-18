@@ -1,0 +1,1 @@
+import{t as e}from"./index-CZ4T_dVD.js";import{t}from"./ax-4rdbEknh.js";var n=e();function r({level:e,isLast:r,className:i}){return e<=0?null:(0,n.jsx)(`span`,{className:[`inline-block h-full ${t({flex:`none`,placement:`relative`})}`,`item-indicator--tree-connector`,r?`item-indicator--tree-connector-last`:``,i].filter(Boolean).join(` `)})}export{r as t};

@@ -1,0 +1,1 @@
+import{t as e}from"./Feed-DYFdxbUY.js";export{e as Feed};

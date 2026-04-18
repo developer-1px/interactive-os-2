@@ -1,1 +1,0 @@
-import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({tone:t,children:r,className:i}){return(0,n.jsx)(`span`,{className:e({tone:t,textStyle:`caption`,shape:`pill`,padding:`xs`,content:`text`})+(i?` ${i}`:``),children:r})}export{r as t};

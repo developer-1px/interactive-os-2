@@ -1,1 +1,0 @@
-import{r as e}from"./chunk-CFjPhJqf.js";import{t}from"./jsx-runtime-BJXw1wCY.js";import{t as n}from"./TerminalOutput-CApMssJV.js";var r=e({Demo:()=>o,meta:()=>a}),i=t(),a={slug:`terminal-output`,category:`ui`,label:`TerminalOutput`};function o(){return(0,i.jsx)(n,{command:`pnpm typecheck`,output:`src/index.ts - no errors found`})}export{r as n,a as r,o as t};

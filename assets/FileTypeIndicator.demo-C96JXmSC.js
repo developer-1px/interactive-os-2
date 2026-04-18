@@ -1,1 +1,0 @@
-import{r as e,t}from"./FileTypeIndicator.demo-kGu4Jse6.js";export{t as Demo,e as meta};

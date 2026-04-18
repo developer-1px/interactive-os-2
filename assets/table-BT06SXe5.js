@@ -1,0 +1,1 @@
+import{n as e}from"./navigate-DOjM5vD7.js";import{t}from"./expand-DMxM428d.js";import{t as n}from"./composePattern-CzrKuiBe.js";var r={1:`rowgroup`,2:`row`,3:`cell`},i=n({role:`table`,childRole:(e,t)=>r[t.level??1]??`cell`},[e(`natural`),t()],{});export{i as t};

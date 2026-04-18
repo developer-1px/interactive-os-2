@@ -1,0 +1,1 @@
+import{t as e}from"./MenuList-CQId0Qqr.js";export{e as MenuList};

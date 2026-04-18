@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DVHx1lan.js";import{l as t}from"./useAriaView-CIWQlIV_.js";import{t as n}from"./composePattern-fnrkFOju.js";var r=n({role:`none`,childRole:`link`},[e(`natural`)],{Enter:t,Space:t,Click:t});export{r as t};

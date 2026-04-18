@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./composePattern-fnrkFOju.js";import{t as n}from"./select-BliIHyxB.js";function r(r){let i=r?.selectionMode??`single`,a=e(`activedescendant`);return t({role:`combobox`,childRole:`option`},[a,n(i)],{ArrowDown:a.next,ArrowUp:a.prev,Home:a.first,End:a.last})}export{r as t};

@@ -1,1 +1,0 @@
-import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./composePattern-fnrkFOju.js";var n=t({role:`none`,childRole:`alert`},[e(`natural`)],{});export{n as t};

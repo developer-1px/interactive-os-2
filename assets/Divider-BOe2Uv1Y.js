@@ -1,1 +1,0 @@
-import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({direction:t=`horizontal`}){return t===`horizontal`?(0,n.jsx)(`div`,{className:e({border:`bottom`,width:`full`}),role:`separator`}):(0,n.jsx)(`div`,{className:e({border:`end`}),role:`separator`,style:{alignSelf:`stretch`}})}export{r as t};

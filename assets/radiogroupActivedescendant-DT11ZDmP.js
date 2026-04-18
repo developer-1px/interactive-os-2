@@ -1,0 +1,1 @@
+import{n as e}from"./navigate-DOjM5vD7.js";import{t}from"./composePattern-CzrKuiBe.js";import{t as n}from"./select-Bup3XBRi.js";var r=e(`activedescendant`),i=n(`single`,{followFocus:!0}),a=t({role:`radiogroup`,childRole:`radio`},[r,i],{ArrowDown:r.nextWrap,ArrowUp:r.prevWrap,ArrowRight:r.nextWrap,ArrowLeft:r.prevWrap,Space:i.toggle,Click:i.selectAndAnchor});export{a as t};

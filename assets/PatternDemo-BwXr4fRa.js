@@ -1,0 +1,1 @@
+import{t as e}from"./PatternDemo-DIbW0CQ5.js";export{e as PatternDemo};

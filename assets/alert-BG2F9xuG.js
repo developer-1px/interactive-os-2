@@ -1,0 +1,1 @@
+import{n as e}from"./navigate-DOjM5vD7.js";import{t}from"./composePattern-CzrKuiBe.js";var n=t({role:`none`,childRole:`alert`},[e(`natural`)],{});export{n as t};

@@ -1,9 +1,0 @@
-var e=`@layer component {
-/* last-mile: bubble은 content 축(--pd-ratio)만 ax()로, 나머지는 여기서 */
-.chat-user {
-  max-width: 80%;
-  place-self: end;
-  border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
-}
-}
-`;export{e as default};

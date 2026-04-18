@@ -1,1 +1,0 @@
-import{r as e,t}from"./MasterDetail.demo-gE1RXXEn.js";export{t as Demo,e as meta};

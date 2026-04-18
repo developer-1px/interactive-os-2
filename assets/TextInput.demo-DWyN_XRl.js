@@ -1,1 +1,0 @@
-import{r as e}from"./chunk-CFjPhJqf.js";import{t}from"./jsx-runtime-BJXw1wCY.js";import{t as n}from"./TextInput-B4xUVWy8.js";var r=e({Demo:()=>o,meta:()=>a}),i=t(),a={slug:`text-input`,category:`ui`,label:`TextInput`};function o(){return(0,i.jsx)(n,{placeholder:`Type something...`,"aria-label":`Demo input`})}export{r as n,a as r,o as t};

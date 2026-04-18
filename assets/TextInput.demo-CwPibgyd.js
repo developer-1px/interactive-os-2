@@ -1,0 +1,1 @@
+import{t as e}from"./index-CZ4T_dVD.js";import{t}from"./TextInput-Bfu2WKoR.js";var n=e(),r={slug:`text-input`,category:`ui`,label:`TextInput`};function i(){return(0,n.jsx)(t,{placeholder:`Type something...`,"aria-label":`Demo input`})}export{i as Demo,r as meta};

@@ -1,0 +1,1 @@
+import{n as e}from"./navigate-DOjM5vD7.js";import{t}from"./composePattern-CzrKuiBe.js";import{t as n}from"./select-Bup3XBRi.js";function r(r){let i=r?.selectionMode??`single`,a=e(`activedescendant`);return t({role:`combobox`,childRole:`option`},[a,n(i)],{ArrowDown:a.next,ArrowUp:a.prev,Home:a.first,End:a.last})}export{r as t};

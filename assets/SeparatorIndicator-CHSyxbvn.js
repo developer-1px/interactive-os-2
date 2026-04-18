@@ -1,0 +1,1 @@
+import{t as e}from"./index-CZ4T_dVD.js";import{t}from"./ax-4rdbEknh.js";var n=e();function r({orientation:e=`horizontal`,className:r}){let i=e===`horizontal`,a=[`${t({flex:`none`})}${i?` w-full`:``}`,`item-indicator--separator`,r].filter(Boolean).join(` `);return(0,n.jsx)(`div`,{role:`separator`,"aria-orientation":e,className:a})}export{r as t};

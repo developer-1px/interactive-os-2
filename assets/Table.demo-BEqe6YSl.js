@@ -1,1 +1,0 @@
-import{r as e,t}from"./Table.demo-DVZuKr1B.js";export{t as Demo,e as meta};
