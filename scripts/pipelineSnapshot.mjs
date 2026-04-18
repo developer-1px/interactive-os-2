@@ -21,6 +21,7 @@
 import puppeteer from 'puppeteer-core'
 import { writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
+import { spawnSync } from 'node:child_process'
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:5173'
 const VIEWPORT = { width: 375, height: 812, deviceScaleFactor: 2 }
@@ -99,6 +100,18 @@ const main = async () => {
     await page.close()
   } finally {
     await browser.close()
+  }
+
+  // Stage 5 완료 후 자동 게이트 — Stage 3 선언 ↔ 실제 import 일치 검증
+  if (stage === 5) {
+    console.log('\n◆ Pipeline gate (Stage 3 ↔ Stage 5)')
+    const check = spawnSync('node', ['scripts/pipelineCheck.mjs', sample], {
+      stdio: 'inherit',
+    })
+    if (check.status !== 0) {
+      console.error('\n✗ 게이트 실패 — 5-assembly.check.md 확인')
+      process.exit(check.status ?? 1)
+    }
   }
 }
 
