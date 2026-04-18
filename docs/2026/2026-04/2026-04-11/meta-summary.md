@@ -26,9 +26,9 @@ legacy:
 | [51-[report]aiBuiltSystemsShowcase.md](archive/51-[report]aiBuiltSystemsShowcase.md) | AI 구축 시스템 쇼케이스 | 2026-03-25 |
 | [65-[question]claudeCodeWebUiReadability.md](archive/65-[question]claudeCodeWebUiReadability.md) | Claude Code 웹 UI 가독성 논의 | 2026-03-30 |
 | [74-[memo]initialProjectReview.md](archive/74-[memo]initialProjectReview.md) | 프로젝트 초기 리뷰 메모 | 2026-03 |
-| [handoff-2026-04-11-finder-viewer.md](archive/handoff-2026-04-11-finder-viewer.md) | Finder Viewer handoff (consumed) | 2026-04-11 |
-| [handoff-2026-04-11-skill-kanban-v2.md](archive/handoff-2026-04-11-skill-kanban-v2.md) | Skill Kanban v2 handoff (consumed) | 2026-04-11 |
-| [handoff-2026-04-11-skill-kanban.md](archive/handoff-2026-04-11-skill-kanban.md) | Skill Kanban v1 handoff (consumed) | 2026-04-11 |
-| [skill-kanban-v2-review.md](archive/skill-kanban-v2-review.md) | Skill Kanban v2 리뷰 | 2026-04-11 |
+| [handoff-2026-04-11-finder-viewer.md](handoff-2026-04-11-finder-viewer.md) | Finder Viewer handoff (consumed) | 2026-04-11 |
+| [handoff-2026-04-11-skill-kanban-v2.md](handoff-2026-04-11-skill-kanban-v2.md) | Skill Kanban v2 handoff (consumed) | 2026-04-11 |
+| [handoff-2026-04-11-skill-kanban.md](../2026-04-10/handoff-2026-04-11-skill-kanban.md) | Skill Kanban v1 handoff (consumed) | 2026-04-11 |
+| [skill-kanban-v2-review.md](skill-kanban-v2-review.md) | Skill Kanban v2 리뷰 | 2026-04-11 |
 
 #kind/note #archived

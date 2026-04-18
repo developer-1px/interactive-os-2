@@ -32,7 +32,7 @@ flowchart TD
   OK -.- R{{Axis 타입 확장: Record → interface with keyMap+config}}
 ```
 
-> 원본: [archive/axisV2FiveAxesModel.md](archive/axisV2FiveAxesModel.md)
+> 원본: [archive/axisV2FiveAxesModel.md](../../2026-03/2026-03-21/axisV2FiveAxesModel.md)
 
 ---
 

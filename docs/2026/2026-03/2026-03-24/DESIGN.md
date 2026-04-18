@@ -182,8 +182,8 @@ ax()의 25축은 외부 API 관점에서 **Public 14축** + **Private 11축**으
 
 **마이그레이션 상태.** 현 시점 `ax()`는 Private 키가 들어와도 dev 경고 후 통과시키는 warning-only 모드다. 139 데모 마이그레이션이 끝나면 dev throw + `guardCssAxes` block으로 승격한다.
 
-> 상세 설계·불변식·마이그레이션 플랜: [`docs/2-areas/styles/prds/ax-public-private-split-prd.md`](./2-areas/styles/prds/ax-public-private-split-prd.md)
-> LLM 시스템 프롬프트(Public 14축만): [`docs/2-areas/styles/axLlmPrompt.md`](./2-areas/styles/axLlmPrompt.md)
+> 상세 설계·불변식·마이그레이션 플랜: [`docs/2-areas/styles/prds/ax-public-private-split-prd.md`](../../2026-04/2026-04-17/ax-public-private-split-prd.md)
+> LLM 시스템 프롬프트(Public 14축만): [`docs/2-areas/styles/axLlmPrompt.md`](../../2026-04/2026-04-17/axLlmPrompt.md)
 
 ### 타입 제약
 

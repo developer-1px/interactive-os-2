@@ -55,6 +55,6 @@ flowchart TD
   OK -.- R{{레이블 노드는 네비게이션 스킵}}
 ```
 
-> 원본: [archive/listboxGroupedApgStructure.md](archive/listboxGroupedApgStructure.md)
+> 원본: [archive/listboxGroupedApgStructure.md](../../2026-03/2026-03-28/listboxGroupedApgStructure.md)
 
 #kind/note #archived
