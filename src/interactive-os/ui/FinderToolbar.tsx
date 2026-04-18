@@ -60,17 +60,23 @@ export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick, onBac
   const handleSearch = useCallback(() => onSearchClick(), [onSearchClick])
 
   return (
-    <div className={`finder-toolbar ${ax({ role: 'control-group', layout: 'bar', cs: 'sm' })}`}>
+    <div className={`finder-toolbar ${ax({ role: 'control-group', surface: 'base', layout: 'bar', cs: 'sm' })}`}>
       {(onBack || onForward) && (
-        <Toolbar data={navData} onActivate={handleNav} renderItem={renderItem} aria-label="Navigation" />
+        <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
+          <Toolbar data={navData} onActivate={handleNav} renderItem={renderItem} aria-label="Navigation" />
+        </div>
       )}
-      <Toolbar data={viewData} onActivate={handleView} renderItem={renderItem} aria-label="View mode" />
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
+        <Toolbar data={viewData} onActivate={handleView} renderItem={renderItem} aria-label="View mode" />
+      </div>
       {path && (
         <div className={ax({ textStyle: 'label', clamp: '1', flex: '1' })} title={path}>
           {path}
         </div>
       )}
-      <Toolbar data={searchData} onActivate={handleSearch} renderItem={renderItem} aria-label="Search" />
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
+        <Toolbar data={searchData} onActivate={handleSearch} renderItem={renderItem} aria-label="Search" />
+      </div>
     </div>
   )
 }
