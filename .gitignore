@@ -31,6 +31,12 @@ test-results
 *.sw?
 .superpowers/
 .claude/agent-ops/
+.claude/worktrees/
+.claude/launch.json
+scripts/dom-compare.txt
+scripts/dom-dump.txt
+scripts/dom-dump.json
+scripts/shadcn-compare.txt
 coverage/
 screenshots/
 docs/superpowers/specs/module-css-dump.md
