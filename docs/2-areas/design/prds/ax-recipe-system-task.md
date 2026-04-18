@@ -1,3 +1,15 @@
+---
+id: 2-areas/design/prds/ax-recipe-system-task
+title: 'ax() Recipe System — shadcn 자유도 원리 적용'
+status: active
+kind: plan
+created: 2026-04-07
+updated: 2026-04-08
+summary: '핵심: 구조 축(height/padding/font/gap)을 잠그고, 색 축만 열어서 어떤 조합이든 완성품 느낌 보장'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # ax() Recipe System — shadcn 자유도 원리 적용
 
 > 핵심: 구조 축(height/padding/font/gap)을 잠그고, 색 축만 열어서 어떤 조합이든 완성품 느낌 보장

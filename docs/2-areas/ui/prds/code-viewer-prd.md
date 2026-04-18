@@ -1,3 +1,15 @@
+---
+id: 2-areas/ui/prds/code-viewer-prd
+title: 'CodeViewer — PRD'
+status: active
+kind: prd
+created: 2026-04-17
+updated: 2026-04-17
+summary: 'Discussion: CodeBlock을 단일 fat 완성품 `CodeViewer`로 통합하여 PPT/md/chat/shorts/edit 5 사용처를 preset 레시피로 커버한다. VirtualCodeBlock 흡수, 원자적 rename, preset 4종(presentation/doc/chat/replay) 도입, ARIA 기본, softwrap·deleted 색·설정 공백 해소.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # CodeViewer — PRD
 
 > Discussion: CodeBlock을 단일 fat 완성품 `CodeViewer`로 통합하여 PPT/md/chat/shorts/edit 5 사용처를 preset 레시피로 커버한다. VirtualCodeBlock 흡수, 원자적 rename, preset 4종(presentation/doc/chat/replay) 도입, ARIA 기본, softwrap·deleted 색·설정 공백 해소.

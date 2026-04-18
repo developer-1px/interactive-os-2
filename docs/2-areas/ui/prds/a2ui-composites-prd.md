@@ -1,3 +1,15 @@
+---
+id: 2-areas/ui/prds/a2ui-composites-prd
+title: 'A2UI Composites — PRD'
+status: active
+kind: prd
+created: 2026-04-07
+updated: 2026-04-08
+summary: 'Discussion: LLM이 Row/Column/Card 수준 레이아웃을 직접 설계하면 와이어프레임 수준에 머문다. 의도 수준 컴포넌트(composites)를 ui/ 하위에 추가하여 Pit of Success를 구조적으로 해결한다.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # A2UI Composites — PRD
 
 > Discussion: LLM이 Row/Column/Card 수준 레이아웃을 직접 설계하면 와이어프레임 수준에 머문다. 의도 수준 컴포넌트(composites)를 ui/ 하위에 추가하여 Pit of Success를 구조적으로 해결한다.

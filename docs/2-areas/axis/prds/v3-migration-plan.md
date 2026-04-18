@@ -1,3 +1,14 @@
+---
+id: 2-areas/axis/prds/v3-migration-plan
+title: 'v3 Migration Plan — 2026-03-29'
+status: active
+kind: plan
+created: 2026-03-28
+updated: 2026-04-08
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # v3 Migration Plan — 2026-03-29
 
 ## 목표

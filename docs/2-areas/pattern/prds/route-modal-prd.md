@@ -1,3 +1,15 @@
+---
+id: 2-areas/pattern/prds/route-modal-prd
+title: 'AriaRoute Route-Level Modal — PRD'
+status: active
+kind: prd
+created: 2026-04-09
+updated: 2026-04-09
+summary: 'Discussion: 화면을 가리는 UI(fullscreen view 등)는 modal 취급해야 한다. popup 축(인스턴스 내 modal)과 별개로, AriaRoute가 인스턴스 간 포커스 격리를 담당한다.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # AriaRoute Route-Level Modal — PRD
 
 > Discussion: 화면을 가리는 UI(fullscreen view 등)는 modal 취급해야 한다. popup 축(인스턴스 내 modal)과 별개로, AriaRoute가 인스턴스 간 포커스 격리를 담당한다.

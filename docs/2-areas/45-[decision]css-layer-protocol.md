@@ -1,3 +1,14 @@
+---
+id: '2-areas/45-[decision]css-layer-protocol'
+title: 'CSS Layer Protocol — SRP 기반 스타일링 설계문서 제안 — 2026-03-25 (v2)'
+status: active
+kind: decision
+created: 2026-03-24
+updated: 2026-04-05
+topics: [2-areas, data-aria-container, data-focused, decision, role]
+relates: []
+supersedes: []
+---
 # CSS Layer Protocol — SRP 기반 스타일링 설계문서 제안 — 2026-03-25 (v2)
 
 ## 배경

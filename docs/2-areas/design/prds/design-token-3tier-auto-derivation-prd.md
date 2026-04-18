@@ -1,3 +1,15 @@
+---
+id: 2-areas/design/prds/design-token-3tier-auto-derivation-prd
+title: '디자인 토큰 3티어 자동 파생 — PRD'
+status: active
+kind: prd
+created: 2026-04-12
+updated: 2026-04-12
+summary: 'Discussion: list/tree selection이 raised로 안 보이는 문제를 추적하다, 토큰 시스템이 손 매핑 2티어(palette → role)인 게 근본 원인임을 확인. 자동 파생 3티어(palette → semantic elev → role)로 재배선.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # 디자인 토큰 3티어 자동 파생 — PRD
 
 > Discussion: list/tree selection이 raised로 안 보이는 문제를 추적하다, 토큰 시스템이 손 매핑 2티어(palette → role)인 게 근본 원인임을 확인. 자동 파생 3티어(palette → semantic elev → role)로 재배선.

@@ -1,3 +1,14 @@
+---
+id: 2-areas/design/prds/ax-padding-refactor-task
+title: 'ax() padding 축 리팩토링 — cs/pd/content 재설계'
+status: active
+kind: plan
+created: 2026-04-04
+updated: 2026-04-08
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # ax() padding 축 리팩토링 — cs/pd/content 재설계
 
 ## 배경

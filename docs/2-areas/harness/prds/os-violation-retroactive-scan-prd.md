@@ -1,3 +1,15 @@
+---
+id: 2-areas/harness/prds/os-violation-retroactive-scan-prd
+title: 'OS Violation Retroactive Scan — PRD'
+status: active
+kind: prd
+created: 2026-04-12
+updated: 2026-04-12
+summary: 'Discussion: 기존 PreToolUse 훅 2개(guardOsPatterns, guardCssAxes)를 소급 적용하여 src/ 전체의 축적된 os 위반을 가시화·수렴한다. `pages/` → `ui/` → `primitives/` 순서 레이어별 청소.'
+topics: [2-areas, m]
+relates: []
+supersedes: []
+---
 # OS Violation Retroactive Scan — PRD
 
 > Discussion: 기존 PreToolUse 훅 2개(guardOsPatterns, guardCssAxes)를 소급 적용하여 src/ 전체의 축적된 os 위반을 가시화·수렴한다. `pages/` → `ui/` → `primitives/` 순서 레이어별 청소.

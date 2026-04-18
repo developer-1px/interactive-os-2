@@ -1,3 +1,15 @@
+---
+id: '2-areas/primitives/67-[explain]popupTriggerCollision'
+title: 'Popup Trigger 충돌 — Aria.Item과 Aria.Trigger가 같은 노드를 2번 렌더하는 이유'
+status: active
+kind: explain
+created: 2026-03-30
+updated: 2026-04-11
+summary: '작성일: 2026-03-30 맥락: APG 전수 전환에서 발견된 Gap 2 — popup 패턴이 `<Aria>` 선언적 방식을 사용할 수 없는 구조적 원인'
+topics: [2-areas, explain]
+relates: []
+supersedes: []
+---
 # Popup Trigger 충돌 — Aria.Item과 Aria.Trigger가 같은 노드를 2번 렌더하는 이유
 
 > 작성일: 2026-03-30

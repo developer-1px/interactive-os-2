@@ -1,3 +1,15 @@
+---
+id: 2-areas/ui/prds/slot-children-visual-render-design
+title: 'Slot Children 시각적 렌더링 + Auto-drill'
+status: active
+kind: note
+created: 2026-04-06
+updated: 2026-04-08
+summary: '**Date:** 2026-04-07 **Status:** Approved'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Slot Children 시각적 렌더링 + Auto-drill
 
 **Date:** 2026-04-07

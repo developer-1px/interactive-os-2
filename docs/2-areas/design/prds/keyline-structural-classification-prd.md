@@ -1,3 +1,15 @@
+---
+id: 2-areas/design/prds/keyline-structural-classification-prd
+title: 'Keyline Structural Classification — PRD'
+status: active
+kind: prd
+created: 2026-04-18
+updated: 2026-04-18
+summary: 'Discussion: keyline 테스트 페이지를 "LLM이 어떻게 조립해도 시각 일관성이 보장된다"는 디자인 시스템의 자기 증명으로 고도화'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Keyline Structural Classification — PRD
 
 > Discussion: keyline 테스트 페이지를 "LLM이 어떻게 조립해도 시각 일관성이 보장된다"는 디자인 시스템의 자기 증명으로 고도화

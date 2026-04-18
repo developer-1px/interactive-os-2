@@ -1,3 +1,15 @@
+---
+id: 2-areas/axis/prds/axis-v3-architecture-prd
+title: 'Axis v3 Architecture — PRD'
+status: active
+kind: prd
+created: 2026-03-29
+updated: 2026-04-08
+summary: 'Discussion: 축에서 keyMap 분리, 축=capability SSOT, 패턴=key binding, createPatternContext 해체'
+topics: [2-areas, nodeid]
+relates: []
+supersedes: []
+---
 # Axis v3 Architecture — PRD
 
 > Discussion: 축에서 keyMap 분리, 축=capability SSOT, 패턴=key binding, createPatternContext 해체

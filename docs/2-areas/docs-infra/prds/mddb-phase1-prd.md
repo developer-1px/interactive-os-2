@@ -1,3 +1,15 @@
+---
+id: 2-areas/docs-infra/prds/mddb-phase1-prd
+title: 'mddb Phase 1 — L0 결정적 frontmatter 인프라 Blueprint'
+status: active
+kind: prd
+created: 2026-04-18
+updated: 2026-04-18
+summary: '**Discussion**: `docs/0-inbox/mddb-audit-2026-04-18.md` + 2026-04-18 대화 **산출물 유형**: 스킬·훅 (scripts + hooks) **규모 추정**: 신규 5~7 파일, 수정 2~3 **Scope**: `docs/**/*.md` 한정 (`memory/` 제외), L0 결정적 추출 (로컬 LLM 제외)'
+topics: [2-areas, a, b, backlog, folder0, tag]
+relates: []
+supersedes: []
+---
 # mddb Phase 1 — L0 결정적 frontmatter 인프라 Blueprint
 
 > **Discussion**: `docs/0-inbox/mddb-audit-2026-04-18.md` + 2026-04-18 대화

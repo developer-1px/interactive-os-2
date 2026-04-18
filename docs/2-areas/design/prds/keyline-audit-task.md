@@ -1,3 +1,14 @@
+---
+id: 2-areas/design/prds/keyline-audit-task
+title: 'Keyline Audit 파이프라인'
+status: active
+kind: plan
+created: 2026-04-15
+updated: 2026-04-15
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Keyline Audit 파이프라인
 
 ## 배경

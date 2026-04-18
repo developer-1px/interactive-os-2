@@ -1,3 +1,15 @@
+---
+id: 2-areas/layout/prds/flatlayout-resizable-split-prd
+title: 'FlatLayout Resizable Split — PRD'
+status: active
+kind: prd
+created: 2026-04-12
+updated: 2026-04-12
+summary: 'Discussion: FlatLayout split 렌더러를 SplitPane으로 위임하여 리사이즈 가능하게 하고, raised widget에 그림자 가시성 확보, CodeBlock fill clipping 구현'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # FlatLayout Resizable Split — PRD
 
 > Discussion: FlatLayout split 렌더러를 SplitPane으로 위임하여 리사이즈 가능하게 하고, raised widget에 그림자 가시성 확보, CodeBlock fill clipping 구현

@@ -1,3 +1,15 @@
+---
+id: 2-areas/design/prds/remove-module-css-plan
+title: 'module.css 전면 제거 Implementation Plan'
+status: active
+kind: plan
+created: 2026-04-05
+updated: 2026-04-17
+summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
+topics: [2-areas, data-compact]
+relates: []
+supersedes: []
+---
 # module.css 전면 제거 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

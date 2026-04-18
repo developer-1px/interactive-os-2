@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/url-sync-v2-prd
+title: 'urlSync v2 — 상용 수준 URL 상태 동기화 PRD'
+status: active
+kind: prd
+created: 2026-04-11
+updated: 2026-04-11
+summary: 'Discussion: viewer URL 딥링크 미작동에서 출발 → urlSync를 nuqs/TanStack Router 표준급으로 보강 Explain: `docs/0-inbox/78-[explain]urlSync-three-layer-problem.md`'
+topics: [2-areas, explain]
+relates: []
+supersedes: []
+---
 # urlSync v2 — 상용 수준 URL 상태 동기화 PRD
 
 > Discussion: viewer URL 딥링크 미작동에서 출발 → urlSync를 nuqs/TanStack Router 표준급으로 보강

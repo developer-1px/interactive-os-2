@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/engine-handler-registry-remaining-failures
+title: 'Engine Handler Registry — 잔여 테스트 실패 보고'
+status: active
+kind: note
+created: 2026-03-28
+updated: 2026-04-08
+summary: 'Phase 2 수정 후 15건 실패. Cynefin 분석 기반, 확실한 1건(use-aria-zone)은 수정 완료.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Engine Handler Registry — 잔여 테스트 실패 보고
 
 > Phase 2 수정 후 15건 실패. Cynefin 분석 기반, 확실한 1건(use-aria-zone)은 수정 완료.

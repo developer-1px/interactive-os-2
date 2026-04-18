@@ -1,3 +1,15 @@
+---
+id: 2-areas/ui/prds/lightbox-prd
+title: 'Lightbox — PRD'
+status: active
+kind: prd
+created: 2026-04-08
+updated: 2026-04-08
+summary: 'Discussion: MarkdownViewer 내 이미지/머메이드 클릭 → 100vw×100vh 풀스크린 modal. OS 기반, dispatch-only Context 디커플링.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Lightbox — PRD
 
 > Discussion: MarkdownViewer 내 이미지/머메이드 클릭 → 100vw×100vh 풀스크린 modal. OS 기반, dispatch-only Context 디커플링.

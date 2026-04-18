@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/session-replay-phase-a-prd
+title: 'Session Replay Phase A — PRD'
+status: active
+kind: prd
+created: 2026-04-01
+updated: 2026-04-08
+summary: 'Discussion: AI 코딩 세션을 웹에서 재생 가능한 인터랙티브 뷰어로 만든다. Phase A는 채팅 패널 재생만.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Session Replay Phase A — PRD
 
 > Discussion: AI 코딩 세션을 웹에서 재생 가능한 인터랙티브 뷰어로 만든다. Phase A는 채팅 패널 재생만.

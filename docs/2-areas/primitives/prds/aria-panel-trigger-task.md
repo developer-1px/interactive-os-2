@@ -1,3 +1,15 @@
+---
+id: 2-areas/primitives/prds/aria-panel-trigger-task
+title: 'Aria.Panel + Aria.Trigger — Task'
+status: active
+kind: plan
+created: 2026-04-04
+updated: 2026-04-08
+summary: 'PRD: `2026-03-28-aria-panel-trigger-prd.md`'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Aria.Panel + Aria.Trigger — Task
 
 PRD: `2026-03-28-aria-panel-trigger-prd.md`

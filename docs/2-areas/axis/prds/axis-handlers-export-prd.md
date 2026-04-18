@@ -1,3 +1,15 @@
+---
+id: 2-areas/axis/prds/axis-handlers-export-prd
+title: '축 handlers 정적 export — PRD'
+status: active
+kind: prd
+created: 2026-03-28
+updated: 2026-04-08
+summary: 'Discussion: APG Grid 증거 — 같은 키(ArrowRight)가 맥락마다 다른 의미. 축이 keyMap을 소유하면 패턴이 맥락별 바인딩을 결정할 수 없다. handlers를 정적 export하여 패턴이 직접 key→handler 바인딩 구성 가능하게.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # 축 handlers 정적 export — PRD
 
 > Discussion: APG Grid 증거 — 같은 키(ArrowRight)가 맥락마다 다른 의미. 축이 keyMap을 소유하면 패턴이 맥락별 바인딩을 결정할 수 없다. handlers를 정적 export하여 패턴이 직접 key→handler 바인딩 구성 가능하게.

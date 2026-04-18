@@ -1,3 +1,15 @@
+---
+id: '2-areas/ui/57-[explain]chatRenderingPipeline'
+title: 'Chat 렌더링 파이프라인 — 3계층 변환이 tool_group을 재생산한다'
+status: active
+kind: explain
+created: 2026-04-04
+updated: 2026-04-11
+summary: '작성일: 2026-04-03 맥락: timelineAdapter에서 tool_group을 제거했지만 ChatFeed 내부에서 재그룹핑이 발생하여 여전히 그룹 카드가 보임'
+topics: [2-areas, explain]
+relates: []
+supersedes: []
+---
 # Chat 렌더링 파이프라인 — 3계층 변환이 tool_group을 재생산한다
 
 > 작성일: 2026-04-03

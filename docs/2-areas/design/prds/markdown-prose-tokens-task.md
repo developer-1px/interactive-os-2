@@ -1,3 +1,14 @@
+---
+id: 2-areas/design/prds/markdown-prose-tokens-task
+title: 'Markdown Prose 토큰 분리 및 base 정리'
+status: active
+kind: plan
+created: 2026-04-02
+updated: 2026-04-08
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Markdown Prose 토큰 분리 및 base 정리
 
 ## 액션 플랜

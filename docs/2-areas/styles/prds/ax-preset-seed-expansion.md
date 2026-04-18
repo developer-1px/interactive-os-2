@@ -1,3 +1,15 @@
+---
+id: 2-areas/styles/prds/ax-preset-seed-expansion
+title: 'ax() rolePreset Seed Expansion — Scan Report'
+status: active
+kind: note
+created: 2026-04-17
+updated: 2026-04-17
+summary: 'Date: 2026-04-18 Scope: `src/**/*.{ts,tsx}` — 모든 `ax({...})` 호출 Goal: `rolePresetTable` 의 `role.surface.cs` 키에 자동 도출 seed 추가'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # ax() rolePreset Seed Expansion — Scan Report
 
 Date: 2026-04-18

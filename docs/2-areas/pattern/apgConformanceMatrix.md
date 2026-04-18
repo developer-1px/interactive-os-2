@@ -1,3 +1,15 @@
+---
+id: 2-areas/pattern/apgConformanceMatrix
+title: APG Conformance Matrix
+status: active
+kind: note
+created: 2026-03-28
+updated: 2026-03-28
+summary: 'APG(WAI-ARIA Authoring Practices Guide) 전체 example과 우리 pattern/roles/ 매핑. CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 기준.'
+topics: [2-areas, aria-label]
+relates: []
+supersedes: []
+---
 # APG Conformance Matrix
 
 APG(WAI-ARIA Authoring Practices Guide) 전체 example과 우리 pattern/roles/ 매핑.

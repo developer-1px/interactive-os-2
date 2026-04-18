@@ -1,3 +1,15 @@
+---
+id: 2-areas/pattern/prds/listbox-example-unification-prd
+title: 'ListBox Example → UI 완성품 기반 전환 — PRD'
+status: active
+kind: prd
+created: 2026-03-30
+updated: 2026-04-08
+summary: 'Discussion: examples/가 ui/ 완성품을 소비하여 APG를 재현. 의존 방향: examples → ui → pattern. drift 제거 + APG 검증 유지.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # ListBox Example → UI 완성품 기반 전환 — PRD
 
 > Discussion: examples/가 ui/ 완성품을 소비하여 APG를 재현. 의존 방향: examples → ui → pattern. drift 제거 + APG 검증 유지.

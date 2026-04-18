@@ -1,3 +1,14 @@
+---
+id: '2-areas/ui/66-[retro]apgUnificationDesignGaps'
+title: 'APG 전수 전환 설계 갭 리포트 — 2026-03-30'
+status: active
+kind: retro
+created: 2026-03-30
+updated: 2026-04-11
+topics: [2-areas, retro]
+relates: []
+supersedes: []
+---
 # APG 전수 전환 설계 갭 리포트 — 2026-03-30
 
 ## 배경

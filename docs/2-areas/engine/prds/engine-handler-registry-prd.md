@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/engine-handler-registry-prd
+title: 'Engine Handler Registry (defineCommand Phase 2) — PRD'
+status: active
+kind: prd
+created: 2026-03-29
+updated: 2026-04-08
+summary: 'Discussion: Command에서 .execute() 제거 → 순수 메시지 + engine registry lookup + .reduce() direct API + middleware getStore() 단순화'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Engine Handler Registry (defineCommand Phase 2) — PRD
 
 > Discussion: Command에서 .execute() 제거 → 순수 메시지 + engine registry lookup + .reduce() direct API + middleware getStore() 단순화

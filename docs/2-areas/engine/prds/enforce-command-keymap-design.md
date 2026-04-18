@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/enforce-command-keymap-design
+title: 'Command 패턴 강제 완성 — KeyHandler 통일 설계'
+status: active
+kind: note
+created: 2026-04-05
+updated: 2026-04-08
+summary: '작성일: 2026-04-05 맥락: inspector가 plugin/override keyMap의 command를 표시하지 못하는 blind spot 수정'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Command 패턴 강제 완성 — KeyHandler 통일 설계
 
 > 작성일: 2026-04-05

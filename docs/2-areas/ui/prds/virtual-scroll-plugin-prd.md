@@ -1,3 +1,15 @@
+---
+id: 2-areas/ui/prds/virtual-scroll-plugin-prd
+title: 'virtualScroll Plugin — PRD'
+status: active
+kind: prd
+created: 2026-04-04
+updated: 2026-04-17
+summary: 'Discussion: useVirtualScroll을 os definePlugin으로 승격. autoscroll 패턴 — useEffect + 훅 이중 구조.'
+topics: [2-areas, itemcount]
+relates: []
+supersedes: []
+---
 # virtualScroll Plugin — PRD
 
 > Discussion: useVirtualScroll을 os definePlugin으로 승격. autoscroll 패턴 — useEffect + 훅 이중 구조.

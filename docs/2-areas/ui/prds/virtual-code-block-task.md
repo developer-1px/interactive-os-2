@@ -1,3 +1,14 @@
+---
+id: 2-areas/ui/prds/virtual-code-block-task
+title: 'FilePanel 대규모 파일 가상화'
+status: active
+kind: plan
+created: 2026-04-04
+updated: 2026-04-17
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # FilePanel 대규모 파일 가상화
 
 ## 목표

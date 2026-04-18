@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/useCommandBind-prd
+title: 'useCommandBind — PRD'
+status: active
+kind: prd
+created: 2026-04-09
+updated: 2026-04-09
+summary: 'Discussion: ExpandIndicator 클릭 시 expand toggle. 이벤트와 커맨드를 선언적으로 바인딩하는 hook.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # useCommandBind — PRD
 
 > Discussion: ExpandIndicator 클릭 시 expand toggle. 이벤트와 커맨드를 선언적으로 바인딩하는 hook.

@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/plugin-effect-autoscroll-prd
+title: 'Plugin Effect + Autoscroll — PRD'
+status: active
+kind: prd
+created: 2026-04-03
+updated: 2026-04-08
+summary: 'Discussion: plugin 시스템에 effect(hook 팩토리) 레이어 추가, autoscroll을 첫 적용 사례로 구현'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Plugin Effect + Autoscroll — PRD
 
 > Discussion: plugin 시스템에 effect(hook 팩토리) 레이어 추가, autoscroll을 첫 적용 사례로 구현

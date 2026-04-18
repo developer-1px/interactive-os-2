@@ -1,3 +1,14 @@
+---
+id: '2-areas/layout/76-[explain]flat-layout-engine-what-changed'
+title: 'FlatLayout 엔진 — 뭐가 달라졌나 — 2026-04-10'
+status: active
+kind: explain
+created: 2026-04-11
+updated: 2026-04-11
+topics: [2-areas, explain]
+relates: []
+supersedes: []
+---
 # FlatLayout 엔진 — 뭐가 달라졌나 — 2026-04-10
 
 ## 배경

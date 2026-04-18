@@ -1,3 +1,15 @@
+---
+id: 2-areas/harness/reports/violations-pages
+title: 'Violations — pages'
+status: active
+kind: note
+created: 2026-04-12
+updated: 2026-04-12
+summary: 'Generated: 2026-04-12T03:07:55.047Z Total: 14 violations in 12 files (of 147 scanned)'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Violations — pages
 Generated: 2026-04-12T03:07:55.047Z
 Total: 14 violations in 12 files (of 147 scanned)

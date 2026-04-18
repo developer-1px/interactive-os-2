@@ -1,3 +1,15 @@
+---
+id: 2-areas/axis/prds/axis-v3-architecture-plan
+title: Axis v3 Architecture Implementation Plan
+status: active
+kind: plan
+created: 2026-03-29
+updated: 2026-04-08
+summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
+topics: [2-areas, x]
+relates: []
+supersedes: []
+---
 # Axis v3 Architecture Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

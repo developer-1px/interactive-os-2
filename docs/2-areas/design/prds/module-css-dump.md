@@ -1,3 +1,14 @@
+---
+id: 2-areas/design/prds/module-css-dump
+title: 'module.css 전체 덤프 (2026-04-03)'
+status: active
+kind: note
+created: 2026-04-09
+updated: 2026-04-09
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # module.css 전체 덤프 (2026-04-03)
 
 ## `src/devtools/inspector/AppInspectorPanel.module.css` (      34줄)

@@ -1,3 +1,15 @@
+---
+id: 2-areas/design/prds/ax-migration-phase2-prd
+title: 'ax() 마이그레이션 Phase 2 — PRD'
+status: active
+kind: prd
+created: 2026-04-03
+updated: 2026-04-08
+summary: 'Discussion: module.css last-mile을 줄이기 위해 새 축 발견 + surface 정합성 재스캔'
+topics: [2-areas, aria-disabled, prop]
+relates: []
+supersedes: []
+---
 # ax() 마이그레이션 Phase 2 — PRD
 
 > Discussion: module.css last-mile을 줄이기 위해 새 축 발견 + surface 정합성 재스캔

@@ -1,3 +1,15 @@
+---
+id: 2-areas/styles/axLlmPrompt
+title: 'ax() 디자인 시스템 — LLM Guide'
+status: active
+kind: note
+created: 2026-04-17
+updated: 2026-04-17
+summary: 'ARIA OS UI를 생성할 때 사용하는 시스템 프롬프트. 이 문서에 적힌 **Public 14축만** 사용한다. 여기 없는 키(padding, gap, shape, border, icon, square, weight, text, opacity, state, motion)는 절대 `ax()` 호출에 넣지 않는다. 필요할 때는 `ax.raw()` 참조.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # ax() 디자인 시스템 — LLM Guide
 
 > ARIA OS UI를 생성할 때 사용하는 시스템 프롬프트. 이 문서에 적힌 **Public 14축만** 사용한다.

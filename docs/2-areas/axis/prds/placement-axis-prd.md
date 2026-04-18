@@ -1,3 +1,15 @@
+---
+id: 2-areas/axis/prds/placement-axis-prd
+title: 'placement 축 — PRD'
+status: active
+kind: prd
+created: 2026-04-05
+updated: 2026-04-08
+summary: 'Discussion: module.css의 position+inset 패턴을 ax() placement 축으로 흡수. 의도 기반 어휘로 배치를 선언.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # placement 축 — PRD
 
 > Discussion: module.css의 position+inset 패턴을 ax() placement 축으로 흡수. 의도 기반 어휘로 배치를 선언.

@@ -1,3 +1,15 @@
+---
+id: 2-areas/design/prds/design-convergence-loop-prd
+title: 'Design Convergence Loop — Slice 0 — Blueprint'
+status: active
+kind: prd
+created: 2026-04-18
+updated: 2026-04-18
+summary: '**Discussion**: 2026-04-18 /discuss — LLM이 1-shot으로 결함 없는 디자인을 뽑게 하려면 L1(미려 컴포넌트)+L2(레이아웃 엔진) 구축 전에 **수렴 루프 인프라**가 필요. 4번 원인(구축했는데 깨짐) = 합격선 테스트 부재. TDD 순서로 Slice 0(루프 인프라) → Slice A(Linear issue list 구현). **산출물 유형**: 엔진/인프라 (스크립트 + 테스트 파이프라인) **규모 추정**: 신규 파일 4~6개, 수정 0~2개 (기존 `scripts/design*.mjs` 재활용)'
+topics: [2-areas, i, p]
+relates: []
+supersedes: []
+---
 # Design Convergence Loop — Slice 0 — Blueprint
 
 > **Discussion**: 2026-04-18 /discuss — LLM이 1-shot으로 결함 없는 디자인을 뽑게 하려면 L1(미려 컴포넌트)+L2(레이아웃 엔진) 구축 전에 **수렴 루프 인프라**가 필요. 4번 원인(구축했는데 깨짐) = 합격선 테스트 부재. TDD 순서로 Slice 0(루프 인프라) → Slice A(Linear issue list 구현).

@@ -1,3 +1,14 @@
+---
+id: 2-areas/pattern/patternCompositionLogicTree
+title: 'Pattern Composition 로직트리 — 2026-03-20'
+status: active
+kind: note
+created: 2026-03-21
+updated: 2026-03-24
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Pattern Composition 로직트리 — 2026-03-20
 
 ## 배경

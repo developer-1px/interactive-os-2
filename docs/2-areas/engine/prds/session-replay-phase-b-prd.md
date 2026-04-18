@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/session-replay-phase-b-prd
+title: 'Session Replay Phase B — Tool Visualization PRD'
+status: active
+kind: prd
+created: 2026-04-02
+updated: 2026-04-08
+summary: 'Discussion: JSONL 기반 세션 리플레이에서 tool_use 결과를 좌측 뷰어에 시각화한다.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Session Replay Phase B — Tool Visualization PRD
 
 > Discussion: JSONL 기반 세션 리플레이에서 tool_use 결과를 좌측 뷰어에 시각화한다.

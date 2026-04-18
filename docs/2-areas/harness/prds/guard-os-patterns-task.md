@@ -1,3 +1,14 @@
+---
+id: 2-areas/harness/prds/guard-os-patterns-task
+title: guard-os-patterns hook
+status: active
+kind: plan
+created: 2026-04-04
+updated: 2026-04-08
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # guard-os-patterns hook
 
 ## 목적

@@ -1,3 +1,15 @@
+---
+id: 2-areas/harness/hooks
+title: 'Hooks — 기계적 강제'
+status: active
+kind: note
+created: 2026-04-04
+updated: 2026-04-04
+summary: '훅은 강제력 100%. regex/파일 체크로 위반을 감지하고 block 또는 warning을 반환한다. 모든 훅은 `.claude/hooks/*.mjs` (ESM), stdin으로 JSON 입력, stdout/stderr로 출력.'
+topics: [2-areas, async]
+relates: []
+supersedes: []
+---
 # Hooks — 기계적 강제
 
 > 훅은 강제력 100%. regex/파일 체크로 위반을 감지하고 block 또는 warning을 반환한다.

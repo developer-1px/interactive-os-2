@@ -1,3 +1,14 @@
+---
+id: '2-areas/61-[decision]serviceUserStoryPipeline'
+title: 'Service User Story Pipeline — 2026-03-27'
+status: active
+kind: decision
+created: 2026-03-27
+updated: 2026-03-28
+topics: [2-areas, decision]
+relates: []
+supersedes: []
+---
 # Service User Story Pipeline — 2026-03-27
 
 ## 배경

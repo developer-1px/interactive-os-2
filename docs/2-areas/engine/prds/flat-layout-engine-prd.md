@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/flat-layout-engine-prd
+title: 'FlatLayout 엔진 — PRD'
+status: active
+kind: prd
+created: 2026-04-10
+updated: 2026-04-10
+summary: 'Discussion: React JSX 중첩을 NormalizedData flat 선언으로 대체. 위젯=React 블랙박스, 레이아웃=엔진이 관리. Phase 1: PageBookViewer 전환으로 검증.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # FlatLayout 엔진 — PRD
 
 > Discussion: React JSX 중첩을 NormalizedData flat 선언으로 대체. 위젯=React 블랙박스, 레이아웃=엔진이 관리. Phase 1: PageBookViewer 전환으로 검증.

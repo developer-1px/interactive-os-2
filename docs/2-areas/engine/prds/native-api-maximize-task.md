@@ -1,3 +1,14 @@
+---
+id: 2-areas/engine/prds/native-api-maximize-task
+title: 'Native CSS/DOM API 극대화'
+status: active
+kind: plan
+created: 2026-04-09
+updated: 2026-04-09
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Native CSS/DOM API 극대화
 
 ## 목적

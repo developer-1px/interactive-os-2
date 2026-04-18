@@ -1,3 +1,15 @@
+---
+id: '2-areas/layout/70-[explain]projectPageDesignDecisions'
+title: '/project 페이지 — 디자인 의사결정 근거'
+status: active
+kind: explain
+created: 2026-04-06
+updated: 2026-04-11
+summary: '작성일: 2026-04-05 맥락: `/project` 라우트는 프로젝트 전체 조감도를 TreeView로 보여주는 내부 도구다'
+topics: [2-areas, explain]
+relates: []
+supersedes: []
+---
 # /project 페이지 — 디자인 의사결정 근거
 
 > 작성일: 2026-04-05

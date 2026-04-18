@@ -1,3 +1,15 @@
+---
+id: 2-areas/plugin-showcase
+title: Plugin Showcase
+status: active
+kind: note
+created: 2026-03-21
+updated: 2026-03-21
+summary: '최종 갱신: 2026-03-21 (retro: plugin-showcase-gap-phase2)'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Plugin Showcase
 
 > 최종 갱신: 2026-03-21 (retro: plugin-showcase-gap-phase2)

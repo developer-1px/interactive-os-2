@@ -1,3 +1,15 @@
+---
+id: 2-areas/ui/prds/ui-items-prd
+title: 'UI 부품 레이어 확장 — PRD'
+status: active
+kind: prd
+created: 2026-04-05
+updated: 2026-04-08
+summary: 'Discussion: 도구 UI 글자 크기 불일치 → 부품 레이어 부재가 근본 원인 → indicators처럼 items/panels/cells 3개 부품 레이어 추가 + hook 강제'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # UI 부품 레이어 확장 — PRD
 
 > Discussion: 도구 UI 글자 크기 불일치 → 부품 레이어 부재가 근본 원인 → indicators처럼 items/panels/cells 3개 부품 레이어 추가 + hook 강제

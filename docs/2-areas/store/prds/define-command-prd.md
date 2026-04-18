@@ -1,3 +1,15 @@
+---
+id: 2-areas/store/prds/define-command-prd
+title: 'defineCommand 패턴 도입 (Phase 1: 추상화 벽) — PRD'
+status: active
+kind: prd
+created: 2026-03-28
+updated: 2026-04-08
+summary: 'Discussion: Command의 execute 분리 → Redux 표준 action/reducer. Phase 1은 인터페이스만 세우고 내부는 .execute() 유지'
+topics: [2-areas, id]
+relates: []
+supersedes: []
+---
 # defineCommand 패턴 도입 (Phase 1: 추상화 벽) — PRD
 
 > Discussion: Command의 execute 분리 → Redux 표준 action/reducer. Phase 1은 인터페이스만 세우고 내부는 .execute() 유지

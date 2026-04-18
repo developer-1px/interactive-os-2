@@ -1,3 +1,14 @@
+---
+id: 2-areas/design/prds/module-css-migration
+title: 'module.css → ax() 마이그레이션 트래커'
+status: active
+kind: note
+created: 2026-04-02
+updated: 2026-04-08
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # module.css → ax() 마이그레이션 트래커
 
 ## 목적

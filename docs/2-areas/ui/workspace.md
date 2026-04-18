@@ -1,3 +1,15 @@
+---
+id: 2-areas/ui/workspace
+title: Workspace
+status: active
+kind: note
+created: 2026-03-27
+updated: 2026-03-27
+summary: 'SplitPane + TabGroup 재귀 오케스트레이터. cmux/IDE 스타일 분할 워크스페이스.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Workspace
 
 > SplitPane + TabGroup 재귀 오케스트레이터. cmux/IDE 스타일 분할 워크스페이스.

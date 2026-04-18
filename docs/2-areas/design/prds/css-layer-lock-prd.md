@@ -1,3 +1,15 @@
+---
+id: 2-areas/design/prds/css-layer-lock-prd
+title: 'CSS @layer 구조/상태 잠금 — PRD'
+status: active
+kind: prd
+created: 2026-04-08
+updated: 2026-04-08
+summary: 'Discussion: os 부품으로 조립해도 디자인 일관성이 없음 → recipe/interactive가 convention으로만 잠기고 CSS cascade에서 강제되지 않음 → @layer 도입으로 물리적 잠금'
+topics: [2-areas, data-focused]
+relates: []
+supersedes: []
+---
 # CSS @layer 구조/상태 잠금 — PRD
 
 > Discussion: os 부품으로 조립해도 디자인 일관성이 없음 → recipe/interactive가 convention으로만 잠기고 CSS cascade에서 강제되지 않음 → @layer 도입으로 물리적 잠금

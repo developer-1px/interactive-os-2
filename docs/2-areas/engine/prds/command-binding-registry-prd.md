@@ -1,3 +1,15 @@
+---
+id: 2-areas/engine/prds/command-binding-registry-prd
+title: 'Command Binding Registry — PRD'
+status: active
+kind: prd
+created: 2026-04-04
+updated: 2026-04-08
+summary: 'Discussion: 모든 pointer 행동에 이름 있는 커맨드 부여. useCommand 도입 + ariaRegistry 확장 + inspector 양방향 뷰.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Command Binding Registry — PRD
 
 > Discussion: 모든 pointer 행동에 이름 있는 커맨드 부여. useCommand 도입 + ariaRegistry 확장 + inspector 양방향 뷰.

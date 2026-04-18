@@ -1,3 +1,15 @@
+---
+id: 2-areas/styles/prds/ax-pit-of-success-prd
+title: 'ax() Pit of Success 불변량 — PRD'
+status: active
+kind: prd
+created: 2026-04-10
+updated: 2026-04-10
+summary: 'Discussion: ax() 축 간 관계(불변량)가 없어서 조합이 깨질 수 있다. 페어링/레벨/시드 3가지 불변량을 도입하여 어떤 조합도 안전한 시스템을 만든다.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # ax() Pit of Success 불변량 — PRD
 
 > Discussion: ax() 축 간 관계(불변량)가 없어서 조합이 깨질 수 있다. 페어링/레벨/시드 3가지 불변량을 도입하여 어떤 조합도 안전한 시스템을 만든다.

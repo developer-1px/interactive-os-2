@@ -1,3 +1,15 @@
+---
+id: '2-areas/pattern/58-[explain]remainingL4L5Violations'
+title: 'L4→L5 잔존 위반 2개 — createPatternContext가 spatial·rename plugin을 직접 import한다'
+status: active
+kind: explain
+created: 2026-03-26
+updated: 2026-04-11
+summary: '작성일: 2026-03-26 맥락: 26개 역참조를 정리하여 2개까지 줄였으나, spatial·rename의 command 팩토리가 여전히 L4에서 직접 import됨'
+topics: [2-areas, explain]
+relates: []
+supersedes: []
+---
 # L4→L5 잔존 위반 2개 — createPatternContext가 spatial·rename plugin을 직접 import한다
 
 > 작성일: 2026-03-26

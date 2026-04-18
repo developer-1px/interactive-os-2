@@ -1,3 +1,14 @@
+---
+id: 2-areas/engine/prds/plugin-default-keymap-task
+title: Plugin Default KeyMap + CMS Sidebar Cleanup
+status: active
+kind: plan
+created: 2026-04-02
+updated: 2026-04-08
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Plugin Default KeyMap + CMS Sidebar Cleanup
 
 ## 배경

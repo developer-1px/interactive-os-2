@@ -1,3 +1,14 @@
+---
+id: '2-areas/styles/72-[explain]ax-mece-review'
+title: 'ax() 24축 MECE 검토 — 2026-04-06'
+status: active
+kind: explain
+created: 2026-04-06
+updated: 2026-04-11
+topics: [2-areas, explain]
+relates: []
+supersedes: []
+---
 # ax() 24축 MECE 검토 — 2026-04-06
 
 ## 배경

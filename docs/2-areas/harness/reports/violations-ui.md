@@ -1,3 +1,15 @@
+---
+id: 2-areas/harness/reports/violations-ui
+title: 'Violations — ui'
+status: active
+kind: note
+created: 2026-04-12
+updated: 2026-04-12
+summary: 'Generated: 2026-04-12T03:24:27.995Z Total: 6 violations in 5 files (of 357 scanned)'
+topics: [2-areas, m]
+relates: []
+supersedes: []
+---
 # Violations — ui
 Generated: 2026-04-12T03:24:27.995Z
 Total: 6 violations in 5 files (of 357 scanned)

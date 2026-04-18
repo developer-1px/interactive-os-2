@@ -1,3 +1,15 @@
+---
+id: 2-areas/primitives/prds/aria-panel-trigger-plan
+title: Aria.Panel + Aria.Trigger Implementation Plan
+status: active
+kind: plan
+created: 2026-03-29
+updated: 2026-04-08
+summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # Aria.Panel + Aria.Trigger Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

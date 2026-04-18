@@ -1,3 +1,14 @@
+---
+id: 2-areas/harness/prds/harness-convergence-task
+title: '하네스 수렴 구조 개선'
+status: active
+kind: plan
+created: 2026-04-05
+updated: 2026-04-08
+topics: [2-areas]
+relates: []
+supersedes: []
+---
 # 하네스 수렴 구조 개선
 
 ## 목표
