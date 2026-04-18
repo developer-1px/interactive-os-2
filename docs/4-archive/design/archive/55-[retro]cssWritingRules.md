@@ -1,3 +1,14 @@
+---
+id: '4-archive/design/archive/55-[retro]cssWritingRules'
+title: 'Retro: CSS Writing Rules — 2026-03-25'
+status: archived
+kind: retro
+created: 2026-03-25
+updated: 2026-04-11
+topics: [4-archive, data-aria-container, retro]
+relates: []
+supersedes: []
+---
 # Retro: CSS Writing Rules — 2026-03-25
 
 ## 비교 기준

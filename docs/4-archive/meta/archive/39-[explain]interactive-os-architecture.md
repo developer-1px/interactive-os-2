@@ -1,3 +1,15 @@
+---
+id: '4-archive/meta/archive/39-[explain]interactive-os-architecture'
+title: 'interactive-os — GUI 구축 비용을 0으로 만드는 ARIA 프레임워크'
+status: archived
+kind: explain
+created: 2026-03-24
+updated: 2026-04-11
+summary: '작성일: 2026-03-24 맥락: 프로젝트 전체 아키텍처 해설. 디자인 시스템 구축과 UI 완성품 양산을 앞두고, 현재까지의 설계 의도와 구조를 정리한다.'
+topics: [4-archive, explain]
+relates: []
+supersedes: []
+---
 # interactive-os — GUI 구축 비용을 0으로 만드는 ARIA 프레임워크
 
 > 작성일: 2026-03-24

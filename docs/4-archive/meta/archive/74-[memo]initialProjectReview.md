@@ -1,4 +1,14 @@
-
+---
+id: '4-archive/meta/archive/74-[memo]initialProjectReview'
+title: '74-[memo]initialProjectReview'
+status: archived
+kind: memo
+created: 2026-03-28
+updated: 2026-04-11
+topics: [4-archive, memo]
+relates: []
+supersedes: []
+---
 1. undo 방식에 대해서 command excute undo를 굳이 만들어야 하나? 그냥 data delta방식으로 데이터 처리를 하고 focus정책은 변경사항을 체크해주는 식으로
 2. 데이터 변경이 아닌 것에 대해서는 history에 기억하지 않는다. (ui는 undo 대상이 아님. 다만 UI 상태를 외부 연동을 한다면 undo redo 대상. 이거 구분은 어떻게 할 지 고민)
 3. 지금 프로젝트에 대해서는 확신을 가져도 된다. 사람들은 터미널을 무서워 한다. 용도에 맞는 UI는 너무나 필요하다.

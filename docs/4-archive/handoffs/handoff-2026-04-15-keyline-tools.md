@@ -1,9 +1,19 @@
 ---
-created_at: 2026-04-15
-consumed_by: 2026-04-15-keyline-resume
-consumed_at: 2026-04-15
+id: 4-archive/handoffs/handoff-2026-04-15-keyline-tools
+title: 'Handoff: Key Line 정적 분석 + Inspector 도구'
+status: archived
+kind: handoff
+created: 2026-04-15
+updated: 2026-04-15
+summary: '디자인 피드백 루프를 빠르게 하기 위한 결정적 도구의 첫 번째 세트 — ax() 정적 분석 CLI와 visual inspector overlay 테스트 페이지를 구현했다.'
+topics: [4-archive]
+relates: []
+supersedes: []
+legacy:
+  created_at: 2026-04-15
+  consumed_by: 2026-04-15-keyline-resume
+  consumed_at: 2026-04-15
 ---
-
 # Handoff: Key Line 정적 분석 + Inspector 도구
 
 > 디자인 피드백 루프를 빠르게 하기 위한 결정적 도구의 첫 번째 세트 — ax() 정적 분석 CLI와 visual inspector overlay 테스트 페이지를 구현했다.

@@ -1,3 +1,15 @@
+---
+id: '4-archive/primitives/archive/32-[explain]useAria'
+title: 'useAria.ts — 442줄의 해부'
+status: archived
+kind: explain
+created: 2026-03-23
+updated: 2026-04-11
+summary: '작성일: 2026-03-23 맥락: 중간 점검에서 "접착층(L5-L6)이 1,501 LOC로 무겁다"는 지적. useAria 442줄이 커져야 할 이유가 있는지 해부.'
+topics: [4-archive, explain]
+relates: []
+supersedes: []
+---
 # useAria.ts — 442줄의 해부
 
 > 작성일: 2026-03-23

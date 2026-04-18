@@ -1,3 +1,14 @@
+---
+id: '4-archive/ui/archive/60-[retro]chatModule'
+title: 'Retro: Gen UI Chat Module — 2026-03-27'
+status: archived
+kind: retro
+created: 2026-03-27
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # Retro: Gen UI Chat Module — 2026-03-27
 
 ## 비교 기준

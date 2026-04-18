@@ -1,3 +1,15 @@
+---
+id: 4-archive/meta/archive/handoff-2026-04-11-finder-viewer
+title: Handoff: Finder Viewer
+status: archived
+kind: handoff
+created: 2026-04-11
+updated: 2026-04-11
+summary: 'consumed_by: 7a4c6d1d (FilePreview OCP 통합)'
+topics: [4-archive]
+relates: []
+supersedes: []
+---
 # Handoff: Finder Viewer
 
 consumed_by: 7a4c6d1d (FilePreview OCP 통합)

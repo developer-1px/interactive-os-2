@@ -1,3 +1,14 @@
+---
+id: 4-archive/ui/summary
+title: 'UI — 결정 요약'
+status: archived
+kind: summary
+created: 2026-04-11
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # UI — 결정 요약
 
 ## Gen UI Chat Module (2026-03-27)

@@ -1,8 +1,18 @@
 ---
-consumed_by: 2026-04-15-archived
-consumed_at: 2026-04-15
+id: 4-archive/handoffs/handoff-2026-04-11-skill-diet
+title: 'Handoff: 스킬 다이어트 — discuss 12요소 + 34→19 구조 설계'
+status: archived
+kind: handoff
+created: 2026-04-11
+updated: 2026-04-15
+summary: '2026-04-11 세션에서 discuss 프레임 확장(⑧보유자산) + 스킬 다이어트 논의'
+topics: [4-archive]
+relates: []
+supersedes: []
+legacy:
+  consumed_by: 2026-04-15-archived
+  consumed_at: 2026-04-15
 ---
-
 # Handoff: 스킬 다이어트 — discuss 12요소 + 34→19 구조 설계
 
 > 2026-04-11 세션에서 discuss 프레임 확장(⑧보유자산) + 스킬 다이어트 논의

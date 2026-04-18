@@ -1,3 +1,14 @@
+---
+id: 4-archive/engine/archive/definePluginArchitecture
+title: 'clipboard keyMap → native event 전환 — 2026-03-23'
+status: archived
+kind: note
+created: 2026-03-23
+updated: 2026-04-11
+topics: [4-archive]
+relates: []
+supersedes: []
+---
 > ✅ 완료 — 2026-03-23
 
 # clipboard keyMap → native event 전환 — 2026-03-23

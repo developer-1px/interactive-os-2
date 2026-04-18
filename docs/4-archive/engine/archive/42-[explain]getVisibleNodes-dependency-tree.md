@@ -1,3 +1,15 @@
+---
+id: '4-archive/engine/archive/42-[explain]getVisibleNodes-dependency-tree'
+title: 'getVisibleNodes는 tree-only 가시성 함수인데 범용으로 쓰이고 있다'
+status: archived
+kind: explain
+created: 2026-03-24
+updated: 2026-04-11
+summary: '작성일: 2026-03-25 맥락: NavList 사이드바에서 ArrowDown이 동작하지 않는 버그를 추적하다, getVisibleNodes의 설계 한계를 발견'
+topics: [4-archive, explain]
+relates: []
+supersedes: []
+---
 # getVisibleNodes는 tree-only 가시성 함수인데 범용으로 쓰이고 있다
 
 > 작성일: 2026-03-25

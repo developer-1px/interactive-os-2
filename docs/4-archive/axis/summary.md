@@ -1,3 +1,14 @@
+---
+id: 4-archive/axis/summary
+title: 'Axis — 결정 요약'
+status: archived
+kind: summary
+created: 2026-04-11
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # Axis — 결정 요약
 
 ## Axis v2: 11축 → 5축 모델 (2026-03-20)

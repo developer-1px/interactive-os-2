@@ -1,3 +1,14 @@
+---
+id: 4-archive/cms/summary
+title: 'CMS — 결정 요약'
+status: archived
+kind: summary
+created: 2026-04-11
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # CMS — 결정 요약
 
 ## Field Type System: 타입 기반 편집 UI (2026-03-24)

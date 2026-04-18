@@ -1,3 +1,14 @@
+---
+id: 4-archive/meta/archive/skill-kanban-v2-review
+title: 'Skill Kanban v2 — Review'
+status: archived
+kind: note
+created: 2026-04-11
+updated: 2026-04-11
+topics: [4-archive]
+relates: []
+supersedes: []
+---
 # Skill Kanban v2 — Review
 
 ```mermaid

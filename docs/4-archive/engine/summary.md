@@ -1,3 +1,14 @@
+---
+id: 4-archive/engine/summary
+title: 'Engine — 결정 요약'
+status: archived
+kind: summary
+created: 2026-04-11
+updated: 2026-04-11
+topics: [4-archive, explain, retro]
+relates: []
+supersedes: []
+---
 # Engine — 결정 요약
 
 ## History: snapshot → delta 방식 전환 (2026-03-23)

@@ -1,3 +1,14 @@
+---
+id: '4-archive/cms/archive/37-[retro]cms-landing-design-system'
+title: 'Retro: CMS Landing 독립 디자인 시스템 — 2026-03-24'
+status: archived
+kind: retro
+created: 2026-03-24
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # Retro: CMS Landing 독립 디자인 시스템 — 2026-03-24
 
 ## 비교 기준

@@ -1,3 +1,15 @@
+---
+id: 4-archive/meta/summary
+title: 'Meta — 아카이브 인덱스'
+status: archived
+kind: summary
+created: 2026-04-11
+updated: 2026-04-11
+summary: '프로젝트 스냅샷, 보고서, 메모 등 "결정"이 아닌 시점 기록.'
+topics: [4-archive, audit, explain, memo, question, report, retro, sample, vision]
+relates: []
+supersedes: []
+---
 # Meta — 아카이브 인덱스
 
 프로젝트 스냅샷, 보고서, 메모 등 "결정"이 아닌 시점 기록.

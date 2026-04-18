@@ -1,3 +1,14 @@
+---
+id: '4-archive/ui/archive/63-[retro]uiIndicators'
+title: 'Retro: UI Indicators Phase 1 — 2026-03-28'
+status: archived
+kind: retro
+created: 2026-03-28
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # Retro: UI Indicators Phase 1 — 2026-03-28
 
 ## 비교 기준

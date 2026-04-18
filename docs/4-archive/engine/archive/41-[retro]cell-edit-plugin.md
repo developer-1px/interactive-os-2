@@ -1,3 +1,14 @@
+---
+id: '4-archive/engine/archive/41-[retro]cell-edit-plugin'
+title: 'Retro: cellEdit Plugin — 2026-03-25'
+status: archived
+kind: retro
+created: 2026-03-24
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # Retro: cellEdit Plugin — 2026-03-25
 
 ## 비교 기준

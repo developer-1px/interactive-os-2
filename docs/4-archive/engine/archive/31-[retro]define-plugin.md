@@ -1,3 +1,14 @@
+---
+id: '4-archive/engine/archive/31-[retro]define-plugin'
+title: 'Retro: definePlugin — 2026-03-23'
+status: archived
+kind: retro
+created: 2026-03-23
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # Retro: definePlugin — 2026-03-23
 
 ## 비교 기준

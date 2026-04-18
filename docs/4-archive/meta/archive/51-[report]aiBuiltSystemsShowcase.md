@@ -1,3 +1,15 @@
+---
+id: '4-archive/meta/archive/51-[report]aiBuiltSystemsShowcase'
+title: '내가 구축한 AI 협업 시스템 — 실물 쇼케이스'
+status: archived
+kind: report
+created: 2026-03-25
+updated: 2026-04-11
+summary: '작성일: 2026-03-25 작성자: FE개발 성격: "이런 걸 만들었다"를 실물 위주로 보여주는 문서'
+topics: [4-archive, report]
+relates: []
+supersedes: []
+---
 # 내가 구축한 AI 협업 시스템 — 실물 쇼케이스
 
 > 작성일: 2026-03-25

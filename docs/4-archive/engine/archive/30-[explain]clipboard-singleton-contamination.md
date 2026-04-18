@@ -1,3 +1,15 @@
+---
+id: '4-archive/engine/archive/30-[explain]clipboard-singleton-contamination'
+title: 'Clipboard Singleton 오염 — module-level 전역 상태가 paste 동작을 페이지 간 오염시킨다'
+status: archived
+kind: explain
+created: 2026-03-23
+updated: 2026-04-11
+summary: '작성일: 2026-03-23 맥락: `/plugin/history` 페이지에서 paste가 항상 리스트 마지막에 삽입되는 현상을 추적하다 발견한 구조적 결함'
+topics: [4-archive, explain]
+relates: []
+supersedes: []
+---
 # Clipboard Singleton 오염 — module-level 전역 상태가 paste 동작을 페이지 간 오염시킨다
 
 > 작성일: 2026-03-23

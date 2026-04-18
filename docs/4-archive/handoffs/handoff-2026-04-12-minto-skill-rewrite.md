@@ -1,11 +1,20 @@
 ---
-title: minto 스킬 재작성 + 강의 피라미드 진화
-date: 2026-04-12
-slug: minto-skill-rewrite
-consumed_by: 2026-04-12-continue
-consumed_at: 2026-04-12
+id: minto-skill-rewrite
+title: 'minto 스킬 재작성 + 강의 피라미드 진화'
+status: archived
+kind: handoff
+created: 2026-04-12
+updated: 2026-04-15
+summary: '2026-04-12 세션에서 minto 스킬/훅/강의 피라미드를 한 사이클 크게 진화시켰다. 핵심 규칙 3개 변경 (접속사→자연스런 의문, 요소 맨앞, P 샌드위치). 모두 uncommitted.'
+topics: [4-archive]
+relates: []
+supersedes: []
+legacy:
+  date: 2026-04-12
+  slug: minto-skill-rewrite
+  consumed_by: 2026-04-12-continue
+  consumed_at: 2026-04-12
 ---
-
 # Handoff: minto 스킬 재작성 + 강의 피라미드 진화
 
 > 2026-04-12 세션에서 minto 스킬/훅/강의 피라미드를 한 사이클 크게 진화시켰다. 핵심 규칙 3개 변경 (접속사→자연스런 의문, 요소 맨앞, P 샌드위치). 모두 uncommitted.

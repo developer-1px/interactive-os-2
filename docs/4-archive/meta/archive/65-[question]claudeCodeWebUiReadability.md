@@ -1,3 +1,14 @@
+---
+id: '4-archive/meta/archive/65-[question]claudeCodeWebUiReadability'
+title: '클로드 코드 웹 UI 가독성 — 2026-03-30'
+status: archived
+kind: note
+created: 2026-03-31
+updated: 2026-04-11
+topics: [4-archive, question]
+relates: []
+supersedes: []
+---
 # 클로드 코드 웹 UI 가독성 — 2026-03-30
 
 ## 배경

@@ -1,10 +1,20 @@
 ---
-created_at: 2026-04-15
-session_id: theme-components-masonry
-consumed_by: 2026-04-15-archived
-consumed_at: 2026-04-15
+id: 4-archive/handoffs/handoff-2026-04-15-themeComponentsMasonry
+title: 'Handoff: /internals/theme#components 개선'
+status: archived
+kind: handoff
+created: 2026-04-15
+updated: 2026-04-15
+summary: 'Components 쇼케이스를 flat masonry + 카테고리 7 그룹화로 재구성. Row 1 빈공간/컬럼 불균형/그룹 위계 부재 해소.'
+topics: [4-archive]
+relates: []
+supersedes: []
+legacy:
+  created_at: 2026-04-15
+  session_id: theme-components-masonry
+  consumed_by: 2026-04-15-archived
+  consumed_at: 2026-04-15
 ---
-
 # Handoff: /internals/theme#components 개선
 
 > Components 쇼케이스를 flat masonry + 카테고리 7 그룹화로 재구성. Row 1 빈공간/컬럼 불균형/그룹 위계 부재 해소.

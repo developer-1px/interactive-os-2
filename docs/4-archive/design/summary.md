@@ -1,3 +1,14 @@
+---
+id: 4-archive/design/summary
+title: 'Design — 결정 요약'
+status: archived
+kind: summary
+created: 2026-04-11
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # Design — 결정 요약
 
 ## 구조적 CSS의 LLM 한계 발견 (2026-03-25)

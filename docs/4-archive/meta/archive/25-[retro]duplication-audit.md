@@ -1,3 +1,14 @@
+---
+id: '4-archive/meta/archive/25-[retro]duplication-audit'
+title: '중복 현황 조사 보고서 — 2026-03-23'
+status: archived
+kind: retro
+created: 2026-03-23
+updated: 2026-04-11
+topics: [4-archive, retro]
+relates: []
+supersedes: []
+---
 # 중복 현황 조사 보고서 — 2026-03-23
 
 ## 배경

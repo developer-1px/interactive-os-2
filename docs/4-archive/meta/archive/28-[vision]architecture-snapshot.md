@@ -1,3 +1,14 @@
+---
+id: '4-archive/meta/archive/28-[vision]architecture-snapshot'
+title: 'Architecture Snapshot — 2026-03-23'
+status: archived
+kind: vision
+created: 2026-03-23
+updated: 2026-04-11
+topics: [4-archive, vision]
+relates: []
+supersedes: []
+---
 # Architecture Snapshot — 2026-03-23
 
 ## 배경
