@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T01:52:57.270Z",
+  "generatedAt": "2026-04-18T01:53:23.900Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -8,142 +8,142 @@
         "lc_min": 60
       },
       "params": {
-        "focus_alpha": 0.85
+        "focus_alpha": 0.95
       },
       "total": 22,
-      "pass": 0,
-      "fail": 22,
+      "pass": 5,
+      "fail": 17,
       "items": [
         {
           "theme": "dark",
           "key": "action",
-          "lc": 32.83,
+          "lc": 38.13,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "input",
-          "lc": 35.63,
+          "lc": 41.88,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "display",
-          "lc": 35.41,
+          "lc": 41.68,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "overlay",
-          "lc": 32.83,
+          "lc": 38.13,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "trap",
-          "lc": 30.76,
+          "lc": 35.23,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "ghost",
-          "lc": 35.41,
+          "lc": 41.68,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "placeholder",
-          "lc": 35.99,
+          "lc": 42.69,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "sunken",
-          "lc": 35.99,
+          "lc": 42.69,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "base",
-          "lc": 35.41,
+          "lc": 41.68,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "raised",
-          "lc": 32.83,
+          "lc": 38.13,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "inverted",
-          "lc": 47.89,
+          "lc": 52.87,
           "pass": false
         },
         {
           "theme": "light",
           "key": "action",
-          "lc": 57.82,
-          "pass": false
+          "lc": 63.13,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "input",
-          "lc": 57.82,
-          "pass": false
+          "lc": 63.13,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "display",
-          "lc": 54.24,
+          "lc": 59.17,
           "pass": false
         },
         {
           "theme": "light",
           "key": "overlay",
-          "lc": 57.82,
-          "pass": false
+          "lc": 63.13,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "trap",
-          "lc": 57.82,
-          "pass": false
+          "lc": 63.13,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "ghost",
-          "lc": 54.24,
+          "lc": 59.17,
           "pass": false
         },
         {
           "theme": "light",
           "key": "placeholder",
-          "lc": 48.7,
+          "lc": 53.41,
           "pass": false
         },
         {
           "theme": "light",
           "key": "sunken",
-          "lc": 48.7,
+          "lc": 53.41,
           "pass": false
         },
         {
           "theme": "light",
           "key": "base",
-          "lc": 54.24,
+          "lc": 59.17,
           "pass": false
         },
         {
           "theme": "light",
           "key": "raised",
-          "lc": 57.82,
-          "pass": false
+          "lc": 63.13,
+          "pass": true
         },
         {
           "theme": "light",
           "key": "inverted",
-          "lc": 27.38,
+          "lc": 32.87,
           "pass": false
         }
       ]
