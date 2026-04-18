@@ -82,18 +82,21 @@ function RenderBlock({ children, config }: { children: string; config?: Markdown
 }
 
 // ② lightbox-prd.md — img/mermaid click → Lightbox
-function MarkdownContent({ content, className, codePreset, prose, linkTransform, config }: { content: string; className?: string; codePreset?: CodePreset; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
+/** YAML frontmatter를 파싱하여 data와 body로 분리한다. */
+export function parseFrontmatter(content: string): { data: Record<string, unknown>; body: string } {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(content)
+  if (!match) return { data: {}, body: content }
+  try {
+    const parsed = parseYaml(match[1]) as Record<string, unknown> | null
+    return { data: parsed ?? {}, body: content.slice(match[0].length) }
+  } catch {
+    return { data: {}, body: content }
+  }
+}
+
+function MarkdownContent({ content, className, codePreset, prose, linkTransform, config, showFrontmatter }: { content: string; className?: string; codePreset?: CodePreset; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig; showFrontmatter: boolean }) {
   const lightbox = useLightbox()
-  const { data: frontmatter, body } = useMemo(() => {
-    const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(content)
-    if (!match) return { data: {}, body: content }
-    try {
-      const parsed = parseYaml(match[1]) as Record<string, unknown> | null
-      return { data: parsed ?? {}, body: content.slice(match[0].length) }
-    } catch {
-      return { data: {}, body: content }
-    }
-  }, [content])
+  const { data: frontmatter, body } = useMemo(() => parseFrontmatter(content), [content])
 
   const components = useMemo(() => ({
     ...(linkTransform ? {
@@ -163,7 +166,7 @@ function MarkdownContent({ content, className, codePreset, prose, linkTransform,
 
   return (
     <div className={`break-word select-text ${ax({ width: 'prose', layout: 'stack', gap: 'md', flex: 'none' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
-      {Object.keys(frontmatter).length > 0 && <FrontmatterCard data={frontmatter} />}
+      {showFrontmatter && Object.keys(frontmatter).length > 0 && <FrontmatterCard data={frontmatter} />}
       <Markdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}
@@ -174,10 +177,10 @@ function MarkdownContent({ content, className, codePreset, prose, linkTransform,
   )
 }
 
-export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codePreset, prose = true, linkTransform, config }: { content: string; className?: string; codePreset?: CodePreset; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
+export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codePreset, prose = true, linkTransform, config, showFrontmatter = true }: { content: string; className?: string; codePreset?: CodePreset; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig; showFrontmatter?: boolean }) {
   return (
     <LightboxProvider>
-      <MarkdownContent content={content} className={className} codePreset={codePreset} prose={prose} linkTransform={linkTransform} config={config} />
+      <MarkdownContent content={content} className={className} codePreset={codePreset} prose={prose} linkTransform={linkTransform} config={config} showFrontmatter={showFrontmatter} />
     </LightboxProvider>
   )
 })
