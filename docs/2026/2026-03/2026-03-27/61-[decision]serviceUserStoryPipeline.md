@@ -63,5 +63,3 @@ discuss → [유저스토리 맵] → PRD → Plan → Go
 ## 다음 단계
 
 /prd로 스킬 명세 작성
-
-#kind/decision

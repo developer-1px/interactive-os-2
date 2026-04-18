@@ -95,5 +95,3 @@ legacy:
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 
 구체적으로: **GAP #6 widget 레이어 위치 결정** — `/discuss`로 시작하여 `src/widgets/` vs `ui/composites/` vs 다른 옵션 중 결정한 뒤, `experiments/incidentWidgets.tsx`를 정식 위치로 이동하고, pages/ 훅 규칙도 그에 맞게 조정.
-
-#kind/handoff #archived

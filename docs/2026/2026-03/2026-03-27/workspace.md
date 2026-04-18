@@ -181,5 +181,3 @@ WorkspaceNode(nodeId)
 | PageAgentChat | 채팅 세션 멀티플렉서 | syncFromExternal(sessions) | splitAndAddTab |
 | PageAgentViewer | Agent 세션 + 파일 뷰어 | syncFromExternal(sessions, filter) + openTab(files) | splitAndAddTab |
 | PageComponentCreator | 고정 3-pane (Canvas \| Code \| Chat) | createCreatorWorkspace 초기 데이터 | — |
-
-#kind/note #topic/ui

@@ -258,5 +258,3 @@ Layer 3 (component): padding: var(--space-100)
 2. **레퍼런스 실측**: `/design-extract`로 레퍼런스 사이트에서 padding/gap/depth별 spacing 수치 추출
 3. **관계 규칙 후보 인코딩**: internal≤external 비율, depth별 감소율을 `score:design-visual`에 추가
 4. **자가성장 루프**: `/improve`로 측정→수정→재측정 반복
-
-#kind/note #topic/design

@@ -415,5 +415,3 @@ vite.config에서 CSS Modules 설정이 있다면 CmsLanding 1개만 남으므�
 ```bash
 git commit -m "chore: module.css 전면 제거 완료 검증"
 ```
-
-#kind/plan #topic/design

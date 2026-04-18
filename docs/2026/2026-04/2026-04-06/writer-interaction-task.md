@@ -26,5 +26,3 @@ Discussion에서 수렴: 글쓰기 특유 인지 패턴에 맞는 조작이 부�
 ## Agent B: focusHistory 플러그인
 1. `src/interactive-os/plugins/focusHistory.ts` — 포커스 이동 이력 스택
 2. PageWriter에 focusHistory 플러그인 등록
-
-#kind/plan #topic/chat

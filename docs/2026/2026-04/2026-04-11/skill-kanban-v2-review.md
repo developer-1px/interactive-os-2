@@ -62,5 +62,3 @@ flowchart LR
   style 출력 fill:#2a2a1a,stroke:#8a8a4a,color:#ddddaa
   style 제약 fill:#2a1a1a,stroke:#ff6b6b,color:#ff9999
 ```
-
-#kind/note #archived

@@ -185,5 +185,3 @@ legacy:
 | # | 파일 | 상태 | 메모 |
 |---|------|------|------|
 | 86 | devtools/inspector/PageStoreInspector.module.css | ✅ | 미확인 — devtools 후순위 |
-
-#kind/note #topic/design

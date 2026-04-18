@@ -188,5 +188,3 @@ flowchart TD
 2. `src/interactive-os/pattern/createPatternContext.ts:40-42` — lazy 캐시로 호출
 3. 쇼케이스에서 재현: `http://localhost:5173/ui/NavList` → Tab으로 사이드바 진입 → ArrowDown → 이동 안 됨
 4. 정상 동작 시: ArrowDown → `navlist` → `tab-list` → `menu-list` 순서로 포커스 이동
-
-#kind/explain #archived

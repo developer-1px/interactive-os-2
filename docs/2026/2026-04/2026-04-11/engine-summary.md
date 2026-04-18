@@ -127,5 +127,3 @@ flowchart TD
 ```
 
 > 원본: [archive/42-[explain]getVisibleNodes-dependency-tree.md](archive/42-[explain]getVisibleNodes-dependency-tree.md), [archive/43-[explain]expandedIds-to-collapsedIds-constraints.md](archive/43-[explain]expandedIds-to-collapsedIds-constraints.md)
-
-#kind/note #archived

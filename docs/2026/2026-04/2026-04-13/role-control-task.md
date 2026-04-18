@@ -173,5 +173,3 @@ const axes = { ...variantAxes[variant], role: 'control' } as Axes
 - StreamFeed FAB → pill shape 컨트롤 필요
 - FlatLayout.tsx:85-101 탭 버튼 → role: 'item' 영역 (control 아님)
 - pages/ 마이그레이션
-
-#kind/plan

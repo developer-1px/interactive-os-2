@@ -68,5 +68,3 @@ legacy:
 ## 다음 행동
 - L1 백로그 없음
 - PRD 아카이브 실행
-
-#kind/retro #archived

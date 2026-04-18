@@ -58,5 +58,3 @@ Cmd+\ 전역 단축키 구현 → AriaRoute 설계 → page grid→flex 전환 �
 
 - 구조적 CSS 해결 방향을 열린 마음으로 재논의 (Layout 컴포넌트 외 대안 탐색)
 - 현재 `.page-content` overflow:hidden은 임시 — clean CSS 원칙에 어긋남
-
-#kind/retro #archived

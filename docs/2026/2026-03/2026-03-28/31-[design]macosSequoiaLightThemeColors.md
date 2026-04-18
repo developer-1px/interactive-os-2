@@ -159,5 +159,3 @@ graph TD
 2. Finder 사이드바 위에 마우스 올리기 → RGB 값 확인 (R≈G≈B, 무채색 확인)
 3. Notes 앱 열어서 3-column 레이아웃 관찰 → sidebar/list/content 경계의 미묘한 차이
 4. 우리 앱과 나란히 놓고 비교 → chroma 차이가 즉각 보임
-
-#kind/note #topic/design

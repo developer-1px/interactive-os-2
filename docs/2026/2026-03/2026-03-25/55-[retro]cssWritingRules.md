@@ -60,5 +60,3 @@ legacy:
 ## 다음 행동
 - L1 3개 항목을 `/backlog`에 저장
 - 시각 검증은 다음 CSS 작업 시 함께 실시
-
-#kind/retro #archived

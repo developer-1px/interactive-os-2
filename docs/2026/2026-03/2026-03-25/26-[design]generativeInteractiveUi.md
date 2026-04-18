@@ -222,5 +222,3 @@ Thesys: Radix → shadcn/ui → Crayon → C1 API
 2. **CopilotKit Demo** — go.copilotkit.ai/gen-ui-demo에서 AG-UI + A2UI + MCP Apps 3가지 패턴 비교
 3. **Claude Interactive Visuals** — claude.ai에서 "주기율표를 인터랙티브하게 보여줘" 입력 → 인라인 인터랙티브 시각화
 4. **현재 프로토타입** — /incident 라우트에서 채팅 블록 + 컨텍스트 패널 구조 확인, Static 계층의 기초 형태
-
-#kind/note #topic/design #topic/feaiuilayer

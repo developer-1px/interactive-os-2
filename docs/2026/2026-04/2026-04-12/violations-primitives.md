@@ -23,5 +23,3 @@ Total: 0 violations in 0 files (of 21 scanned)
 |---|---|
 
 ## By file
-
-#kind/note #topic/harness

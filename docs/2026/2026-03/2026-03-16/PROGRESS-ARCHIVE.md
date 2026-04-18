@@ -318,5 +318,3 @@ legacy:
 - [x] Agent Viewer — Tool Call 카드 그룹핑. Bot 아이콘 제거, 연속 tool_use를 rounded border 카드(ToolGroupCard)로 묶어 LLM 응답과 구조적 분리. groupEvents 순수 함수 + 7 unit tests, virtual scroll 호환
 
 *Last updated: 2026-03-22 — Agent Viewer Tool Card Grouping*
-
-#kind/note

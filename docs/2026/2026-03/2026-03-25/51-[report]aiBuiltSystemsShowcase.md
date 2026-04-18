@@ -260,5 +260,3 @@ mock 호출 검증 → 금지
 ### 프로젝트 프로필 설계
 
 CLAUDE.md(행동 지시), MEMORY.md(대화 기억)와 별도로, **project.yml(프로젝트 구조 선언)** 제3의 설정 레이어를 설계 중. 관심사(문서/네이밍/테스트/디자인/품질)별로 철학→구조→도구를 선언하는 방식.
-
-#kind/note #topic/report #archived

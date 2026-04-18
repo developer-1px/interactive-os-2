@@ -31,5 +31,3 @@ legacy:
 T1 → T2 (DOM element 있어야 위계 구성)
 T3 → T4 (clickMap 있어야 Interaction탭에 표시)
 T5, T6은 T4와 병렬 가능
-
-#kind/plan #topic/viewer

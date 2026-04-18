@@ -181,5 +181,3 @@ flowchart TB
 2. `prepare('한국어 텍스트 테스트', '16px sans-serif')` 호출하여 PreparedText 획득
 3. `layout(prepared, 200, 24)` — 200px 폭에서의 높이/줄 수 확인
 4. 브라우저 DevTools에서 `performance.now()`로 DOM 측정 vs Pretext 속도 비교
-
-#kind/note #topic/library

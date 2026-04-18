@@ -67,5 +67,3 @@ const fixture: NormalizedData = {
 ```
 
 각 시나리오 전 `resetCmsData(fixture)` 호출로 상태 초기화.
-
-#kind/note

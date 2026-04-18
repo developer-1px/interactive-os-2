@@ -300,5 +300,3 @@ LLM이 이 프레임워크 위에서 코드를 생성할 때, 완성품 1줄이 
 4. **ARIA 축 체감**: `/internals/axis/navigate` → 각 축의 키바인딩과 ARIA 속성 변화를 개별 확인
 5. **실전 조합**: `/cms` → TreeGrid + spatial + clipboard + history + zodSchema가 조합된 Visual CMS
 6. **확인 포인트**: 아무 데모에서 키보드만으로 CRUD + undo/redo + copy/paste가 전부 동작하면 정상
-
-#kind/explain #archived

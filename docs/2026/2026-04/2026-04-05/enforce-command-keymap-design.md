@@ -205,5 +205,3 @@ keyMap: {
 2. inspector — 모든 keyMap entry에 command 표시
 3. `pnpm test` — 기존 1237 테스트 통과
 4. spatial Enter/Escape — original 데코레이터 정상 동작
-
-#kind/note #topic/engine

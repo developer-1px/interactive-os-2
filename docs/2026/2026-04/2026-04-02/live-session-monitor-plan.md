@@ -406,5 +406,3 @@ Run: `pnpm dev` — CLI 세션에서 Edit/Read/Write 수행 시 코드 뷰어 �
 git add src/pages/replay/LiveSessionPanel.tsx
 git commit -m "fix: improve live file content tracking for Read/Edit/Write"
 ```
-
-#kind/plan #topic/engine

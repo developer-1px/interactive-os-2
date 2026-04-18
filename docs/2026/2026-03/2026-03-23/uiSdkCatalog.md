@@ -110,5 +110,3 @@ SplitPane/Popover는 위계상 Pattern이지만 os 미지원 축(drag/resize, an
 
 - UI SDK discussion + NavList 구현 세션 (2026-03-23)
 - 카탈로그 발견 테이블: docs/0-inbox/27-[vision]ui-catalog.md
-
-#kind/note

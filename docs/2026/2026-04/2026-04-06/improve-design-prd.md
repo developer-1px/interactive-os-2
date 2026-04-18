@@ -206,5 +206,3 @@ legacy:
 | 8 | overflow 미처리 (텍스트 잘림/밀림) | -1 | 스크린샷 |
 | 9 | 해치 사용 (module.css 축 소유 속성) | -2 | 코드 grep |
 | 10 | style={} 사용 | -2 | 코드 grep |
-
-#kind/prd #topic/design

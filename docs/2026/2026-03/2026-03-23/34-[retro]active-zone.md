@@ -63,5 +63,3 @@ legacy:
 ## 다음 행동
 - L1: natural-tab-order 테스트 → backlog
 - PRD 아카이브: specs/ → specs/archive/
-
-#kind/retro #archived

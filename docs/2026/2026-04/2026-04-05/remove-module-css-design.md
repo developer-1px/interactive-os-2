@@ -113,5 +113,3 @@ scroll?: 'hidden' | 'y' | 'x' | 'auto'
 - `src/**/*.module.css` = 0개
 - typecheck, lint, lint:css, test 모두 통과
 - 시각적 regression 없음 (score:design 점수 유지 또는 상승)
-
-#kind/note #topic/design

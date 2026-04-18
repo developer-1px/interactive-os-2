@@ -375,5 +375,3 @@ Override 규칙: `showLineNumbers`, `wrap`, `startLine` 개별 prop은 preset �
 - **CodeViewerMagicMove** — shiki-magic-move 래핑, before/after 입력. 별도 discuss → 별도 PRD.
 - **2차 기능**: Focus mode / Column-range highlight / ANSI strip / forced-colors fallback / reduced-motion 가드 — 별도 작은 PRD로 묶음.
 - **3차 기능**: Line anchor URL / Callout / 접기 / Multi-file tabs — 백로그.
-
-#kind/prd #topic/ui

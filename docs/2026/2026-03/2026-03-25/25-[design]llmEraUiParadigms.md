@@ -263,5 +263,3 @@ AI가 "무엇을 보여줄지" 결정하더라도:
 2. **AG-UI 프로토콜 문서** — `https://docs.ag-ui.com/`에서 이벤트 구조와 상태 관리 패턴 확인
 3. **현재 프로토타입과 비교** — `/incident` 라우트의 고정 레이아웃 vs Generative UI의 동적 컴포넌트 선택
 4. **Chatless 패러다임 적용 시나리오** — 인시던트 알림 → 에이전트가 상황에 맞는 위젯을 자동 조합 → 사람은 승인만
-
-#kind/note #topic/design #topic/feaiuilayer

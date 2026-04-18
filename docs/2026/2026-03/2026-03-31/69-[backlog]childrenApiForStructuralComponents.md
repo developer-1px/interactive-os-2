@@ -69,5 +69,3 @@ children API가 내부에서 NormalizedData로 자동 변환. engine + pattern �
 ## 다음 행동
 
 /discuss → /prd → /go 파이프라인으로 진행 시 이 문서를 입력으로 사용.
-
-#kind/note #topic/backlog

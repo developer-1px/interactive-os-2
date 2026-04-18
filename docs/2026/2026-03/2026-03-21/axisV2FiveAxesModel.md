@@ -129,5 +129,3 @@ interface Axis {
 4. 기존 11축 deprecate → 삭제
 5. 쇼케이스 재설계 (5축 × 옵션 토글)
 6. activateFollowFocus 삭제
-
-#kind/note #archived

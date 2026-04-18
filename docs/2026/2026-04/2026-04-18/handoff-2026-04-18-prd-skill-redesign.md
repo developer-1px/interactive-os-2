@@ -52,5 +52,3 @@ memory 갱신: `feedback_prd_interface_convergence` 책임 분해 중심으로 �
 - A) `git cherry-pick fb253a15` from main
 - B) `pipeline-ssot-handoff` PR 생성하여 main 머지
 - C) 그대로 두고 다른 세션 작업과 자연 머지 대기
-
-#kind/handoff

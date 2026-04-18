@@ -23,5 +23,3 @@ legacy:
    - max-width: `65ch` → `48rem`
    - table: `width: max-content` + `min-width: 100%` 제거 → 본문 폭 내 제한
 3. 앱 UI(14px) 불변, chat variant 영향 없음
-
-#kind/plan #topic/design

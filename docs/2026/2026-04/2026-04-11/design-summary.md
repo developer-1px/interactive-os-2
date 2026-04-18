@@ -59,5 +59,3 @@ flowchart TD
 ```
 
 > 원본: [archive/55-[retro]cssWritingRules.md](archive/55-[retro]cssWritingRules.md)
-
-#kind/note #archived

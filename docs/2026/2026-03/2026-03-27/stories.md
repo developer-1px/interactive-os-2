@@ -96,5 +96,3 @@ legacy:
 | W6 | 번역 시트 | F21 | — |
 | W7 | 템플릿 선택 | F9 | — |
 | W8 | 프레젠트 모드 | F16 | — |
-
-#kind/note #topic/cms

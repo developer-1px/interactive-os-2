@@ -27,5 +27,3 @@ book viewer의 header bar가 전체 너비를 차지하며 컨텐츠를 가림. 
 ## 파일
 - `src/pages/book/PageBookViewer.tsx` — JSX 구조 변경
 - `src/pages/book/PageBookViewer.module.css` — 스타일 전환
-
-#kind/plan #topic/book

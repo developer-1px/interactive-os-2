@@ -35,5 +35,3 @@ engine에 subscribe API를 추가하여 모든 command dispatch 이벤트를 외
 ## 파일 변경
 - `src/interactive-os/engine/types.ts`
 - `src/interactive-os/engine/createCommandEngine.ts`
-
-#kind/plan #topic/engine

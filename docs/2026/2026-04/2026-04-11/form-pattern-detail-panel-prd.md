@@ -137,5 +137,3 @@ legacy:
 ---
 
 **전체 완성도:** 🟢 7/8 (⑥만 🟡 — B1 테스트는 구현 시 확인)
-
-#kind/prd #topic/pattern

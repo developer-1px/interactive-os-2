@@ -81,5 +81,3 @@ flowchart TD
 ```
 
 > 원본: [archive/37-[retro]cms-landing-design-system.md](archive/37-[retro]cms-landing-design-system.md)
-
-#kind/note #archived

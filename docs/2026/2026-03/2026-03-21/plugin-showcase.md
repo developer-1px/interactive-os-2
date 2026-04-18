@@ -45,5 +45,3 @@ legacy:
 
 - experience_db #1: showcase 데모 데이터가 텍스트 최소 조건 미충족
 - experience_db #2: 키힌트와 UI 래퍼 불일치
-
-#kind/note

@@ -76,5 +76,3 @@ legacy:
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 
 **구체적 첫 행동**: `pnpm dev`로 서버 확인 후 `localhost:5173/replay` 브라우저 열기. 재생되는 동안 5 지점 시각 smoke (특히 Search 스테이지가 떠야 히어로 타이포 확인 가능 — 세션 2~3 정도 기다릴 것).
-
-#kind/handoff

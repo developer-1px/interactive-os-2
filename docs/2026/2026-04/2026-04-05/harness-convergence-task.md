@@ -36,5 +36,3 @@ guard hook의 block 메시지를 하드코딩에서 동적 디렉토리 스캔�
 ## 제약
 - .mjs → readdirSync만
 - 기존 차단 로직 불변, 메시지만 변경
-
-#kind/plan #topic/harness

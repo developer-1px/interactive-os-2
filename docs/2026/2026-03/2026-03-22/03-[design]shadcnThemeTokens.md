@@ -229,5 +229,3 @@ surface 모델에서 필요한 토큰을 shadcn 기준으로 매핑하면:
 | 2 | [tweakcn Theme Editor](https://tweakcn.com/) | 커뮤니티 도구 | shadow, typography 포함 확장 토큰 목록 |
 | 3 | [shadcn/ui Themes](https://ui.shadcn.com/themes) | 공식 도구 | 프리셋 테마 8종(Blue, Green, Orange 등) |
 | 4 | [Theming in shadcn UI - Medium](https://medium.com/@enayetflweb/theming-in-shadcn-ui-customizing-your-design-with-css-variables-bb6927d2d66b) | 블로그 | 커스텀 색상 추가 방법 |
-
-#kind/note #topic/design

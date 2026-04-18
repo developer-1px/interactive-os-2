@@ -170,5 +170,3 @@ Engine은 Store 위의 상태 변환 레이어다. 어떤 플러그인이 존재
 **총계: 26 runtime 위반 + 3 type-only 위반**
 
 → 이 중 **Entity ID 상수 8종**과 **Command 팩토리 9종**이 핵심이다. 이 17개를 올바른 레이어로 옮기면 26개 runtime 위반 중 대부분이 해소된다.
-
-#kind/explain #topic/engine

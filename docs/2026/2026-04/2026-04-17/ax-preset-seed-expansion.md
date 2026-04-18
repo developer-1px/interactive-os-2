@@ -110,5 +110,3 @@ cs 축이 채워지면 곧바로 seed 후보가 될 버킷:
 ```bash
 node /tmp/scan_ax.mjs > /tmp/ax_scan.json
 ```
-
-#kind/note #topic/styles

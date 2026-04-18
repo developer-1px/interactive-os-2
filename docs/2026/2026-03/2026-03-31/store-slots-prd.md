@@ -157,5 +157,3 @@ legacy:
 ---
 
 **전체 완성도:** 🟢 1/8 — ① 동기
-
-#kind/prd #topic/store

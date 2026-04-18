@@ -62,5 +62,3 @@ legacy:
 ## 다음 행동
 - PRD 아카이브 → specs/archive/
 - 경험 DB 업데이트
-
-#kind/retro #archived

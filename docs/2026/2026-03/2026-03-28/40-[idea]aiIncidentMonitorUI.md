@@ -99,5 +99,3 @@ legacy:
 - 팀장 기존 데모의 데이터 구조 파악
 - 핵심 시나리오 3개로 PoC 범위 확정
 - interactive-os 위에서 프로토타입
-
-#kind/note #topic/idea

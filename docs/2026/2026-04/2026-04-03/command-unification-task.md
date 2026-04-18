@@ -54,5 +54,3 @@ legacy:
 - [ ] 기존 테스트 통과
 - [ ] V1~V15 시나리오 검증
 - [ ] chat 30블록 렌더 성능 실측
-
-#kind/plan #topic/store

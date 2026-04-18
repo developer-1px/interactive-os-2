@@ -470,5 +470,3 @@ ax({ surface: 'action', tone: 'accent' })
 | 컨트롤 높이 | 32px 기본, 28/24/36 변주 | 28px 법칙 단일 |
 | 기본 font-size | 14px (text-sm) | 13px (body) |
 | 불투명도 | 직접 제어 (/10, /50, /80) | tone-dim으로 근사 |
-
-#kind/note #topic/design

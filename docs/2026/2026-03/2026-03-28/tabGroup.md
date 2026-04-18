@@ -113,5 +113,3 @@ div.tabGroup (flex-col)
 - 선택 상태: `--surface-raised` 배경 + `--text-primary` 색상
 - close 버튼: hover/selected 시 `opacity: 0.6`
 - motion: `--motion-instant-*`
-
-#kind/note #topic/ui

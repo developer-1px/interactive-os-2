@@ -205,5 +205,3 @@ export function getVisibleNodes(
 | 핵심 전환 | engine이 "어떤 plugin이 있는지" 몰라도 됨 | 아직 "spatial이 있다", "rename이 있다"를 알아야 함 |
 
 → getVisibleNodes의 성공 패턴이 createPatternContext에도 적용 가능하다. **plugin이 ctx 확장을 선언하고, createPatternContext는 합성만 하는 구조.**
-
-#kind/explain #topic/pattern

@@ -151,5 +151,3 @@ legacy:
 6. light theme 검증 + 시각 검수 + baseline 갱신
 7. depth-* alias 제거 (1 사이클 후)
 8. memory `feedback_chroma_ladder` 갱신
-
-#kind/prd #topic/design

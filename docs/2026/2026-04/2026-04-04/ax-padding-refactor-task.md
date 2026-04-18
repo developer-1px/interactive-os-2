@@ -44,5 +44,3 @@ padding-inline:block 2:1 비율은 텍스트 콘텐츠에서만 유효한 전략
 2. ax.css — cs-* 재작성, pd-* calc 변환, ct-* 추가
 3. 소급 적용 — controlSize 사용처 전수 검색 → 텍스트/아이콘 분류 → 축 추가/제거
 4. 테스트 실행 + typecheck
-
-#kind/plan #topic/design

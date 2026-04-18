@@ -76,5 +76,3 @@ legacy:
 4. 다음 폴더 반복 (1-projects, 2-areas, 3-resources, 4-archive)
 
 **구체적 첫 행동**: `pnpm mddb:audit` 실행 + 결과 사용자에게 보고.
-
-#kind/handoff

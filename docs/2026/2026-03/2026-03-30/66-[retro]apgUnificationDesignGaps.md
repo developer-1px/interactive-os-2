@@ -99,5 +99,3 @@ AriaComponentProps에 `className`과 `onFocusChange`가 정의되어 있지만, 
 ## 남은 행동
 
 모든 갭 해결 완료. Carousel 2종(CarouselTabs, CarouselPrevNext)은 실전 빈도 낮아 의도적 제외.
-
-#kind/retro #topic/ui

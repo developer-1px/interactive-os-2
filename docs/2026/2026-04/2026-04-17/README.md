@@ -88,5 +88,3 @@ Insight 한 줄 문법: `{date} · {kind}: {text} (출처: {source})`. 날짜/�
 
 - **Feature** (대문자) — 이 레이어의 레코드
 - **feature** (소문자) — 일반 "기능"
-
-#kind/note #topic/features

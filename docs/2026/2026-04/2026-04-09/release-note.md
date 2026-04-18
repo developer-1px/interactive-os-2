@@ -90,5 +90,3 @@ MillerColumns 파일 브라우저로 계층 탐색 UX를 대폭 개선.
 - MillerColumns에서 키보드 좌우 이동 시 스크롤 위치가 초기화되던 문제 수정
 - Pipeline Dashboard 셀 클릭 시 빈 파일이 생성되던 문제 수정
 - focusRecovery 플러그인이 삭제된 노드 ID를 참조하던 메모리 누수 수정
-
-#kind/note

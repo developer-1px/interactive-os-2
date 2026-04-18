@@ -61,5 +61,3 @@ legacy:
 ## 다음 행동
 - L1 backlog 2건은 Phase 2에서 함께 처리
 - PRD → archive 이동 (Phase 1 완료)
-
-#kind/retro #archived

@@ -243,5 +243,3 @@ pnpm score:aesthetics → 점수(0~100) → /improve가 낮은 항목 식별 →
 2. `src/styles/tokens.css`의 DESIGN.md §3 조합 규칙 10개 → 각각 grep/AST로 검사 가능한지 판단
 3. Stylelint 설정(`stylelint.config.js`) 확인 — 커스텀 플러그인 추가 지점
 4. `/improve` 스킬의 루프 구조 확인 — score 스크립트 교체만으로 aesthetics 루프 가능
-
-#kind/note #topic/design

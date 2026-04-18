@@ -251,5 +251,3 @@ docs/3-resources/23-[methodology]discussFirstWorkflowTheory.md에서 분석한 5
 2. 프로젝트 의존은 대부분 **경로 + 문서 구조** — 로직이 아님
 3. 반복 참조되는 설정 항목은 12개로 수렴한다
 4. 이론적 기반이 있는 스킬(코어 루프)과 도메인 도구 스킬은 성격이 다르다
-
-#kind/audit #archived

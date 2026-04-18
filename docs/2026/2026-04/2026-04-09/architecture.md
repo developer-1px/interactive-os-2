@@ -86,5 +86,3 @@ sequenceDiagram
 | useSyncExternalStore | React 18 공식 API, tearing 방지, 외부 store 연동에 최적 | useState + useEffect 구독 |
 | expandAllSlots 후처리 | 복합 엔티티의 슬롯 자식을 플랫 맵에 통합하여 균일한 순회 보장 | 렌더 시점에 동적 슬롯 해석 |
 | ui/ 완성품만 pages에서 사용 | primitives 직접 사용 금지로 일관된 ARIA/인터랙션 품질 보장 | 각 page에서 useAria 직접 호출 |
-
-#kind/note

@@ -1135,5 +1135,3 @@ Expected: ALL PASS
 git add src/interactive-os/__tests__/aria-panel.test.tsx
 git commit -m "test: backward compat — listbox without Panel works unchanged"
 ```
-
-#kind/plan #topic/primitives

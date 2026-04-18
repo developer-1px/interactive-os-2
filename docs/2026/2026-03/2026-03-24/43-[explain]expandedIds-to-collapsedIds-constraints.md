@@ -150,5 +150,3 @@ entity key `'__expanded__'`를 `'__collapsed__'`로 바꿀지는 별개 판단. 
 2. `src/interactive-os/engine/getVisibleNodes.ts` — 27줄, 가시성 판정의 단일 지점
 3. `src/interactive-os/plugins/focusRecovery.ts:22-33` — treeReachable, 제약의 핵심
 4. 나머지 5개 파일 — store에서 읽기만 하므로 기계적 반전
-
-#kind/explain #archived

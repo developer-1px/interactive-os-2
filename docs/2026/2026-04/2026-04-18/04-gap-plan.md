@@ -401,5 +401,3 @@ Q1~Q4는 원리 자체 해석보다 **구현 선택지**. 02 카드는 "원리"�
 - `docs/DESIGN.md` (재편, §6)
 - `02-principles.md` P-16 카드 (P0)
 - `agents/design-review.md` 프롬프트 (P3)
-
-#kind/plan #topic/research

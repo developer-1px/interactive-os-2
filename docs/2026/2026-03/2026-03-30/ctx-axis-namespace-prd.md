@@ -211,5 +211,3 @@ composePattern이 ctxFactory를 수집 → createPatternContext가 호출하여 
 | flat 메서드 제거 | `toggleSelect`, `expand()`, `collapse()` 등 flat 메서드 grep 0건 (namespace로 전환) |
 
 **실행 방식:** 에이전트 위임 아님. 사람과 함께 단계별 확인하며 점진적 수정.
-
-#kind/prd #topic/pattern

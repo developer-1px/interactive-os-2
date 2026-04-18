@@ -257,5 +257,3 @@ flowchart TD
 **해결 지점:** ChatFeed의 `mergeConsecutiveSystem`과 `groupSystemBlocks`를 제어할 수 있어야 한다. 현재 하드코딩이라 소비측(replay/live)이 이 동작을 끌 수 없다.
 
 → ChatFeed에 `grouping?: boolean` prop을 추가하거나, system 메시지 렌더링 전략을 blockRenderers처럼 주입 가능하게 바꾸면 해결된다.
-
-#kind/explain #topic/ui

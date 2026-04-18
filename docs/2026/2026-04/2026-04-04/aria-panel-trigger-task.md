@@ -43,5 +43,3 @@ PRD: `2026-03-28-aria-panel-trigger-prd.md`
 - menuButton: triggerKeyMap 추가 (Enter/Space/ArrowDown → open)
 
 ### T5: 테스트 (V1-V10)
-
-#kind/plan #topic/primitives

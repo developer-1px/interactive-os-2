@@ -352,5 +352,3 @@ AI에게 거절 권한을 주는 건, **guardrail을 코드가 아니라 대화 
 ## 더 알고 싶으면
 
 위 내용의 이론적 기반(TOC, OODA, Double-Loop Learning 등)이나 실제 스킬 구현 세부사항이 궁금하시면 말씀해주세요.
-
-#kind/note #topic/methodology

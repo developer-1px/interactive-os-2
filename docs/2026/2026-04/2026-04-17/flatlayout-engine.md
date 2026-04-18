@@ -40,5 +40,3 @@ legacy:
 ## Gaps
 - [ ] resizer(SplitPane) 공식 지원
 - [ ] nested 9-variant 시 keyboard 네비 일관성 회귀 테스트
-
-#kind/note #topic/features

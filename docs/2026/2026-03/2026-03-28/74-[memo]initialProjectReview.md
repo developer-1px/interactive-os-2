@@ -26,5 +26,3 @@ legacy:
 
 8. planning과 진척도 시각화 (user story view 참고)
 9. dnd pan zoom plug in 확대
-
-#kind/note #topic/memo #archived

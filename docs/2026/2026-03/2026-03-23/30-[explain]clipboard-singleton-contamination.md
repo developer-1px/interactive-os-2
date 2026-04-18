@@ -156,5 +156,3 @@ flowchart LR
 4. **관찰**: 새 항목이 리스트 **마지막**에 추가됨 (커서 뒤가 아님)
 5. **대조**: `http://localhost:5173/plugin/clipboard`에서 같은 동작 → 역시 마지막에 추가됨 (동일 버그)
 6. **원인 확인**: 브라우저 콘솔에서 `clipboard.ts`의 `canAcceptFn`이 `cmsCanAccept` 함수인지 확인
-
-#kind/explain #archived

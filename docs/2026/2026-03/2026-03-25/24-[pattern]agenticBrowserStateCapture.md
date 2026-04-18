@@ -212,5 +212,3 @@ interactive-os는 **모든 인터랙티브 요소에 ARIA 속성이 이미 있�
 2. **ARIA 스냅샷 비교**: 데모 페이지에서 REC 녹화 후 JSON 결과의 `aria` 필드(타겟 1개)와 Playwright YAML 형식(전체 트리)의 정보량 차이를 비교
 3. **브라우저 내장 확인**: Chrome DevTools → Elements → Accessibility 패널에서 전체 accessibility tree 확인. 이것이 에이전틱 브라우저가 읽는 것
 4. **토큰 추정**: 데모 페이지의 accessibility tree를 YAML로 직렬화하면 대략 수십~수백 줄. DOM 전체 대비 10~100배 경량
-
-#kind/note #topic/pattern

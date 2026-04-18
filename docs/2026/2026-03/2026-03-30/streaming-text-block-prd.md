@@ -122,5 +122,3 @@ legacy:
 - ②↔③: StreamingTextBlock이 content prop으로 flush 로직 소유 ✅
 - ④↔⑧: 미완성 코드 펜스, 잔여 버퍼 모두 검증에 포함 ✅
 - ⑦↔⑤⑥: 금지 출처 전부 유효 ✅
-
-#kind/prd #topic/chat

@@ -43,5 +43,3 @@ legacy:
 - ax()만 사용. style={} 금지
 - 기존 ui/ 부품 재활용 (Badge, Button, Avatar 등)
 - items/ 패턴 따르기 (renderItem 함수 시그니처)
-
-#kind/plan #topic/cms

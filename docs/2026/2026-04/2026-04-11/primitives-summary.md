@@ -59,5 +59,3 @@ flowchart TD
 ```
 
 > 원본: [archive/listboxGroupedApgStructure.md](../../2026-03/2026-03-28/listboxGroupedApgStructure.md)
-
-#kind/note #archived

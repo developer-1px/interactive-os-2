@@ -430,5 +430,3 @@ renderItem={(item, state) => (
   </span>
 )}
 ```
-
-#kind/note

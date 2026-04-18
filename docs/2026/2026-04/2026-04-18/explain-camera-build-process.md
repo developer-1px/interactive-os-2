@@ -255,5 +255,3 @@ flowchart TD
 - Monitor — 장시간 명령 스트리밍
 
 **커밋**: [c9460d06](c9460d06) `feat(ui): Camera 프리미티브 — ZoomPane/ZoomPanCanvas 통합` (12 files, +1172 / -392)
-
-#kind/explain

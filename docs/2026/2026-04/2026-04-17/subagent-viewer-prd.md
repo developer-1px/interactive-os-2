@@ -970,5 +970,3 @@ _(/go·/retro·/handoff가 채움)_
 - 한 줄 권고: **P0 교정 완료, P1 진행 가능** — 설계 골격(매칭 SSOT, hook 분리, Widget 수렴, meta-is-core, 자동 파생)은 feedback 원칙과 정렬. 잔여 경고(W1~W6)는 P1에서 개별 판단.
 
 **위반 4 ✅ / 경고 6 (P1 재검토) / §간 불일치 6 ✅ / CATALOG 재사용 후보 8건 검토**
-
-#kind/prd #topic/replay

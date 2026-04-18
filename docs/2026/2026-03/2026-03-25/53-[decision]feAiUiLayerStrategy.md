@@ -92,5 +92,3 @@ AI 제품 전수 조사 (Claude, ChatGPT, Cursor, v0, Copilot, Perplexity, Gemin
 1. Thesys Playground / CopilotKit Demo 직접 체험하여 인터랙션 수준 확인
 2. P0 채팅 블록 7개 설계 → interactive-os 확장
 3. AG-UI 프로토콜 스펙 정독하여 어댑터 설계
-
-#kind/decision #topic/feaiuilayer

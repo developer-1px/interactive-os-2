@@ -57,5 +57,3 @@ consumed_by: 7a4c6d1d (FilePreview OCP 통합)
 
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 구체적으로: 사이드바 Recents + Layers 추가 (기획 합의 완료, sidebarData 확장만으로 구현 가능)
-
-#kind/handoff #archived

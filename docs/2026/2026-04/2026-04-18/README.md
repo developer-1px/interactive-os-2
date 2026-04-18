@@ -48,5 +48,3 @@ DESIGN.md 재편 (메타 원리 선언 → 24축 파생 증명)
 - `feedback_ax_semantic_not_css` — ax 축은 의도·역할 기준 (CSS 1:1 아님)
 - `feedback_role_axis_design` — role축=크기SSOT
 - `feedback_color_system` — 3층 색상 + accent + chroma 5단계
-
-#kind/note #topic/research

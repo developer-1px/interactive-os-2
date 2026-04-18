@@ -150,5 +150,3 @@ legacy:
 | spatialAlgorithm | `primitives/spatialAlgorithm.ts` — 순수 공간 탐색 알고리즘 |
 | misc/spatial 마이그레이션 | `misc/spatial.ts` — navigate('spatial') 사용 |
 | 테스트 | `__tests__/spatial-navigate.test.tsx` |
-
-#kind/prd #topic/axis

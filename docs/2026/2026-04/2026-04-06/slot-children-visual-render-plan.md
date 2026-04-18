@@ -1171,5 +1171,3 @@ Expected: ALL PASS
 git add src/__tests__/cms-slot-edit.test.tsx
 git commit -m "test(cms): integration tests for slot child selection and navigation"
 ```
-
-#kind/plan #topic/ui

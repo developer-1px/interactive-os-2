@@ -123,5 +123,3 @@ src/interactive-os/
 - Phase 2: ui/ 내부 컴포넌트도 FlatLayout으로 재귀 적용 (tab, tree 등)
 - 위젯 props를 command dispatch로 전환 (콜백 배선 제거)
 - 다른 pages/ 점진적 마이그레이션 (PageCms, PageAgentChat)
-
-#kind/explain #topic/layout

@@ -37,5 +37,3 @@ Aria 컴포넌트 변경이 수반되므로 definePlugin 작업과 분리.
 ## 출처
 
 discussion: clipboard singleton 오염 + definePlugin 아키텍처 설계 (2026-03-23)
-
-#kind/note #archived

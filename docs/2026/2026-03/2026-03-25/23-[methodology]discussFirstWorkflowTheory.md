@@ -244,5 +244,3 @@ discuss-first 파이프라인은 **하나의 이론을 적용한 것이 아니�
 3. **Double-Loop 확인**: discuss에서 "이상적 결과"와 "현실"의 갭을 질문하는 과정이 governing variables 검토
 4. **Deliberate Practice 확인**: `/improve`에서 점수 스크립트 → 수정 → 재측정 사이클이 Ericsson의 피드백 루프
 5. **전체 순환**: discuss → prd → go → retrospect → improve → discuss 한 사이클을 관찰하면 PDCA가 double-loop로 강화된 형태임을 확인
-
-#kind/note #topic/methodology

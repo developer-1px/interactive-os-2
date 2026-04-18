@@ -131,5 +131,3 @@ Write/Edit → 파일 경로, Bash → 커맨드를 로깅. stopTestGate의 판�
 3. 수정 있고 테스트 없으면 → block
 
 **조건:** `stop_reason === 'end_turn'`일 때만 (tool_use 중에는 무시)
-
-#kind/note #topic/harness

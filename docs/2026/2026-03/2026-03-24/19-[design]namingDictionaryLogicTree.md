@@ -110,5 +110,3 @@ naming-dictionary.md의 명사 ~90개를 MECE(상호배타·전체포괄)로 분
 ## 다음 행동
 
 - 이 트리를 기준으로 폴더 구조·라우트·문서의 MECE 정렬 검토 (discuss 계속)
-
-#kind/note #topic/design

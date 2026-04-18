@@ -118,5 +118,3 @@ legacy:
 ```
 
 그 다음 viewer를 타겟으로 3-actor beauty 루프 재시도. 이번엔 레퍼런스 앵커 + 다중 front 동시 수정.
-
-#kind/handoff #archived

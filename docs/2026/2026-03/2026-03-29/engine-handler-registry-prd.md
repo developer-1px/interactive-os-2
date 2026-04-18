@@ -159,5 +159,3 @@ legacy:
 | creator.reduce() | `engine/defineCommand.ts` — `.reduce()` static method |
 | history spy 제거 | `plugins/history.ts` — getStore() before/after 패턴 |
 | batch registry lookup | `createCommandEngine.ts` — sub-command 순차 registry lookup |
-
-#kind/prd #topic/engine

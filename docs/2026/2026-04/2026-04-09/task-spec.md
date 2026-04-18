@@ -119,5 +119,3 @@ it('선택 없이 duplicate하면 상태 변화 없다', () => {
 | `src/interactive-os/store/createStore.ts` | addNode, addChild, removeNode 등 저수준 command |
 | `src/interactive-os/engine/plugins/clipboard.ts` | copy/paste command 참조 구현 |
 | `src/interactive-os/engine/createCommandEngine.ts` | command dispatch, undo/redo |
-
-#kind/note

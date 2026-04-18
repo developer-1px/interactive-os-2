@@ -221,5 +221,3 @@ surface + semantic color + spacing + radius = Open Props의 핵심 카테고리�
 | 5 | [Radix Primitives Styling](https://www.radix-ui.com/primitives/docs/guides/styling) | 공식 문서 | data-state 속성 기반 스타일링, unstyled primitives |
 | 6 | [Classless CSS List](https://github.com/dbohdan/classless-css) | GitHub | classless CSS 프레임워크 목록과 비교 |
 | 7 | [The wasted potential of CSS attribute selectors](https://elisehe.in/2022/10/16/attribute-selectors) | 블로그 | CSS attribute 셀렉터의 활용 가능성 분석 |
-
-#kind/note #topic/design

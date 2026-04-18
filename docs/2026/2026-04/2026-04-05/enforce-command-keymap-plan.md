@@ -688,5 +688,3 @@ Expected: 모든 통과 (기존 에러 제외).
 - [ ] **Step 3: Final commit (있으면)**
 
 남은 수정사항 커밋.
-
-#kind/plan #topic/engine

@@ -223,5 +223,3 @@ src/entities/{domain}/
 5. 게이트 통과 확인: `node scripts/pipelineCheck.mjs chat` (실행 가능하려면 chat sample 에 1-requirement.md/2-data.json/3-components.json 이 필요. 없다면 게이트 적용은 P2 로 미루고 시각 검증만).
 
 `/handoff` Step B 가 자동으로 이 파일을 집어가도록 frontmatter 의 `consumed_by` 는 비워둠.
-
-#kind/handoff

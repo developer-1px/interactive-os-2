@@ -142,5 +142,3 @@ export function getSlotName(store: NormalizedData, parentId: string, childId: st
 - 데이터 모델 변경 (slot 시스템 그대로 유지)
 - container childRules 변경 없음
 - 새 노드 타입 추가 없음
-
-#kind/note #topic/ui

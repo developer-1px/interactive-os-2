@@ -58,5 +58,3 @@ PRD 촘촘함 충분, 스킬 구조 문제 없음, 새 원칙 발견 없음.
 ## 다음 행동
 - BACKLOGS.md에서 #14, #15, #16 체크 완료 처리
 - PRD → specs/archive/ 이동
-
-#kind/retro #archived

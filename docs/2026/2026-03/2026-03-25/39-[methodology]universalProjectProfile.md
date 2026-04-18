@@ -306,5 +306,3 @@ stateDiagram-v2
 2. **첫 번째 조작**: inbox 스킬에서 경로 하드코딩을 `project.yml 참조`로 교체
 3. **핵심 시나리오**: 새 프로젝트(project.yml 없음)에서 `/inbox` 실행 → 기본값으로 동작 확인
 4. **확인 포인트**: 같은 스킬이 aria에서는 `docs/0-inbox/`에, 빈 프로젝트에서는 `./`에 저장
-
-#kind/note #topic/methodology

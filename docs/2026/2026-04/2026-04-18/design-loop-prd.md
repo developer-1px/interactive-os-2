@@ -299,5 +299,3 @@ flowchart TD
 ---
 
 **전체 완성도**: 🟢 6/6
-
-#kind/prd

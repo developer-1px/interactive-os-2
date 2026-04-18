@@ -204,5 +204,3 @@ hook은 Write/Edit 시점에만 동작 → 기존 위반은 영원히 잔존.
 - 현재 강제 수단 없음 (CLAUDE.md 문서 규칙만 존재)
 - **설계 필요**: stop gate에서 스킬 호출 여부를 체크하려면 agent-ops 로그에 스킬 호출을 기록해야 함
 - **결정 포인트**: 스킬 호출을 hook으로 강제할 것인가, Claude의 자율에 맡기되 회고에서 추적할 것인가
-
-#kind/note #topic/analysis

@@ -40,5 +40,3 @@ Anthropic Agent SDK + WebSocket 기반 채팅. Phase A는 텍스트, Phase B/C�
 ## Gaps
 - [ ] tool_use / tool_result 인터랙티브 블록 UI
 - [ ] permission 모달 (도구 실행 사전 승인)
-
-#kind/note #topic/features

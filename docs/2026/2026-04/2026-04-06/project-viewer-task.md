@@ -53,5 +53,3 @@ Backlog (드릴다운 시 표시)
 - import.meta.glob(`/src/pages/**/*`) → 프로젝트별 파일 수
 - import.meta.glob(`/docs/BACKLOGS.md`, { query: '?raw' }) → 백로그 파싱
 - PROGRESS.md → 성숙도 (선택)
-
-#kind/plan #topic/viewer

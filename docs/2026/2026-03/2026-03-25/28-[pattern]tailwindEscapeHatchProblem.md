@@ -178,5 +178,3 @@ function ContentArea({ children }) {
 | 5 | [Arbitrary values discussion](https://github.com/tailwindlabs/tailwindcss/discussions/18748) | GitHub | 토큰 vs arbitrary value 가이드라인 |
 | 6 | [Panda CSS Origin Story](https://www.adebayosegun.com/blog/panda-css-the-origin-story) | 블로그 | Chakra UI → Panda CSS 설계 동기 |
 | 7 | [React CSS in 2026](https://medium.com/@imranmsa93/react-css-in-2026-best-styling-approaches-compared-d5e99a771753) | 블로그 | Tailwind 62% 만족도, CSS Module과의 비교 |
-
-#kind/note #topic/pattern

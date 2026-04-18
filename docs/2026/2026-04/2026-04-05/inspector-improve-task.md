@@ -43,5 +43,3 @@ legacy:
 ## 의존 순서
 F1 → F2 (Pick이 있어야 DOM element를 찾아서 비교 가능)
 B1, B2는 독립 — F1/F2와 병렬 가능
-
-#kind/plan #topic/viewer

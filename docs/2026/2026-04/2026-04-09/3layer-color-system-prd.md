@@ -146,5 +146,3 @@ legacy:
 3. **경계 ↔ 검증**: E1~E5 → V6~V9 커버됨 ✅
 4. **금지 ↔ 출처**: 4개 금지 모두 ⑤/⑥/discuss에서 파생 ✅
 5. **원칙 대조 ↔ 전체**: chroma_ladder/accent_budget 갱신 예정, 새 위반 없음 ✅
-
-#kind/prd #topic/design

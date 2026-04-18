@@ -217,5 +217,3 @@ npx depcruise src/interactive-os --config .dependency-cruiser.cjs --output-type 
 3. `npx depcruise src/interactive-os --config .dependency-cruiser.cjs` 실행 — 현재 위반 확인
 4. 위반 0개이면 `package.json` scripts에 등록, `checkLayerDeps.mjs` 제거
 5. `npx depcruise src/interactive-os --output-type dot | dot -T svg > deps.svg`로 의존 그래프 시각화 확인
-
-#kind/note #topic/tooling

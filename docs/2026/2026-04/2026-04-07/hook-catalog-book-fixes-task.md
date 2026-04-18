@@ -29,5 +29,3 @@ legacy:
 ## 제약
 - pages/에서 raw <input>, onKeyDown, addEventListener 금지 (훅)
 - os 부품 재사용 우선
-
-#kind/plan #topic/book

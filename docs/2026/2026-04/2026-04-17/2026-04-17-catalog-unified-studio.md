@@ -1166,5 +1166,3 @@ git commit -m "chore(catalog): final verification" --allow-empty
 - **Spec coverage:** 5축 갭(Task 3-4), 매트릭스(Task 6-7), 4탭 상세(Task 8), Storybook 좌/우 구조(Task 9), 편집 API(Task 11), 리다이렉트(Task 12), 테스트(Task 13) — 모두 커버.
 - **Placeholder 없음:** 모든 코드 블록이 완성.
 - **타입 일관성:** `CatalogEntry`, `MatrixRow`, `GapStatus`가 모든 Task에서 동일 시그니처 사용.
-
-#kind/note

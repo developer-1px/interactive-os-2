@@ -222,5 +222,3 @@ flowchart TD
 ```
 
 → **세 줄기를 독립적으로 풀 수 있다.** 줄기 1(Entity ID)이 가장 단순하고, 줄기 3(getVisibleNodes)이 가장 격리된 변경이고, 줄기 2(Command 팩토리)가 가장 구조적인 변경이다.
-
-#kind/explain #topic/pattern

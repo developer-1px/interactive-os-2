@@ -399,5 +399,3 @@ graph TD
 | 11 | [Base UI v1 (InfoQ)](https://www.infoq.com/news/2026/02/baseui-v1-accessible/) | 뉴스 | Base UI 1.0 출시, shadcn/ui 공식 지원 |
 | 12 | [Pigment (Kobalte)](https://pigment.kobalte.dev/docs/core/overview/introduction) | 공식 문서 | Solid 생태계의 headless→styled 레이어 |
 | 13 | [React UI Libraries 2026 (Makers Den)](https://makersden.io/blog/react-ui-libs-2025-comparing-shadcn-radix-mantine-mui-chakra) | 비교 분석 | 2025-2026 UI 라이브러리 트렌드 |
-
-#kind/note #topic/design

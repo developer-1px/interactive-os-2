@@ -291,5 +291,3 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 6 | ~~heterogeneous childRole 미지원~~ — **해소됨**: childRole 함수 확장 `(entity, state) => string` | Listbox Grouped (#38), Table (#57, #58) | pattern/composePattern | ✅ 해소 |
 | 7 | multi-zone 미지원 — 하나의 위젯에 여러 독립 focus zone 조합 불가 | Carousel (#7, #8), Combobox Grid (#15), Date Picker (#16, #18), Listbox Rearrangeable (#37), Multi-Thumb Slider (#52), Tabs Actions (E1) | composePattern / useAriaZone | ⛔ 미해소 |
 | 8 | ~~Menubar multi-zone~~ — **해소됨**: expand axis + custom handlers로 single-pattern 구현 (multi-zone 아님, level 전환) | Menubar (#39, #40) | expand axis + menubar.ts | ✅ 해소 |
-
-#kind/note #topic/pattern

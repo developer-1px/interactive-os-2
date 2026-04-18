@@ -387,5 +387,3 @@ legacy:
 - **Task 3** — `02-principles.md` 원리 카드 작성 (최대 20개 규모)
 - **Task 4** — `03-ax-mapping.md` 원리 × 24축 매트릭스
 - **Task 5** — `04-gap-plan.md` + `DESIGN.md` 재편
-
-#kind/note #topic/research

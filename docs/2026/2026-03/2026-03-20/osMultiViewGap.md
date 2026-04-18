@@ -293,5 +293,3 @@ useAria.ts:272  el.focus({ preventScroll: false })
 ```
 
 `data-aria-container`로 소유권을 확인하지만, `querySelector`가 전역이므로 **다른 container의 요소를 먼저 찾으면 소유권 체크 자체가 잘못된 대상에서 실행**된다. scope 옵션은 이 탐색을 container 내부로 한정함으로써 근본적으로 해결한다.
-
-#kind/note #topic/primitives

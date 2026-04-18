@@ -188,5 +188,3 @@ KeyboardRoute는 기능이 제한적이지만 핵심 인사이트를 제공: **R
 | 4 | [UE Enhanced Input](https://www.unrealdirective.com/articles/enhanced-input-what-you-need-to-know/) | 공식 문서 | Input Mapping Context 스택, 우선순위 기반 충돌 해결 |
 | 5 | [react-hotkeys-hook Scoping](https://react-hotkeys-hook.vercel.app/docs/documentation/useHotkeys/scoping-hotkeys) | 라이브러리 문서 | ref 기반 스코핑, tabIndex={-1} 패턴 |
 | 6 | [VS Code when-clause contexts](https://code.visualstudio.com/api/references/when-clause-contexts) | 공식 API 문서 | activeViewlet, sideBarFocus 등 뷰 기반 context key |
-
-#kind/note #topic/pattern

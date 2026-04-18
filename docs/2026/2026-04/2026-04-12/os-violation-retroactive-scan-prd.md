@@ -184,5 +184,3 @@ runner는 CLI 도구. 입력=CLI 인자 + 파일시스템, 출력=stdout + 리�
 ③ ui 레이어 동일 사이클
 ④ primitives 레이어 동일 사이클
 ⑤ 전체 재스캔으로 수렴 확인
-
-#kind/prd #topic/harness

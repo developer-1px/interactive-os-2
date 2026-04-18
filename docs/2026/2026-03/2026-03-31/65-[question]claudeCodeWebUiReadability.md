@@ -54,5 +54,3 @@ Claude Code 출력 3종류를 DM UI에서 어떻게 처리할 것인가:
 
 - Tool call / 코드 결과 표현 방식 결정 후 `/prd`로 전환
 - 관련 메모리: `project_chat_module_gen_ui`, `project_fe_value_ai_ui_layer`, `feedback_animation_buys_time`
-
-#kind/note #topic/question #archived

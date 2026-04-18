@@ -175,5 +175,3 @@ legacy:
 | CalendarGrid ui/ 완성품 | `src/interactive-os/ui/CalendarGrid.tsx` |
 | DatePicker ui/ 조합 완성품 | `src/interactive-os/ui/DatePicker.tsx` |
 | DatePicker 스타일 | `src/interactive-os/ui/DatePicker.module.css` |
-
-#kind/prd #topic/ui

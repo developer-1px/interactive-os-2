@@ -153,5 +153,3 @@ CLASSIFY:
 ---
 
 **전체 완성도:** 🟢 8/8
-
-#kind/prd #topic/design

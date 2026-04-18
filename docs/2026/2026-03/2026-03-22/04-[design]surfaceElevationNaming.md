@@ -245,5 +245,3 @@ interactive-os가 원하는 "surface 하나로 bg+border+shadow 번들"은 **Atl
 | 5 | [Primer Color Overview](https://primer.style/foundations/color/overview/) | 공식 문서 | bgColor-default/muted/inset 3단계 |
 | 6 | [Apple HIG Materials](https://developer.apple.com/design/human-interface-guidelines/materials) | 공식 문서 | ultra-thin~ultra-thick 물리적 두께 메타포 |
 | 7 | [Elevation Design Patterns](https://designsystems.surf/articles/depth-with-purpose-how-elevation-adds-realism-and-hierarchy) | 블로그 | 시스템 간 비교, semantic vs numeric 전략 분석 |
-
-#kind/note #topic/design

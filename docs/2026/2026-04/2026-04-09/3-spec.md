@@ -43,5 +43,3 @@ AI 생성 문서(docs/)를 편하게 탐색·열람할 Finder 스타일 Miller C
 - 로딩: SpinnerIndicator 표시
 - 파일 선택: 프리뷰 패널 활성
 - 폴더 선택: 자식 컬럼 생성
-
-#kind/note #topic/viewer

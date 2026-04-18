@@ -33,5 +33,3 @@ legacy:
 | [handoff-2026-04-11-skill-kanban-v2.md](handoff-2026-04-11-skill-kanban-v2.md) | Skill Kanban v2 handoff (consumed) | 2026-04-11 |
 | [handoff-2026-04-11-skill-kanban.md](../2026-04-10/handoff-2026-04-11-skill-kanban.md) | Skill Kanban v1 handoff (consumed) | 2026-04-11 |
 | [skill-kanban-v2-review.md](skill-kanban-v2-review.md) | Skill Kanban v2 리뷰 | 2026-04-11 |
-
-#kind/note #archived

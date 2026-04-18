@@ -1549,5 +1549,3 @@ if (!isStyles && isTsx) {
 3. **병렬 세션 차단 명시** — §2.3 Bundle A~F가 여러 세션에 흩어지면 `feedback_atomic_restructure` 위반. `feedback_parallel_session_worktree`(worktree 격리) 또는 "단일 PR freeze" 수칙을 §2.3 상단에 명시.
 4. **V7 rolePresetTable mutation 주의** — `as const satisfies` 테이블을 테스트에서 수정하면 type narrowing이 풀리고 다른 테스트에 오염. helper 주입(`resolveRolePresetWithTable(table, input)`) 형태로 DI 도입을 구현 시 고려.
 5. **선행 PRD `ax-public-private-split-prd.md`와의 방향 점검** — "Public 3축" 기록과 현 PRD "Public 13 키"의 해석 차이를 §1.0 주석에 1줄 추가하여 로드맵 단계 명시 (예: "P1 = 25→18, P2 = padding/gap/shape/border → role 흡수, P3 = flex/clamp/aspect Private 이행").
-
-#kind/prd #topic/styles

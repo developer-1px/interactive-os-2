@@ -4618,5 +4618,3 @@ details[open] > .depGroupSummary::before {
 ---
 
 **총 53파일, 4335줄**
-
-#kind/note #topic/design

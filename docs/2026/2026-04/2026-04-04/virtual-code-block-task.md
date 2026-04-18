@@ -43,5 +43,3 @@ legacy:
 ## 2026-04-17 — CodeViewer 흡수
 
 `VirtualCodeBlock`은 `CodeViewer`로 흡수되었다. `<CodeViewer virtualized />` 단일 prop으로 내부에서 `codeToTokens` + `useVirtualScrollState` 경로가 활성화된다. 자동 임계값 500줄. 상세는 `code-viewer-prd.md` 참조.
-
-#kind/plan #topic/ui

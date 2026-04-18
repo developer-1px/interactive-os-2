@@ -82,5 +82,3 @@ legacy:
 ## 이어받는 법
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다. CodeViewer 확장이 필요하면 backlog의 항목을 꺼내 새 discuss/PRD 사이클 시작.
-
-#kind/handoff

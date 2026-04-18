@@ -200,5 +200,3 @@ button:active { transform: scale(var(--motion-press-scale)); }
 - 이 제안 승인 시 → DESIGN.md에 § CSS Layers 섹션 작성
 - `/design-implement` 스킬이 이 섹션을 참조하도록 연결
 - 파일 분리(Step 2~5)는 별도 PRD로 분리 가능
-
-#kind/decision

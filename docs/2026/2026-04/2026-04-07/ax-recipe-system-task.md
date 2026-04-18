@@ -62,5 +62,3 @@ type Recipe = 'control' | 'control-sm' | 'control-lg'
 3. 기존 구조 축(controlSize, padding, gap 등) 유지 — 하위호환
 4. ui/ 컴포넌트에서 recipe 적용 시작 (Button, ListBox, Input부터)
 5. 시각 비교 (브라우저)
-
-#kind/plan #topic/design

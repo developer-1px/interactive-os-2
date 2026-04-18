@@ -315,5 +315,3 @@ graph TB
 2. **우리 store와 비교**: `src/interactive-os/store/types.ts`의 `NormalizedData`를 열고, A2UI의 flat component list가 entities + relationships로 어떻게 변환되는지 머릿속으로 매핑한다
 3. **컴포넌트 대조**: `src/interactive-os/ui/` 디렉토리를 열고, 위 매핑 테이블의 15종이 실제로 존재하는지 확인한다
 4. **커스텀 카탈로그 구상**: A2UI Basic Catalog에 없는 TreeView, Combobox, Grid를 JSON Schema로 정의하면 어떤 props가 필요한지 스케치한다
-
-#kind/note #topic/protocol

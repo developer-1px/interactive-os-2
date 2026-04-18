@@ -797,5 +797,3 @@ icon 축 또는 typography composite token의 optical flag. 대부분 폰트/아
 
 - Task 4: `03-ax-mapping.md` — 20개 원리 × ax 24축 Locked/Exposed/Missing 매트릭스
 - Task 5: `04-gap-plan.md` + `DESIGN.md` 재편
-
-#kind/note #topic/research

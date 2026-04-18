@@ -134,5 +134,3 @@ src/server/
 - 스캐너 단위 테스트: 샘플 fixture 컴포넌트 → 예상 `CatalogEntry` 일치
 - 통합 테스트: `/catalog` 라우트 행 선택 → 우측 탭 렌더 검증
 - scaffold API는 임시 디렉토리에서 파일 쓰기 검증
-
-#kind/note

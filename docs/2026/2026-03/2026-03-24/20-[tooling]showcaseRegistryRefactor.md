@@ -61,5 +61,3 @@ MD SSOT 전환을 위해 `showcaseRegistry.tsx`의 각 필드가 어디서 소�
 - name/description/usage는 MD에서만 관리
 - apg는 별도 매핑(`apgBySlug`)으로 분리하면 registry 의존 끊김
 - `slugToMdFile` 매핑은 convention(`slug → PascalCase`) 자동화 검토
-
-#kind/note #topic/tooling

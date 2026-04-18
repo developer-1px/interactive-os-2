@@ -311,5 +311,3 @@ ax() 축으로 표현 불가능한 CSS만 module.css에 작성한다. 예: 복�
 | padding/margin 직접 값 | ax() padding/gap 축 |
 | background/color 직접 값 | ax() surface/tone/text 축 |
 | position/inset | ax() placement 축 |
-
-#kind/note

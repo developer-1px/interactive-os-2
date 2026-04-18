@@ -270,5 +270,3 @@ flowchart LR
 | `intercepts` | ❌ | DEV 경고용 (useEngine 초기화) |
 
 → Plugin은 engine의 인터페이스이지만, 실제 슬롯의 대부분은 상위 레이어(primitives, ui)가 소비한다. Engine은 "등록"만 하고, "사용"은 각 레이어의 몫이다.
-
-#kind/explain #topic/engine

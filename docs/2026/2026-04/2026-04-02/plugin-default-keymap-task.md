@@ -33,5 +33,3 @@ crud/dnd/clipboard 플러그인이 commands만 갖고 keyMap이 없어서, 사�
 - `src/interactive-os/plugins/clipboard.ts`
 - `src/pages/cms/CmsLayout.tsx`
 - `src/pages/cms/CmsSidebar.tsx`
-
-#kind/plan #topic/engine

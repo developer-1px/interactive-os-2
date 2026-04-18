@@ -139,5 +139,3 @@ interactive-os는 LLM이 **A2UI 선언(JSON)만 출력** → 엔진이 ARIA/키�
 - **pattern + collection = UI**: 모듈(axis/plugin)은 분리, UI에서는 하나. 별도 라우트 불필요
 - **LLM 시대 FE 검증**: 테스트 pass는 데이터일 뿐, 눈으로 봐야 신뢰 가능
 - **부분 검사는 누락을 숨김**: 실제 페이지를 렌더해야 진짜 갭이 보임
-
-#kind/note

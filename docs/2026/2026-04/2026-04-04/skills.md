@@ -88,5 +88,3 @@ legacy:
   워크플로우 필요?  → 스킬 (~80%)
   배경 지식?       → memory (~50%)
 ```
-
-#kind/note #topic/harness

@@ -575,5 +575,3 @@ export async function relocate({ dryRun = false } = {}) {
 ---
 
 **전체 완성도**: 🟢
-
-#kind/prd #topic/docs-infra

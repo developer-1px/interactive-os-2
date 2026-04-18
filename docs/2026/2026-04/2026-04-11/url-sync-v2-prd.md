@@ -181,5 +181,3 @@ PRD 저장 완료: `docs/2-areas/engine/prds/url-sync-v2-prd.md`
   - 테스트 0개 → V1~V10 신규 작성 필요
 
 수정/추가 사항 있으시면 말씀해주세요. 리뷰 완료되면 바로 진행합니다.
-
-#kind/prd #topic/engine

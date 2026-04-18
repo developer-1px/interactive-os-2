@@ -73,5 +73,3 @@ legacy:
 ## 다음 행동
 - L1 백로그 → viewer 기능 복원은 별도 사이클
 - CSS 토큰 위반 → 이미 수정 완료
-
-#kind/retro #archived

@@ -904,5 +904,3 @@ Plan complete and saved to `docs/2-areas/distribution/plans/2026-04-12-single-en
 **2. Inline Execution** — 본 세션에서 직접 실행. Task별 checkpoint.
 
 Which approach?
-
-#kind/note #topic/distribution

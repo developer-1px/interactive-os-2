@@ -273,5 +273,3 @@ flowchart TD
 | **route-engine 분리** (5) | route command가 engine 밖 | 설계 판단 필요 |
 
 결함 1,2,4는 **동일한 해결 패턴**으로 풀린다: axis의 `key()` 팩토리처럼, plugin keyMap과 override도 command 메타데이터를 선언하는 팩토리를 거치게 하면 된다. `definePlugin`의 keyMap entry가 `key('writer:insert-after', handler)` 형태가 되면 `.commands`가 자동으로 붙는다.
-
-#kind/explain #topic/devtools

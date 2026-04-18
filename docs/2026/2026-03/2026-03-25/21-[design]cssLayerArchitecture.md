@@ -142,5 +142,3 @@ L6/L7 module.css (로컬) → 구조(structure) + 변형(variant)
 - 이 전략 기반으로 `/prd` 작성 → 각 레이어별 구현 명세
 - L5 Interactive 확장이 최우선 (disabled, invalid, Action hover/active 글로벌화)
 - 토큰 에이전트 작업 완료 후, 컴포넌트 CSS를 이 프로토콜 기준으로 전수 점검
-
-#kind/note #topic/design

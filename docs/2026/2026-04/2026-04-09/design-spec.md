@@ -61,5 +61,3 @@ CMS 편집 화면 상단의 액션 바. 노드 CRUD, undo/redo, 뷰 전환 등 �
 4. **accent 1채널** — selected=neutral bg, activate=accent bg, focus=accent outline. 동시에 두 곳에 accent 사용 금지.
 5. **recipe가 구조 잠금** — height, padding, font-size, border-radius는 recipe 프리셋이 결정. 개별 오버라이드 금지.
 6. **tone-dim 패턴** — disabled 상태는 opacity 축이 아닌 `tone: 'neutral-dim'`으로 표현.
-
-#kind/note

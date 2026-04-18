@@ -231,5 +231,3 @@ flowchart TD
 2. **react-hotkeys 코드 확인**: [GitHub README](https://github.com/greena13/react-hotkeys) → `<GlobalHotKeys>` vs `<HotKeys>` 사용 예시 비교
 3. **tinykeys 코드 확인**: [GitHub source](https://github.com/jamiebuilds/tinykeys/blob/main/src/tinykeys.ts) → 100줄 미만의 전체 구현 읽기
 4. **프로젝트 대입**: `src/interactive-os/primitives/useAriaView.ts:258-265` (keyMap-only 경로) → 이것이 react-hotkeys의 `<HotKeys>` (Scoped)에 해당. `<GlobalHotKeys>`에 해당하는 것이 없음을 확인
-
-#kind/note #topic/pattern

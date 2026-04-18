@@ -91,5 +91,3 @@ legacy:
 
 - [ ] /improve-design 루프 진입 (평균 4.5/10 < 9/10)
 - [ ] 우선순위 1~3 수정 후 재리뷰
-
-#kind/note #topic/viewer

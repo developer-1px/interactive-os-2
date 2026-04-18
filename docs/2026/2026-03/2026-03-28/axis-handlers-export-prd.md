@@ -171,5 +171,3 @@ legacy:
 | 증거 파일 | `src/interactive-os/axis/tab.ts` — `focusNextWrap`, `focusPrevWrap` static export 잔존 |
 | 대체 PRD | `2026-03-29-compose-pattern-3arg-prd.md` — AxisInstance가 config+handler 소유 |
 | 하위 호환 | 기존 테스트 전체 통과 (3arg 전환 시 원자적 변환) |
-
-#kind/prd #topic/axis

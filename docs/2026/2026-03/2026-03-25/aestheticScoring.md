@@ -83,5 +83,3 @@ legacy:
 - [ ] Prose 렌더러 통일 (MdPage로) — 별도 PRD
 - [ ] DESIGN.md §3에 배치 규칙 추가
 - [ ] `pnpm score:aesthetics` 스크립트 — lint 층부터 시작
-
-#kind/note

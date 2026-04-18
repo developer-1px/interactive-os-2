@@ -168,5 +168,3 @@ function parseSurface(stream: ReadableStream<string>): AsyncIterable<NormalizedD
 | Q2 | 커스텀 카탈로그 JSON을 a2ui.org에 공개 등록? | P1 이후 검토. 먼저 로컬 카탈로그로 증명 |
 | Q3 | A2UI v0.9 → v1.0 스펙 변경 대응 | parseSurface에 version 분기. 현재는 v0.9 타겟 |
 | Q4 | 스트리밍 중 에러 처리 (잘못된 JSON, 없는 ID 참조) | 해당 줄 skip + console.warn. 나머지는 정상 렌더 |
-
-#kind/prd #topic/ui

@@ -175,5 +175,3 @@ CI 검증:
 - 매트릭스의 컴포넌트명이 모두 `aria-os/ui` 실 export와 매칭되는지
 - aria.md(Plan 5)의 인용이 본 파일과 일치하는지
 - 매트릭스 빈칸 표는 갭이 해결되면 갱신
-
-#kind/note #topic/distribution

@@ -105,5 +105,3 @@ Config-only 함수는 유지: `selectConfig()`, `expandConfig()`
    - Agent C: slider, spinbutton, checkbox, checkboxMixed, switch, buttonToggle, link, feed
 3. Task 3 (bundle 제거) — 직접 (전환 후)
 4. Verify — typecheck + lint + test + deps
-
-#kind/plan #topic/axis

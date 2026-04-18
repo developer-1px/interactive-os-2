@@ -296,5 +296,3 @@ AI에게 "고쳐줘"라고 말하는 것이 아니라, **구조화된 4단계**�
 | **TOC** | Theory of Constraints — 제약 이론 (Eliyahu Goldratt) |
 | **PRD** | Product Requirements Document — 구현 명세서 |
 | **역PRD** | git diff에서 자동 생성한 "실제로 구현된 것"의 명세 |
-
-#kind/note #topic/report #archived

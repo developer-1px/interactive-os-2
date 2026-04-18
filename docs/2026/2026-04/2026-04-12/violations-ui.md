@@ -42,5 +42,3 @@ Total: 6 violations in 5 files (of 357 scanned)
 
 ### src/interactive-os/ui/chat/ToolSummaryBlock.tsx
 - ui/ 컴포넌트에서 onKeyDown/onKeyUp 바닐라 핸들링 금지 — pattern keyMap 또는 plugin.keyMap으로 선언적 키 매핑을 사용하세요. CLAUDE.md "키바인딩 → KeyMap 선언" 참조
-
-#kind/note #topic/harness

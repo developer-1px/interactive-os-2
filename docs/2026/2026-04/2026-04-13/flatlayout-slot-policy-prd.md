@@ -176,5 +176,3 @@ export interface WidgetNode extends LayoutBase {
   scroll?: boolean  // 기본 true, false면 스크롤 비활성
 }
 ```
-
-#kind/prd #topic/layout

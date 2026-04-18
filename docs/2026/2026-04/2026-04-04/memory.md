@@ -56,5 +56,3 @@ feedback memory 승격
 - 코드에서 파악 가능한 것은 저장하지 않음
 - 상대 날짜는 절대 날짜로 변환
 - memory보다 훅/스킬이 우선
-
-#kind/note #topic/harness

@@ -54,5 +54,3 @@ legacy:
 
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 구체적으로: 2종 위반 파일(bookWidgets, i18nWidgets, incidentWidgets)부터 FlatLayout 노드로 전환
-
-#kind/handoff #archived

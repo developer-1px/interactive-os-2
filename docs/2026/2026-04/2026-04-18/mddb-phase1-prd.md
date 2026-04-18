@@ -2191,5 +2191,3 @@ stages:
 **종합 완성도:** 🟢 6/6
 
 **/go 착수 가능 여부:** **가능**. Blueprint가 exhaustive하고 §3 export ↔ §4 pseudo-code ↔ §5 경계 ↔ §6 시나리오의 4방향 정합성이 확보되었다. 잔여 `(?)` 25건은 전부 구현 단계에서 자연스럽게 해소되거나 실측 후 튜닝되는 범주.
-
-#kind/prd #topic/docs-infra

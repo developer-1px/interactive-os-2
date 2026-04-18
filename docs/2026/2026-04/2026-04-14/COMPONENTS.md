@@ -239,5 +239,3 @@ legacy:
 | **Total** | **124** | **75** | **60%** |
 
 > **Note**: 2026-04-14 — 10개 GAP 컴포넌트 일괄 구현으로 52% → 60% 달성. 남은 GAP은 ax()로 대체 가능한 CSS 유틸(Typography, Stack)뿐.
-
-#kind/note

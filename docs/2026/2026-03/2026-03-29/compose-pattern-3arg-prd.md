@@ -170,5 +170,3 @@ legacy:
 | popup() 축 | `axis/popup.ts` — popup 인스턴스 |
 | grid() 축 | `navigate.ts:175` — `grid(columns, opts?)` |
 | 31개 role 변환 | `pattern/roles/*.ts` 전부 `composePattern(identity, [axes], keyMap)` 형태 |
-
-#kind/prd #topic/pattern

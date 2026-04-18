@@ -61,5 +61,3 @@ legacy:
 | 도메인 | 상황 | 교훈 |
 |--------|------|------|
 | plugin/focusRecovery | crud가 focusRecovery 번들 시 기본 isReachable=treeReachable | 기본값 번들 시 다른 모델(spatial)의 기본값과 충돌 가능. 사용처별 isReachable 전달 필요 |
-
-#kind/retro #archived

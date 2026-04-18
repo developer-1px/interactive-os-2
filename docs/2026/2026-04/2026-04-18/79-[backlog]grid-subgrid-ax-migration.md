@@ -42,5 +42,3 @@ shadcn 매핑 작업 중 PipelineGrid 스크린샷에서 그리드 구조 깨짐
 
 - /discuss로 축 설계 방향 결정 (layout 확장 vs 새 축)
 - /do로 마이그레이션 실행
-
-#kind/note #topic/backlog

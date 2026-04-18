@@ -313,5 +313,3 @@ grep으로 자동 체크 가능한 항목:
 2. `scripts/scoreComponentCompleteness.mjs` 생성 — 각 module.css를 grep해서 필수 항목 존재 여부 카운트
 3. `pnpm score:completeness` 실행 → 컴포넌트별 점수 출력
 4. `/improve` 스킬로 점수가 낮은 컴포넌트부터 자율 개선 루프
-
-#kind/note #topic/design

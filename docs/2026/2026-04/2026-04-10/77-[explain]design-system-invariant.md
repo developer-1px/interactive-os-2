@@ -125,5 +125,3 @@ shadcn에서는 불가능 — 항상 `bg-X text-X-foreground` 페어로 소비�
 | **불변량** | 값이 뭐든 유지되는 **값 사이의 관계** |
 | **pit of success** | 불변량이 CSS에 인코딩되어 **깨고 싶어도 못 깨는** 상태 |
 | **ax()에 없는 것** | tone→surface 관계가 action에서만 완성. 나머지 surface에서 fg 끊김 |
-
-#kind/explain #topic/styles

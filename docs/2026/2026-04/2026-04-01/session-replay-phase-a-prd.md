@@ -158,5 +158,3 @@ PageReplay
 5. **원칙 대조 ↔ 전체**: 위반 없음 ✅
 
 **전체 완성도:** 🟢 8/8
-
-#kind/prd #topic/engine

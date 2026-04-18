@@ -936,5 +936,3 @@ flowchart LR
 - 없음.
 
 감사 기준: CLAUDE.md §2·§3 + DESIGN.md SSOT 존중 + MEMORY.md feedback 번들(ax/css/role/harness). 본 PRD는 엔진 레이어 리팩토링으로 UI 카탈로그 영향 없음.
-
-#kind/prd #topic/styles

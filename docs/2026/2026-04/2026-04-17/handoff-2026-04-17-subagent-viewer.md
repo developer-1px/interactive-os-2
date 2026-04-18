@@ -61,5 +61,3 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: `pnpm dev` 후 replay 페이지에서 실제 Task 도구 사용하는 세션 live 관찰, SubAgent row 자동 추가 여부 확인.
-
-#kind/handoff

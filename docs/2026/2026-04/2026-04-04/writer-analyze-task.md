@@ -29,5 +29,3 @@ legacy:
 ## 제약
 - role은 MD에 없는 파생 데이터 → storeToMd에 포함 안 됨
 - role은 sentence.data.role에만 존재
-
-#kind/plan #topic/chat

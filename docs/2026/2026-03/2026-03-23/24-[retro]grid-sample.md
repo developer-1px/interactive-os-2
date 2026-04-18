@@ -59,5 +59,3 @@ legacy:
 
 ## 다음 행동
 - L1 수정 완료 → 커밋 필요
-
-#kind/retro #archived

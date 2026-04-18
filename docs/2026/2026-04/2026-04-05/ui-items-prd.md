@@ -186,5 +186,3 @@ ItemProps = renderItem 시그니처의 3인자를 그대로 받음:
 ---
 
 **전체 완성도:** 🟢 8/8
-
-#kind/prd #topic/ui

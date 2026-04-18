@@ -239,5 +239,3 @@ export const combobox = composePattern(
 3. **경계 ↔ 검증**: E1→V5, E2→V6, E3→V7, E6→V8, E8→V9 ✅
 4. **금지 ↔ 출처**: X1←P1, X2←P4, X3←Non-Goals, X4←S3, X5←P8 전부 유효 ✅
 5. **원칙 대조 ↔ 전체**: P8 주의사항(ui/ 완성품 래핑)은 별도 PRD로 분리 ✅
-
-#kind/prd #topic/primitives

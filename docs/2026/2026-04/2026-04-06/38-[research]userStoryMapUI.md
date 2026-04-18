@@ -228,5 +228,3 @@ block-beta
 2. **데이터 모델 설계** — NormalizedData로 Journey > Step > Story 3계층 + Release 그룹 모델링
 3. **핵심 인터랙션 우선순위** — (1) 키보드 카드 생성, (2) 드래그앤드롭 재배치, (3) 릴리즈 슬라이스 분할
 4. **검증 포인트** — Walking Skeleton(첫 번째 수평 슬라이스)이 시각적으로 즉시 식별 가능한가?
-
-#kind/research

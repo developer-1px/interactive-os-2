@@ -672,5 +672,3 @@ graph LR
 | DOM focus sync | useAriaView.ts |
 | 새 NodeState 필드 추가 | useAriaView.ts |
 | containerProps 모드 추가 | useAriaView.ts |
-
-#kind/explain #archived

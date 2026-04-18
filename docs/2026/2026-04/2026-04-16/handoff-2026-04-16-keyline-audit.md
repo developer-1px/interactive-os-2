@@ -62,5 +62,3 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: `cd ~/Desktop/plugin-repo && git add skills/keyline-audit/ && git commit`
-
-#kind/handoff

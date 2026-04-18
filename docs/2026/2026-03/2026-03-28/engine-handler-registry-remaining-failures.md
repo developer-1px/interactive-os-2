@@ -77,5 +77,3 @@ legacy:
 1. **spatial plugin** (`src/interactive-os/plugins/spatial.ts`) — defineCommand 사용 여부 확인 → 12건 해소 가능
 2. **dialog expand 초기화** — expand command registry 등록 확인 → 2건 해소 가능
 3. **cms-detail-panel** — 위 2개 해결 후 재확인
-
-#kind/note #topic/engine

@@ -206,5 +206,3 @@ interface WidgetNode {
 3. **경계 ↔ 검증**: split collapse(V6), overlay 중첩(V7) 커버 ✅
 4. **금지 ↔ 출처**: 모든 금지의 출처가 ⑤ 또는 ⑥에 있음 ✅
 5. **원칙 대조 ↔ 전체**: P4(style) 잠재 위반은 SplitPane UI 내부로 격리하여 해결 ✅
-
-#kind/prd #topic/engine

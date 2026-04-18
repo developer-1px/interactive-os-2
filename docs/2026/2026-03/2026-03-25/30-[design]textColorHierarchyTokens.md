@@ -234,5 +234,3 @@ Carbon의 opacity 모델이 가장 시사적이다:
 2. 브라우저 DevTools → 아무 Surface 위의 muted 텍스트 선택 → Computed 탭에서 color 확인
 3. [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)에 foreground/background 입력
 4. 결과가 4.5:1 미만이면 → Surface 계약 위반 확인
-
-#kind/note #topic/design

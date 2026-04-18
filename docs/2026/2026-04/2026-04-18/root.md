@@ -31,5 +31,3 @@ updated: 2026-04-18
 - **G3 위계**: pass. "Accessibility shouldn't 'be' the thing you add last."가 압도적인 폰트 크기로 설계되어 화면에서 가장 우선순위가 높은 정보로 인지된다.
 
 ## Overall: good
-
-#kind/note #topic/research

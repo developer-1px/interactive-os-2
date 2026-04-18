@@ -36,5 +36,3 @@ Lightbox에서 dialog close 시 inline style 잔재 버그를 발견하면서, 4
 ## 출처
 
 Lightbox mermaid lightbox 구현 세션에서 발견 (2026-04-11). FlatLayout Phase2(ui/) 범위.
-
-#kind/note

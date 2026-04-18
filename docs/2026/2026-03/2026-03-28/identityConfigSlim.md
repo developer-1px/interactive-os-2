@@ -72,5 +72,3 @@ export function grid(columns: number, tabCycle = false): AriaPattern {
 ## 출처
 
 2026-03-29 세션 — APG 원문 비교 + config 설계 점검 discuss
-
-#kind/note

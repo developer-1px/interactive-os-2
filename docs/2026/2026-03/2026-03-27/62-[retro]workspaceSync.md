@@ -66,5 +66,3 @@ legacy:
 - L1 백로그 항목 저장
 - Areas 갱신
 - PRD 아카이브
-
-#kind/retro #archived

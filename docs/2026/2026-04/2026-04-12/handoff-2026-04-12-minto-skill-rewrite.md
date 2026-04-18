@@ -114,5 +114,3 @@ legacy:
 `/go` 로 시작하거나 `/minto @docs/0-inbox/minto-ai-dev-mentoring.md` 로 재개.
 
 구체적으로: **1.2 MECE 🟡 해결** 부터. 4번째 D(자기평가 불능)를 어디로 분류할지 사용자와 합의한 뒤 나머지 챕터(2.1~4.6) 전수 마이그레이션을 Sonnet 에 위임.
-
-#kind/handoff #archived

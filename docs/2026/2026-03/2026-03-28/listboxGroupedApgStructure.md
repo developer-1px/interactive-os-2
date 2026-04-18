@@ -59,5 +59,3 @@ APG Listbox Grouped Example의 실제 HTML을 확인한 결과, 현재 구현과
 ## 출처
 
 2026-03-28 세션 — APG 원본 HTML 확인 결과
-
-#kind/note #archived

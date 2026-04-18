@@ -206,5 +206,3 @@ legacy:
 5. **원칙 대조 ↔ 전체**: 위험 3건(⑤#3, #4, #11)이 ② 산출물에 수정 반영(빌더 파일 분리, 매트릭스 markdown SSOT, ax() LLM 비노출 명시) ✅
 
 **교차 검증: 통과**
-
-#kind/prd #topic/distribution

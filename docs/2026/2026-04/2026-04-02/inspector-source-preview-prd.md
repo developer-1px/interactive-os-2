@@ -136,5 +136,3 @@ legacy:
 | computePlacement | `src/misc/computePlacement.ts` — 순수 배치 함수 |
 | SourcePreview | `src/devtools/inspector/SourcePreview.tsx` — ~5줄 코드 preview |
 | InspectorOverlay 통합 | `src/devtools/inspector/InspectorOverlay.tsx` — SourcePreview 참조 |
-
-#kind/prd #topic/viewer

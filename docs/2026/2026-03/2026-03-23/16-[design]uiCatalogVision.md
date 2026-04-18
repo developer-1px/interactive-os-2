@@ -87,5 +87,3 @@ UI SDK 고도화 과정에서 NavList → FileIcon/CodeBlock/Breadcrumb 분리�
 - 🟡 쇼케이스 → 완성품 승격: 제품에서 실제로 쓸 때 hook-first로 전환 (NavList 패턴 반복)
 - 🔴 미존재 → 우선순위: SplitPane > CommandPalette > MarkdownViewer > Timeline > 나머지
 - PROGRESS.md에 UI 카탈로그 행 반영 검토
-
-#kind/note #topic/design

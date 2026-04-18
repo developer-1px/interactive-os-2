@@ -142,5 +142,3 @@ Release Note
 - 관통: Decision Log이 모든 분기점에 기록
 
 "우리 뭐가 구현되어 있지?" → **Living Spec을 열면 답이 나온다.**
-
-#kind/note

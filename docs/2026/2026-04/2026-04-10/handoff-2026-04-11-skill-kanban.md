@@ -57,5 +57,3 @@ legacy:
 
 `/go`로 시작하면 이 handoff를 자동으로 픽업한다.
 구체적으로: `/simplify` → `/naming-audit` → useActiveSessions 필터링 수정 (비활성 세션도 포함)
-
-#kind/handoff #archived

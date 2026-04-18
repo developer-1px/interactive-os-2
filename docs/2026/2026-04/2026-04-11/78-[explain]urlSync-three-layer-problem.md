@@ -163,5 +163,3 @@ flowchart LR
 2. **L2 urlSync 보강**: pathname 모드 + push/replace 옵션 + serializer
 3. **L2 popstate**: `useUrlSync` 훅 또는 페이지 레벨 popstate → onChange 패턴 정립
 4. **L3 불필요**: EffectContext, onExternalEvent 확장 없음
-
-#kind/explain

@@ -143,5 +143,3 @@ Display:       0/18
 | DatePicker | Calendar + Combobox |
 | Menubar | multi-zone |
 | NavigationMenu | menubar 변형 |
-
-#kind/note

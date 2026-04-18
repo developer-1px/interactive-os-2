@@ -53,5 +53,3 @@ legacy:
 
 ## 다음 행동
 - L2 보강: PRD 스킬에 "테스트 코드 영향" 체크리스트 검토 (이미 존재하나 focusStrategy→tabIndex 연쇄를 구체적으로 명시 필요)
-
-#kind/retro #archived

@@ -30,5 +30,3 @@ updated: 2026-04-18
 
 ## Overall: ok
 기능적 요소의 정밀한 배열과 일관성이 뛰어나지만, 시각적 영역 구분(Spacing & Contrast) 측면에서 아쉬움이 관찰됨.
-
-#kind/note #topic/research

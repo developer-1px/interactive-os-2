@@ -59,5 +59,3 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: `window.cms.list()` 콘솔 실행으로 API 동작 확인
-
-#kind/handoff

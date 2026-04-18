@@ -51,5 +51,3 @@ Pre (차단)  ──→  Post (피드백)  ──→  Stop (최종 게이트)
 ```
 
 retro가 갭을 발견하면, improve-skill이 강제력 위계에 따라 훅(기계적) 또는 스킬(워크플로우)을 패치한다.
-
-#kind/note #topic/harness

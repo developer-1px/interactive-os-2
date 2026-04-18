@@ -222,5 +222,3 @@ graph TB
 ## 다음 행동
 
 - 이 그림을 기반으로 discussion 계속 — gap의 우선순위, 계층 경계의 근거 정리
-
-#kind/note #topic/vision #archived

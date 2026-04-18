@@ -200,5 +200,3 @@ return render(optionProps, entity, state)
 2. `src/interactive-os/ui/ListBox.tsx` → defaultRenderItem에서 props spread 패턴 확인
 3. `src/AppShell.tsx` → renderNavItem에서 Tooltip + props 배치 확인 (복잡한 케이스)
 4. 확인 포인트: 모든 defaultRenderItem이 `(props, item, state)` 순서로 props-first 되어 있으면 적용 완료
-
-#kind/note #topic/pattern

@@ -94,5 +94,3 @@ legacy:
 
 > 스크립트: `scripts/verifyModularScale.mjs`
 > 참고: `docs/research/ax/04-gap-plan.md` §3.3
-
-#kind/note #topic/research

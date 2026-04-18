@@ -86,5 +86,3 @@ div.splitPane (flex-row | flex-col)
 - separator 커서: `col-resize` (horizontal) / `row-resize` (vertical)
 - separator 배경: `--border-default`, hover 시 `--focus`
 - motion: `--motion-instant-duration` + `--motion-instant-easing`
-
-#kind/note #topic/ui

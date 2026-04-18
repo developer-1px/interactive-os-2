@@ -936,5 +936,3 @@ flowchart LR
 ---
 
 **전체 완성도:** 🟢 7/7 (§1 §2 §3 §4 §5 §6 §7 완료, 원칙 감시자 통과)
-
-#kind/prd #topic/styles

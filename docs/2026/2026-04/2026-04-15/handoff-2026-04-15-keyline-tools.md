@@ -63,5 +63,3 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: `/test/keyline` 페이지에서 inspector ON으로 key line 불일치를 찾고 수정 시작
-
-#kind/handoff #archived

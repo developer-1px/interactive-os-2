@@ -90,5 +90,3 @@ legacy:
 - `src/styles/landingTokens.css` — 랜딩 전용 번들 토큰 (독자 관리)
 - `DESIGN.md` — 디자인 시스템 명세
 - `docs/0-inbox/39-[explain]interactive-os-architecture.md` — 컨텐츠 소스
-
-#kind/note

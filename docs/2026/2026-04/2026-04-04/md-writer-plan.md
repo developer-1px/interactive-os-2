@@ -878,5 +878,3 @@ Expected: PASS
 git add src/__tests__/route-writer.screen.test.tsx
 git commit -m "test: PageWriter screen tests — empty state, tree load, view toggle"
 ```
-
-#kind/plan #topic/chat

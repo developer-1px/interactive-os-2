@@ -28,5 +28,3 @@ legacy:
 | `/ui` | false | 0 | visible  | ✅ |
 | `/catalog` | false | 0 | visible  | ✅ |
 | `/showcase/gmail` | false | 0 | visible  | ✅ |
-
-#kind/note #topic/research

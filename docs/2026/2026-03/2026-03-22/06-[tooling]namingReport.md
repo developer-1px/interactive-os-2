@@ -308,5 +308,3 @@ legacy:
 | ToastData | 5 | getToasts(), next, snapshot, toast, toasts |
 | UseAriaReturn | 3 | useAria(), useAriaZone(), useControlledAria() |
 | ValueRange | 2 | range, valueRange |
-
-#kind/note #topic/tooling

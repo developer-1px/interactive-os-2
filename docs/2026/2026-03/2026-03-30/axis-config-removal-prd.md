@@ -156,5 +156,3 @@ legacy:
 | requiredEntities | `composePattern.ts:163+` — AriaPattern에 entities 합성 |
 | clickMap 이관 | `composePattern.ts` — `splitInputMap`으로 keyMap/clickMap 분리 |
 | 축 middleware | `src/interactive-os/axis/select.ts` — `ctx.selected.*` namespace |
-
-#kind/prd #topic/axis

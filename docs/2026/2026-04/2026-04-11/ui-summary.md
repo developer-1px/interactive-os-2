@@ -81,5 +81,3 @@ flowchart TD
 ```
 
 > 원본: [archive/63-[retro]uiIndicators.md](archive/63-[retro]uiIndicators.md)
-
-#kind/note #archived

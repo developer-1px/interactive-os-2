@@ -123,5 +123,3 @@ legacy:
 ---
 
 **전체 완성도:** 🟢 7/8 (⑥만 🟡 — history plugin 영향은 실행 시 검증)
-
-#kind/prd #topic/pattern

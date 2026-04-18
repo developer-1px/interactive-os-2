@@ -161,5 +161,3 @@ legacy:
 ---
 
 **전체 완성도:** 🔴 1/8
-
-#kind/prd #topic/chat

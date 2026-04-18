@@ -235,5 +235,3 @@ graph TB
 2. **testerHtmlPath 실험**: 프로젝트의 `index.html`을 `testerHtmlPath`로 지정하고, 기존 테스트가 앱 HTML 안에서 실행되는지 확인
 3. **Preview provider URL**: vitest 서버가 제공하는 URL을 브라우저에서 직접 열어 테스트 실행 관찰
 4. **CMS 테스트 기준**: `src/__tests__/cms-detail-panel.test.tsx`를 browser mode로 실행해보면, 실제 CmsLayout이 브라우저에서 렌더되며 테스트가 돌아가는 것을 눈으로 확인 가능
-
-#kind/note #topic/tooling

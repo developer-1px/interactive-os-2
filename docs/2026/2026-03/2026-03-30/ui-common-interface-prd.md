@@ -148,5 +148,3 @@ legacy:
 ---
 
 **역PRD 요약:** ② 산출물 9/9 ✅, ⑧ 검증 3/8 ✅ (V3,V4 미구현 — rename renderer 후속, V1,V2,V6 테스트 후속)
-
-#kind/prd #topic/ui

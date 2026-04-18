@@ -203,5 +203,3 @@ flowchart TD
 Panel은 트리 노드와 **직교하는 별도 DOM 영역**을 렌더한다. Trigger는 트리 노드 **중 하나를 특별하게** 렌더하려는데, Item이 이미 그 노드를 렌더하고 있다.
 
 → 근본 원인은 **Aria.Item이 "이 노드는 내가 렌더하면 안 된다"는 신호를 받을 수 없다**는 것이다. Panel은 Item의 렌더 영역 밖에 있으므로 신호가 필요 없다. Trigger는 Item의 렌더 영역 안에 있으므로 **skip 신호가 필수**다.
-
-#kind/explain #topic/primitives

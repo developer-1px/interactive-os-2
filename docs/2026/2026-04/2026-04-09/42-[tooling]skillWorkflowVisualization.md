@@ -190,5 +190,3 @@ design-extract → design-implement → design-review → improve-design ⟳ (9/
 
 - 이 다이어그램을 기반으로 누락된 연결이나 불필요한 스킬이 없는지 `/doubt` 검증
 - 파이프라인 진입점 가이드 문서 작성 (어떤 상황에서 어떤 스킬로 시작?)
-
-#kind/note #topic/tooling

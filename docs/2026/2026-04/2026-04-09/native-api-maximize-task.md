@@ -48,5 +48,3 @@ legacy:
 
 ### 7. `field-sizing: content`
 - rename input에 자동 크기 CSS 추가
-
-#kind/plan #topic/engine

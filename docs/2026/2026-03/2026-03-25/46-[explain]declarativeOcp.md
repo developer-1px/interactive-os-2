@@ -289,5 +289,3 @@ const cmsGlobalKeyMap: KeyMap = {
 3. **Plugin 추가**: `src/interactive-os/plugins/history.ts:81-84` — `definePlugin`에 keyMap 선언
 4. **최종 병합**: `src/interactive-os/primitives/useAriaView.ts:92-95` — `{ ...behavior, ...plugin, ...override }`
 5. **확인**: 어느 단계에서든 기존 코드를 수정하지 않고 새 항목만 추가해도 동작한다
-
-#kind/explain

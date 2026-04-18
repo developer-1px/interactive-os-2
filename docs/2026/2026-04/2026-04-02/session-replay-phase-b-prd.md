@@ -174,5 +174,3 @@ PageReplay
 5. **원칙 대조 ↔ 전체**: ⑤#3 위반 → ⑦#3에 반영 ✅
 
 **전체 완성도:** 🟢 8/8
-
-#kind/prd #topic/engine

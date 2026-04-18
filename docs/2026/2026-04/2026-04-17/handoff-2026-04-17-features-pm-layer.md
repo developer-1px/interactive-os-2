@@ -72,5 +72,3 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일을 자동으로 찾아 읽는다.
 구체적 첫 행동: 사용자에게 `git push` 승인받기 → 그다음 MEMORY 이관 스크립트 설계.
-
-#kind/handoff

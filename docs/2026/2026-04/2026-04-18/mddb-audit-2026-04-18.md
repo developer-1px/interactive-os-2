@@ -112,5 +112,3 @@ legacy:
 - [ ] Phase 1 MVP 범위: Zod schema + `extract.ts` + pre-commit hook (memory/ 제외, docs/ 한정)
 - [ ] Phase 2: 로컬 Gemma 분류 — **별도 PRD** 또는 같은 PRD의 Phase 2 섹션
 - [ ] Phase 3: `/knowledge` 라우트 뷰어 — 별도 PRD
-
-#kind/note

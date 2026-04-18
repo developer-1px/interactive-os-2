@@ -183,5 +183,3 @@ sequenceDiagram
 이 결정의 근거: 프로젝트 목록을 보는 사람은 **곧 해당 프로젝트로 이동하고 싶다.** 조감도(read)와 이동(navigate)을 한 화면에서 해결한다. ActivityBar에서 `/project`로 오고, `/project`에서 각 앱으로 간다 — 허브 패턴이다.
 
 → TreeView의 activate 시맨틱이 "선택"이 아니라 "실행"인 점을 활용한 자연스러운 UX다.
-
-#kind/explain #topic/layout

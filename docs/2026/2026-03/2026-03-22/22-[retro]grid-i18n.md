@@ -71,5 +71,3 @@ legacy:
 ## 다음 행동
 - L1 항목 4개 → /backlog에 저장
 - L2 제안 → PRD 스킬 체크리스트 보강 검토
-
-#kind/retro #archived

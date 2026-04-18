@@ -32,5 +32,3 @@ legacy:
 - `src/styles/tokens.css` — 토큰 값 변경
 - `src/styles/axes.css` — 축 CSS에서 토큰 소비하는 부분 확인
 - `src/interactive-os/ui/*` — 완성품 컴포넌트 기본값 확인
-
-#kind/plan #topic/cms

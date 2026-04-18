@@ -65,5 +65,3 @@ NavList ✅, TreeView ✅, ListBox 🟡, DataGrid 🟡, Tabs 🟡, Toolbar 🟡,
 
 **Composition (5개)**
 FileViewerModal ✅, CommandPalette 🔴, ContextMenu 🔴, Timeline 🔴, Kanban 🟡
-
-#kind/note #topic/design

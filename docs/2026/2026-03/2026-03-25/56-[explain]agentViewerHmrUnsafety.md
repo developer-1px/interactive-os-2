@@ -237,5 +237,3 @@ flowchart TD
 ```
 
 1층(전파)과 2층(데이터)을 해결하면 3층(불일치)은 부수적으로 해소된다. 핵심은 **timeline 데이터를 React state 밖으로 꺼내는 것**이다.
-
-#kind/explain #archived

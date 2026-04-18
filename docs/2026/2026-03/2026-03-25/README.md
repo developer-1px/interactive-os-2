@@ -39,5 +39,3 @@ legacy:
 - [P0] 채팅 블록 필수 7개
 - [P1] 채팅 블록 확장 4개
 - [P2] Ops 특화 3개
-
-#kind/note #topic/feaiuilayer

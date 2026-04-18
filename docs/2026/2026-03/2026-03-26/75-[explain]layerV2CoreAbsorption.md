@@ -216,5 +216,3 @@ pattern/
 18개 APG 파일이 examples/로 이동. import 경로 변경: `../pattern/listbox` → `../pattern/roles/listbox`.
 
 → pattern/의 본문(composePattern, createPatternContext, types)과 사용 예시(APG)가 분리된다.
-
-#kind/explain #topic/engine

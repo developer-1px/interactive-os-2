@@ -77,5 +77,3 @@ legacy:
 ## 실행 순서
 
 같은 이벤트 내에서 훅은 등록 순서대로 실행된다. Pre 훅이 block을 반환하면 이후 훅은 실행되지 않고 도구 실행도 중단된다.
-
-#kind/note #topic/harness

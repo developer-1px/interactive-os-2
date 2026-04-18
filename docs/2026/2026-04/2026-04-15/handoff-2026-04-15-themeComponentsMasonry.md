@@ -54,5 +54,3 @@ legacy:
 
 다음 세션에서 `/handoff`를 치면 이 파일이 자동 선택된다.
 구체적 첫 행동: 3개 backlog 중 골라 `/fix` 또는 `/do`로 진입.
-
-#kind/handoff #archived

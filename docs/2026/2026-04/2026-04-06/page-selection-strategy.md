@@ -180,5 +180,3 @@ legacy:
 3. **경계 ↔ 검증**: 데스크톱 regression(V6), 이미지 있을 때(V7), container query fallback(④) 커버 ✅
 4. **금지 ↔ 출처**: 6개 금지 모두 ⑤/① 출처 유효 ✅
 5. **원칙 대조 ↔ 전체**: lucide 사용은 기존 패턴과 일치, 위반 없음 ✅
-
-#kind/note #topic/cms

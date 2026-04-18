@@ -49,5 +49,3 @@ legacy:
 - 테스트 전략 (계산=unit, 인터랙션=통합)
 - git mv 사용 (rename 시)
 - 테스트 실패 시 원복 정책 (activeSessions.sh)
-
-#kind/note #topic/harness

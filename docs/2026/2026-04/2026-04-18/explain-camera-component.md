@@ -381,5 +381,3 @@ flowchart TD
 | Focus 결과 지향 | target 부재 시 rAF 재시도 → warn+skip |
 
 → Camera는 단순히 "줌+팬" 컴포넌트가 아니라, **3방향 입력을 하나의 transform으로 수렴시키는 상태 기계**다.
-
-#kind/explain

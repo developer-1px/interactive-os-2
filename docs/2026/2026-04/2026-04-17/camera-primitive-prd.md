@@ -171,5 +171,3 @@ legacy:
 5. 원칙 대조 재검: 수정(⑤#3 dispatcher 맵, ⑤#5 자동 파생, ⑤#7 fallback) 후 신규 위반 없음 ✅
 
 **(?) 추측 항목**: 없음. 모든 항목 discuss·리서치 근거 확보.
-
-#kind/prd #topic/ui

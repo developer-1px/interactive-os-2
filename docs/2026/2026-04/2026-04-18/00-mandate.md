@@ -98,5 +98,3 @@ shadcn의 "구조 잠금 + 스타일 개방"의 심화판 — shadcn이 Radix로
 - [project_ax_codification](../../../.claude/projects/-Users-user-Desktop-aria/memory/project_ax_codification.md) — 이 연구의 정체성 선언
 - [project_ax_design_system](../../../.claude/projects/-Users-user-Desktop-aria/memory/project_ax_design_system.md) — 24축 설계 결정 기록
 - [feedback_ax_semantic_not_css](../../../.claude/projects/-Users-user-Desktop-aria/memory/feedback_ax_semantic_not_css.md) — 의도 기준 원칙
-
-#kind/note #topic/research

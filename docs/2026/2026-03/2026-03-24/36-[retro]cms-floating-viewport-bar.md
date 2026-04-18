@@ -53,5 +53,3 @@ legacy:
 
 ## 다음 행동
 - 갭 없음 — PRD 아카이브로 이동
-
-#kind/retro #archived

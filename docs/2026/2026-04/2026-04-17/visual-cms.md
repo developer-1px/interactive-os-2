@@ -40,5 +40,3 @@ legacy:
 ## Gaps
 - [ ] Detail 패널 resizer
 - [ ] Viewer 채널(CMS → viewer 브릿지) 실전 검증
-
-#kind/note #topic/features

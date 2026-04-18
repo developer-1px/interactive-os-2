@@ -272,5 +272,3 @@ last_touched: 2026-04-15
 ---
 
 **전체 완성도: 🟢 8/8**
-
-#kind/prd #topic/features

@@ -869,5 +869,3 @@ export default function PageAgentChat() {
 - **Wave D**: W13, W14 (C 이후)
 
 병렬 에이전트 편성은 `/team` 이후 `/go` Execute phase가 담당.
-
-#kind/prd #topic/chat

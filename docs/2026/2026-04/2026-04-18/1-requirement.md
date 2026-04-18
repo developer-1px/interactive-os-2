@@ -57,5 +57,3 @@ updated: 2026-04-18
 - 5단계 전부 산출물 저장
 - `/todo` 라우트에서 모바일 viewport 기준 동작 확인
 - 각 단계 transitions diff로 문제 지점 격리 가능
-
-#kind/note #topic/research

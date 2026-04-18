@@ -162,5 +162,3 @@ legacy:
 - widget 레이어 공식 위치(GAP #6) → 별도 `/discuss`
 - `warnFlatLayout.mjs` 정적 검사 추가 → 별도 `/antipattern`
 - Cms 외 다른 FlatLayout 사용처(SkillKanban/Catalog/Creator/Incident) Pull 검증 → 이 PRD 완료 후 점진
-
-#kind/prd #topic/book

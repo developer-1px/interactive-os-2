@@ -158,5 +158,3 @@ legacy:
 1. **Phase 1 (페어링)**: ax.css surface 8곳에 `color: var(--_fg, inherit)` 추가. sf-placeholder 제외.
 2. **Phase 2 (레벨)**: tokens.css에 5단계 레벨 토큰 + depth surface가 레벨 매핑. DESIGN.md 갱신.
 3. **Phase 3 (시드)**: tokens.css에 `--radius-seed` + calc 파생. ax.css recipe/cs 하드코딩 교체. 4px/8px 토큰 추가.
-
-#kind/prd #topic/styles

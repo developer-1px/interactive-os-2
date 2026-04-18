@@ -562,5 +562,3 @@ legacy:
 5. design score 재측정
 6. 대시보드 상태 갱신
 ```
-
-#kind/note #topic/ui

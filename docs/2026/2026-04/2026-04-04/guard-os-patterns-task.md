@@ -35,5 +35,3 @@ Write/Edit 시 os 위반 패턴을 블로킹하는 PreToolUse hook
 - node_modules, .test., __tests__, tokens.css
 - src/interactive-os/ui/는 useAria 허용 (정상 사용)
 - src/interactive-os/ 하위는 addEventListener 허용 (축/엔진 구현)
-
-#kind/plan #topic/harness

@@ -88,5 +88,3 @@ legacy:
 
 > 측정: `apca-w3` 0.1.9 · 스크립트: `scripts/measureFocusContrast.mjs`
 > 참고: `docs/research/ax/04-gap-plan.md` §3.1
-
-#kind/note #topic/research

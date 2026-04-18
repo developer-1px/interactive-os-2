@@ -46,5 +46,3 @@ AI 생성 문서(docs/)를 편하게 탐색·열람할 Finder 스타일 Miller C
 - `src/pages/viewer/PageViewer.tsx` (수정)
 - `src/pages/docs/PageDocs.tsx` (신규)
 - `src/router.tsx` (수정)
-
-#kind/plan #topic/cms

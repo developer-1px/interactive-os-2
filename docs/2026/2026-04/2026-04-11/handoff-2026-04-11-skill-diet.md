@@ -86,5 +86,3 @@ discuss에서 합의된 구조이나 아직 실행 안 함.
 1. 우선순위 높은 것부터: `/groom` 스킬 작성 → `/plan` 스킬 작성
 2. 그 다음: `/review` 합치기 → `/close` 확장 → `/inbox` 확장
 3. 마지막: 흡수된 스킬 삭제, memory 업데이트
-
-#kind/handoff #archived

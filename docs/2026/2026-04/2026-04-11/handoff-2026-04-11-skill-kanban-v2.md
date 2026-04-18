@@ -54,5 +54,3 @@ legacy:
 ## 다음 행동 제안
 
 `/use /kanban`으로 실사용 검증 먼저. 동작 확인 후 `/improve`로 디자인 품질 개선.
-
-#kind/handoff #archived

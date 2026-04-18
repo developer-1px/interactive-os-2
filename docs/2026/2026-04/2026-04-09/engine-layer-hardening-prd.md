@@ -145,5 +145,3 @@ legacy:
 | 1 | inspectToTree + computeNodeAriaProps → devtools/ 이동 | Low | 5 |
 | 2 | useEngine axis import 제거 → coreRegistry 주입 | High | 6 |
 | 3 | Plugin/buildRegistry 타입 강화 + defineCommand as never 제거 | Medium | 3 |
-
-#kind/prd #topic/engine

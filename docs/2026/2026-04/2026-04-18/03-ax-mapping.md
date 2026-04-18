@@ -290,5 +290,3 @@ P0 = 즉시 (카드 수정만). P1 = 2026-Q2 우선. P2 = 필요 시. P3 = agent
 - **0개 완전 기각** — 외부 수렴과 프로젝트 타당성이 대체로 정합
 
 다음: `04-gap-plan.md`에서 원리별 **7 enforcement layer** 현재 상태 + 이상 상태 + 보정 액션 작성.
-
-#kind/note #topic/research

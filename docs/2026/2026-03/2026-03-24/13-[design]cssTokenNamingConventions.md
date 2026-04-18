@@ -188,5 +188,3 @@ graph TB
 2. 🔴 판정 약어 검색: `--shape-xs-r`, `--type-hero-lh` 등
 3. 위 "적용 규칙 제안" 표에 따라 rename 대상 식별
 4. rename 후 `[data-surface]` 등 소비자 CSS에서 깨지는 곳 없는지 grep
-
-#kind/note #topic/design

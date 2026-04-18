@@ -192,5 +192,3 @@ textStyle은 role과 직교한다. role이 있으면 role의 weight/text가 우�
 - [ ] `role: 'control'`을 썼다면 `padding`/`shape`/`gap`을 추가로 넣지 않았는가? (rolePreset 자동 처리)
 - [ ] `style={}` 또는 임의 className을 섞지 않았는가?
 - [ ] 반복 조합이 rolePreset seed에 없으면 `src/styles/rolePreset.ts`에 추가할 후보로 기록했는가?
-
-#kind/note #topic/styles

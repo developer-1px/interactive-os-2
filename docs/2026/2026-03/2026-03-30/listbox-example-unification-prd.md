@@ -129,5 +129,3 @@ legacy:
 | ListBoxGrouped ui/ 완성품 | `src/interactive-os/ui/ListBoxGrouped.tsx` |
 | ListboxGrouped example 전환 | `src/interactive-os/pattern/examples/ListboxGrouped.tsx` — ui/ 소비 |
 | examples → ui 의존 | examples가 ui/ 컴포넌트를 import |
-
-#kind/prd #topic/pattern

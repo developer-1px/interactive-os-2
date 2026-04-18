@@ -39,5 +39,3 @@ TreeView → ListBox 기반 프로젝트 리스트로 재구성. 도메인 서�
 ```
 [StatusIndicator] [Name bold] [Maturity badge] [kind tag]  ··· [metrics] [time]
 ```
-
-#kind/plan #topic/viewer

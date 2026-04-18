@@ -57,5 +57,3 @@ const layout = definePage({
 - **widget = React, layout = 엔진**: widget만 React 컴포넌트. 나머지는 엔진이 렌더.
 - **pull 모델**: widget이 `useFlatLayout()`으로 필요한 데이터를 읽는다.
 - **XY 배치 + Z 깊이**: split/stack/bar가 XY 배치, surface가 Z 깊이.
-
-#kind/note

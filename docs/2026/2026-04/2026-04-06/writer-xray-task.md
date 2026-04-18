@@ -50,5 +50,3 @@ Discussion에서 수렴: "글의 엑스레이" — 문장 역할을 색으로, �
 - `src/pages/writer/writerChatBridge.ts` — applyRoles → applyAnalysis
 - `src/pages/writer/PageWriter.tsx` — Command 추가, 시각화
 - `src/interactive-os/ui/WriterTreeGrid.tsx` — role 색상 렌더링 (있다면)
-
-#kind/plan #topic/chat

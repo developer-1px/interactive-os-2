@@ -105,5 +105,3 @@ flowchart TD
 ```
 
 > 원본: [archive/35-[retro]tab-axis.md](archive/35-[retro]tab-axis.md)
-
-#kind/note #archived
