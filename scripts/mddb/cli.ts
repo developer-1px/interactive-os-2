@@ -158,15 +158,29 @@ async function relocateSubcommand(args: CliArgs): Promise<number> {
       console.log(`  total scanned: ${plan.total}`)
       console.log(`  planned moves: ${plan.planned.length}`)
       console.log(`  skipped:       ${plan.skipped.length}`)
+      console.log(`  unresolved conflicts: ${plan.unresolvedConflicts.length}`)
       const bySource: Record<string, number> = {}
       for (const p of plan.planned) bySource[p.source] = (bySource[p.source] ?? 0) + 1
       console.log('  by source:')
       for (const [s, c] of Object.entries(bySource).sort()) console.log(`    ${s}: ${c}`)
+      const conflictRenamed = plan.planned.filter((p) => p.conflictPrefix).length
+      if (conflictRenamed > 0) {
+        console.log(`  conflict-rename applied: ${conflictRenamed} (parent prefix added)`)
+      }
       const byReason: Record<string, number> = {}
       for (const s of plan.skipped) byReason[s.reason] = (byReason[s.reason] ?? 0) + 1
       if (Object.keys(byReason).length > 0) {
         console.log('  by skip reason:')
         for (const [r, c] of Object.entries(byReason).sort()) console.log(`    ${r}: ${c}`)
+      }
+      if (plan.unresolvedConflicts.length > 0) {
+        console.log('  ⚠ unresolved conflicts:')
+        for (const c of plan.unresolvedConflicts.slice(0, 10)) {
+          console.log(`    ${c.date}/${c.base} ← ${c.files.join(', ')}`)
+        }
+        if (plan.unresolvedConflicts.length > 10) {
+          console.log(`    ... and ${plan.unresolvedConflicts.length - 10} more`)
+        }
       }
       if (dryRun) console.log('  (dry-run: no files moved)')
     }

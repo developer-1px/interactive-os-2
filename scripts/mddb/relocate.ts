@@ -29,6 +29,7 @@ export type RelocatePlanEntry = {
   to: string
   source: ExtractSource
   date: string
+  conflictPrefix?: string
 }
 
 export type RelocateSkipEntry = {
@@ -36,15 +37,40 @@ export type RelocateSkipEntry = {
   reason: 'memory' | 'already-dated' | 'noop'
 }
 
+export type RelocateConflictEntry = {
+  date: string
+  base: string
+  files: string[]
+}
+
 export type RelocatePlan = {
   total: number
   planned: RelocatePlanEntry[]
   skipped: RelocateSkipEntry[]
+  unresolvedConflicts: RelocateConflictEntry[]
+}
+
+/**
+ * Conflict-resolving slug — `a/b/c/foo.md` → depth 0: 'foo.md', 1: 'c-foo.md', 2: 'b-c-foo.md'.
+ */
+function slugWithParentPrefix(relPath: string, depth: number): string {
+  const segs = relPath.split('/')
+  const base = segs[segs.length - 1]
+  if (depth <= 0) return base
+  const start = Math.max(0, segs.length - 1 - depth)
+  const parents = segs.slice(start, segs.length - 1)
+  return parents.length === 0 ? base : `${parents.join('-')}-${base}`
+}
+
+type Candidate = {
+  from: string
+  date: string
+  source: ExtractSource
 }
 
 export async function planRelocate(): Promise<RelocatePlan> {
   const files = walkDocsMd(DOCS_ROOT)
-  const planned: RelocatePlanEntry[] = []
+  const candidates: Candidate[] = []
   const skipped: RelocateSkipEntry[] = []
 
   for (const rel of files) {
@@ -76,17 +102,79 @@ export async function planRelocate(): Promise<RelocatePlan> {
       date = gd.created
       source = gd.source
     }
-
-    const base = basename(rel)
-    const to = `${dateToFolder(date)}/${base}`
-    if (to === rel) {
-      skipped.push({ path: rel, reason: 'noop' })
-      continue
-    }
-    planned.push({ from: rel, to, source, date })
+    candidates.push({ from: rel, date, source })
   }
 
-  return { total: files.length, planned, skipped }
+  // 1) noop 분리, 2) 충돌 검출, 3) parent prefix로 충돌 해소 (최대 4단)
+  const planned: RelocatePlanEntry[] = []
+  const grouped = new Map<string, Candidate[]>() // dayFolder → cands
+  for (const c of candidates) {
+    const key = dateToFolder(c.date)
+    const arr = grouped.get(key) ?? []
+    arr.push(c)
+    grouped.set(key, arr)
+  }
+
+  const unresolvedConflicts: RelocateConflictEntry[] = []
+
+  for (const [dayFolder, cands] of grouped.entries()) {
+    // depth 0부터 시작해서 dest unique까지 증가
+    const dests = new Map<string, Candidate>() // destBase → cand
+    let depth = 0
+    let remaining: Candidate[] = cands.slice()
+    while (remaining.length > 0 && depth < 5) {
+      const collisions = new Map<string, Candidate[]>() // base → cands
+      for (const c of remaining) {
+        const base = slugWithParentPrefix(c.from, depth)
+        const list = collisions.get(base) ?? []
+        list.push(c)
+        collisions.set(base, list)
+      }
+      const nextRemaining: Candidate[] = []
+      for (const [base, group] of collisions.entries()) {
+        if (group.length === 1) {
+          if (dests.has(base)) {
+            nextRemaining.push(group[0])
+          } else {
+            dests.set(base, group[0])
+          }
+        } else {
+          for (const c of group) nextRemaining.push(c)
+        }
+      }
+      if (nextRemaining.length === remaining.length) {
+        // 진전 없음 — abort
+        break
+      }
+      remaining = nextRemaining
+      depth++
+    }
+
+    for (const [base, cand] of dests.entries()) {
+      const to = `${dayFolder}/${base}`
+      if (to === cand.from) {
+        skipped.push({ path: cand.from, reason: 'noop' })
+        continue
+      }
+      const conflictPrefix = base !== basename(cand.from) ? base : undefined
+      planned.push({ from: cand.from, to, source: cand.source, date: cand.date, conflictPrefix })
+    }
+    if (remaining.length > 0) {
+      // 미해결 충돌 — base별 그룹 출력
+      const byBase = new Map<string, string[]>()
+      for (const c of remaining) {
+        const base = slugWithParentPrefix(c.from, depth)
+        const list = byBase.get(base) ?? []
+        list.push(c.from)
+        byBase.set(base, list)
+      }
+      for (const [base, files] of byBase.entries()) {
+        unresolvedConflicts.push({ date: dayFolder, base, files })
+      }
+    }
+  }
+
+  return { total: files.length, planned, skipped, unresolvedConflicts }
 }
 
 function isGitDirty(): boolean {
@@ -108,6 +196,11 @@ export async function relocate(opts: { dryRun?: boolean } = {}): Promise<Relocat
     throw new Error('relocate: working tree dirty — commit or stash first, or use --dry-run')
   }
   const plan = await planRelocate()
+  if (plan.unresolvedConflicts.length > 0 && !dryRun) {
+    throw new Error(
+      `relocate: ${plan.unresolvedConflicts.length} unresolved conflict(s). Run with --dry-run --json to inspect.`,
+    )
+  }
   if (dryRun) return plan
 
   for (const { from, to } of plan.planned) {
