@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T02:00:55.373Z",
+  "generatedAt": "2026-04-18T02:08:02.695Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -145,6 +145,722 @@
           "key": "inverted",
           "lc": 81.91,
           "pass": true
+        }
+      ]
+    },
+    "text-apca": {
+      "metric": "text-apca",
+      "threshold": {
+        "lc_min": 75,
+        "lc_min_muted": 60
+      },
+      "total": 88,
+      "pass": 64,
+      "fail": 24,
+      "items": [
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "action",
+          "lc": 102.04,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "input",
+          "lc": 106.65,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "display",
+          "lc": 106.07,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "overlay",
+          "lc": 102.04,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "trap",
+          "lc": 99.08,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "ghost",
+          "lc": 106.07,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "placeholder",
+          "lc": 107.57,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "sunken",
+          "lc": 107.57,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "base",
+          "lc": 106.07,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "raised",
+          "lc": 102.04,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "bright",
+          "surface": "inverted",
+          "lc": 0,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "action",
+          "lc": 90.83,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "input",
+          "lc": 95.44,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "display",
+          "lc": 94.86,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "overlay",
+          "lc": 90.83,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "trap",
+          "lc": 87.87,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "ghost",
+          "lc": 94.86,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "placeholder",
+          "lc": 96.36,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "sunken",
+          "lc": 96.36,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "base",
+          "lc": 94.86,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "raised",
+          "lc": 90.83,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "primary",
+          "surface": "inverted",
+          "lc": 7.65,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "action",
+          "lc": 74.05,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "input",
+          "lc": 78.66,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "display",
+          "lc": 78.08,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "overlay",
+          "lc": 74.05,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "trap",
+          "lc": 71.09,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "ghost",
+          "lc": 78.08,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "placeholder",
+          "lc": 79.58,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "sunken",
+          "lc": 79.58,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "base",
+          "lc": 78.08,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "raised",
+          "lc": 74.05,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "secondary",
+          "surface": "inverted",
+          "lc": 23.31,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "action",
+          "lc": 48.81,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "input",
+          "lc": 53.42,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "display",
+          "lc": 52.84,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "overlay",
+          "lc": 48.81,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "trap",
+          "lc": 45.85,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "ghost",
+          "lc": 52.84,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "placeholder",
+          "lc": 54.34,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "sunken",
+          "lc": 54.34,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "base",
+          "lc": 52.84,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "raised",
+          "lc": 48.81,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "text": "muted",
+          "surface": "inverted",
+          "lc": 47.36,
+          "threshold": 60,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "action",
+          "lc": 105.62,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "input",
+          "lc": 105.62,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "display",
+          "lc": 101.56,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "overlay",
+          "lc": 105.62,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "trap",
+          "lc": 105.62,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "ghost",
+          "lc": 101.56,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "placeholder",
+          "lc": 95.44,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "sunken",
+          "lc": 95.44,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "base",
+          "lc": 101.56,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "raised",
+          "lc": 105.62,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "bright",
+          "surface": "inverted",
+          "lc": 0,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "action",
+          "lc": 104.41,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "input",
+          "lc": 104.41,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "display",
+          "lc": 100.35,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "overlay",
+          "lc": 104.41,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "trap",
+          "lc": 104.41,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "ghost",
+          "lc": 100.35,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "placeholder",
+          "lc": 94.23,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "sunken",
+          "lc": 94.23,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "base",
+          "lc": 100.35,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "raised",
+          "lc": 104.41,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "primary",
+          "surface": "inverted",
+          "lc": 0,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "action",
+          "lc": 83.51,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "input",
+          "lc": 83.51,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "display",
+          "lc": 79.45,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "overlay",
+          "lc": 83.51,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "trap",
+          "lc": 83.51,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "ghost",
+          "lc": 79.45,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "placeholder",
+          "lc": 73.34,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "sunken",
+          "lc": 73.34,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "base",
+          "lc": 79.45,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "raised",
+          "lc": 83.51,
+          "threshold": 75,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "secondary",
+          "surface": "inverted",
+          "lc": 18.12,
+          "threshold": 75,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "action",
+          "lc": 78.75,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "input",
+          "lc": 78.75,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "display",
+          "lc": 74.69,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "overlay",
+          "lc": 78.75,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "trap",
+          "lc": 78.75,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "ghost",
+          "lc": 74.69,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "placeholder",
+          "lc": 68.57,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "sunken",
+          "lc": 68.57,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "base",
+          "lc": 74.69,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "raised",
+          "lc": 78.75,
+          "threshold": 60,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "text": "muted",
+          "surface": "inverted",
+          "lc": 22.74,
+          "threshold": 60,
+          "pass": false
         }
       ]
     },
@@ -345,6 +1061,14 @@
           ]
         }
       ]
+    },
+    "spatial-grid": {
+      "metric": "spatial-grid",
+      "threshold": {
+        "baseline_unit": 4
+      },
+      "total_violations": 0,
+      "files": []
     }
   }
 }

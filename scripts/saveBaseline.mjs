@@ -31,7 +31,9 @@ const BASELINE_PATH = resolve(ROOT, 'ax-baseline.json')
 
 const METRICS = [
   { name: 'focus-apca', script: 'scripts/measureFocusContrast.mjs' },
+  { name: 'text-apca', script: 'scripts/measureTextContrast.mjs' },
   { name: 'modular-scale', script: 'scripts/verifyModularScale.mjs' },
+  { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
 ]
 
 /**
@@ -87,17 +89,20 @@ function main() {
     try {
       const prev = JSON.parse(readFileSync(BASELINE_PATH, 'utf-8'))
       console.log(`[baseline] 이전 baseline: ${prev.date ?? prev.generatedAt}`)
-      const focusPrev = prev.metrics?.['focus-apca']
-      const focusCur = metrics['focus-apca']
-      if (focusPrev && focusCur) {
-        console.log(
-          `  focus-apca: pass ${focusPrev.pass}/${focusPrev.total} → ${focusCur.pass}/${focusCur.total}`,
-        )
+      for (const key of ['focus-apca', 'text-apca']) {
+        const p = prev.metrics?.[key]
+        const c = metrics[key]
+        if (p && c) console.log(`  ${key}: pass ${p.pass}/${p.total} → ${c.pass}/${c.total}`)
       }
       const msPrev = prev.metrics?.['modular-scale']
       const msCur = metrics['modular-scale']
       if (msPrev && msCur) {
         console.log(`  modular-scale: warnings ${msPrev.warnings} → ${msCur.warnings}`)
+      }
+      const sgPrev = prev.metrics?.['spatial-grid']
+      const sgCur = metrics['spatial-grid']
+      if (sgPrev && sgCur) {
+        console.log(`  spatial-grid: violations ${sgPrev.total_violations} → ${sgCur.total_violations}`)
       }
     } catch (e) {
       console.warn(`[baseline] 이전 baseline 파싱 실패 (덮어쓰기 진행): ${e instanceof Error ? e.message : e}`)
@@ -106,8 +111,12 @@ function main() {
 
   writeFileSync(BASELINE_PATH, json)
   console.log(`[baseline] 저장: ${BASELINE_PATH}`)
-  console.log(`  focus-apca: pass=${metrics['focus-apca'].pass}/${metrics['focus-apca'].total}`)
+  for (const key of ['focus-apca', 'text-apca']) {
+    const m = metrics[key]
+    if (m) console.log(`  ${key}: pass=${m.pass}/${m.total}`)
+  }
   console.log(`  modular-scale: warnings=${metrics['modular-scale'].warnings}`)
+  console.log(`  spatial-grid: violations=${metrics['spatial-grid'].total_violations}`)
 }
 
 try {

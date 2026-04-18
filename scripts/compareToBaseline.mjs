@@ -27,7 +27,9 @@ const BASELINE_PATH = resolve(ROOT, 'ax-baseline.json')
 
 const METRICS = [
   { name: 'focus-apca', script: 'scripts/measureFocusContrast.mjs' },
+  { name: 'text-apca', script: 'scripts/measureTextContrast.mjs' },
   { name: 'modular-scale', script: 'scripts/verifyModularScale.mjs' },
+  { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
 ]
 
 function runMetric(scriptPath) {
@@ -42,11 +44,17 @@ function runMetric(scriptPath) {
 }
 
 /**
- * focus-apca 회귀 검사.
- *   - total pass 수 감소 → 회귀
- *   - 개별 조합 (theme/key) 단위로 baseline pass → 현재 fail 전환 → 회귀
+ * APCA 계열 metric (focus-apca, text-apca)의 공통 diff 로직.
+ *   - pass 전환: pass→fail = hard regression, fail→pass = improvement
+ *   - pass 유지 Lc 하락 = hard regression (margin 잠식)
+ *   - fail 유지 Lc 하락 = soft (pass 손실 아님, improvement에 [soft] 표기)
+ *   - 총 pass 수 감소 = hard regression
+ *
+ * @param {*} prev baseline metric payload
+ * @param {*} cur 현재 측정 payload
+ * @param {(item: any) => string} buildId item 식별자 구성 함수
  */
-function diffFocusApca(prev, cur) {
+function diffApcaLike(prev, cur, buildId) {
   /** @type {{type: string, detail: string}[]} */
   const regressions = []
   /** @type {{type: string, detail: string}[]} */
@@ -64,8 +72,8 @@ function diffFocusApca(prev, cur) {
     })
   }
 
-  const prevMap = new Map(prev.items.map((i) => [`${i.theme}/${i.key}`, i]))
-  const curMap = new Map(cur.items.map((i) => [`${i.theme}/${i.key}`, i]))
+  const prevMap = new Map(prev.items.map((i) => [buildId(i), i]))
+  const curMap = new Map(cur.items.map((i) => [buildId(i), i]))
 
   // Lc delta 집계 — individual 상승/하락도 추적 (pass 수가 바닥인 상태에서 유일한 진행 지표)
   const LC_EPS = 0.5 // 부동소수 노이즈 무시
@@ -200,6 +208,21 @@ function diffModularScale(prev, cur) {
   return { regressions, improvements }
 }
 
+/** spatial-grid 회귀 검사: total_violations 증감만 */
+function diffSpatialGrid(prev, cur) {
+  const regressions = []
+  const improvements = []
+  if (!prev) {
+    improvements.push({ type: 'new_metric', detail: `신규 metric: violations ${cur.total_violations}` })
+    return { regressions, improvements }
+  }
+  const p = prev.total_violations ?? 0
+  const c = cur.total_violations ?? 0
+  if (c > p) regressions.push({ type: 'violations_up', detail: `violations ${p} → ${c} (+${c - p})` })
+  else if (c < p) improvements.push({ type: 'violations_down', detail: `violations ${p} → ${c} (-${p - c})` })
+  return { regressions, improvements }
+}
+
 function main() {
   const jsonMode = process.argv.includes('--json')
 
@@ -215,9 +238,15 @@ function main() {
     curMetrics[m.name] = runMetric(m.script)
   }
 
+  const focusId = (i) => `${i.theme}/${i.key}`
+  const textId = (i) => `${i.theme}/${i.text}+${i.surface}`
   const diffs = {
-    'focus-apca': diffFocusApca(prev.metrics['focus-apca'], curMetrics['focus-apca']),
+    'focus-apca': diffApcaLike(prev.metrics['focus-apca'], curMetrics['focus-apca'], focusId),
+    'text-apca': prev.metrics['text-apca']
+      ? diffApcaLike(prev.metrics['text-apca'], curMetrics['text-apca'], textId)
+      : { regressions: [], improvements: [{ type: 'new_metric', detail: `신규 metric: pass ${curMetrics['text-apca'].pass}/${curMetrics['text-apca'].total}` }] },
     'modular-scale': diffModularScale(prev.metrics['modular-scale'], curMetrics['modular-scale']),
+    'spatial-grid': diffSpatialGrid(prev.metrics['spatial-grid'], curMetrics['spatial-grid']),
   }
 
   const totalRegressions = Object.values(diffs).reduce((acc, d) => acc + d.regressions.length, 0)
