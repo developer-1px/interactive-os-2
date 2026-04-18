@@ -19,6 +19,8 @@ import { EXPANDED_ID } from '@os/axis/expand'
 import { DEFAULT_ROOT, type FileNodeData } from './types'
 import { fetchTree } from './fsClient'
 import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelected } from './treeTransform'
+import { fetchMddbIndex } from './knowledgeFetch'
+import { indexToTree } from './knowledgeTransform'
 import { pathParser } from '@os/plugins/urlParsers'
 import { useUrlSync } from '@os/plugins/useUrlSync'
 import { ax } from '@styles/ax'
@@ -34,14 +36,31 @@ import {
 
 const VIEWMODE_KEY = 'viewer-viewmode'
 
+type FavoriteRoot = { id: string; name: string; path: string }
+
+const FAVORITES: FavoriteRoot[] = [
+  { id: 'root',        name: '/',           path: DEFAULT_ROOT },
+  { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src` },
+  { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs` },
+  { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots` },
+]
+
+const DEFAULT_FAVORITE_ID = 'src'
+
+const KNOWLEDGE_ID = 'knowledge'
+
 const sidebarData = createStore({
   entities: {
     'favorites': { id: 'favorites', data: { type: 'group', label: 'Favorites' } },
-    'root': { id: 'root', data: { name: '/', type: 'directory', icon: 'folder' } },
-    'src': { id: 'src', data: { name: 'src', type: 'directory', icon: 'folder' } },
-    'docs': { id: 'docs', data: { name: 'docs', type: 'directory', icon: 'folder' } },
+    ...Object.fromEntries(
+      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: 'folder' } }]),
+    ),
+    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'Knowledge', type: 'directory', icon: 'folder' } },
   },
-  relationships: { [ROOT_ID]: ['favorites'], 'favorites': ['root', 'src', 'docs'] },
+  relationships: {
+    [ROOT_ID]: ['favorites'],
+    'favorites': [...FAVORITES.map((f) => f.id), KNOWLEDGE_ID],
+  },
 })
 
 const viewerWidgets = createWidgetRegistry({
@@ -54,8 +73,15 @@ const viewerWidgets = createWidgetRegistry({
 })
 
 function resolveRoot(key: string): string {
-  if (key === 'root') return DEFAULT_ROOT
-  return DEFAULT_ROOT + '/' + key
+  return FAVORITES.find((f) => f.id === key)?.path ?? DEFAULT_ROOT
+}
+
+function detectRootFromSeg(seg: string | undefined): string {
+  return FAVORITES.find((f) => f.id === seg)?.id ?? DEFAULT_FAVORITE_ID
+}
+
+function detectRootFromPath(id: string): string {
+  return FAVORITES.find((f) => f.id !== 'root' && id.startsWith(f.path + '/'))?.id ?? DEFAULT_FAVORITE_ID
 }
 
 export default function PageViewer() {
@@ -68,10 +94,7 @@ export default function PageViewer() {
     return saved === 'columns' ? 'columns' : 'list'
   })
   const [previewPath, setPreviewPath] = useState<string | null>(null) // @useState-hatch
-  const [currentRoot, setCurrentRoot] = useState(() => {
-    const seg = window.location.pathname.split('/')[2]
-    return seg === 'docs' ? 'docs' : 'src'
-  })
+  const [currentRoot, setCurrentRoot] = useState(() => detectRootFromSeg(window.location.pathname.split('/')[2]))
   const [sortKey, setSortKey] = useState<SortKey | null>(null) // @useState-hatch
   const [sortDir, setSortDir] = useState<SortDir>('asc') // @useState-hatch
   const [filters, setFilters] = useState<string[]>([]) // @useState-hatch
@@ -125,7 +148,7 @@ export default function PageViewer() {
 
   const handleUrlChange = useCallback((id: string | null) => {
     if (!id) return
-    const newRoot = id.startsWith(DEFAULT_ROOT + '/docs') ? 'docs' : 'src'
+    const newRoot = detectRootFromPath(id)
     if (newRoot === currentRootRef.current) {
       setInitialStore(prev => {
         if (!prev) return prev
@@ -166,7 +189,17 @@ export default function PageViewer() {
   }, [navigate])
 
   const handleSidebarActivate = useCallback((nodeId: string) => {
-    if (nodeId === 'root' || nodeId === 'src' || nodeId === 'docs') {
+    if (nodeId === KNOWLEDGE_ID) {
+      setPreviewPath(null)
+      setCurrentRoot(KNOWLEDGE_ID)
+      fetchMddbIndex().then((idx) => {
+        setInitialStore(indexToTree(idx, 'topic'))
+      }).catch((err) => {
+        console.error('[viewer] failed to load mddb-index.json', err)
+      })
+      return
+    }
+    if (FAVORITES.some((f) => f.id === nodeId)) {
       setPreviewPath(null)
       setCurrentRoot(nodeId)
       fetchTree(resolveRoot(nodeId)).then((tree) => {

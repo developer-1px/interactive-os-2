@@ -16,10 +16,11 @@ import { extractFile, extractAll } from './extract.ts'
 import { validateExtract, validateAll } from './validate.ts'
 import { runAudit, writeAuditFile, renderAuditMarkdown } from './audit.ts'
 import { injectFrontmatter } from './injectFrontmatter.ts'
+import { writeIndexFile, DEFAULT_INDEX_PATH } from './buildIndex.ts'
 import { toRelDocsPath, isDocsMd, isMemoryPath, DOCS_ROOT, PROJECT_ROOT, walkDocsMd } from './paths.ts'
 
 export type CliArgs = {
-  subcommand: 'extract' | 'validate' | 'audit' | 'inject'
+  subcommand: 'extract' | 'validate' | 'audit' | 'inject' | 'index'
   positionals: string[]
   flags: {
     dryRun?: boolean
@@ -31,14 +32,14 @@ export type CliArgs = {
   }
 }
 
-const KNOWN_SUBCOMMANDS = ['extract', 'validate', 'audit', 'inject'] as const
+const KNOWN_SUBCOMMANDS = ['extract', 'validate', 'audit', 'inject', 'index'] as const
 
 export function parseArgv(argv: string[]): CliArgs {
   const [first, ...rest] = argv
   if (!first || !(KNOWN_SUBCOMMANDS as readonly string[]).includes(first)) {
     throw new Error(
       `unknown subcommand: ${first ?? '(none)'}\n` +
-      `usage: mddb <extract|validate|audit|inject> [--scope PATH] [--dry-run] [--json] [--strategy STRATEGY] [--concurrency N] [--out PATH]`,
+      `usage: mddb <extract|validate|audit|inject|index> [--scope PATH] [--dry-run] [--json] [--strategy STRATEGY] [--concurrency N] [--out PATH]`,
     )
   }
   const subcommand = first as CliArgs['subcommand']
@@ -232,6 +233,17 @@ async function injectSubcommand(args: CliArgs): Promise<number> {
   return report.errors > 0 ? 1 : 0
 }
 
+async function indexSubcommand(args: CliArgs): Promise<number> {
+  const outPath = args.flags.outPath ? resolve(PROJECT_ROOT, args.flags.outPath) : DEFAULT_INDEX_PATH
+  const index = await writeIndexFile(outPath)
+  if (args.flags.json) {
+    console.log(JSON.stringify({ outPath, total: index.total, generated_at: index.generated_at }, null, 2))
+  } else {
+    console.log(`mddb:index wrote ${index.total} entries → ${outPath}`)
+  }
+  return 0
+}
+
 export async function main(argv: string[]): Promise<number> {
   let args: CliArgs
   try {
@@ -246,6 +258,7 @@ export async function main(argv: string[]): Promise<number> {
       case 'validate': return await validateSubcommand(args)
       case 'audit': return await auditSubcommand(args)
       case 'inject': return await injectSubcommand(args)
+      case 'index': return await indexSubcommand(args)
     }
   } catch (e) {
     console.error(`mddb: ${(e as Error).message}`)
