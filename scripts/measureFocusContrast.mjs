@@ -298,11 +298,12 @@ const SURFACES = [
   { key: 'inverted', darkVar: '--stone-0', lightVar: '--stone-950', note: '역전 tooltip' },
 ]
 
-/** focus 색: tokens.css — dark: --focus = --blue-400, light: --focus = --blue-500 */
-const FOCUS = {
-  dark: '--blue-400',
-  light: '--blue-500',
-}
+/**
+ * focus 색: tokens.css의 `--focus` 토큰을 동적으로 사용.
+ * root/light map에서 `--focus`가 이미 등록되어 있으므로 resolveVar로 체인 따라감.
+ * 상수 하드코딩 금지 — 소스 변경이 측정에 즉시 반영되어야 함.
+ */
+const FOCUS_VAR = '--focus'
 
 /** focus-ring alpha — tokens.css의 `--focus-ring-shadow: ... / <alpha>` 에서 동적 파싱. 실패 시 0.35 fallback. */
 function readFocusAlpha(tokensCss) {
@@ -379,7 +380,7 @@ function main() {
 
   for (const theme of ['dark', 'light']) {
     const vars = theme === 'dark' ? root : light
-    const focusVar = theme === 'dark' ? FOCUS.dark : FOCUS.light
+    const focusVar = FOCUS_VAR
     for (const s of SURFACES) {
       const surfVar = theme === 'dark' ? s.darkVar : s.lightVar
       const row = computeRow(s.key, surfVar, focusVar, vars, focusAlpha)
