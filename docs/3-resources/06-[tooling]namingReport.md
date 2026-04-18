@@ -5,7 +5,7 @@ status: reference
 kind: tooling
 created: 2026-03-22
 updated: 2026-04-18
-summary: Generated: 2026-03-22
+summary: 'Generated: 2026-03-22'
 topics: [3-resources, tooling]
 relates: []
 supersedes: []

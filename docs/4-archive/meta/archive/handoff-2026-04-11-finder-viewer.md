@@ -1,6 +1,6 @@
 ---
 id: 4-archive/meta/archive/handoff-2026-04-11-finder-viewer
-title: Handoff: Finder Viewer
+title: 'Handoff: Finder Viewer'
 status: archived
 kind: handoff
 created: 2026-04-11

@@ -1,6 +1,6 @@
 ---
 id: samples/design-spec
-title: Design Spec: CMS Toolbar
+title: 'Design Spec: CMS Toolbar'
 status: sample
 kind: note
 created: 2026-04-09
