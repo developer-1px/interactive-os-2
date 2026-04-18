@@ -179,7 +179,9 @@ export async function planRelocate(): Promise<RelocatePlan> {
 
 function isGitDirty(): boolean {
   try {
-    const out = execSync('git status --porcelain', {
+    // docs/ scope만 체크 — relocate는 docs/ 내 git mv만 수행하므로
+    // 다른 영역의 변경은 무관. untracked 파일도 rename 영향권 밖이라 제외.
+    const out = execSync('git status --porcelain --untracked-files=no docs/', {
       cwd: PROJECT_ROOT,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
