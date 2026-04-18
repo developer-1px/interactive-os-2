@@ -1,3 +1,15 @@
+---
+id: GOAL
+title: 'GOAL — interactive-os'
+status: meta
+kind: note
+created: 2026-03-23
+updated: 2026-04-07
+summary: '작성일: 2026-03-23 갱신일: 2026-04-08 맥락: "FE의 엔진" 비전 재설정. 엔진 + SaaS 2층 구조 합의.'
+topics: [x]
+relates: []
+supersedes: []
+---
 # GOAL — interactive-os
 
 > 작성일: 2026-03-23

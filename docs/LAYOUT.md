@@ -1,3 +1,15 @@
+---
+id: LAYOUT
+title: 'FlatLayout — 선언적 페이지 레이아웃'
+status: meta
+kind: note
+created: 2026-04-14
+updated: 2026-04-14
+summary: 'SSOT: `src/interactive-os/layout/`'
+topics: []
+relates: []
+supersedes: []
+---
 # FlatLayout — 선언적 페이지 레이아웃
 
 > SSOT: `src/interactive-os/layout/`

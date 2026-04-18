@@ -1,3 +1,15 @@
+---
+id: COMPONENTS
+title: Universal Component Domain Dictionary
+status: meta
+kind: note
+created: 2026-04-14
+updated: 2026-04-14
+summary: 'aria-os 컴포넌트와 7개 주요 라이브러리의 교차 매핑 사전. 생성일: 2026-04-14'
+topics: []
+relates: []
+supersedes: []
+---
 # Universal Component Domain Dictionary
 
 > aria-os 컴포넌트와 7개 주요 라이브러리의 교차 매핑 사전.

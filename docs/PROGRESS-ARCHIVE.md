@@ -1,3 +1,15 @@
+---
+id: PROGRESS-ARCHIVE
+title: 'interactive-os — Progress Tracker'
+status: meta
+kind: note
+created: 2026-03-16
+updated: 2026-03-23
+summary: '**For LLMs:** 작업 시작 시 이 문서를 읽고 현황을 파악하세요. 기능 완료 및 커밋 시 체크를 업데이트하세요. **For humans:** 우선순위 태그 `[P0]`~`[P2]`는 수시로 조절 가능합니다.'
+topics: [data-surface, data-theme, p0, p1, p2, x]
+relates: []
+supersedes: []
+---
 # interactive-os — Progress Tracker
 
 > **For LLMs:** 작업 시작 시 이 문서를 읽고 현황을 파악하세요. 기능 완료 및 커밋 시 체크를 업데이트하세요.
