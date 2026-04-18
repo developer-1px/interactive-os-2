@@ -1,106 +1,135 @@
-# Gemma Prompt Tuning Loop — Ralph 자가 개선 orchestration
+# ax Refinement Loop — Ralph 자가 수렴 (ax 정립·혁신·개선)
 
-**포지션**: Phase 1-a 상위 메타 루프. `gemma-critique-loop.md`가 "디자인 → 평가"라면, 이 루프는 "평가 응답 → 프롬프트 개선". 관리 시스템 자체가 스스로를 갱신.
+**사용자 재프레임 (2026-04-18)**: "ax 시스템이 개선되고 혁신되고 있어? 그게 핵심이야"
 
-**철학 접속**:
-- 사용자 재프레임: "평가는 점수의 또 다른 형태일 뿐. 관리 시스템 업그레이드가 목표"
-- 이 루프는 **평가자(Gemma)의 행동 정의** 자체를 타겟. 평가자가 관찰자 역할을 정직하게 수행하도록 프롬프트 수렴
+**목표**: ax 시스템이 Gemma 관측을 통해 스스로 갭을 드러내고, 매 iteration에서 **실제 구조 변경 1건**을 반영하여 정립·혁신·개선이 수렴하도록 한다.
 
-## 루프 수명
+**이 루프가 아닌 것**:
+- 프롬프트 튜닝 루프 (AS-IS 초기 설계 — 사용자 재프레임으로 무효)
+- 점수 해소 루프 (Overall=good 만들기 게임)
+- 평가 품질 개선 루프 (수단이 목적화된 형태)
 
-Ralph Loop(`/ralph-loop`)로 감싼다. completion promise: **`PROMPT_STABLE`**.
-
-```
-/ralph-loop 읽기: .claude/gemma-prompt-tuning-loop.md. 매 라운드 Step 1~6 수행. --max-iterations 5 --completion-promise PROMPT_STABLE
-```
+**이 루프인 것**:
+- 관측(Gemma) → **ax 시스템 구조 변경** → 재관측 → ... 수렴
 
 ## 매 iteration 절차
 
-### Step 1. 현재 프롬프트 + 최근 응답 N건 로드
+### Step 1. 관측 (고정 샘플)
 
-- 입력 1: `scripts/gemmaCritique.mjs` 내 `PROMPT` 상수 (현재 버전)
-- 입력 2: `docs/research/ax/gemmaCritique/*.md` 중 최근 iteration 리포트 전체
-
-### Step 2. 응답 품질 관측 (정직함 축)
-
-Claude가 응답들을 읽고 다음을 진단:
-
-| 결함 종류 | 증상 | 개선 여부 |
-|----------|------|---------|
-| **Hallucination** | 이미지 없는데 점수 주기 / 이미지와 무관한 일반 상식 나열 | 프롬프트에 관찰 좌표 요구 + none 허용 강화 |
-| **양 강제 효과** | "이슈 N-M개" 같은 수 제약이 억지 채움 유도 | 수 제약 제거 or 완화 |
-| **기준 모호** | Overall 판정이 객관적 근거 없음 / 산술 규칙 의존 | 기준을 품질 서술로 재정의 |
-| **좌표 부재** | "여백이 좁다"처럼 어디를 말하는지 불명 | "좌측 nav 3번째 아이템" 같은 위치 지시 의무화 |
-| **과도한 제약** | Gemma가 모든 제약 다 지키느라 평가 자체를 희미하게 함 | 가장 중요한 3개만 남기고 삭제 |
-| **일관성 부재** | 비슷한 화면에 다른 등급 | 판정 기준 사례 1~2개를 프롬프트에 고정 |
-
-### Step 3. 단일 축 개선 (한 iteration = 한 축)
-
-- 한 iteration에서 **위 표의 축 1개만** 수정
-- 복수 축을 동시에 변경하면 다음 iteration에서 "어느 변경이 효과냈는지" 분리 불가능
-- 수정 후 PROMPT 상수 교체 + 주석에 버전 번호(P-2, P-3, …)와 변경 사유 1줄
-
-### Step 4. 재실행 (고정 샘플)
-
-```
+```bash
 node scripts/gemmaCritique.mjs / /ui
 ```
 
-라우트는 항상 동일 2개로 고정 — **프롬프트 변수만 조작**하는 A/B 비교.
+- `/` + `/ui` 고정. 다른 라우트는 별도 iter.
+- 응답은 `docs/research/ax/gemmaCritique/{root,ui}.md` 덮어쓰기.
+- **프롬프트 vP-N 튜닝은 주 작업 아님** — 응답이 너무 모호해서 갭 추출 불가능할 때만 1 iter 할애.
 
-### Step 5. Before/After 비교 → summary.md 기록
+### Step 2. ax 시스템 갭 후보 추출
 
-`docs/research/ax/gemmaCritique/summary.md`에 append:
+Gemma 응답을 읽고 각 이슈/좋은 점에 대해:
 
-```markdown
-### 프롬프트 vP-N (YYYY-MM-DD)
+| 질문 | 해답이 시사하는 것 |
+|------|-------------------|
+| 이 관찰이 ax의 어떤 **축/토큰/컴포넌트**에 걸리는가? | 직접 수정 가능 지점 |
+| 현재 ax가 이 축을 **커버하고 있는가**? | 있으면 sculpt / 없으면 신규 축 |
+| 이 이슈가 **구조 설계 갭**인가 **값 조정 갭**인가? | PRD 대상 / sculpt 대상 분리 |
+| `ax-baseline.json` **기존 지표**와 매핑되는가? | 매핑 실패 → 새 측정 후보 |
 
-**변경 축**: [Hallucination/양 강제/기준 모호/좌표 부재/과도한 제약/일관성]
-**변경 내용**: [1~2줄]
+결과를 `docs/0-inbox/gemma-ax-gap-candidates.md`에 **append**. 한 iter당 최소 2 후보 기록.
 
-| 지표 | vP-(N-1) | vP-N |
-|------|--------|------|
-| / 이슈 수 | … | … |
-| /ui 이슈 수 | … | … |
-| / Overall | … | … |
-| /ui Overall | … | … |
-| 좌표 구체성 | … | … |
-| Hallucination 의심 | … | … |
+### Step 3. 개선 대상 1건 선택 + 분류
 
-**관찰**: [응답 품질이 어떻게 달라졌는지 1~2줄]
-**다음 축 후보**: [남은 결함 중 우선순위 1개]
+후보 중 1건을 선택하여 실행. 분류 3가지:
+
+| 분류 | 대상 파일 | 작업 성격 |
+|------|---------|---------|
+| **(a) 값 조정 (sculpt)** | `src/styles/tokens.css`, `src/styles/ax.css`, `ax-baseline.json` | 기존 축 값 조정 — spacing ratio, color Lc, radius seed 등 |
+| **(b) 신규 측정 지표** | `docs/research/ax/04-gap-plan.md` (카드 추가), `scripts/measure*.mjs` (신규) | Gemma 지적이 현 baseline으로 안 잡힘 → 측정 확장 |
+| **(c) 구조적 변경** | `docs/2-areas/styles/prds/*-prd.md` (신규 PRD) | 축 자체 추가/삭제, 컴포넌트 재설계 |
+
+**선택 기준**:
+- 가장 많이 반복 지적된 후보 먼저 (반복 = 구조적 신호)
+- (a) 우선 (변동 비용 최소) → (b) → (c) 순
+- 단 (a)로 고칠 수 없는 구조적 갭은 (c)로 직행
+
+### Step 4. 개선 실행 (1 iter = 1 commit)
+
+선택한 분류에 따라 파일 편집 + 커밋.
+
+- 커밋 메시지: `refactor(ax-refine): iter N — <개선 요약>` or `feat(ax-refine): iter N — <신규>`
+- Private 축 직접 주입 금지 규약 유지 (CLAUDE.md ax()만)
+- baseline 회귀 0 확인 (`pnpm typecheck` + 기존 measure 스크립트)
+
+### Step 5. 재측정
+
+```bash
+node scripts/smokeTestPuppeteer.mjs          # 관측 파이프라인 무결
+node scripts/gemmaCritique.mjs / /ui         # Gemma 재관찰
+# (선택) baseline 재측정 — ax-baseline.json 대상 metric
 ```
 
-### Step 6. 완료 판정
+재관측 결과를 이전 iter 응답과 비교:
+- 같은 이슈가 여전히 지적되면 → 개선 불충분 or 다른 원인
+- 다른 이슈가 지적되면 → 원 갭 해소, 새 갭 수면 위로
+- 지적 없으면 → iter 수렴 신호 1 (3 연속이면 종료 조건)
 
-**`PROMPT_STABLE` 조건**:
-- 직전 2 iteration 연속으로 이슈 내용·Overall·구체성이 **동일 방향 수렴**
-- 더 이상 축 개선으로 응답 품질 변화가 관측되지 않음
+### Step 6. 로그 + 수렴 판정
 
-미달 시 다음 iteration (Ralph Loop이 같은 프롬프트 재공급).
+`docs/research/ax/gemmaCritique/summary.md`에 **iter N** 섹션 append:
+
+```markdown
+## Refinement iter N (YYYY-MM-DD)
+
+**관측 이슈**: [/, /ui의 주요 이슈 요약]
+**선택 갭**: [후보 중 1개 + 분류]
+**실행**: [commit hash + 파일 변동]
+**재측정**: [이전 이슈 해소 여부 / 새 이슈 / baseline 변동]
+**수렴 신호**: 0 / 1 / 2 / 3 (연속 "지적 없음"이면 ++, 지적 재등장하면 0)
+**다음 후보**: [inbox gap-candidates에서 남은 것 중 1건]
+```
+
+### 완료 약속: `AX_CONVERGED`
+
+다음 **모두** 만족하면 `<promise>AX_CONVERGED</promise>` 출력:
+1. 직전 3 iter 연속 Gemma 응답에서 **같은 갭 재등장 0**
+2. `docs/0-inbox/gemma-ax-gap-candidates.md`의 미처리 후보 0건
+3. `ax-baseline.json` 모든 metric 안정 (pass 카운트 감소 0)
+4. smoke test 통과
+
+위 조건 미충족이면 promise 출력 금지. Ralph가 다음 iter 재공급.
+
+### 한계 탈출: `LIMIT_REACHED: <사유>`
+
+다음 중 하나면 `LIMIT_REACHED` 출력:
+- 같은 갭이 5 iter 연속 잔존 (구조적 난제 — 사람 개입 필요)
+- Gemma 응답이 완전 불변 (평가 도구 한계)
+- baseline 회귀 발생 + 롤백도 실패
 
 ## 엄수 규칙
 
 | 규칙 | 이유 |
 |------|------|
-| 한 iteration = 한 축만 수정 | 개선 효과 분리 |
-| 고정 샘플 라우트 (`/`, `/ui`) | A/B 비교 공정성 |
-| 프롬프트 버전 주석 필수 (P-N) | 실험 이력 추적 |
-| summary.md에 before/after 전문 인용 | `feedback_pyramid_preserve_original` |
-| 사람이 Gemma 응답을 읽고 "신뢰도"를 판정하는 게 아님 | Claude가 관측 결과를 **구조적으로** 읽는다 |
-| 점수(Overall)가 좋아졌다 = 개선 ❌ | Overall이 "관찰 품질"을 반영하는가가 평가 기준 |
-| 3회 연속 동일 결함 잔존 | 프롬프트 한계 — 모델 교체 또는 평가 파이프라인 재설계 고려 |
+| 한 iter = 한 개선 | 효과 분리 + bisect 가능 |
+| 고정 샘플 라우트 (`/`, `/ui`) | A/B 공정성 |
+| 프롬프트 튜닝은 Step 1의 부속, 주 작업 아님 | 사용자 재프레임 정합 |
+| 매 iter inbox gap-candidates에 최소 2 후보 append | 갭 DB 축적 |
+| "Overall 등급 향상 = 성공" 판정 금지 | 점수 해소 재진입 방지 |
+| Phase 2/3으로의 재료 (메타 지표 / 자율 개선 정책) 축적 | `project_ax_codification` 일치 |
+| 새 축/토큰 도입 전 `CATALOG.md` + `04-gap-plan.md` 사전 확인 | CLAUDE.md 제1원칙 "있는 걸로 만든다" |
 
-## Phase 2 진입 조건
+## 보조 도구
 
-PROMPT_STABLE 도달 후:
-- `summary.md`의 프롬프트 버전 섹션을 **메타 지표 재료**로 이관
-- "프롬프트 변경 → 응답 분포 변화" 궤적이 **다른 도메인(sculpt, keyline-audit)**에도 일반화되는지 Phase 2에서 설계
+- `scripts/gemmaCritique.mjs` — 관측 실행기 (PROMPT 상수가 불충분할 때만 vP-N 조정)
+- `scripts/smokeTestPuppeteer.mjs` — pre-flight
+- `docs/0-inbox/gemma-ax-gap-candidates.md` — 갭 후보 누적 (신규)
+- `docs/research/ax/gemmaCritique/summary.md` — iter 로그
+- `docs/research/ax/04-gap-plan.md` — 승격된 측정 후보 (원리 × 7 layer)
+- `docs/2-areas/styles/prds/*` — 구조적 변경 PRD
+- `ax-baseline.json` — 정량 metric SSOT
 
-## 관련 자산
+## 재료 이관 (Phase 2 진입 조건)
 
-- `scripts/gemmaCritique.mjs` — 평가 실행기 (PROMPT 상수가 튜닝 대상)
-- `.claude/gemma-critique-loop.md` — 디자인 → 평가 루프 (이 루프의 **피평가자**)
-- `docs/research/ax/gemmaCritique/summary.md` — 메타 로그 (버전 기록)
-- `scripts/smokeTestPuppeteer.mjs` — 관측 파이프라인 pre-flight (G-5 산출)
-- ralph-loop 플러그인 — 반복 실행 인프라
+이 루프가 AX_CONVERGED 도달 시 다음이 자동 확보되어 Phase 2에 투입:
+- **갭 DB**: inbox + 04-gap-plan에 반복 지적 이슈 카탈로그
+- **변경 로그**: summary.md에 iter별 개선 기록 — 어떤 갭이 어떤 축/토큰/구조 변경으로 해소됐는지
+- **baseline 추이**: 개선 전/후 정량 지표 변동 — 메타 지표 재설계 재료

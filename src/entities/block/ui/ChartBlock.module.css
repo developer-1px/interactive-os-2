@@ -1,0 +1,10 @@
+/* ChartBlock last-mile — 동적 bar width는 CSS custom property로 주입 */
+
+.barTrack {
+  height: 0.75rem;
+}
+
+.barFill {
+  height: 100%;
+  width: var(--bar-fill, 0%);
+}

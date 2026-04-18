@@ -1,0 +1,57 @@
+/* SlideThumbItem — aspect-ratio는 ax()에 직접 축이 없어 last-mile만 여기서 처리 */
+
+.slideThumbPreview {
+  aspect-ratio: 16 / 9;
+}
+
+.slideThumbPreview[data-ratio='4:3'] {
+  aspect-ratio: 4 / 3;
+}
+
+/* 미니어처 블록 시각화 — 높이/너비 비율만 여기서 관리 (ax() 축 범위 밖) */
+.miniBlock[data-kind='title'] {
+  height: 10%;
+  width: 60%;
+  opacity: 0.85;
+}
+
+.miniBlock[data-kind='bullets'] {
+  height: 8%;
+  width: 90%;
+}
+
+.miniBlock[data-kind='stat'] {
+  height: 22%;
+  width: 40%;
+  opacity: 0.75;
+}
+
+.miniBlock[data-kind='image'] {
+  height: 30%;
+  width: 70%;
+  opacity: 0.4;
+}
+
+.miniBlock[data-kind='quote'] {
+  height: 16%;
+  width: 80%;
+  opacity: 0.5;
+}
+
+.miniBlock[data-kind='code'] {
+  height: 22%;
+  width: 85%;
+  opacity: 0.45;
+}
+
+.miniBlock[data-kind='chart'] {
+  height: 28%;
+  width: 55%;
+  opacity: 0.55;
+}
+
+.slideThumbNumber {
+  min-width: 2ch;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
