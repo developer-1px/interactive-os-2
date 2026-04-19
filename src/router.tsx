@@ -36,6 +36,7 @@ export const router = createBrowserRouter([
       { path: '/incident-legacy', lazy: () => import('./pages/incident/PageIncidentInterface').then(m => ({ Component: m.default })) },
       { path: '/internals/theme', lazy: () => import('./pages/theme/PageThemeCreator').then(m => ({ Component: m.default })) },
       { path: '/creator/*', lazy: () => import('./pages/creator/PageComponentCreator').then(m => ({ Component: m.default })) },
+      { path: '/json-editor', lazy: () => import('./pages/jsonEditor/PageJsonEditor').then(m => ({ Component: m.default })) },
       { path: '/a2ui', lazy: () => import('./pages/a2ui/PageA2UI').then(m => ({ Component: m.default })) },
 
       {
