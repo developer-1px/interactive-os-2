@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import { useEngineStore } from '../engine/useEngineStore'
 import type { Command, EffectContext, EngineOptions, InspectResult } from '../engine/types'
 import { buildRegistry } from '../engine/types'
 import type { NormalizedData } from '../store/types'
@@ -77,7 +78,6 @@ export interface UseAriaReturn {
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
   const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, onFocusChange, initialFocus, logger, autoFocus = true, disabled = false, 'aria-label': ariaLabel, id: ariaId, getNodeElement } = options
-  const [, forceRender] = useState(0)
   const pointerDownCtxRef = useRef<ReturnType<typeof createPatternContext> | null>(null)
   const suppressFocusDispatchRef = useRef(false)
 
@@ -122,7 +122,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       }
       cb.prevFocus = newFocusedId
       onChange?.(newStore)
-      forceRender((n) => n + 1)
+      // Rerender is driven by useEngineStore (useSyncExternalStore) below — no forceRender needed.
       } finally { _reentrantDepth-- }
     }, logger != null ? { logger } : undefined)
 
@@ -167,19 +167,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   })
 
   // ── ② External data sync (useAria-only) ──
+  // `data` prop is a push channel: parent may replace the store reference (e.g.
+  // filtered options in Combobox, layout tree in FlatLayout). When the reference
+  // differs we reconcile into the engine, preserving internal meta-entities
+  // (focus/selection/expanded/…).
 
   useMemo(() => {
-    // @ts-expect-error debug counter
-    engine.__syncCount = (engine.__syncCount ?? 0) + 1
-    // @ts-expect-error debug counter
-    const _tag = `[useAria:${pattern.role || 'none'}] #${engine.__syncCount}`
-    const _entityCount = Object.keys(data.entities).filter(k => !META_ENTITY_IDS.has(k)).length
-    // @ts-expect-error debug counter
-    if (engine.__syncCount > 500) { console.error(_tag, 'LOOP — entities:', _entityCount, 'data ref changed:', data !== engine.__prevData); return }
-    // @ts-expect-error debug counter
-    if (engine.__syncCount > 1) { console.warn(_tag, 'entities:', _entityCount, 'data ref changed:', data !== engine.__prevData) }
-    // @ts-expect-error debug counter
-    engine.__prevData = data
     const currentStore = engine.getStore()
     const externalFocusChanged = FOCUS_ID in data.entities &&
       (data.entities[FOCUS_ID]?.focusedId as string) !== (currentStore.entities[FOCUS_ID]?.focusedId as string)
@@ -226,8 +219,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   }, [data, engine])
 
   // ── State derivation ──
+  // useEngineStore subscribes the component to engine.subscribeStore via
+  // useSyncExternalStore — replaces the legacy forceRender+onStoreChange path.
 
-  const store = engine.getStore()
+  const store = useEngineStore(engine)
   const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
   const selectedIdSet = useMemo(() => {
     const ids = (store.entities['__selection__']?.selectedIds as string[]) ?? []
