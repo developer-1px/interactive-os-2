@@ -20,19 +20,11 @@
    * + border + bg-hover/active. Theme 교체 시 이 블록 전체가 단위.
    * ════════════════════════════════════════════ */
 
-  /* ── Elevation primitive (palette-like, dark) ──
-     디자인-중립 숫자 시리즈. 음수 단 인정 (--elevation--1 = sunken).
-     향후 -2, +3 확장 가능. Material/Carbon/Atlassian 수렴진화 패턴. */
-  --elevation--1: var(--stone-950);   /* sunken — sidebar/blockquote */
-  --elevation-0:  var(--stone-875);   /* base — page bg */
-  --elevation-1:  var(--stone-750);   /* raised — content card */
-  --elevation-2:  var(--stone-700);   /* overlay — modal/popover */
-
-  /* ── Surface semantic (4단) — elevation primitive 매핑 SSOT ── */
-  --surface-sunken:   var(--elevation--1);
-  --surface-base:     var(--elevation-0);
-  --surface-raised:   var(--elevation-1);
-  --surface-overlay:  var(--elevation-2);
+  /* ── Surface semantic (4단, dark) ── */
+  --surface-sunken:   var(--stone-950);   /* sunken — sidebar/blockquote */
+  --surface-base:     var(--stone-875);   /* base — page bg */
+  --surface-raised:   var(--stone-750);   /* raised — content card */
+  --surface-overlay:  var(--stone-700);   /* overlay — modal/popover */
 
   /* legacy alias — 사용처 정리 후 제거 예정 */
   --surface-default:  var(--surface-base);
@@ -101,9 +93,7 @@
   --tone-warning-foreground: var(--stone-950);
 
   --tone-neutral-base:       var(--stone-500);
-  --tone-neutral-hover:      var(--stone-400);
   --tone-neutral-dim:        var(--stone-800);
-  --tone-neutral-foreground: var(--stone-0);
 
   /* ── Focus ──
      focus inverted 토큰은 역전 surface(inverted) 전용. dark 기본은 blue 진하게,
@@ -212,15 +202,12 @@
   /* ── Independent axes: weight
      type 번들과 독립적으로 사용. 버튼·배지 등 텍스트 계층과 무관한 요소용. ── */
   --weight-regular: 400;
-  --weight-book:    450;
   --weight-medium:  500;
   --weight-semi:    600;
-  --weight-bold:    700;
 
   /* ── Independent axes: line-height
      type 번들과 독립적으로 사용. 마크다운·코드 등 특수 line-height 필요 시. ── */
   --leading-snug:    1.4;
-  --leading-normal:  1.5;
   --leading-relaxed: 1.75;
   --leading-code:    1.6;
 
@@ -255,7 +242,6 @@
      radius는 seed에서 파생. padding은 비례 관계. ── */
   --shape-xs-py: 6px;  --shape-xs-px: 12px;
   --shape-sm-py: 6px;  --shape-sm-px: 16px;
-  --shape-md-py: 0px;  --shape-md-px: 12px;
   --shape-lg-py: 20px; --shape-lg-px: 20px;
   --shape-xl-py: 24px; --shape-xl-px: 24px;
 
@@ -291,8 +277,6 @@
    *   --control-height: 32px  → var(--cs-h) 구독으로 대체 (textStyle이 공급)
    *   --item-height:    28px  → var(--cs-h) 구독으로 대체 (ts-body가 공급) */
   --toolbar-height: 32px;
-  --input-padding-x: 12px;
-  --sidebar-item-height: 28px;
   --storymap-col-width: 220px;
   --overlay-width:  360px;
   --content-sm:     560px;
@@ -349,19 +333,13 @@
    Surface gap과 L값은 macOS windowBg(94.3%) 실측 참조. */
 
 [data-theme="light"] {
-  /* ── Surface ── */
-  /* ── Elevation primitive (light) ──
+  /* ── Surface (light) ──
      Apple HIG 패턴: 흰색 베이스 유지 + raised/overlay는 shadow + rim으로 구분.
      색만으로 4단 구분 부족 → shadow가 보조. */
-  --elevation--1: oklch(96% 0.007 90); /* sunken — sidebar/blockquote (96% lightness) */
-  --elevation-0:  var(--stone-50);     /* base — page bg */
-  --elevation-1:  var(--stone-0);      /* raised — white card + shadow-sm */
-  --elevation-2:  var(--stone-0);      /* overlay — white + shadow-lg + rim */
-
-  --surface-sunken:   var(--elevation--1);
-  --surface-base:     var(--elevation-0);
-  --surface-raised:   var(--elevation-1);
-  --surface-overlay:  var(--elevation-2);
+  --surface-sunken:   oklch(96% 0.007 90); /* sunken — sidebar/blockquote (96% lightness) */
+  --surface-base:     var(--stone-50);     /* base — page bg */
+  --surface-raised:   var(--stone-0);      /* raised — white card + shadow-sm */
+  --surface-overlay:  var(--stone-0);      /* overlay — white + shadow-lg + rim */
 
   --surface-default:  var(--surface-raised); /* legacy alias — content card */
 
@@ -415,7 +393,6 @@
   --tone-warning-foreground: oklch(16.3%  0  0);
 
   --tone-neutral-base:  var(--stone-500);
-  --tone-neutral-hover: var(--stone-600);
   --tone-neutral-dim:   var(--stone-100);
 
   /* ── Focus ── */

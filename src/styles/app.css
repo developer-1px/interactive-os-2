@@ -58,7 +58,7 @@
   font-size: var(--type-body-size);
   color: var(--text-secondary);
   margin: 0;
-  line-height: var(--leading-normal);
+  line-height: var(--leading-snug);
   max-width: 520px;
 }
 
@@ -308,7 +308,7 @@ kbd {
   padding: var(--space-sm) var(--space-md);
   font-size: var(--type-body-size);
   color: var(--text-secondary);
-  line-height: var(--leading-normal);
+  line-height: var(--leading-snug);
   border-bottom: 1px solid var(--border-subtle);
   background: var(--surface-base);
 }
@@ -358,7 +358,7 @@ kbd {
   padding: var(--shape-xs-py) var(--space-md) var(--shape-xs-py) var(--space-xl);
   font-size: var(--type-body-size);
   color: var(--text-secondary);
-  line-height: var(--leading-normal);
+  line-height: var(--leading-snug);
   border-bottom: 1px solid var(--border-subtle);
   background: var(--surface-base);
 }

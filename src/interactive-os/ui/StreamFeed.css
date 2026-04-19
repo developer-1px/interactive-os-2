@@ -24,8 +24,8 @@
 }
 
 .stream-fab {
-  width: var(--sidebar-item-height);
-  height: var(--sidebar-item-height);
+  width: var(--cs-h, 28px);
+  height: var(--cs-h, 28px);
 
   --_bg: var(--surface-overlay);
   --_bg-hover: var(--bg-hover);

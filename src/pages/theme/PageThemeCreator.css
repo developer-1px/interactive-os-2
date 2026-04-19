@@ -139,7 +139,7 @@
 }
 
 .theme-spacing-bar {
-  height: var(--input-padding-x);
+  height: var(--cs-px, 12px);
   background: var(--tone-primary-base);
 }
 .theme-spacing-bar[data-size="xs"] { width: var(--space-xs); }

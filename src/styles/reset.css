@@ -16,8 +16,8 @@
     color: var(--text-primary);
     font-family: var(--sans);
     font-size: var(--type-body-size);
-    font-weight: var(--weight-book);
-    line-height: var(--leading-normal);
+    font-weight: 450;
+    line-height: var(--leading-snug);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
