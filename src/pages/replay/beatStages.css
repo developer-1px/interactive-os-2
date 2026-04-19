@@ -23,6 +23,16 @@
   --replay-traffic-red: rgb(255, 95, 87);        /* #ff5f57 */
   --replay-traffic-yellow: rgb(254, 188, 46);    /* #febc2e */
   --replay-traffic-green: rgb(40, 200, 64);      /* #28c840 */
+
+  /* TikTok subtitle tokens */
+  --replay-subtitle-bg: rgba(0, 0, 0, 0.78);
+  --replay-subtitle-pad: 3px 8px;
+  --replay-subtitle-radius: 4px;
+  --replay-subtitle-fz: 14px;
+  --replay-subtitle-lh: 1.7;
+  --replay-subtitle-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  --replay-subtitle-fw: 600;
+  --replay-subtitle-font: 'Inter', system-ui, sans-serif;
 }
 
 /* ─────────────────────────────────────────────
@@ -422,9 +432,9 @@
  * ───────────────────────────────────────────── */
 .short-card { background: var(--replay-black); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08); cursor: pointer; user-select: none; border-radius: 20px; flex-shrink: 0; aspect-ratio: 9 / 16; height: 100%; width: auto; max-width: 100%; contain: layout; isolation: isolate; }
 .short-card__beat { position: absolute; inset: 0; }
-.short-card__progress { position: absolute; top: 10px; left: 12px; right: 12px; z-index: 5; gap: 4px; }
-.short-card__progress-track { height: 2.5px; border-radius: 2px; background: var(--beat-progress-track); overflow: hidden; }
-.short-card__progress-fill { height: 100%; width: var(--fill, 0%); background: var(--beat-text-strong); border-radius: 2px; }
+.short-card__progress { position: absolute; top: 12px; left: 14px; right: 14px; z-index: 6; gap: 3px; }
+.short-card__progress-track { height: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.18); overflow: hidden; }
+.short-card__progress-fill { height: 100%; width: var(--fill, 0%); background: rgb(255, 255, 255); border-radius: 3px; transition: width 80ms linear; }
 .short-card__agent { position: absolute; top: 24px; left: 14px; z-index: 5; gap: 8px; }
 .short-card__avatar { width: 26px; height: 26px; font-size: 12px; font-weight: var(--beat-fw-bold, 700); }
 .short-card__agent-meta { line-height: 1.15; }
@@ -464,6 +474,21 @@
   background: var(--beat-pause-glyph);
   border-radius: 50%;
   display: block;
+}
+
+/* subtitle: title block 안 자식 (position 불필요) */
+.short-card__subtitle {
+  font-family: var(--replay-subtitle-font);
+  font-size: var(--replay-subtitle-fz);
+  line-height: var(--replay-subtitle-lh);
+  font-weight: var(--replay-subtitle-fw);
+  color: var(--replay-white);
+  text-shadow: var(--replay-subtitle-shadow);
+  background: var(--replay-subtitle-bg);
+  padding: var(--replay-subtitle-pad);
+  border-radius: var(--replay-subtitle-radius);
+  text-align: center;
+  margin-bottom: 12px;
 }
 
 /* ─────────────────────────────────────────────

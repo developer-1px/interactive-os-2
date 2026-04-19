@@ -7,6 +7,7 @@ import type {
   ThinkingBeat,
   TerminalBeat,
   DiffBeat,
+  ReadBeat,
   CommitBeat,
   FiletreeBeat,
   PreviewBeat,
@@ -27,6 +28,7 @@ export function BeatRenderer({ beat, progress, hue }: BeatRendererProps): JSX.El
     case 'thinking': return <ThinkingBeatView beat={beat} progress={progress} cssVar={cssVar} />
     case 'terminal': return <TerminalBeatView beat={beat} progress={progress} />
     case 'diff':     return <DiffBeatView beat={beat} progress={progress} />
+    case 'read':     return <ReadBeatView beat={beat} progress={progress} />
     case 'commit':   return <CommitBeatView beat={beat} progress={progress} />
     case 'filetree': return <FiletreeBeatView beat={beat} progress={progress} />
     case 'preview':  return <PreviewBeatView beat={beat} progress={progress} />
@@ -135,6 +137,31 @@ function DiffBeatView({ beat, progress }: { beat: DiffBeat; progress: number }) 
           <div key={i} className={`beat-diff__line beat-diff__line--${l.t} ${ax({ layout: 'row' })}`}>
             <span className={`beat-diff__sym beat-diff__sym--${l.t}`}>{sym[l.t]}</span>
             <span className="beat-diff__text">{l.v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────
+// Read — 파일 보기 (file 이름 hero + 라인 점진 reveal)
+// ─────────────────────────────────────────────
+
+function ReadBeatView({ beat, progress }: { beat: ReadBeat; progress: number }) {
+  const total = beat.lines.length
+  const shown = Math.floor(total * Math.min(1, progress * 1.2))
+  return (
+    <div className={`beat-frame beat-diff ${ax({ layout: 'stack', width: 'full' })}`}>
+      <div className="beat-diff__header">
+        <div className={`beat-label ${ax({ textStyle: 'caption' })}`}>READ</div>
+        <div className={`beat-diff__file ${ax({ layout: 'row', textStyle: 'code' })}`}>{beat.file}</div>
+      </div>
+      <div className={ax({ flex: '1', layout: 'stack', textStyle: 'code' })}>
+        {beat.lines.slice(0, shown).map((l, i) => (
+          <div key={i} className={`beat-diff__line beat-diff__line--ctx ${ax({ layout: 'row' })}`}>
+            <span className="beat-diff__sym beat-diff__sym--ctx"> </span>
+            <span className="beat-diff__text">{l || '\u00A0'}</span>
           </div>
         ))}
       </div>

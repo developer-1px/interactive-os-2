@@ -1,10 +1,12 @@
 // ② replayV2BeatPrd
-export type BeatKind = 'thinking' | 'terminal' | 'diff' | 'commit' | 'filetree' | 'preview'
+export type BeatKind = 'thinking' | 'terminal' | 'diff' | 'read' | 'commit' | 'filetree' | 'preview'
 
 export interface BeatBase {
   kind: BeatKind
   /** 카드 재생 시간(ms). useBeatPlayer가 progress 0..1 계산 기준 */
   duration: number
+  /** TikTok-style 자막. 직전 assistant text(있으면) — ShortCard가 카드 하단 overlay로 렌더 */
+  subtitle?: string
 }
 
 export interface ThinkingBeat extends BeatBase {
@@ -23,6 +25,12 @@ export interface DiffBeat extends BeatBase {
   kind: 'diff'
   file: string
   lines: Array<{ t: 'add' | 'del' | 'ctx'; v: string }>
+}
+
+export interface ReadBeat extends BeatBase {
+  kind: 'read'
+  file: string
+  lines: string[]
 }
 
 export interface CommitBeat extends BeatBase {

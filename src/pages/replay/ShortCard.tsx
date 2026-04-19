@@ -6,6 +6,11 @@ import { useBeatPlayer } from './useBeatPlayer'
 import type { BeatSession } from './beatTypes'
 import './beatStages.css'
 
+function lastSentence(text: string): string {
+  const sentences = text.split(/(?<=[.!?。])\s+|\n+/).map(s => s.trim()).filter(Boolean)
+  return sentences[sentences.length - 1] ?? text
+}
+
 export interface ShortCardProps {
   session: BeatSession
   /** true = 자동재생, false = 일시정지 */
@@ -61,7 +66,14 @@ export function ShortCard({ session, active, autoplay, onComplete }: ShortCardPr
         </div>
       </div>
 
-      <div className={`short-card__title ${ax({ textStyle: 'body' })}`}>{session.title}</div>
+      <div className={`short-card__title ${ax({ textStyle: 'body' })}`}>
+        {beat.subtitle && (
+          <div className={`short-card__subtitle ${ax({ textStyle: 'body' })}`}>
+            {lastSentence(beat.subtitle)}
+          </div>
+        )}
+        <div className="short-card__title-text">{session.title}</div>
+      </div>
 
       {paused && active && <div className={`short-card__pause ${ax({ layout: 'center' })}`} aria-label="paused" />}
     </div>

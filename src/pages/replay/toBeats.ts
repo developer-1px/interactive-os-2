@@ -1,6 +1,7 @@
 // ② replayV2BeatPrd
 import type { ChatMessage, ChatBlock } from '@os/ui/chat/types'
-import type { Beat, BeatSession, CommitBeat, DiffBeat, TerminalBeat, ThinkingBeat } from './beatTypes'
+import type { TimelineEvent } from '../viewer/groupEvents'
+import type { Beat, BeatSession, CommitBeat, DiffBeat, ReadBeat, TerminalBeat } from './beatTypes'
 import { parseCommitMessage } from './parseCommitMessage'
 
 export interface ToBeatsArgs {
@@ -18,47 +19,54 @@ interface EditStats {
 }
 
 /**
- * 변환 규칙:
- * - assistant text block → ThinkingBeat (1 메시지 1 beat)
- * - tool_use Bash → TerminalBeat (input.command + tool_result lines)
- * - tool_use Edit/Write → DiffBeat (old/new 라인화 + ctx 일부)
- * - tool_use Read/Grep/Glob → ThinkingBeat에 흡수 또는 skip (포스터로 약함)
- * - 마지막에 CommitBeat 1개 합성 (parseCommitMessage(첫 user prompt) + assistant 마지막 + edit stats)
- * @invariant tool_use 1개 ≤ beat 1개 (skip 가능)
- * @invariant beats[last].kind === 'commit' (항상 마무리)
+ * 변환 규칙 (TikTok 자막 패턴):
+ * - tool_use 만 stage(beat)가 됨: Read/Write/Edit/Bash. 그 외 (Grep/Glob/Task ...) skip
+ * - assistant text block은 beat이 아니라 **subtitle**로 다음 tool beat에 attach
+ * - subtitle은 sticky: assistant text가 갱신될 때까지 이전 값 유지
+ * - 마지막에 CommitBeat 1개 합성
+ * @invariant tool_use 1개 = beat 1개 (Read/Write/Edit/Bash만)
+ * @invariant beats[last].kind === 'commit'
  */
 export function toBeats({ sessionId, agent, title, repo, messages }: ToBeatsArgs): BeatSession {
   const beats: Beat[] = []
   const stats: EditStats = { edits: 0, additions: 0, deletions: 0 }
+  let subtitle: string | undefined
 
   for (const msg of messages) {
     if (msg.role === 'assistant') {
-      beats.push(...extractAssistantBeats(msg.blocks))
+      const t = lastTextOf(msg.blocks)
+      if (t) subtitle = t
+      // timeline 변환 결과: tool_group block도 assistant role로 옴
+      for (const b of msg.blocks) {
+        if (b.type === 'tool_group' && 'data' in b) {
+          const group = b.data as { events: TimelineEvent[] }
+          beats.push(...extractToolBeatsFromEvents(group.events, stats, subtitle))
+        }
+      }
       continue
     }
     if (msg.role === 'system') {
-      beats.push(...extractToolBeats(msg.blocks, stats))
+      beats.push(...extractToolBeats(msg.blocks, stats, subtitle))
     }
   }
 
-  beats.push(synthesizeCommitBeat(messages, stats))
+  beats.push({ ...synthesizeCommitBeat(messages, stats), subtitle })
   return { id: sessionId, agent, title, repo, beats }
 }
 
 // ── Helpers ──────────────────────────────────────────────
 
-/** assistant text/streaming_text 블록 → ThinkingBeat 시퀀스 */
-function extractAssistantBeats(blocks: ChatBlock[]): ThinkingBeat[] {
-  const beats: ThinkingBeat[] = []
-  for (const b of blocks) {
-    const text = readTextContent(b)
-    if (text) beats.push({ kind: 'thinking', text, duration: 6000 })
+/** 한 메시지의 텍스트 블록 중 마지막 비어있지 않은 content. */
+function lastTextOf(blocks: ChatBlock[]): string | undefined {
+  for (let i = blocks.length - 1; i >= 0; i--) {
+    const t = readTextContent(blocks[i])
+    if (t) return t
   }
-  return beats
+  return undefined
 }
 
-/** system 메시지의 tool_use 블록 → Terminal/Diff Beat (skip 가능). stats 누적. */
-function extractToolBeats(blocks: ChatBlock[], stats: EditStats): Beat[] {
+/** system 메시지의 tool_use 블록 → Read/Terminal/Diff Beat (skip 가능). stats 누적. */
+function extractToolBeats(blocks: ChatBlock[], stats: EditStats, subtitle: string | undefined): Beat[] {
   const beats: Beat[] = []
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i]
@@ -67,21 +75,43 @@ function extractToolBeats(blocks: ChatBlock[], stats: EditStats): Beat[] {
     const result = readToolResult(blocks[i + 1])
 
     const beat = toToolBeat(data, result, stats)
-    if (beat) beats.push(beat)
-    // Read/Grep/Glob: skip (포스터로 약함, ⑩ 결정)
+    if (beat) beats.push({ ...beat, subtitle })
   }
   return beats
 }
 
-/** Bash → Terminal, Edit/Write → Diff. 그 외 null. stats는 Edit/Write에서 누적. */
+/** TimelineEvent[] (sidechain/live timeline) → Beat[] using event.input/result. */
+function extractToolBeatsFromEvents(events: TimelineEvent[], stats: EditStats, subtitle: string | undefined): Beat[] {
+  const beats: Beat[] = []
+  // build map of tool_use → next tool_result for result text
+  for (let i = 0; i < events.length; i++) {
+    const evt = events[i]
+    if (evt.type !== 'tool_use' || !evt.tool) continue
+    const next = events[i + 1]
+    const result = next?.type === 'tool_result' ? (next.result ?? '') : ''
+    const data = { name: evt.tool, input: evt.input ?? { file_path: evt.filePath } }
+    const beat = toToolBeat(data, result, stats)
+    if (beat) beats.push({ ...beat, subtitle })
+  }
+  return beats
+}
+
+/** Bash → Terminal, Edit/Write → Diff, Read → Read. 그 외 null. */
 function toToolBeat(
   data: { name: string; input: Record<string, unknown> },
   result: string,
   stats: EditStats,
-): TerminalBeat | DiffBeat | null {
+): TerminalBeat | DiffBeat | ReadBeat | null {
   if (data.name === 'Bash') return toTerminalBeat(data.input, result)
   if (data.name === 'Edit' || data.name === 'Write') return toDiffBeat(data.name, data.input, stats)
+  if (data.name === 'Read') return toReadBeat(data.input, result)
   return null
+}
+
+function toReadBeat(input: Record<string, unknown>, result: string): ReadBeat {
+  const file = (input.file_path as string) ?? (input.path as string) ?? ''
+  const lines = result ? result.split('\n').slice(0, 16) : []
+  return { kind: 'read', duration: 3500, file, lines }
 }
 
 function toTerminalBeat(input: Record<string, unknown>, result: string): TerminalBeat {
@@ -106,7 +136,7 @@ function toDiffBeat(
   stats.edits += 1
   stats.additions += newStr ? newStr.split('\n').length : 0
   stats.deletions += oldStr ? oldStr.split('\n').length : 0
-  return { kind: 'diff', duration: 5000, file, lines: toDiffLines(oldStr, newStr) }
+  return { kind: 'diff', duration: 8000, file, lines: toDiffLines(oldStr, newStr) }
 }
 
 /** 첫 user prompt + 마지막 assistant text + 누적 stats → CommitBeat 합성 */
