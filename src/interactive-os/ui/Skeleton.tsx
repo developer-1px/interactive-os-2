@@ -9,12 +9,13 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ width = 'full', height: _height = 'sm', shape = 'rect' }: SkeletonProps) {
+  // ② ax-p0-roles-prd (W8): role:'placeholder' 승격 — shimmer motion은 rolePreset이 자동 주입
   return (
     <div
       className={ax({
-          role: 'control-group',
+        role: 'placeholder',
         surface: 'sunken',
-        width: shape === 'circle' ? undefined : width
+        width: shape === 'circle' ? undefined : width,
       })}
       aria-hidden="true"
     />

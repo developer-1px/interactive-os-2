@@ -455,6 +455,53 @@ dialog.sf-overlay[open] {
   pointer-events: none;
 }
 
+/* ════════════════════════════════════════════
+ * Role: Metric — 숫자 강조 표시 (ax-p0-roles-prd W3)
+ * value(큰 숫자) + label(작은 설명) 기본 stack.
+ * layout:'bar' 시 가로 배치.
+ * ════════════════════════════════════════════ */
+
+.rl-metric {
+  min-height: var(--cs-h, 28px);
+  font-size:  var(--font-size, 14px);
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  align-items: flex-start;
+}
+.rl-metric[data-layout="bar"] {
+  flex-direction: row;
+  align-items: center;
+}
+
+/* ════════════════════════════════════════════
+ * Role: Signal — 시스템→사용자 알림 (ax-p0-roles-prd W3)
+ * Alert, Toast, EmptyState 등. 아이콘+텍스트 가로 배치.
+ * ════════════════════════════════════════════ */
+
+.rl-signal {
+  min-height: var(--cs-h, 28px);
+  font-size:  var(--font-size, 14px);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--cs-px, 8px);
+  padding: var(--cs-py, 4px) var(--cs-px, 8px);
+  border-radius: var(--shape-md-radius);
+}
+
+/* ════════════════════════════════════════════
+ * Role: Placeholder — 로딩/Skeleton (ax-p0-roles-prd W3)
+ * motion은 rolePreset이 shimmer/pulse 자동 주입.
+ * aria-hidden="true"는 ui 컴포넌트가 책임.
+ * ════════════════════════════════════════════ */
+
+.rl-placeholder {
+  display: block;
+  border-radius: var(--shape-sm-radius);
+  background: var(--_bg, var(--surface-sunken));
+}
+
 } /* @layer recipe — Recipe, Control Size, Text Style */
 
 @layer state {

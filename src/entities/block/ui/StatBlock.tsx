@@ -12,9 +12,10 @@ export interface StatBlockProps {
 }
 
 export function StatBlock({ data, editable, onEdit }: StatBlockProps): React.ReactElement {
+  // ② ax-p0-roles-prd (W4): role:'metric' 승격 — hero value + label stack 컨테이너
   return (
     <div
-      className={`${ax({ layout: 'stack', width: 'full' })} ${ax.raw({ gap: 'xs', padding: 'md' })}`}
+      className={`${ax({ role: 'metric', surface: 'display', textStyle: 'hero', content: 'text', layout: 'stack', width: 'full' })} ${ax.raw({ gap: 'xs', padding: 'md' })}`}
     >
       <strong
         className={ax({ textStyle: 'hero' })}

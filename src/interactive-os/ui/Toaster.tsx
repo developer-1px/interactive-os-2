@@ -47,9 +47,10 @@ function ToastItem({
 }): ReactNode {
   const variant = toast.variant ?? 'default'
   const tone = variantToneMap[variant]
+  // ② ax-p0-roles-prd (W7): role:'signal', surface:'overlay' 승격 — toast=떠 있는 알림
   return (
     <div
-      className={`pointer-auto ${ax({ role: 'cell', surface: 'display', tone, layout: 'row' })}`}
+      className={`pointer-auto ${ax({ role: 'signal', surface: 'overlay', tone, placement: 'float-bottom-center', layout: 'row' })}`}
       style={variantBorder[variant]}
     >
       <div className={ax({ flex: '1', layout: 'self-start' })}>

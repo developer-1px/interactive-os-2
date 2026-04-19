@@ -19,10 +19,11 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   }
   const resolvedTone = (tone ? toneMap[tone] : undefined) ?? 'neutral-dim' as const
   const indicatorTone = tone === 'danger' || tone === 'error' ? 'error' : tone === 'success' ? 'success' : tone === 'warning' ? 'warning' : 'info'
+  // ② ax-p0-roles-prd (W6): role:'signal' 승격 — 시스템→사용자 알림
   return (
     <div {...props} className={ax({
-        role: 'item',
-        surface: 'display', tone: resolvedTone, layout: 'row' })}>
+        role: 'signal',
+        surface: 'display', tone: resolvedTone, content: 'text', layout: 'row' })}>
       <StatusIndicator tone={indicatorTone} />
       <div className={ax({ layout: 'stack' })}>
         <span className={ax({ textStyle: 'label',  })}>{label}</span>

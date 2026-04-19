@@ -31,8 +31,9 @@ function BarChart({ items }: { items: ChartData['data'] }): React.ReactElement {
             className={`${ax({ role: 'control-group', surface: 'sunken', flex: '1' })} ${ax.raw({ shape: 'xs' })} ${styles.barTrack}`}
             aria-hidden
           >
+            {/* ② ax-p0-roles-prd (W5): role:'metric' bar variant 승격 — 막대 자체가 수치 시각화 */}
             <span
-              className={`${ax({ role: 'badge', surface: 'display', tone: 'accent' })} ${ax.raw({ shape: 'xs' })} ${styles.barFill}`}
+              className={`${ax({ role: 'metric', surface: 'display', layout: 'bar', tone: 'accent' })} ${ax.raw({ shape: 'xs' })} ${styles.barFill}`}
               style={{ '--bar-fill': `${(d.value / max) * 100}%` } as React.CSSProperties}
             />
           </span>

@@ -39,12 +39,15 @@ export type AxFlex = 'none' | 'auto' | '1'
 export type AxClamp = '1' | '2' | '3' | '4' | 'pre'
 export type AxAspect = '1' | 'video' | 'card'
 
-// ── 2) role discriminant — 7 브랜치 (utility/tip/cell 신규) ─────────
+// ── 2) role discriminant — 10 브랜치 (metric/signal/placeholder 신규) ─────────
 /**
  * @invariant role은 AxPublic discriminated union의 유일 discriminant
  * @invariant 'utility'는 role 키 미지정(key-absence) 시 default 브랜치
  * @invariant 'tip'은 Tooltip 전용 — surface가 SurfaceTip subset으로 잠긴다
  * @invariant 'cell'은 grid 칸 컨테이너 + 내부 control 묶음 역할 — surface가 SurfaceCell subset으로 잠긴다
+ * @invariant 'metric'은 숫자 강조 표시 — surface가 SurfaceMetric subset으로 잠긴다 (strictRoles)
+ * @invariant 'signal'은 시스템→사용자 알림 — surface가 SurfaceSignal subset으로 잠긴다 (strictRoles)
+ * @invariant 'placeholder'는 로딩/Skeleton — surface optional (rolePreset이 motion:shimmer/pulse 공급)
  */
 export type AxRole =
   | 'control'
@@ -54,6 +57,9 @@ export type AxRole =
   | 'badge'
   | 'utility'   // 신규
   | 'tip'       // 신규 (§2.0 결정)
+  | 'metric'    // 신규 — ax-p0-roles-prd — 숫자 강조 표시
+  | 'signal'    // 신규 — ax-p0-roles-prd — 시스템→사용자 알림
+  | 'placeholder' // 신규 — ax-p0-roles-prd — 로딩/Skeleton
 
 // ── 3) surface 파티션 — 7 subset (role-별 잠금) ──────────────────────
 /**
@@ -67,12 +73,16 @@ type SurfaceCell       = 'display' | 'ghost' | 'input'                     // ro
 type SurfaceBadge      = 'display' | 'ghost' | 'overlay' | 'placeholder'  // role: 'badge'
 type SurfaceTip        = 'inverted' | 'overlay'                            // role: 'tip'
 type SurfacePanel      = 'sunken' | 'base' | 'raised' | 'overlay'          // role: 'control-group'
+type SurfaceMetric      = 'display' | 'ghost' | 'sunken'                   // role: 'metric' (신규, ax-p0-roles-prd)
+type SurfaceSignal      = 'display' | 'overlay' | 'ghost'                  // role: 'signal' (신규, ax-p0-roles-prd)
+type SurfacePlaceholder = 'sunken' | 'ghost' | 'display'                   // role: 'placeholder' (신규, ax-p0-roles-prd)
 
 /** AxSurface — 모든 subset의 union (외부 enumeration용) */
 export type AxSurface =
   | SurfaceActionable | SurfaceDisplay | SurfaceRow
   | SurfaceCell                                     // 신규
   | SurfaceBadge | SurfaceTip | SurfacePanel
+  | SurfaceMetric | SurfaceSignal | SurfacePlaceholder  // 신규 (ax-p0-roles-prd)
 
 // ── 4) AxPublic — discriminated union by role ─────────────────────────
 /**
@@ -80,7 +90,8 @@ export type AxSurface =
  * @invariant role: 'utility' 브랜치는 surface/interactive/content/tone 키 자체 부재 (타입 거부)
  * @invariant role 브랜치별 surface는 role-local subset만 허용 (cross-role surface 거부)
  * @invariant role: 'tip' 브랜치는 textStyle을 'caption' | 'label' | 'body'로 잠근다(option)
- * @invariant role: 'control' / 'badge' / 'tip' / 'cell' 브랜치는 surface 필수 — rolePreset 주입 진입점
+ * @invariant role: 'control' / 'badge' / 'tip' / 'cell' / 'metric' / 'signal' 브랜치는 surface 필수 — rolePreset 주입 진입점 (strictRoles)
+ * @invariant role: 'placeholder' 브랜치는 surface optional — rolePreset이 motion:shimmer/pulse 기본 공급
  * @invariant text/weight/state/opacity/scroll/cs 키는 모든 브랜치에서 부재
  */
 export type AxPublic =
@@ -168,6 +179,52 @@ export type AxPublic =
       flex?: AxFlex
       clamp?: AxClamp
       aspect?: AxAspect
+    }
+  // ⑧ metric — 숫자 강조 표시 (신규, ax-p0-roles-prd)
+  /**
+   * @invariant role:'metric' 브랜치는 surface 필수 — rolePreset 주입 진입점 (strictRoles)
+   * @invariant layout:'stack' = value/label 세로 / layout:'bar' = 가로 (rolePreset CSS 파생)
+   */
+  | {
+      role: 'metric'
+      surface: SurfaceMetric
+      tone?: AxTone
+      textStyle?: AxTextStyle
+      content?: 'text' | 'bubble'
+      layout?: AxLayout
+      width?: AxWidth
+      flex?: AxFlex
+    }
+  // ⑨ signal — 시스템→사용자 알림 (신규, ax-p0-roles-prd)
+  /**
+   * @invariant role:'signal' 브랜치는 surface 필수 — rolePreset 주입 진입점 (strictRoles)
+   * @invariant interactive:'button'은 dismiss 있을 때만. placement는 toast 시 float-*
+   */
+  | {
+      role: 'signal'
+      surface: SurfaceSignal
+      tone?: AxTone
+      textStyle?: AxTextStyle
+      content?: 'text' | 'bubble' | 'icon'
+      interactive?: 'button'
+      placement?: AxPlacement
+      layout?: AxLayout
+      width?: AxWidth
+    }
+  // ⑩ placeholder — 로딩/Skeleton 전용 (신규, ax-p0-roles-prd)
+  /**
+   * @invariant role:'placeholder' 브랜치는 surface optional — strictRoles 제외
+   * @invariant motion은 rolePreset이 shimmer/pulse 자동 공급
+   * @invariant aria-hidden="true" DOM 주입은 ui 컴포넌트(Skeleton) 책임
+   */
+  | {
+      role: 'placeholder'
+      surface?: SurfacePlaceholder
+      layout?: AxLayout
+      width?: AxWidth
+      aspect?: AxAspect
+      flex?: AxFlex
+      clamp?: AxClamp
     }
 
 // ── 5) Public 키 enumeration ─────────────────────────────────────────

@@ -15,8 +15,9 @@ const warnedMissKeys = new Set<string>()
  * 'role' > 'role.surface' > 'role.surface.interactive' > 'role.surface.content'
  *
  * @invariant cs는 키에서 제외 — 외부 입력(크기)으로 유지, Private 주입과 직교
- * @invariant AxRole 7브랜치 × AxSurface union으로 자동 확장
+ * @invariant AxRole 10브랜치 × AxSurface union으로 자동 확장
  * @invariant `tip.inverted`, `tip.inverted.caption` entry 등록 (Tooltip unblock)
+ * @invariant `metric.*`, `signal.*`, `placeholder.*` entry 등록 (ax-p0-roles-prd)
  */
 export type RolePresetKey =
   | `${AxRole}`
@@ -108,6 +109,24 @@ export const rolePresetTable: Partial<Record<RolePresetKey, Partial<AxPrivate>>>
   // content 슬롯 대응: AxContent에 'caption' 없으므로 interactive slot 사용하지 않음 — base만 상속.
   // tip.overlay — overlay Tooltip (투명 배경 + 블러)
   'tip.overlay': { shape: 'sm', motion: 'fade-slide-in' },
+
+  // ── metric.* — 숫자 강조 표시 (신규, ax-p0-roles-prd) ──
+  'metric.display': { shape: 'sm' },
+  'metric.display.text': {},                     // value+label stack
+  'metric.display.bubble': { shape: 'md' },      // 버블 형태 (CmsLanding-like)
+  'metric.ghost': {},
+  'metric.sunken': { shape: 'sm' },
+
+  // ── signal.* — 시스템→사용자 알림 (신규, ax-p0-roles-prd) ──
+  'signal.display': { shape: 'md' },
+  'signal.display.button': { shape: 'md' },      // dismissable alert
+  'signal.overlay': { shape: 'md', motion: 'fade-slide-in' },  // toast
+  'signal.ghost': {},
+
+  // ── placeholder.* — 로딩/Skeleton (신규, ax-p0-roles-prd, motion 자동) ──
+  'placeholder.sunken': { shape: 'sm', motion: 'shimmer' },
+  'placeholder.ghost':  { motion: 'pulse' },
+  'placeholder.display': { shape: 'sm', motion: 'shimmer' },
 }
 
 /**
@@ -200,12 +219,13 @@ export function resolveRolePreset(
   }
 
   // D) 모든 키 miss 시 분기 정책 (§1 #7, §4b):
-  //    - role ∈ {control|badge|tip|cell} AND surface 지정 → throw (Pit of Failure 차단)
-  //      · 이 4 role은 surface 필수 — preset 누락은 감사 실패 (Tooltip-class 버그).
-  //    - role ∈ {control-group|item|utility} OR surface 미지정 → silent {}
+  //    - role ∈ {control|badge|tip|cell|metric|signal} AND surface 지정 → throw (Pit of Failure 차단)
+  //      · 이 6 role은 surface 필수 — preset 누락은 감사 실패 (Tooltip-class 버그).
+  //    - role ∈ {control-group|item|utility|placeholder} OR surface 미지정 → silent {}
   //      · 이 role들은 surface optional — panel/row는 layout만으로도 시각 구분 가능.
+  //      · placeholder는 surface 생략 시에도 motion 주입 없이 통과 (ax-p0-roles-prd).
   if (!anyHit) {
-    const strictRoles: AxRole[] = ['control', 'badge', 'tip', 'cell']
+    const strictRoles: AxRole[] = ['control', 'badge', 'tip', 'cell', 'metric', 'signal']
     if (strictRoles.includes(input.role) && input.surface) {
       const suffix =
         (input.content ? `.${input.content}` : '') +
