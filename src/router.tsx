@@ -17,7 +17,6 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { path: '/', lazy: () => import('./pages/cms/PageCms').then(m => ({ Component: m.default })) },
-      { path: '/ui/*', lazy: () => import('./pages/showcase/PageUiShowcase').then(m => ({ Component: m.default })) },
       { path: '/viewer/*', lazy: () => import('./pages/viewer/PageViewer').then(m => ({ Component: m.default })) },
       {
         path: '/book/*',
@@ -29,6 +28,7 @@ export const router = createBrowserRouter([
       { path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
       { path: '/chat/entities', lazy: () => import('./pages/chat/PageChatEntities').then(m => ({ Component: m.default })) },
       { path: '/cmux/preview', lazy: () => import('./pages/cmux-preview/PageCmuxPreview').then(m => ({ Component: m.default })) },
+      { path: '/replay/raw', lazy: () => import('./pages/replay/PageReplayRaw').then(m => ({ Component: m.default })) },
       { path: '/replay/inspect', lazy: () => import('./pages/replay/PageReplayInspect').then(m => ({ Component: m.default })) },
       { path: '/replay', lazy: () => import('./pages/replay/PageReplay').then(m => ({ Component: m.default })) },
       { path: '/i18n', lazy: () => import('./pages/i18n/PageI18nEditor').then(m => ({ Component: m.default })) },
