@@ -1,13 +1,17 @@
 // ② 2026-04-04-inspector-redesign-prd.md  ② inspectorDefinePagePanelPrd.md
 // @useState-hatch — devtools: inspector UI owns local view state (selection, tabs, pick-mode)
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
+// Inspector 쉘 전체 조립을 defineLayout에 귀속. 구조형 레이아웃(split/stack)은 defineLayout
+// 소유, 위젯은 표시 내용만. scroll 오너십도 defineLayout 노드의 scroll 필드.
+import React, { useEffect, useRef, useState, useMemo, useCallback, useContext } from 'react'
 import type { InspectResult } from '@os/engine/types'
 import type { AriaActions } from '@os/primitives/ariaRegistry'
-import type { NormalizedData, PaneSize } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
 import { getAllAriaActions } from '@os/primitives/ariaRegistry'
 import { TreeView } from '@os/ui/TreeView'
-import { SplitPane } from '@os/ui/SplitPane'
+import { FlatLayout } from '@os/ui/FlatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
+import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { AppInspector } from './AppInspector'
 import { copyAriaTree } from './inspectToAscii'
 import { registryToUnifiedTree, findInstanceId } from './inspectorStore'
@@ -16,6 +20,31 @@ import { InspectorLogTab } from './InspectorLogTab'
 import { InspectorPageTab } from './InspectorPageTab'
 import { ax } from '@styles/ax'
 import './InspectorWindow.css'
+
+type UnifiedTree = ReturnType<typeof registryToUnifiedTree>['tree']
+
+// ── Shared context — 모든 widget이 상태/핸들러 pull ──
+interface InspectorShellCtx {
+  actionsMap: Map<string, AriaActions>
+  tree: UnifiedTree
+  metas: Map<string, InstanceMeta>
+  selectedId: string
+  activeTab: DetailTab
+  setActiveTab: (tab: DetailTab) => void
+  picking: boolean
+  setPicking: React.Dispatch<React.SetStateAction<boolean>>
+  inspectResult: InspectResult | undefined
+  prevState: NormalizedData | undefined
+  handleActivate: (nodeId: string) => void
+}
+
+const InspectorShellContext = React.createContext<InspectorShellCtx | null>(null)
+
+function useInspectorShell(): InspectorShellCtx {
+  const ctx = useContext(InspectorShellContext)
+  if (!ctx) throw new Error('InspectorShellContext missing')
+  return ctx
+}
 
 const emptyPlugins: Plugin[] = []
 
@@ -185,13 +214,116 @@ function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: Detai
   )
 }
 
+// ── Widgets (defineLayout 조립 단위) — 표시만. 구조 조립은 defineLayout이. ──
+
+function InspectorTopBar() {
+  const { actionsMap, picking, setPicking } = useInspectorShell()
+  return (
+    <div className={`${ax({ role: 'control-group', layout: 'spread', surface: 'overlay' })} ${ax({ textStyle: 'caption' })}`}>
+      <div className={ax({ layout: 'row' })}>
+        <span>Aria Inspector</span>
+        <button
+          className={`border-none cursor-pointer ${ax({ textStyle: 'caption' })} inspector-tab ${picking ? 'inspector-tab-active' : ''}`}
+          onClick={() => setPicking(p => !p)}
+        >
+          {picking ? 'Picking…' : 'Pick'}
+        </button>
+      </div>
+      <span>{actionsMap.size} instances</span>
+    </div>
+  )
+}
+
+function InspectorInstanceTree() {
+  const { actionsMap, tree, handleActivate } = useInspectorShell()
+  if (actionsMap.size === 0) {
+    return <div className={ax({ textStyle: 'caption' })}>등록된 인스턴스 없음</div>
+  }
+  return (
+    <TreeView
+      data={tree}
+      plugins={emptyPlugins}
+      onActivate={handleActivate}
+      selectionFollowsFocus
+      activateOnClick
+    />
+  )
+}
+
+function InspectorTabBar() {
+  const { activeTab, setActiveTab } = useInspectorShell()
+  return <TabBar active={activeTab} onChange={setActiveTab} />
+}
+
+function InspectorTabContent() {
+  const { activeTab, inspectResult, prevState, actionsMap, selectedId, metas } = useInspectorShell()
+  if (activeTab === 'page') return <InspectorPageTab />
+  if (activeTab === 'log') return <InspectorLogTab actionsMap={actionsMap} />
+  if (!inspectResult) {
+    return <div className={ax({ textStyle: 'caption' })}>선택된 인스턴스 없음</div>
+  }
+  if (activeTab === 'interaction') {
+    return (
+      <div className={ax({ layout: 'stack' })}>
+        <div className={ax({ layout: 'spread', textStyle: 'caption' })}>
+          <span>Bindings ({Object.keys(inspectResult.keyMap).length + Object.keys(inspectResult.clickMap ?? {}).length})</span>
+          <CopyButton inspectResult={inspectResult} />
+        </div>
+        <BoundKeyTable inspectResult={inspectResult} />
+      </div>
+    )
+  }
+  if (activeTab === 'aria') {
+    return <AriaTabContent selectedId={selectedId} inspectResult={inspectResult} actionsMap={actionsMap} metas={metas} />
+  }
+  if (activeTab === 'state') {
+    return (
+      <div className={ax({ layout: 'stack' })}>
+        <div className={ax({ textStyle: 'caption' })}>
+          State ({Object.keys(inspectResult.state.entities).length} entities)
+        </div>
+        <AppInspector inspectResult={inspectResult} prevState={prevState} />
+      </div>
+    )
+  }
+  return null
+}
+
+// ── defineLayout SSOT — scroll 오너는 tree, tab-content 노드 ──
+
+const inspectorShellLayout = defineLayout({
+  entities: {
+    root: {
+      data: { type: 'split', direction: 'vertical', sizes: ['auto', 'flex'], resizable: false },
+      children: ['topbar', 'body'],
+    },
+    topbar: { data: { type: 'widget', widget: 'InspectorTopBar' } },
+    body: {
+      data: { type: 'split', direction: 'horizontal', sizes: [0.3, 'flex'], resizable: true },
+      children: ['tree', 'detail'],
+    },
+    tree: { data: { type: 'widget', widget: 'InspectorInstanceTree', scroll: 'y' } },
+    detail: {
+      data: { type: 'split', direction: 'vertical', sizes: ['auto', 'flex'], resizable: false },
+      children: ['tabbar', 'tab-content'],
+    },
+    tabbar: { data: { type: 'widget', widget: 'InspectorTabBar' } },
+    'tab-content': { data: { type: 'widget', widget: 'InspectorTabContent', scroll: 'y' } },
+  },
+})
+
+const inspectorShellRegistry = createWidgetRegistry({
+  InspectorTopBar,
+  InspectorInstanceTree,
+  InspectorTabBar,
+  InspectorTabContent,
+})
+
 export function InspectorWindow() {
   // @useState-hatch — devtools: registry snapshot polling mirror
   const [actionsMap, setActionsMap] = useState<Map<string, AriaActions>>(new Map())
   // @useState-hatch — devtools: local inspector selection
   const [selectedId, setSelectedId] = useState('')
-  // @useState-hatch — devtools: SplitPane controlled sizes
-  const [sizes, setSizes] = useState<PaneSize[]>([0.3, 'flex'])
   // @useState-hatch — devtools: local tab selection (첫 진입은 Page — defineLayout SSOT 우선)
   const [activeTab, setActiveTab] = useState<DetailTab>('page')
   // @useState-hatch — devtools: pick-mode toggle
@@ -299,79 +431,21 @@ export function InspectorWindow() {
     }
   }, [metas, actionsMap])
 
+  const ctx = useMemo<InspectorShellCtx>(() => ({
+    actionsMap, tree, metas,
+    selectedId, activeTab, setActiveTab,
+    picking, setPicking,
+    inspectResult, prevState, handleActivate,
+  }), [actionsMap, tree, metas, selectedId, activeTab, picking, inspectResult, prevState, handleActivate])
+
   return (
-    <div className={`${ax({ layout: 'stack' })} inspector-root`}>
-      <div className={`${ax({ role: 'control-group', layout: 'spread', surface: 'overlay' })} ${ax({ textStyle: 'caption' })}`}>
-        <div className={ax({ layout: 'row' })}>
-          <span className={ax({ })}>Aria Inspector</span>
-          <button
-            className={`border-none cursor-pointer ${ax({ textStyle: 'caption' })} inspector-tab ${picking ? 'inspector-tab-active' : ''}`}
-            onClick={() => setPicking(p => !p)}
-          >
-            {picking ? '⊙ Picking…' : '⊙ Pick'}
-          </button>
-        </div>
-        <span className={ax({ })}>{actionsMap.size} instances</span>
-      </div>
-
-      <div className={ax({ flex: '1' })}>
-        <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
-          <div className={ax({ layout: 'stack' })}>
-            {actionsMap.size === 0 ? (
-              <div className={ax({ textStyle: 'caption' })}>등록된 인스턴스 없음</div>
-            ) : (
-              <TreeView
-                data={tree}
-                plugins={emptyPlugins}
-                onActivate={handleActivate}
-                selectionFollowsFocus
-                activateOnClick
-              />
-            )}
-          </div>
-
-          <div className={`${ax({ })} inspector-detail`}>
-            <div className={ax({ layout: 'stack' })}>
-              <TabBar active={activeTab} onChange={setActiveTab} />
-
-              {activeTab === 'page' ? (
-                <InspectorPageTab />
-              ) : activeTab === 'log' ? (
-                <InspectorLogTab actionsMap={actionsMap} />
-              ) : inspectResult ? (
-                <>
-                  {activeTab === 'interaction' && (
-                    <div className={ax({ layout: 'stack' })}>
-                      <div className={ax({ layout: 'spread', textStyle: 'caption' })}>
-                        <span>Bindings ({Object.keys(inspectResult.keyMap).length + Object.keys(inspectResult.clickMap ?? {}).length})</span>
-                        <CopyButton inspectResult={inspectResult} />
-                      </div>
-                      <BoundKeyTable inspectResult={inspectResult} />
-                    </div>
-                  )}
-
-                  {activeTab === 'aria' && (
-                    <AriaTabContent selectedId={selectedId} inspectResult={inspectResult} actionsMap={actionsMap} metas={metas} />
-                  )}
-
-                  {activeTab === 'state' && (
-                    <div className={ax({ layout: 'stack' })}>
-                      <div className={ax({ textStyle: 'caption' })}>
-                        State ({Object.keys(inspectResult.state.entities).length} entities)
-                      </div>
-                      <AppInspector inspectResult={inspectResult} prevState={prevState} />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className={ax({ textStyle: 'caption' })}>
-                  선택된 인스턴스 없음
-                </div>
-              )}
-            </div>
-          </div>
-        </SplitPane>
-      </div>
-    </div>
+    <InspectorShellContext.Provider value={ctx}>
+      <FlatLayout
+        id="inspector-shell"
+        data={inspectorShellLayout}
+        registry={inspectorShellRegistry}
+        aria-label="Aria Inspector"
+      />
+    </InspectorShellContext.Provider>
   )
 }

@@ -44,6 +44,9 @@ export function openInspectorWindow(): void {
 
   const container = win.document.createElement('div')
   container.id = 'inspector-root'
+  // body height:100% 체인을 잇기 위해 container도 100% + flex column.
+  // FlatLayout 루트(.ly-fill flex:1)가 이 container 안에서 viewport 높이에 캡된다.
+  container.style.cssText = 'height: 100%; display: flex; flex-direction: column;'
   win.document.body.appendChild(container)
 
   const root = createRoot(container)

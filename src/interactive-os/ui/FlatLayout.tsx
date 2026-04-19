@@ -120,16 +120,16 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
             const size = node.sizes[i]
             const isFlex = size === 'flex' || size === undefined
             const isAuto = size === 'auto'
-            const style = isFlex
-              ? { '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties
+            // pane 자체가 flex container여야 자식(widget/nested split)의 flex:1이
+            // 부모 높이에 캡된다. layout:'stack' (flex-column) + inline flex로 sizing.
+            const style: React.CSSProperties = isFlex
+              ? { flex: 1, flexBasis: 'auto', minWidth: 0, minHeight: 0 }
               : isAuto
-                ? { '--split-flex': '0 0 auto', '--split-basis': 'auto' } as React.CSSProperties
-                : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
+                ? { flex: '0 0 auto', flexBasis: 'auto', minWidth: 0, minHeight: 0 }
+                : { flex: '0 0 auto', flexBasis: `${size * 100}%`, minWidth: 0, minHeight: 0 }
 
             return (
-              // pane 자체가 flex container여야 자식(widget/nested split)의 flex:1이
-              // 부모 높이에 캡된다. layout:'stack' (flex-column)으로 보장.
-              <div key={childId} className={`${ax({ layout: 'stack' })} ${isAuto ? '' : styles.splitPane}`} style={style}>
+              <div key={childId} className={ax({ layout: 'stack' })} style={style}>
                 {renderNode(childId, 'split')}
               </div>
             )
