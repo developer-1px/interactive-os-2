@@ -1,5 +1,5 @@
 // ② 2026-04-02-inspector-source-preview-prd.md
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react' // @useState-hatch — devtools inspector
 import { computePlacement } from '../../misc/computePlacement'
 import { CodePreview } from '@os/ui/CodePreview'
 
@@ -9,40 +9,41 @@ interface SourcePreviewProps {
   anchor: { x: number; y: number }
 }
 
-const PREVIEW_WIDTH = 480
-const PREVIEW_HEIGHT = 140
-const CONTEXT_LINES = 2
+const PREVIEW_WIDTH = 720
+const PREVIEW_HEIGHT = 560
 
 // Module-scope cache survives re-mounts
 // eslint-disable-next-line react-refresh/only-export-components
 export const fileCache = new Map<string, string>()
 
 export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewProps) {
-  const [snippet, setSnippet] = useState<string>('')
-  const [error, setError] = useState(false)
+  const [source, setSource] = useState<string>('') // @useState-hatch — devtools
+  const [error, setError] = useState(false) // @useState-hatch — devtools
+  const scrollRef = useRef<HTMLDivElement>(null)
 
-  const contentWidth = Math.min(PREVIEW_WIDTH, window.innerWidth - 16)
+  const contentWidth = Math.min(PREVIEW_WIDTH, window.innerWidth - 32)
+  const contentHeight = Math.min(PREVIEW_HEIGHT, window.innerHeight - 80)
 
   // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const placement = useMemo(() =>
     computePlacement({
       anchor,
-      content: { width: contentWidth, height: PREVIEW_HEIGHT },
+      content: { width: contentWidth, height: contentHeight },
       viewport: { width: window.innerWidth, height: window.innerHeight },
     }),
-  [anchor.x, anchor.y, contentWidth])
+  [anchor.x, anchor.y, contentWidth, contentHeight])
 
   useEffect(() => {
     if (!filePath) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSnippet('')
+      setSource('')
       setError(false)
       return
     }
 
     const cached = fileCache.get(filePath)
     if (cached) {
-      setSnippet(extractSnippet(cached, lineNumber))
+      setSource(cached)
       setError(false)
       return
     }
@@ -54,26 +55,42 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
       .then(text => {
         fileCache.set(filePath, text)
         if (!controller.signal.aborted) {
-          setSnippet(extractSnippet(text, lineNumber))
+          setSource(text)
           setError(false)
         }
       })
       .catch(err => {
         if (err instanceof DOMException && err.name === 'AbortError') return
         if (!controller.signal.aborted) {
-          setSnippet('')
+          setSource('')
           setError(true)
         }
       })
 
     return () => controller.abort()
-  }, [filePath, lineNumber])
+  }, [filePath])
 
-  const startLine = Math.max(1, lineNumber - CONTEXT_LINES)
-  const highlightLines = useMemo(
-    () => new Set([lineNumber - startLine + 1]),
-    [lineNumber, startLine],
-  )
+  const highlightLines = useMemo(() => new Set([lineNumber]), [lineNumber])
+
+  useEffect(() => {
+    if (!source) return
+    const container = scrollRef.current
+    if (!container) return
+    let raf2 = 0
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        const lineEl = container.querySelector<HTMLElement>(`[data-line="${lineNumber}"]`)
+        if (lineEl) {
+          const target = lineEl.offsetTop - container.clientHeight / 2 + lineEl.clientHeight / 2
+          container.scrollTop = Math.max(0, target)
+        }
+      })
+    })
+    return () => {
+      cancelAnimationFrame(raf1)
+      cancelAnimationFrame(raf2)
+    }
+  }, [source, lineNumber])
 
   if (!filePath) return null
 
@@ -86,7 +103,9 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
         top: placement.top,
         left: placement.left,
         width: contentWidth,
-        maxHeight: PREVIEW_HEIGHT,
+        height: contentHeight,
+        display: 'flex',
+        flexDirection: 'column',
         overflow: 'hidden',
         background: 'rgba(23, 23, 23, 0.95)',
         borderRadius: '8px',
@@ -94,7 +113,7 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
         border: '1px solid rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(8px)',
         zIndex: 100002,
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
         fontSize: '12px',
       }}
     >
@@ -109,19 +128,20 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
+          flexShrink: 0,
         }}
       >
         {filename}:{lineNumber}
       </div>
 
-      <div style={{ overflow: 'hidden' }}>
+      <div ref={scrollRef} style={{ overflow: 'auto', flex: 1, minHeight: 0 }}>
         {error ? (
           <div style={{ padding: '8px 12px', color: '#EF4444', fontSize: '11px' }}>
             Source not available
           </div>
-        ) : snippet ? (
+        ) : source ? (
           <CodePreview
-            code={snippet}
+            code={source}
             filename={filename}
             highlightLines={highlightLines}
             preset="doc"
@@ -130,11 +150,4 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
       </div>
     </div>
   )
-}
-
-function extractSnippet(content: string, line: number): string {
-  const lines = content.split('\n')
-  const start = Math.max(0, line - 1 - CONTEXT_LINES)
-  const end = Math.min(lines.length, line + CONTEXT_LINES)
-  return lines.slice(start, end).join('\n')
 }
