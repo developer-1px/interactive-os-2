@@ -192,8 +192,8 @@ export function InspectorWindow() {
   const [selectedId, setSelectedId] = useState('')
   // @useState-hatch — devtools: SplitPane controlled sizes
   const [sizes, setSizes] = useState<PaneSize[]>([0.3, 'flex'])
-  // @useState-hatch — devtools: local tab selection
-  const [activeTab, setActiveTab] = useState<DetailTab>('interaction')
+  // @useState-hatch — devtools: local tab selection (첫 진입은 Page — defineLayout SSOT 우선)
+  const [activeTab, setActiveTab] = useState<DetailTab>('page')
   // @useState-hatch — devtools: pick-mode toggle
   const [picking, setPicking] = useState(false)
   const prevSnapshotRef = useRef('')

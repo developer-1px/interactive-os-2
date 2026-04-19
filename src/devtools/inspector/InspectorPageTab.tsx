@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useSyncExternalStore } from 'react'
 import { TreeView } from '@os/ui/TreeView'
 import { TreeGrid } from '@os/ui/TreeGrid'
+import { CodePreview } from '@os/ui/CodePreview'
 import { CopyIndicator } from '@os/ui/indicators/CopyIndicator'
 import type { NormalizedData } from '@os/store/types'
 import { getEntityData } from '@os/store/createStore'
@@ -66,6 +67,9 @@ export function InspectorPageTab() {
     [selectedData],
   )
 
+  // 현재 FlatLayout store의 defineLayout raw 소스 — 트리·그리드와 병행 표시.
+  const rawSource = useMemo(() => store ? serializeToDefineLayout(store) : '', [store])
+
   const handleGridChange = useCallback((next: NormalizedData) => {
     if (!selectedNodeId || !actions) return
     const patch = gridDataToLayoutPatch(next)
@@ -118,6 +122,11 @@ export function InspectorPageTab() {
           header
           aria-label="Layout node props"
         />
+      )}
+      {rawSource && (
+        <div className={ax({ flex: '1', layout: 'scroll' })}>
+          <CodePreview code={rawSource} filename="defineLayout.ts" preset="doc" />
+        </div>
       )}
       <div className={ax({ layout: 'bar' })}>
         <button
