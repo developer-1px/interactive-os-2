@@ -10,6 +10,8 @@ export { composePattern } from '../pattern/composePattern';
 
 export { createCommandEngine } from '../engine/createCommandEngine';
 export { useEngine } from '../engine/useEngine';
+export { useEngineStore, useEngineSelector } from '../engine/useEngineStore';
+export { shallow } from '../engine/shallow';
 
 export { definePlugin } from '../plugins/definePlugin';
 export type { Plugin, Command, Middleware, VisibilityFilter } from '../engine/types';
