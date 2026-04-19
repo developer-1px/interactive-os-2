@@ -29,7 +29,7 @@ const sampleSchemaData: SampleSchema = {
   tags: ['ui', 'treegrid'],
 }
 
-export default function JsonEditorDemo(): ReactElement {
+export function Demo(): ReactElement {
   const [free, setFree] = useState<JsonValue>(sampleFree)
   const [typed, setTyped] = useState<SampleSchema>(sampleSchemaData)
 
@@ -45,7 +45,7 @@ export default function JsonEditorDemo(): ReactElement {
 
       <section className={ax({ layout: 'stack' })}>
         <h2 className={ax({ textStyle: 'section' })}>Schema mode (z.object)</h2>
-        <JsonEditor<SampleSchema>
+        <JsonEditor
           value={typed}
           onChange={setTyped}
           schema={sampleSchema}

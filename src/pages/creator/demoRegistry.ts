@@ -16,16 +16,16 @@ export interface DemoEntry {
   loadDemo: () => Promise<{ Demo: React.ComponentType; meta?: DemoMeta }>
 }
 
-// Glob all demo modules (lazy)
+// Glob all demo modules (lazy). `**/*` to include folder-grouped demos like JsonEditor/JsonEditor.demo.tsx.
 const demoModules = import.meta.glob<{ Demo: React.ComponentType; meta?: DemoMeta }>(
-  '../../interactive-os/ui/*.demo.tsx',
+  '../../interactive-os/ui/**/*.demo.tsx',
 )
 
 // Glob raw source for demo files (eager for instant code view)
 export const demoSources: Record<string, string> = Object.fromEntries(
   Object.entries(
     import.meta.glob<string>(
-      '../../interactive-os/ui/*.demo.tsx',
+      '../../interactive-os/ui/**/*.demo.tsx',
       { query: '?raw', import: 'default', eager: true },
     ),
   ).map(([path, src]) => {
