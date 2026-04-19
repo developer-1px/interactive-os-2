@@ -54,6 +54,7 @@ export const router = createBrowserRouter([
       { path: '/test/keyline', lazy: () => import('./pages/keyline/PageKeylineTest').then(m => ({ Component: m.default })) },
       { path: '/ax-principles', lazy: () => import('./pages/ax-principles/PageAxPrinciples').then(m => ({ Component: m.default })) },
       { path: '/todo', lazy: () => import('./pages/todo/PageTodo').then(m => ({ Component: m.default })) },
+      { path: '/playground', lazy: () => import('./pages/playground/PagePlayground').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
