@@ -515,6 +515,30 @@ if (isPages && isTsx) {
   }
 }
 
+// 규칙 38: "존재감 지우기 3축 조합" 경고 — 시각 위계 손상
+// surface:'ghost' + tone:'*-dim' + textStyle:'caption' 3축을 동일 ax() 호출에
+// 동시 선언하면 모두 "물러남" 방향이라 위계 층위가 안 보임.
+// 위계 상위(section header, group label, category title) 요소라면 안티패턴.
+// 순수 장식(footnote, timestamp, helper text)이라면 합법 — 사람이 맥락 판단.
+if (isTsx) {
+  const axCalls = content.match(/\bax\s*\(\s*\{[^}]*?\}/g) ?? []
+  for (const call of axCalls) {
+    const hasGhost = /\bsurface\s*:\s*['"]ghost['"]/.test(call)
+    const hasDim = /\btone\s*:\s*['"][\w-]+-dim['"]/.test(call)
+    const hasCaption = /\btextStyle\s*:\s*['"]caption['"]/.test(call)
+    if (hasGhost && hasDim && hasCaption) {
+      warnings.push(
+        'ax()에 surface:ghost + tone:*-dim + textStyle:caption 3축 동시 선언 — ' +
+        '모두 "존재감 지우기" 방향이라 시각 위계가 손상됩니다. ' +
+        '위계 요소(section header, group label)라면: textStyle:"overline" + tone:"neutral" ' +
+        '(uppercase + wide tracking이 section marker 시맨틱 명시). ' +
+        '순수 장식 텍스트(footnote/timestamp)면 무시하세요.'
+      )
+      break
+    }
+  }
+}
+
 // 규칙 36: ax({ role: 'control-group', ... }) 변수 추출 금지 — "group을 영역으로 나누기" 안티패턴
 // const cluster = ax(...) → 여러 <div>에 재사용하면 시각적 cluster 분리(영역 나누기)로 이어짐
 if (isTsx) {

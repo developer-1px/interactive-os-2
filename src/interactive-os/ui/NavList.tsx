@@ -30,8 +30,11 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   })
 }
 
+// group label은 section header 시맨틱 — uppercase + semi-bold + wide tracking으로
+// 위계 상위 표시. '존재감 지우기' 3축(ghost+dim+caption) 조합은 규칙 38 안티패턴.
+// role:'utility' 브랜치(textStyle만)로 tone 없이도 overline 자체가 충분한 시각 weight.
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
-  <div className={ax({ role: 'badge', surface: 'ghost', textStyle: 'caption', tone: 'neutral-dim' })}>{label}</div>
+  <div className={ax({ textStyle: 'overline' })}>{label}</div>
 )
 
 function isGroup(entity: Record<string, unknown>): boolean {
@@ -88,15 +91,17 @@ export function NavList({
     )
   }
 
+  // Gestalt 분리: 그룹 간 gap:lg(proximity 끊음), 그룹 내부 gap:xs(아이템 결집).
+  // 둘 다 있어야 그룹 경계가 시각적으로 보임.
   return (
-    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${(nav.rootProps as React.HTMLAttributes<HTMLDivElement>).className ?? ''} ${ax({ layout: 'stack' })}`}>
+    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${(nav.rootProps as React.HTMLAttributes<HTMLDivElement>).className ?? ''} ${ax({ layout: 'stack' })} ${ax.raw({ gap: 'lg' })}`}>
       {rootChildren.map((id) => {
         const entity = store.entities[id]
         if (!entity) return null
         if (isGroup(entity)) {
           const groupChildren = getChildren(store, id)
           return (
-            <div key={id} role="group" aria-label={getLabel(entity)} className={`navlist-group ${ax({ layout: 'stack' })}`}>
+            <div key={id} role="group" aria-label={getLabel(entity)} className={`navlist-group ${ax({ layout: 'stack' })} ${ax.raw({ gap: 'xs' })}`}>
               {renderGroupLabel(getLabel(entity))}
               {renderItems(groupChildren)}
             </div>
