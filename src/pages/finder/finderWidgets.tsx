@@ -5,7 +5,7 @@ import { NavList } from '@os/ui/NavList'
 import { FinderToolbar } from '@os/ui/FinderToolbar'
 import { EmptyState } from '@os/ui/EmptyState'
 import { ax } from '@styles/ax'
-import { FileTreeGrid } from '@entities/file/ui/FileTreeGrid'
+import { FileTreeTable } from '@entities/file/ui/FileTreeTable'
 import { useFinder } from './finderContext'
 import { FilePanel } from './widgets/FilePanel'
 import type { SortKey } from './finderSort'
@@ -65,17 +65,14 @@ export function FinderTreeGridWidget() {
   }
 
   // outer FlatLayout node가 scroll:'y'로 scroll container를 소유 — widget은 overflow 관여 안 함.
-  // .ly-fill은 overflow:hidden이어서 외부 scroll 체인을 끊으므로 .ly-stack 사용.
-  // FileTreeGrid column: name/type/loc. Finder SortKey 'kind'→'type', 'date'→undefined (grid 컬럼 없음, 외부 sortStore가 처리).
-  const gridSortKey = sortKey === 'kind' ? 'type' : sortKey === 'date' ? undefined : sortKey ?? undefined
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
-      <FileTreeGrid
+      <FileTreeTable
         data={listStore}
         onChange={onChange}
-        sortKey={gridSortKey}
+        sortKey={sortKey ?? undefined}
         sortDir={sortDir}
-        onSort={(k) => onSort((k === 'type' ? 'kind' : k) as SortKey)}
+        onSort={(k) => onSort(k as SortKey)}
       />
     </div>
   )
