@@ -7,7 +7,7 @@ interface DocLinkCellProps {
 export function DocLinkCell({ docs }: DocLinkCellProps) {
   if (docs.length === 0) return <span />
   return (
-    <span className={ax({ layout: 'bar', gap: 'xs' })}>
+    <span className={ax({ role: 'cell', surface: 'display', layout: 'bar', gap: 'xs' })}>
       {docs.map((doc) => (
         <span key={doc.path} className={ax({ tone: 'accent' })}>
           {doc.label}

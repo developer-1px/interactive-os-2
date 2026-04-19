@@ -21,7 +21,7 @@ const TIER_STYLE: Record<Tier, { textStyle: 'label' | 'body'; weight?: 'semi'; t
 export function TierCell({ text, tier, subtitle, thumbnail }: TierCellProps) {
   const style = TIER_STYLE[tier]
   return (
-    <span className={ax({ layout: 'bar', gap: 'sm' })}>
+    <span className={ax({ role: 'cell', surface: 'display', layout: 'bar', gap: 'sm' })}>
       {thumbnail && (
         <img src={thumbnail} alt="" width={36} height={24} className={ax({ shape: 'sm' })} />
       )}

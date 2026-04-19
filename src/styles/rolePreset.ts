@@ -15,7 +15,7 @@ const warnedMissKeys = new Set<string>()
  * 'role' > 'role.surface' > 'role.surface.interactive' > 'role.surface.content'
  *
  * @invariant cs는 키에서 제외 — 외부 입력(크기)으로 유지, Private 주입과 직교
- * @invariant AxRole 6브랜치 × AxSurface union으로 자동 확장
+ * @invariant AxRole 7브랜치 × AxSurface union으로 자동 확장
  * @invariant `tip.inverted`, `tip.inverted.caption` entry 등록 (Tooltip unblock)
  */
 export type RolePresetKey =
@@ -85,7 +85,20 @@ export const rolePresetTable: Partial<Record<RolePresetKey, Partial<AxPrivate>>>
   // primary target (§1 #1) 이므로 cascade hit을 명시 보장.
   'control-group.overlay': { padding: 'xs', gap: 'xs', shape: 'xl' },
 
-  // ── tip.* — 툴팁 preset (★신규, Bundle D Tooltip unblock) ──
+  // ── control-group.raised — Island (★신규) ──────────────────
+  // sunken 컨테이너 속에서 떠오른 섬. shape:'island'가 "경계를 가진 독립체" 시멘틱.
+  // 예: sidebar section (NavList group), form section card, floating panel group.
+  'control-group.raised': { padding: 'sm', gap: 'xs', shape: 'island' },
+  // control-group.sunken — 섬들을 담는 컨테이너. padding/gap만 번들, shape 없음(꽉 채움).
+  'control-group.sunken': { padding: 'sm', gap: 'sm' },
+
+  // ── cell.* — grid 칸 preset (신규, cs 기본 sm: 28/13, 내부 부품 수용) ──
+  // cell은 "컨테이너 + 내부 control 묶음" role. 내부 control은 --cell-cs 상속.
+  'cell.display': { padding: 'sm', gap: 'xs' },       // 기본 읽기 셀 (TextCell, BadgeCell 등)
+  'cell.ghost':   { padding: 'sm' },                   // 구분선 없는 투명 셀 (ToggleCell)
+  'cell.input':   { padding: 'sm', shape: 'sm', border: 'default' },  // 편집 셀 (EditableCell, SearchableCell)
+
+  // ── tip.* — 툴팁 preset (신규, Bundle D Tooltip unblock) ──
   // tip.inverted — 기본 Tooltip 표면 (어두운 배경 + 밝은 텍스트, CSS layer가 색 주입)
   'tip.inverted': { padding: 'xs', shape: 'sm', motion: 'fade-slide-in' },
   // tip.inverted.caption — caption 타이포 조합 (Tooltip 기본 textStyle)
@@ -148,7 +161,7 @@ interface ResolveRolePresetInput {
  *
  * @invariant 반환은 Partial<AxPrivate> 키만 — AxPublic 키 미포함
  * @invariant role 없으면 {} 반환 (utility default — 1,701 role-less 호출 보호)
- * @invariant role ∈ {'control','badge','tip'} AND surface 지정 AND all-miss → throw (§1 #7)
+ * @invariant role ∈ {'control','badge','tip','cell'} AND surface 지정 AND all-miss → throw (§1 #7)
  *            (Pit of Failure 차단 — Tooltip-class 버그 재발 방지)
  * @invariant role ∈ {'control-group','item','utility'} OR surface 미지정 → silent {}
  * @invariant cascade 순서: role → role.surface → role.surface.interactive → role.surface.content
@@ -184,12 +197,12 @@ export function resolveRolePreset(
   }
 
   // D) 모든 키 miss 시 분기 정책 (§1 #7, §4b):
-  //    - role ∈ {control|badge|tip} AND surface 지정 → throw (Pit of Failure 차단)
-  //      · 이 3 role은 surface 필수 — preset 누락은 감사 실패 (Tooltip-class 버그).
+  //    - role ∈ {control|badge|tip|cell} AND surface 지정 → throw (Pit of Failure 차단)
+  //      · 이 4 role은 surface 필수 — preset 누락은 감사 실패 (Tooltip-class 버그).
   //    - role ∈ {control-group|item|utility} OR surface 미지정 → silent {}
   //      · 이 role들은 surface optional — panel/row는 layout만으로도 시각 구분 가능.
   if (!anyHit) {
-    const strictRoles: AxRole[] = ['control', 'badge', 'tip']
+    const strictRoles: AxRole[] = ['control', 'badge', 'tip', 'cell']
     if (strictRoles.includes(input.role) && input.surface) {
       const suffix =
         (input.content ? `.${input.content}` : '') +

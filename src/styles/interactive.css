@@ -45,3 +45,25 @@
   outline-color: var(--tone-destructive-base);
 }
 } /* @layer state */
+
+/* ════════════════════════════════════════════
+ * Role: Cell — grid 칸 컨테이너 + 내부 control 묶음 (신규)
+ * control-group 선례(ax.css L367-373)를 cell에 이식.
+ * cell의 cs를 --cell-cs로 노출 → 내부 control이 cascade로 상속.
+ * ════════════════════════════════════════════ */
+
+@layer recipe {
+  /* cell의 cs를 자식 cascade용 var로 노출 */
+  .rl-cell {
+    --cell-cs: var(--cs);
+  }
+
+  /* 내부 role:'control'은 cell 높이 상속 — control-group 선례 이식 */
+  .rl-cell > .rl-control,
+  .rl-cell :is(.rl-control) {
+    --cs: var(--cell-cs);
+
+    min-height: unset;
+    align-self: stretch;
+  }
+}

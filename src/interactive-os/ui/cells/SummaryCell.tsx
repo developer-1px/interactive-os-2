@@ -6,7 +6,7 @@ interface SummaryCellProps {
 
 export function SummaryCell({ summary }: SummaryCellProps) {
   return (
-    <span className={ax({ clamp: '1' })}>
+    <span className={ax({ role: 'cell', surface: 'display', clamp: '1' })}>
       {summary}
     </span>
   )

@@ -8,10 +8,10 @@ interface SearchableCellProps {
   muted?: boolean
 }
 
-export function SearchableCell({ children, empty, muted }: SearchableCellProps) {
+export function SearchableCell({ children, empty, muted: _muted }: SearchableCellProps) {
   return (
     <Aria.SearchHighlight>
-      <span className={empty ? ax({ surface: 'sunken' }) : muted ? ax({  }) : undefined}>
+      <span className={ax({ role: 'cell', surface: 'input' })}>
         {empty ? '' : children}
       </span>
     </Aria.SearchHighlight>
