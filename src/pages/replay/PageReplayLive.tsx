@@ -10,13 +10,14 @@ import { useActiveSessions } from './useActiveSessions'
 import { useTimeline } from '../viewer/viewerStore'
 
 export default function PageReplayLive() {
-  const sessions = useActiveSessions({ activeOnly: false })
+  const sessions = useActiveSessions({ activeOnly: true })
   const [sessionId, setSessionId] = useState<string | null>(null) // @useState-hatch
 
   useEffect(() => {
-    if (sessionId) return
+    const stillActive = sessionId && sessions.some(s => s.id === sessionId)
+    if (stillActive) return
     const latest = [...sessions].sort((a, b) => b.mtime - a.mtime)[0]
-    if (latest) setSessionId(latest.id)
+    setSessionId(latest?.id ?? null)
   }, [sessions, sessionId])
 
   const events = useTimeline(sessionId ?? '')
