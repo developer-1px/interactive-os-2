@@ -1,11 +1,12 @@
 // ② replay-inspect-discuss — sessions/ raw data inspector (visual 파이프와 분리)
 import { useMemo, useState, useEffect } from 'react'
 import { MillerColumns } from '@os/ui/MillerColumns'
-import { JsonEditor } from '@os/ui/JsonEditor/JsonEditor'
+import { CodeViewer } from '@os/ui/CodeViewer'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID, type NormalizedData, type Entity } from '@os/store/types'
-import type { JsonValue } from '@os/ui/JsonEditor/jsonToNormalized'
 import { ax } from '@styles/ax'
+
+type JsonValue = unknown
 
 const jsonLoaders = import.meta.glob<Record<string, unknown>>('./sessions/*.json', { import: 'default' })
 const jsonlLoaders = import.meta.glob<string>('./sessions/*.jsonl', { query: '?raw', import: 'default' })
@@ -120,7 +121,8 @@ export default function PageReplayInspect() {
         if (json === undefined) {
           return <div className={ax({ layout: 'center', flex: '1' })}>No data</div>
         }
-        return <JsonEditor value={json} onChange={() => { /* read-only */ }} aria-label="Raw JSON" />
+        const code = JSON.stringify(json, null, 2)
+        return <CodeViewer code={code} filename="entry.json" preset="doc" wrap />
       }}
     />
   )
