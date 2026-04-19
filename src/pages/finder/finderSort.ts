@@ -1,7 +1,6 @@
-// ② list-xray-prd.md
 import type { NormalizedData } from '@os/store/types'
 
-export type SortKey = 'name' | 'type' | 'loc'
+export type SortKey = 'name' | 'kind' | 'date' | 'loc'
 export type SortDir = 'asc' | 'desc'
 
 function getExt(name: string): string {
@@ -37,8 +36,11 @@ export function sortStore(
         case 'name':
           result = ((dA.name as string) ?? '').localeCompare((dB.name as string) ?? '')
           break
-        case 'type':
+        case 'kind':
           result = getExt((dA.name as string) ?? '').localeCompare(getExt((dB.name as string) ?? ''))
+          break
+        case 'date':
+          result = ((dA.mtime as number) ?? 0) - ((dB.mtime as number) ?? 0)
           break
         case 'loc':
           result = ((dA.loc as number) ?? 0) - ((dB.loc as number) ?? 0)

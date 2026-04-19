@@ -6,6 +6,7 @@ export interface TreeNode {
   name: string
   type: 'file' | 'directory'
   loc?: number
+  mtime?: number
   children?: TreeNode[]
 }
 
@@ -19,11 +20,14 @@ export function buildTree(dirPath: string): TreeNode[] {
   for (const entry of entries) {
     if (IGNORE.has(entry.name)) continue
     const fullPath = path.join(dirPath, entry.name)
+    let mtime: number | undefined
+    try { mtime = fs.statSync(fullPath).mtimeMs } catch { /* stat unavailable */ }
     if (entry.isDirectory()) {
       nodes.push({
         id: fullPath,
         name: entry.name,
         type: 'directory',
+        ...(mtime != null && { mtime }),
         children: buildTree(fullPath),
       })
     } else {
@@ -33,7 +37,7 @@ export function buildTree(dirPath: string): TreeNode[] {
       if (isText) {
         try { loc = fs.readFileSync(fullPath, 'utf-8').split('\n').length } catch { /* binary or unreadable */ }
       }
-      nodes.push({ id: fullPath, name: entry.name, type: 'file', ...(loc != null && { loc }) })
+      nodes.push({ id: fullPath, name: entry.name, type: 'file', ...(loc != null && { loc }), ...(mtime != null && { mtime }) })
     }
   }
 

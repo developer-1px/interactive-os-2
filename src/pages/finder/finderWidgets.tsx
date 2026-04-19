@@ -9,6 +9,7 @@ import { FileTreeGrid } from '@entities/file/ui/FileTreeGrid'
 import { useFinder } from './finderContext'
 import { FilePanel } from './widgets/FilePanel'
 import type { SortKey } from './finderSort'
+import type { KindGroup } from './finderFilter'
 
 // ── Sidebar ──
 
@@ -25,11 +26,14 @@ export function FinderSidebarWidget() {
 // ── Toolbar ──
 
 export function FinderToolbarWidget() {
-  const { viewMode, setViewMode, onSearchClick } = useFinder()
+  const { viewMode, setViewMode, onSearchClick, sortKey, sortDir, onSort, onSortDirToggle, kindFilters, setKindFilters } = useFinder()
   const { pathname } = useLocation()
   const handleBack = useCallback(() => window.history.back(), [])
   const handleForward = useCallback(() => window.history.forward(), [])
   const path = pathname.replace(/^\/finder\/?/, '') || '/'
+  const handleKindToggle = useCallback((kind: KindGroup) => {
+    setKindFilters(prev => prev.includes(kind) ? prev.filter(k => k !== kind) : [...prev, kind])
+  }, [setKindFilters])
   return (
     <FinderToolbar
       viewMode={viewMode}
@@ -38,6 +42,12 @@ export function FinderToolbarWidget() {
       onBack={handleBack}
       onForward={handleForward}
       path={path}
+      sortKey={sortKey}
+      sortDir={sortDir}
+      onSortChange={(k: SortKey) => onSort(k)}
+      onSortDirToggle={onSortDirToggle}
+      kindFilters={kindFilters}
+      onKindFilterToggle={handleKindToggle}
     />
   )
 }
@@ -45,10 +55,10 @@ export function FinderToolbarWidget() {
 // ── TreeGrid content (list mode) ──
 
 export function FinderTreeGridWidget() {
-  const { listStore, onChange, filters, sortKey, sortDir, onSort } = useFinder()
+  const { listStore, onChange, filters, kindFilters, sortKey, sortDir, onSort } = useFinder()
 
   if (!listStore || Object.keys(listStore.entities).filter(k => !k.startsWith('__')).length === 0) {
-    if (filters.length > 0) {
+    if (filters.length > 0 || kindFilters.length > 0) {
       return <EmptyState title="No files match filter" description="Try removing some filters" />
     }
     return null
@@ -56,14 +66,16 @@ export function FinderTreeGridWidget() {
 
   // outer FlatLayout node가 scroll:'y'로 scroll container를 소유 — widget은 overflow 관여 안 함.
   // .ly-fill은 overflow:hidden이어서 외부 scroll 체인을 끊으므로 .ly-stack 사용.
+  // FileTreeGrid column: name/type/loc. Finder SortKey 'kind'→'type', 'date'→undefined (grid 컬럼 없음, 외부 sortStore가 처리).
+  const gridSortKey = sortKey === 'kind' ? 'type' : sortKey === 'date' ? undefined : sortKey ?? undefined
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
       <FileTreeGrid
         data={listStore}
         onChange={onChange}
-        sortKey={sortKey ?? undefined}
+        sortKey={gridSortKey}
         sortDir={sortDir}
-        onSort={(k) => onSort(k as SortKey)}
+        onSort={(k) => onSort((k === 'type' ? 'kind' : k) as SortKey)}
       />
     </div>
   )

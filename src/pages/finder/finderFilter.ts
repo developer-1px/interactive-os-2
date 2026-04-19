@@ -1,18 +1,48 @@
-// ② list-xray-prd.md
 import type { NormalizedData, Entity } from '@os/store/types'
+
+export type KindGroup = 'code' | 'doc' | 'media' | 'config'
+
+export interface FilterSpec {
+  kinds?: KindGroup[]
+  extensions?: string[]
+}
+
+const KIND_EXT_MAP: Record<KindGroup, string[]> = {
+  code:   ['ts', 'tsx', 'js', 'jsx', 'mjs', 'cjs', 'py', 'rs', 'go', 'java', 'rb', 'php', 'css', 'scss', 'sass', 'html', 'vue', 'svelte'],
+  doc:    ['md', 'mdx', 'txt', 'pdf', 'rst', 'adoc'],
+  media:  ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp', 'mp4', 'webm', 'mov', 'mp3', 'wav', 'ogg'],
+  config: ['json', 'yaml', 'yml', 'toml', 'lock', 'env', 'ini', 'xml'],
+}
+
+function getExt(name: string): string {
+  return name.includes('.') ? (name.split('.').pop() ?? '').toLowerCase() : ''
+}
 
 export function filterStore(
   store: NormalizedData,
-  extensions: string[],
+  spec: FilterSpec,
 ): NormalizedData {
-  if (extensions.length === 0) return store
+  const { kinds, extensions } = spec
+  const hasKinds = kinds != null && kinds.length > 0
+  const hasExts = extensions != null && extensions.length > 0
+  if (!hasKinds && !hasExts) return store
+
+  const allowedExts = new Set<string>()
+  if (hasKinds) {
+    for (const kind of kinds!) {
+      for (const ext of KIND_EXT_MAP[kind]) allowedExts.add(ext)
+    }
+  }
 
   const kept = new Set<string>()
 
   function matches(entity: Entity): boolean {
     const name = (entity.data as Record<string, unknown> | undefined)?.name as string | undefined
     if (!name) return false
-    return extensions.some(ext => name.endsWith(ext))
+    const ext = getExt(name)
+    if (hasKinds && allowedExts.has(ext)) return true
+    if (hasExts && extensions!.some(e => name.endsWith(e))) return true
+    return false
   }
 
   function walk(id: string): boolean {
@@ -38,7 +68,6 @@ export function filterStore(
     walk(rootId)
   }
 
-  // Also keep meta entities
   const entities: Record<string, Entity> = {}
   for (const [id, entity] of Object.entries(store.entities)) {
     if (id.startsWith('__') || kept.has(id)) {

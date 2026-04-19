@@ -3,6 +3,7 @@ export interface TreeNode {
   name: string
   type: 'file' | 'directory'
   loc?: number
+  mtime?: number
   children?: TreeNode[]
 }
 

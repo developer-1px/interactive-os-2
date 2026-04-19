@@ -4,4 +4,5 @@ export type FileNodeData = {
   name: string
   type: 'file' | 'directory'
   path: string
+  mtime?: number
 }

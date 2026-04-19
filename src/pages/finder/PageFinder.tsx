@@ -14,7 +14,7 @@ import type { NormalizedData } from '@os/store/types'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import { sortStore, type SortKey, type SortDir } from './finderSort'
-import { filterStore } from './finderFilter'
+import { filterStore, type KindGroup, type FilterSpec } from './finderFilter'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { EXPANDED_ID } from '@os/axis/expand'
 import { DEFAULT_ROOT, type FileNodeData } from './types'
@@ -35,6 +35,10 @@ import {
 } from './finderWidgets'
 
 const VIEWMODE_KEY = 'finder-viewmode'
+const SORT_KEY = 'finder-sort-key'
+const SORT_DIR_KEY = 'finder-sort-dir'
+const KIND_FILTERS_KEY = 'finder-kind-filters'
+const KIND_GROUPS: KindGroup[] = ['code', 'doc', 'media', 'config']
 
 type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode }
 
@@ -137,11 +141,28 @@ export default function PageFinder() {
   })
   const [previewPath, setPreviewPath] = useState<string | null>(null) // @useState-hatch
   const [currentRoot, setCurrentRoot] = useState(() => detectRootFromSeg(window.location.pathname.split('/')[2]))
-  const [sortKey, setSortKey] = useState<SortKey | null>(null) // @useState-hatch
-  const [sortDir, setSortDir] = useState<SortDir>('asc') // @useState-hatch
+  const [sortKey, setSortKey] = useState<SortKey | null>(() => {
+    const saved = localStorage.getItem(SORT_KEY)
+    return saved && ['name', 'kind', 'date', 'loc'].includes(saved) ? saved as SortKey : null
+  })
+  const [sortDir, setSortDir] = useState<SortDir>(() => {
+    const saved = localStorage.getItem(SORT_DIR_KEY)
+    return saved === 'desc' ? 'desc' : 'asc'
+  })
   const [filters, setFilters] = useState<string[]>([]) // @useState-hatch
+  const [kindFilters, setKindFilters] = useState<KindGroup[]>(() => {
+    const saved = localStorage.getItem(KIND_FILTERS_KEY)
+    if (!saved) return []
+    try {
+      const parsed = JSON.parse(saved)
+      return Array.isArray(parsed) ? parsed.filter(k => KIND_GROUPS.includes(k)) : []
+    } catch { return [] }
+  })
 
   useEffect(() => { localStorage.setItem(VIEWMODE_KEY, viewMode) }, [viewMode])
+  useEffect(() => { if (sortKey) localStorage.setItem(SORT_KEY, sortKey); else localStorage.removeItem(SORT_KEY) }, [sortKey])
+  useEffect(() => { localStorage.setItem(SORT_DIR_KEY, sortDir) }, [sortDir])
+  useEffect(() => { localStorage.setItem(KIND_FILTERS_KEY, JSON.stringify(kindFilters)) }, [kindFilters])
 
   // ── Tree fetch ──
 
@@ -267,9 +288,13 @@ export default function PageFinder() {
         setSortDir(d => d === 'asc' ? 'desc' : 'asc')
         return key
       }
-      setSortDir(key === 'loc' ? 'desc' : 'asc')
+      setSortDir(key === 'loc' || key === 'date' ? 'desc' : 'asc')
       return key
     })
+  }, [])
+
+  const handleSortDirToggle = useCallback(() => {
+    setSortDir(d => d === 'asc' ? 'desc' : 'asc')
   }, [])
 
   // ── Derived ──
@@ -277,10 +302,13 @@ export default function PageFinder() {
   const listStore = useMemo(() => {
     if (!initialStore || viewMode !== 'list') return null
     let store = initialStore
-    if (filters.length > 0) store = filterStore(store, filters)
+    const spec: FilterSpec = {}
+    if (filters.length > 0) spec.extensions = filters
+    if (kindFilters.length > 0) spec.kinds = kindFilters
+    if (spec.extensions || spec.kinds) store = filterStore(store, spec)
     if (sortKey) store = sortStore(store, sortKey, sortDir)
     return store
-  }, [initialStore, viewMode, filters, sortKey, sortDir])
+  }, [initialStore, viewMode, filters, kindFilters, sortKey, sortDir])
 
   // ── Layout: viewMode에 따라 hidden 토글 ──
 
@@ -310,13 +338,14 @@ export default function PageFinder() {
     listStore,
     sidebarData,
     viewMode, setViewMode,
-    sortKey, sortDir, onSort: handleSort,
+    sortKey, sortDir, onSort: handleSort, onSortDirToggle: handleSortDirToggle,
     filters, setFilters,
+    kindFilters, setKindFilters,
     previewPath,
     onSidebarActivate: handleSidebarActivate,
     onSearchClick: () => setQuickOpenVisible(true),
     onChange: handleChange,
-  }), [initialStore, listStore, viewMode, sortKey, sortDir, handleSort, filters, previewPath, handleSidebarActivate, handleChange])
+  }), [initialStore, listStore, viewMode, sortKey, sortDir, handleSort, handleSortDirToggle, filters, kindFilters, previewPath, handleSidebarActivate, handleChange])
 
   if (!initialStore) return null
 
