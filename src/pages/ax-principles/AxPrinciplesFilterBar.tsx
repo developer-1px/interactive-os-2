@@ -10,6 +10,7 @@ import type { NormalizedData } from '@os/store/types'
 import type {
   PrincipleFilter, PrincipleStatus, PrincipleTag, PrinciplePriority,
 } from './axPrincipleSchema'
+import styles from './AxPrinciplesFilterBar.module.css'
 
 const STATUS_OPTIONS: PrincipleStatus[] = ['Locked', 'Exposed', 'Missing', 'Conflicts', 'N/A']
 const TAG_OPTIONS: PrincipleTag[] = [
@@ -121,7 +122,7 @@ function FilterGroup<T extends string>({
   return (
     <div className={ax({ layout: 'stack' })}>
       <span className={ax({ textStyle: 'overline' })}>{label}</span>
-      <div className={ax({ layout: 'bar', clamp: 'scroll' })}>
+      <div className={`${ax({ layout: 'bar' })} ${styles.optionsBar}`}>
         {options.map((opt) => {
           const active = value === opt
           return (

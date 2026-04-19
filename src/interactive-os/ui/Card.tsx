@@ -1,13 +1,13 @@
 /** @catalog 그룹화된 콘텐츠 표면 카드 */
 import type { ReactNode } from 'react'
 import { ax } from '@styles/ax'
-import type { CsScale } from '@styles/ax'
 
 type CardVariant = 'outlined' | 'elevated' | 'filled'
+type CardPadding = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 interface CardProps {
   variant?: CardVariant
-  padding?: CsScale
+  padding?: CardPadding
   clickable?: boolean
   onClick?: () => void
   className?: string

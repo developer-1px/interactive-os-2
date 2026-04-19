@@ -1,0 +1,15 @@
+/* Avatar size — square last-mile (cs 축 제거 대체) */
+.sm {
+  inline-size: var(--space-lg, 24px);
+  block-size: var(--space-lg, 24px);
+}
+
+.md {
+  inline-size: var(--space-xl, 32px);
+  block-size: var(--space-xl, 32px);
+}
+
+.lg {
+  inline-size: calc(var(--space-xl, 32px) * 1.25);
+  block-size: calc(var(--space-xl, 32px) * 1.25);
+}

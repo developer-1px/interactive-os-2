@@ -2,12 +2,12 @@
 // LLM 시스템 프롬프트·ui 공개 타입(AriaComponentProps)이 바라보는 유일한 축 집합.
 //
 // @removed AxScroll — Public 축에서 제거. overflow 제어는 AxLayout('scroll'|'scroll-x'|'clip') 흡수 (§1 #6)
+// @removed CsScale — Public 축에서 제거. 크기는 textStyle 4-tuple(font-size·cs-h·cs-py·cs-px)이 SSOT (2026-04-19 ax-textstyle-ssot-prd)
 // @removed AxText, AxWeight, AxState, AxOpacity — Public에 존재한 적 없으나 @removed 명시 (Private 측 제거 동반)
 // @invariant Private 7축 키(padding/gap/shape/border/icon/square/motion) 미포함
 // @invariant 외부(ui/, pages/) 공개 타입은 AxPublic만 import — Axes 합성 타입 import 금지
 
 // ── 1) value 단위 열거형 ─────────────────────────────────────────────
-export type CsScale = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 export type AxTone =
   | 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
@@ -36,7 +36,7 @@ export type AxPlacement =
 
 export type AxWidth = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg' | 'xl' | 'prose'
 export type AxFlex = 'none' | 'auto' | '1'
-export type AxClamp = '1' | '2' | '3' | '4' | 'pre' | 'scroll'
+export type AxClamp = '1' | '2' | '3' | '4' | 'pre'
 export type AxAspect = '1' | 'video' | 'card'
 
 // ── 2) role discriminant — 7 브랜치 (utility/tip/cell 신규) ─────────
@@ -81,7 +81,7 @@ export type AxSurface =
  * @invariant role 브랜치별 surface는 role-local subset만 허용 (cross-role surface 거부)
  * @invariant role: 'tip' 브랜치는 textStyle을 'caption' | 'label' | 'body'로 잠근다(option)
  * @invariant role: 'control' / 'badge' / 'tip' / 'cell' 브랜치는 surface 필수 — rolePreset 주입 진입점
- * @invariant text/weight/state/opacity/scroll 키는 모든 브랜치에서 부재
+ * @invariant text/weight/state/opacity/scroll/cs 키는 모든 브랜치에서 부재
  */
 export type AxPublic =
   // ① 인터랙티브 컨트롤
@@ -92,12 +92,6 @@ export type AxPublic =
       content?: AxContent
       tone?: AxTone
       textStyle?: AxTextStyle
-      /**
-       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
-       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
-       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
-       */
-      cs?: CsScale
       layout?: AxLayout
       placement?: AxPlacement
       width?: AxWidth
@@ -109,12 +103,6 @@ export type AxPublic =
   | {
       role: 'control-group'
       surface?: SurfacePanel | 'ghost'
-      /**
-       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
-       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
-       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
-       */
-      cs?: CsScale
       layout?: AxLayout
       width?: AxWidth
       flex?: AxFlex
@@ -128,12 +116,6 @@ export type AxPublic =
       surface?: SurfaceRow
       tone?: AxTone
       textStyle?: AxTextStyle
-      /**
-       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
-       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
-       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
-       */
-      cs?: CsScale
       layout?: AxLayout
       width?: AxWidth
       flex?: AxFlex
@@ -148,19 +130,12 @@ export type AxPublic =
       content?: AxContent
       interactive?: 'button'                 // dismiss 가능 뱃지 한정
       textStyle?: AxTextStyle
-      /**
-       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
-       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
-       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
-       */
-      cs?: CsScale
       clamp?: AxClamp
     }
   // ⑤ cell — grid 칸 컨테이너 + 내부 control 묶음 (신규)
   /**
    * @invariant role:'cell' 브랜치는 surface 필수 — rolePreset 주입 진입점 (strictRoles)
-   * @invariant cs 기본값은 'sm' (28/13) — 내부 부품(item 28, control 36) 수용 호환성
-   * @invariant 내부 role:'control'은 cell.cs를 --cell-cs로 상속, min-height/shape unset (interactive.css)
+   * @invariant 내부 role:'control'은 cell --cs-h를 --cell-cs로 상속, min-height/shape unset (interactive.css)
    */
   | {
       role: 'cell'
@@ -169,12 +144,6 @@ export type AxPublic =
       content?: AxContent
       tone?: AxTone
       textStyle?: AxTextStyle
-      /**
-       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
-       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
-       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
-       */
-      cs?: CsScale
       layout?: AxLayout
       width?: AxWidth
       flex?: AxFlex
@@ -186,12 +155,6 @@ export type AxPublic =
       surface: SurfaceTip                    // 'inverted' | 'overlay' (필수)
       textStyle?: 'caption' | 'label' | 'body'
       placement: AxPlacement                 // D3 결정: 필수화 (Tooltip.tsx positionAnchor 의존 + 의미적 정합)
-      /**
-       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
-       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
-       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
-       */
-      cs?: CsScale
       width?: AxWidth
     }
   // ⑦ utility — 레이아웃/타이포 전용 default 브랜치 (role 생략 허용)
@@ -199,12 +162,6 @@ export type AxPublic =
       role?: 'utility'
       // surface/interactive/content/tone 키 자체 부재 (타입 수준 거부)
       textStyle?: AxTextStyle
-      /**
-       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
-       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
-       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
-       */
-      cs?: CsScale
       layout?: AxLayout
       placement?: AxPlacement
       width?: AxWidth
@@ -214,18 +171,19 @@ export type AxPublic =
     }
 
 // ── 5) Public 키 enumeration ─────────────────────────────────────────
-/** AxPublic 모든 브랜치 키의 union (보조 타입) — 13개 */
+/** AxPublic 모든 브랜치 키의 union (보조 타입) — 12개 */
 export type AxPublicKey =
-  | 'cs' | 'role' | 'surface' | 'tone' | 'textStyle' | 'content'
+  | 'role' | 'surface' | 'tone' | 'textStyle' | 'content'
   | 'layout' | 'placement' | 'width' | 'flex' | 'clamp' | 'aspect' | 'interactive'
 
 /**
  * Public 축 키 집합 — 런타임 guard / prefix map / scanOsViolations 파생 참조용.
  * @invariant 'scroll' 미포함 (@removed)
+ * @invariant 'cs' 미포함 (@removed — textStyle 4-tuple SSOT)
  * @note discriminated union의 keyof 연산은 브랜치 교집합만 반환하므로
  *       string literal tuple로 명시 (TS 한계 우회).
  */
 export const AX_PUBLIC_KEYS = [
-  'cs', 'role', 'surface', 'tone', 'textStyle', 'content',
+  'role', 'surface', 'tone', 'textStyle', 'content',
   'layout', 'placement', 'width', 'flex', 'clamp', 'aspect', 'interactive',
 ] as const satisfies ReadonlyArray<AxPublicKey>

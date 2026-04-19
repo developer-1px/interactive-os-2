@@ -13,8 +13,9 @@ import { axRaw } from './axRaw'
 
 // Public 타입 re-export — 외부 사용자는 'src/styles/ax' 한 경로만 본다.
 // @removed AxScroll — Public 축 제거 (AxLayout의 'scroll'|'scroll-x'|'clip'로 흡수)
+// @removed CsScale — Public 축 제거 (textStyle 4-tuple SSOT)
 export type {
-  AxPublic, CsScale, AxRole, AxSurface, AxTone, AxTextStyle, AxContent,
+  AxPublic, AxRole, AxSurface, AxTone, AxTextStyle, AxContent,
   AxLayout, AxPlacement, AxInteractive, AxWidth, AxFlex, AxClamp, AxAspect,
 } from './axPublic'
 
@@ -26,9 +27,9 @@ export type Axes = AxPublic
 // 전체 축 prefix 매핑 (Public + Private).
 // ax()는 Public 키만 직접 수용 — Private는 rolePreset 경유로 주입된다.
 // @removed scroll/weight/text/opacity/state (5 entries 삭제 — §1 #4, #5, #6)
+// @removed cs (2026-04-19 ax-textstyle-ssot-prd — textStyle 4-tuple SSOT)
 const prefixes: Record<string, string> = {
-  // Public (13)
-  cs: 'cs',
+  // Public (12)
   role: 'rl',
   surface: 'sf',
   tone: 'tn',
@@ -55,9 +56,6 @@ const PRIVATE_KEY_SET = new Set<string>(AX_PRIVATE_KEYS as readonly string[])
 // Phase 1-a G-5 임시: Bundle D/E 마이그레이션 중 throw → warn 완화용 dedup set.
 // Bundle E 완료 후 이 Set과 아래 warn 로직 제거, throw 재승격 (§1 #9).
 const warnedPrivateKeys = new Set<string>()
-// 2026-04-19 ax-textstyle-ssot-prd (W4b): cs 축 deprecate warn dedup set.
-// textStyle이 font-size/cs-h/cs-py/cs-px 4-tuple SSOT. 후속 bundle에서 타입 제거 시 이 set도 제거.
-const warnedCsCallsites = new Set<string>()
 
 /**
  * 축 값을 className 문자열로 변환한다.
@@ -104,23 +102,7 @@ export function ax(axes: Axes): string {
     }
   }
 
-  // 1b) cs 축 deprecate warn — 2026-04-19 ax-textstyle-ssot-prd (W4b).
-  //     textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT. cs 축 흡수됨.
-  //     dedup 키는 value 단위 — 같은 값 callsite는 1회만 warn.
-  if ('cs' in input && input.cs != null) {
-    const callsite = `cs=${input.cs}`
-    if (!warnedCsCallsites.has(callsite)) {
-      warnedCsCallsites.add(callsite)
-      console.warn(
-        `ax() received deprecated 'cs' axis (value: "${input.cs}"). ` +
-        `Use 'textStyle' instead — textStyle supplies font-size, cs-h, cs-py, cs-px as 4-tuple. ` +
-        `Migration: docs/2026/2026-04/2026-04-19/ax-textstyle-ssot-prd.md`,
-      )
-    }
-  }
-
   // 2) rolePreset cascade — role × surface × (content|interactive) 기반 Private 주입.
-  //    cs는 Public 키로 그대로 전달되며 preset 조회 키에는 포함하지 않는다.
   //    ★중요: resolveRolePreset이 throw할 수 있다 (role ∈ {control|badge|tip} + surface 지정 + all-miss).
   //           ax()는 catch 하지 않는다 — caller로 전파하여 Pit of Failure 증상 표면화 (§4a step3).
   const rolePreset = resolveRolePreset({

@@ -14,6 +14,12 @@
      All color values reference palette.css variables.
      No hex/rgb/oklch literals here — palette is the single source. */
 
+  /* ════════════════════════════════════════════
+   * L0 Theme Primitive — Depth Ladder
+   * surface(sunken/base/raised/overlay) + depth-*-hover/active/sel/cursor/context
+   * + border + bg-hover/active. Theme 교체 시 이 블록 전체가 단위.
+   * ════════════════════════════════════════════ */
+
   /* ── Elevation primitive (palette-like, dark) ──
      디자인-중립 숫자 시리즈. 음수 단 인정 (--elevation--1 = sunken).
      향후 -2, +3 확장 가능. Material/Carbon/Atlassian 수렴진화 패턴. */
@@ -63,6 +69,12 @@
   /* ── Overlay edge — top-lit gradient border ── */
   --overlay-edge-top:    rgba(255,255,255, 0.12);
   --overlay-edge-bottom: rgba(255,255,255, 0.04);
+
+  /* ════════════════════════════════════════════
+   * L0 Theme Primitive — Color Palette
+   * primary/destructive/success/warning/neutral × base/foreground/hover/bright/dim.
+   * Theme 교체 단위 — brand/mood 변경 시 이 블록만 override.
+   * ════════════════════════════════════════════ */
 
   /* ── Tone: semantic color bundles (base + hover + dim + mid + bright + foreground)
      All tones share the same axis structure. dim/mid/bright = background tint 3 levels. ── */
@@ -168,10 +180,21 @@
 
   /* ══ Typography ══ */
 
+  /* ════════════════════════════════════════════
+   * L0 Theme Primitive — Font Families
+   * --sans, --serif, --mono. Theme brand 전환 시 family 교체 단위.
+   * ════════════════════════════════════════════ */
+
   /* ── Font families ── */
   --mono:  'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
   --sans:  'Inter', -apple-system, system-ui, sans-serif;
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  /* ════════════════════════════════════════════
+   * L0 Theme Primitive — Type Scale
+   * 9단(hero/display/page/section/control/item/body/prose/caption/code)
+   * × size/weight/family/line-height/letter-spacing + --weight-* alias.
+   * ════════════════════════════════════════════ */
 
   /* ── Type bundle: size + weight + family + line-height + letter-spacing (claude.ai 실측)
      size가 바뀌면 weight·family·line-height·letter-spacing이 함께 바뀐다. color는 독립. ── */
@@ -207,6 +230,11 @@
   --tracking-wide:    0.05em;
   --tracking-wider:   0.08em;
 
+  /* ════════════════════════════════════════════
+   * L0 Theme Primitive — Radius Language
+   * --shape-*-radius 전체 (2xs→pill/island). Theme shape tone(sharp/soft) 교체 단위.
+   * ════════════════════════════════════════════ */
+
   /* ── Radius Seed — 비율 파생 불변량 ── */
   --radius-seed: 8px;
   --shape-2xs-radius: 2px;                               /* checkbox inner */
@@ -230,6 +258,11 @@
   --shape-md-py: 0px;  --shape-md-px: 12px;
   --shape-lg-py: 20px; --shape-lg-px: 20px;
   --shape-xl-py: 24px; --shape-xl-px: 24px;
+
+  /* ════════════════════════════════════════════
+   * L0 Theme Primitive — Space Scale
+   * --space-xs/sm/md/lg/xl/2xl (+3xl/4xl/5xl). Theme density(compact/spacious) 교체 단위.
+   * ════════════════════════════════════════════ */
 
   /* ── Spacing ── */
   --space-inline-code: 2px;
@@ -290,6 +323,11 @@
     var(--surface-overlay) 75%
   );
 
+  /* ════════════════════════════════════════════
+   * L0 Theme Primitive — Motion Profile
+   * --motion-*-duration + --motion-*-easing 세트. Theme feel(snappy/smooth) 교체 단위.
+   * ════════════════════════════════════════════ */
+
   /* ── Motion bundle: duration + easing (claude.ai 실측)
      property는 독립. duration과 easing이 세트. ── */
   --motion-instant-duration: 0.075s;  --motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
@@ -299,6 +337,11 @@
   /* ── Dialog ── */
   --dialog-backdrop: rgba(0, 0, 0, 0.5);
 }
+
+/* ════════════════════════════════════════════
+ * L0 Theme Variant: light — palette/depth override
+ * dark→light 전환. Color Palette + Depth Ladder 두 번들 override.
+ * ════════════════════════════════════════════ */
 
 /* ══ Light theme — pure neutral (macOS Sequoia 실측 기반) ══
    dark = warm stone (C>0, hue 90°)
@@ -404,6 +447,11 @@
 
   --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
+
+/* ════════════════════════════════════════════
+ * L0 Theme Variant: lifted — Depth Ladder material override
+ * overlay tier의 backdrop/tint/rim/lift만 교체. palette/type/radius/motion/space 불변.
+ * ════════════════════════════════════════════ */
 
 /* ══ Lifted theme — Liquid Glass 재질 (overlay tier 전용) ══
    color/text/focus 토큰 불변 — 재질만 override.

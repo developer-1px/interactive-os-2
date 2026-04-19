@@ -1,6 +1,6 @@
 /** @catalog 사용자 프로필 이미지/이니셜 표시 */
 import { ax } from '@styles/ax'
-import type { CsScale } from '@styles/ax'
+import styles from './Avatar.module.css'
 
 type AvatarSize = 'sm' | 'md' | 'lg'
 
@@ -18,10 +18,10 @@ function getInitials(name: string): string {
     .join('')
 }
 
-const csMap: Record<AvatarSize, CsScale> = {
-  sm: 'sm',
-  md: 'md',
-  lg: 'lg',
+const sizeClass: Record<AvatarSize, string> = {
+  sm: styles.sm,
+  md: styles.md,
+  lg: styles.lg,
 }
 
 export function Avatar({ src, name, size = 'md' }: AvatarProps) {
@@ -32,19 +32,19 @@ export function Avatar({ src, name, size = 'md' }: AvatarProps) {
       <img
         src={src}
         alt={name}
-        className={ax({ role: 'cell', surface: 'display', cs: csMap[size] })}
+        className={`${ax({ role: 'cell', surface: 'display' })} ${sizeClass[size]}`}
       />
     )
   }
 
   return (
     <div
-      className={ax({
+      className={`${ax({
         role: 'cell',
         surface: 'display',
         layout: 'center',
-        cs: csMap[size],
-        textStyle: size === 'lg' ? 'label' : 'caption'})}
+        textStyle: size === 'lg' ? 'label' : 'caption',
+      })} ${sizeClass[size]}`}
       aria-label={name}
       role="img"
     >

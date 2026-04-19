@@ -1,0 +1,5 @@
+/* FilterGroup options bar — bounded scroll (구 clamp:'scroll' 대체) */
+.optionsBar {
+  max-height: calc(var(--space-xl, 32px) * 9.375);
+  overflow-y: auto;
+}

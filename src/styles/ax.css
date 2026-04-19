@@ -786,7 +786,6 @@ dialog.sf-overlay[open] {
  * '2'~'4': CSS line-clamp (다중행)
  * ════════════════════════════════════════════ */
 
-.cl-scroll { max-height: 300px; overflow-y: auto; }
 .cl-1   { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cl-pre { white-space: pre; overflow: hidden; text-overflow: ellipsis; }
 .cl-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
