@@ -7,7 +7,7 @@ import { createStore } from '@os/store/createStore'
 import { ROOT_ID, type NormalizedData, type Entity } from '@os/store/types'
 import { ax } from '@styles/ax'
 import { useActiveSessions } from './useActiveSessions'
-import { useTimeline } from '../viewer/viewerStore'
+import { connectSession, disconnectSession, useTimeline } from '../viewer/viewerStore'
 import type { TimelineEvent } from '../viewer/groupEvents'
 
 type JsonValue = unknown
@@ -164,6 +164,13 @@ export default function PageReplayInspect() {
   }, [])
 
   const liveSessionId = extractLiveSessionId(focusedId)
+
+  useEffect(() => {
+    if (!liveSessionId) return
+    connectSession(liveSessionId, true)
+    return () => disconnectSession(liveSessionId)
+  }, [liveSessionId])
+
   const liveEvents = useTimeline(liveSessionId)
 
   const data = useMemo(() => buildData({
