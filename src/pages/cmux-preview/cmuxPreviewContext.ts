@@ -1,8 +1,8 @@
 /**
  * cmux preview domain context — pull 모델.
- * definePage는 구조만 담고, widget이 이 Context에서 값을 pull 한다.
- * 이 Context의 value를 바꾸면 동일 definePage가 다른 시나리오 상태로 렌더된다
- * → 시뮬레이션 매트릭스(N variant × 1 definePage → N 스냅)의 근거.
+ * defineLayout는 구조만 담고, widget이 이 Context에서 값을 pull 한다.
+ * 이 Context의 value를 바꾸면 동일 defineLayout가 다른 시나리오 상태로 렌더된다
+ * → 시뮬레이션 매트릭스(N variant × 1 defineLayout → N 스냅)의 근거.
  */
 import { createDomainContext } from '@os/layout'
 

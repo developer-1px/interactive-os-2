@@ -8,15 +8,15 @@ function jsonWithUnquotedKeys(value: unknown, indent: number): string {
 }
 
 /**
- * NormalizedData (definePage 결과) → `definePage({ entities: {...} })` TS 코드 문자열.
+ * NormalizedData (defineLayout 결과) → `defineLayout({ entities: {...} })` TS 코드 문자열.
  * - 2-space indent, JSON.stringify 기반 + 키 언쿼트
  * - ROOT_ID 메타 relationship은 생략 (children 필드로 복원됨)
  * - __-prefixed 메타 entity(FOCUS_STATE_ID 등)는 skip
  *
  * @invariant 반환 문자열은 eval 대상이 아니라 클립보드 paste용; 사용자가 수동 정리 전제
  */
-export function serializeToDefinePage(store: NormalizedData): string {
-  const lines: string[] = ['definePage({', '  entities: {']
+export function serializeToDefineLayout(store: NormalizedData): string {
+  const lines: string[] = ['defineLayout({', '  entities: {']
   const ids = Object.keys(store.entities).filter(id => !id.startsWith('__'))
   for (const id of ids) {
     const entity = store.entities[id]

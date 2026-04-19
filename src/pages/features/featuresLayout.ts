@@ -1,7 +1,7 @@
-// ② feature-mgmt-view-prd.md — FlatLayout definePage 선언
-import { definePage } from '@os/layout/flatLayout'
+// ② feature-mgmt-view-prd.md — FlatLayout defineLayout 선언
+import { defineLayout } from '@os/layout/flatLayout'
 
-export const featuresLayout = definePage({
+export const featuresLayout = defineLayout({
   entities: {
     root: {
       data: { type: 'split', direction: 'vertical', sizes: [0.06, 'flex'], resizable: false },

@@ -1,7 +1,7 @@
-// ⑦ /do UI — FlatLayout definePage for ax Principles page
-import { definePage } from '@os/layout/flatLayout'
+// ⑦ /do UI — FlatLayout defineLayout for ax Principles page
+import { defineLayout } from '@os/layout/flatLayout'
 
-export const axPrinciplesLayout = definePage({
+export const axPrinciplesLayout = defineLayout({
   entities: {
     root: {
       data: { type: 'split', direction: 'vertical', sizes: [0.08, 'flex'], resizable: false },

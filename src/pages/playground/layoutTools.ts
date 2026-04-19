@@ -9,7 +9,7 @@ import { ROOT_ID } from '@os/store/types'
 import { getEntityData, getChildren } from '@os/store/createStore'
 import { layoutCommands, FOCUS_STATE_ID, type FocusStateData } from '@os/layout/layoutCommands'
 import { workspaceCommands, type TabGroupData, type TabData } from '@os/plugins/workspaceStore'
-import { definePage, type LayoutNode } from '@os/layout/flatLayout'
+import { defineLayout, type LayoutNode } from '@os/layout/flatLayout'
 import { PICKER_STATE_ID } from './playgroundDefaults'
 
 /** layout_init 시 사라지면 안 되는 노드들 — floating overlay(composer/subtitle/chatlog) + state 노드. */
@@ -69,7 +69,7 @@ const handlers: Record<string, ToolHandler> = {
       if (!entities || typeof entities !== 'object') {
         return { ok: false, error: 'entities object required' }
       }
-      const page = definePage({ entities })
+      const page = defineLayout({ entities })
       const current = actions.getStore()
 
       // 1) LLM이 새로 정의한 id와 보호 노드 id가 충돌하면 사용자 입력 방어.
@@ -91,7 +91,7 @@ const handlers: Record<string, ToolHandler> = {
 
       // 2-b) Tab 노드에 PlaygroundSurface widget 자식 자동 주입.
       // FlatLayout의 tab renderer는 children이 없으면 null 반환하므로 canvas가 빈다.
-      // definePage가 만든 각 tab 엔티티마다 `{tabId}-body` widget 자식을 붙여 surface를 렌더한다.
+      // defineLayout가 만든 각 tab 엔티티마다 `{tabId}-body` widget 자식을 붙여 surface를 렌더한다.
       const autoChildrenByTab: Record<string, string[]> = {}
       for (const [id, entity] of Object.entries(page.entities)) {
         const data = entity.data as Record<string, unknown> | undefined

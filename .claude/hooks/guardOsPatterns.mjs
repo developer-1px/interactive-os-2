@@ -333,13 +333,13 @@ if (isPages && isTsx && /\.showModal\s*\(/.test(content)) {
 
 // 규칙 24a: FlatLayout widget 노드에 props 필드 Push 금지 — widget은 Context/hook pull
 // (a) updateEntityData(data, 'xxx', { props: ... }) 패턴
-// (b) definePage 내부 { type: 'widget', ..., props: ... } 패턴
+// (b) defineLayout 내부 { type: 'widget', ..., props: ... } 패턴
 if (isPages && isTsx) {
   const pushA = /updateEntityData\s*\([^,]+,\s*['"][^'"]+['"]\s*,\s*\{[\s\S]{0,40}?\bprops\s*:/.test(content)
   const pushB = /type\s*:\s*['"]widget['"][\s\S]{0,200}?\bprops\s*:/.test(content)
   if (pushA || pushB) {
     violations.push(
-      'FlatLayout widget 노드에 props 필드 전달 금지 (Push 모델) — definePage는 구조/id만 담고, widget이 도메인 Context/hook으로 값을 pull 하세요. 전범: src/pages/cms/cmsContext.tsx + cmsWidgets.tsx. 원칙: feedback_flatlayout_pull_not_push'
+      'FlatLayout widget 노드에 props 필드 전달 금지 (Push 모델) — defineLayout은 구조/id만 담고, widget이 도메인 Context/hook으로 값을 pull 하세요. 전범: src/pages/cms/cmsContext.tsx + cmsWidgets.tsx. 원칙: feedback_flatlayout_pull_not_push'
     )
   }
 }
@@ -356,7 +356,7 @@ if (isPages && /from\s+['"]@os\/(?:store|engine|axis|pattern|primitives|plugins)
 const isWidgetFile = isPages && isTsx && /[Ww]idget/.test(filePath)
 if (isWidgetFile && /\bax\(\{[^}]*\bplacement\s*:/.test(content)) {
   violations.push(
-    'widget에서 ax({ placement: ... }) 금지 — 위치 배치는 FlatLayout(floating/overlay 노드)이 소유합니다. definePage에 floating/overlay 노드를 추가하세요'
+    'widget에서 ax({ placement: ... }) 금지 — 위치 배치는 FlatLayout(floating/overlay 노드)이 소유합니다. defineLayout에 floating/overlay 노드를 추가하세요'
   )
 }
 

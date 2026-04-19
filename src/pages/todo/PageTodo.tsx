@@ -5,7 +5,7 @@ import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { useEngine } from '@os/engine/useEngine'
 import { definePlugin } from '@os/plugins/definePlugin'
 import { todoStore, todoCommands } from './todoStore'
-import { todoLayout } from './todoDefinePage'
+import { todoLayout } from './todoLayout'
 import { TodoProvider } from './todoContext'
 import { TodoHeaderWidget, TodoListWidget, TodoComposerWidget } from './todoWidgets'
 

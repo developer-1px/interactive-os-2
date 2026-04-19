@@ -1,6 +1,6 @@
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 
-export const storiesLayout = definePage({
+export const storiesLayout = defineLayout({
   entities: {
     root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'preview'] },
     sidebar: { data: { type: 'widget', widget: 'StoriesSidebar' } },

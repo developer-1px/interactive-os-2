@@ -54,7 +54,7 @@ export function Textarea({
   return (
     <textarea
       ref={ref}
-      className={`${ax({ role: 'control', surface: 'input', content: 'text', ...(autoResize ? { scroll: 'hidden' } : {}) })} textarea${autoResize ? ' textarea--auto-resize' : ''}${className ? ` ${className}` : ''}`}
+      className={`${ax({ role: 'control', surface: 'input', content: 'text', ...(autoResize ? { layout: 'clip' } : {}) })} textarea${autoResize ? ' textarea--auto-resize' : ''}${className ? ` ${className}` : ''}`}
       value={value}
       onChange={handleChange}
       placeholder={placeholder}

@@ -7,7 +7,7 @@
 **LLM/외부 사용자 (권장 — 단일 entry 4개):**
 ```ts
 import { TreeGrid, ListBox, indicators } from 'aria-os/ui'
-import { definePage, FlatLayout } from 'aria-os/layout'
+import { defineLayout, FlatLayout } from 'aria-os/layout'
 import type { NormalizedData } from 'aria-os/schema'
 ```
 

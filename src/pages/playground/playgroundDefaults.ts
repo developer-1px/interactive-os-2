@@ -1,7 +1,7 @@
 // /playground 초기 레이아웃 — cmux 구조(tabgroup + surface widget) + __focus + __picker.
 // __picker: targetTabId가 null이 아니면 PickerRoot가 PickerDialog 렌더.
 //           EmptySlot의 +버튼과 ⌘P 단축키가 둘 다 이 state를 set하는 단일 진입점.
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import type { FocusStateData } from '@os/layout/layoutCommands'
 import { FOCUS_STATE_ID } from '@os/layout/layoutCommands'
 
@@ -12,7 +12,7 @@ export interface PickerStateData extends Record<string, unknown> {
   targetTabId: string | null
 }
 
-export const PLAYGROUND_INITIAL = definePage({
+export const PLAYGROUND_INITIAL = defineLayout({
   entities: {
     root:      { data: { type: 'tabgroup', activeTabId: 't1' }, children: ['t1'] },
     t1:        { data: { type: 'tab', label: 'Untitled', contentType: 'widget', contentRef: '' }, children: ['t1-body'] },

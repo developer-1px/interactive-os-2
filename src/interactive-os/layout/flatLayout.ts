@@ -6,10 +6,16 @@ import { createStore } from '../store/createStore'
 
 // ── Layout node types ─────────────────────────────────
 
-/** 모든 레이아웃 노드의 공통 속성 — 배치 + 가시성만. surface/재질은 ax()·테마의 책임 */
+/** 모든 레이아웃 노드의 공통 속성 — 배치 + 가시성 + 스크롤 오너십.
+ *  surface/재질은 ax()·테마의 책임.
+ *  스크롤은 defineLayout의 1급 축 — scroll 필드 외에는 pages·widget·module.css에서
+ *  overflow를 직접 선언하지 않는다(단일 SSOT). */
 export interface LayoutBase extends Record<string, unknown> {
   hidden?: boolean
   padding?: 'xs' | 'sm' | 'md' | 'lg'
+  /** 이 노드를 스크롤 컨테이너로 선언. 미지정 = clip (사일런트 overflow 차단).
+   *  'y' 세로, 'x' 가로. */
+  scroll?: 'y' | 'x'
 }
 
 export interface SplitNode extends LayoutBase {
@@ -43,7 +49,6 @@ export interface WidgetNode extends LayoutBase {
   widget: string
   props?: Record<string, unknown>
   source?: string
-  scroll?: boolean
 }
 
 export interface GridNode extends LayoutBase {
@@ -91,14 +96,14 @@ export interface StateNode extends LayoutBase {
 
 export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabgroupNode | TabNode | SectionNode | FloatingNode | StateNode
 
-// ── definePage factory ────────────────────────────────
+// ── defineLayout factory ────────────────────────────────
 
 interface PageEntityConfig {
   data: LayoutNode
   children?: string[]
 }
 
-export function definePage(config: { entities: Record<string, PageEntityConfig> }): NormalizedData {
+export function defineLayout(config: { entities: Record<string, PageEntityConfig> }): NormalizedData {
   const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
   const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
 

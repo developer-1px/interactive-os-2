@@ -25,7 +25,7 @@ import { childRules, nodeSchemas, getEditableFields, expandEntitySlots } from '.
 import { zodSchema } from '@os/plugins/zodSchema'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { CmsProvider } from './cmsContext'
 import { cmsWidgets } from './cmsWidgets'
@@ -56,7 +56,7 @@ const sharedPlugins: Plugin[] = [
   definePlugin({ name: 'cmsEditable', visibilityFilter: cmsEditableFilter }),
 ]
 
-const cmsLayout = definePage({
+const cmsLayout = defineLayout({
   entities: {
     'main-row': {
       data: { type: 'split', direction: 'horizontal', sizes: [0.1, 'flex', 0.2] },

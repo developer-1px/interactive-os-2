@@ -1,14 +1,14 @@
 # FlatLayout — 배치 엔진 스펙
 
 FlatLayout은 React JSX 중첩을 NormalizedData 선언으로 대체하는 배치 엔진이다.
-화면을 만드는 공식: **데이터 설계 → 컴포넌트 조각(widget) 설계 → `definePage` 하나로 배치**.
+화면을 만드는 공식: **데이터 설계 → 컴포넌트 조각(widget) 설계 → `defineLayout` 하나로 배치**.
 
 ```tsx
-import { definePage } from '@os/layout'
+import { defineLayout } from '@os/layout'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 
-const layout = definePage({ entities: { /* LayoutNode 트리 */ } })
+const layout = defineLayout({ entities: { /* LayoutNode 트리 */ } })
 const registry = createWidgetRegistry({ MyWidget, OtherWidget })
 
 <FlatLayout data={layout} registry={registry} aria-label="My Page" />
@@ -192,7 +192,7 @@ registry에 등록된 React 컴포넌트를 배치한다.
 
 ## 공통 속성
 
-definePage는 **배치**만 소유한다. surface/재질/색상은 ax()·테마가 소유한다 — 위젯 컴포넌트 자신이 `ax({ surface: ... })`로 그린다.
+defineLayout는 **배치**만 소유한다. surface/재질/색상은 ax()·테마가 소유한다 — 위젯 컴포넌트 자신이 `ax({ surface: ... })`로 그린다.
 
 ### hidden — 조건부 노출
 
@@ -251,7 +251,7 @@ function MySidebar() {
   return <ListBox data={store} ... />
 }
 
-// 금지: definePage에서 props push
+// 금지: defineLayout에서 props push
 { type: 'widget', widget: 'MySidebar', props: { items, onSelect } }  // ❌
 ```
 
@@ -320,7 +320,7 @@ const registry = createWidgetRegistry({
 ### 3-Pane (CMS 패턴)
 
 ```ts
-definePage({
+defineLayout({
   entities: {
     root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.1, 'flex', 0.2] }, children: ['sidebar', 'preview', 'detail'] },
     sidebar: { data: { type: 'widget', widget: 'Sidebar' } },
@@ -333,7 +333,7 @@ definePage({
 ### Sidebar + Content (Catalog 패턴)
 
 ```ts
-definePage({
+defineLayout({
   entities: {
     root:    { data: { type: 'nav', sidebarWidth: 0.18 }, children: ['nav', 'page1', 'page2'] },
     nav:     { data: { type: 'widget', widget: 'NavWidget' } },
@@ -347,7 +347,7 @@ definePage({
 ### Stack + Overlay (Book 패턴)
 
 ```ts
-definePage({
+defineLayout({
   entities: {
     root:       { data: { type: 'stack', gap: 'md' }, children: ['reader', 'footer', 'nav', 'toc'] },
     reader:     { data: { type: 'widget', widget: 'Reader' } },
@@ -364,7 +364,7 @@ definePage({
 ### Simple Stack (i18n 패턴)
 
 ```ts
-definePage({
+defineLayout({
   entities: {
     root:   { data: { type: 'stack', gap: 'md' }, children: ['header', 'toolbar', 'hints', 'grid'] },
     header: { data: { type: 'widget', widget: 'Header' } },
@@ -378,7 +378,7 @@ definePage({
 ### Fixed Header + Content (Incident 패턴)
 
 ```ts
-definePage({
+defineLayout({
   entities: {
     root:      { data: { type: 'split', direction: 'vertical', sizes: [0.05, 'flex'], resizable: false }, children: ['header', 'body'] },
     header:    { data: { type: 'widget', widget: 'Header' } },
@@ -396,7 +396,7 @@ definePage({
 ### Conditional Mode Switch (Viewer 패턴)
 
 ```ts
-definePage({
+defineLayout({
   entities: {
     root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.18, 'flex'] }, children: ['sidebar', 'content'] },
     sidebar:   { data: { type: 'widget', widget: 'Sidebar' } },
@@ -421,7 +421,7 @@ definePage({
 | 1 | **CMS floating 크롬** — ViewportBar 등 전역 크롬이 FlatLayout 밖 | `ax({ placement })` 직접 사용 | 허용 (전역 크롬은 레이아웃 트리 밖) |
 | 2 | **Route-level modal** — present mode 등 라우트 수준 전환 | `RouteModal` / `useOverlay` 별도 | 허용 (FlatLayout 스코프 밖) |
 | 3 | **Stack widget 크기 제어** — stack 안 widget이 자연 높이가 아닌 비율 지정 불가 | `vertical split`으로 대체 | GAP — stack sizing 정책 필요 |
-| 4 | **동적 노드 CRUD** — definePage는 정적, 런타임 탭 추가/패널 열기 없음 | workspaceCommands + tabgroup renderer 연동 | **해결됨** — workspaceStore command + tabgroup renderer 연동 완료 (cmux-layout-prd.md) |
+| 4 | **동적 노드 CRUD** — defineLayout는 정적, 런타임 탭 추가/패널 열기 없음 | workspaceCommands + tabgroup renderer 연동 | **해결됨** — workspaceStore command + tabgroup renderer 연동 완료 (cmux-layout-prd.md) |
 | 5 | ~~조건부 영역~~ | `LayoutBase.hidden` 일반화로 해결 | **해결됨** |
 | 6 | **반응형 레이아웃** — viewport 기반 split 비율/노드 교체 불가 | CSS 미디어쿼리 widget 내부 | GAP — 방법 미정 |
 | 7 | **포탈 패턴** — 동일 widget이 트리 두 곳에 동시 등장 불가 | 해당 없음 (현재 필요 사례 없음) | 한계 인지 |

@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -44,7 +44,7 @@ const showcaseWidgets = createWidgetRegistry({
   ShowcaseContent: ShowcaseContentWidget,
 })
 
-const showcaseLayout = definePage({
+const showcaseLayout = defineLayout({
   entities: {
     root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex'], resizable: false }, children: ['sidebar', 'content'] },
     sidebar: { data: { type: 'widget', widget: 'ShowcaseSidebar' } },

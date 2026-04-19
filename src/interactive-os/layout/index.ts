@@ -1,4 +1,4 @@
-export { definePage } from './flatLayout'
+export { defineLayout } from './flatLayout'
 export type {
   LayoutNode,
   LayoutBase,

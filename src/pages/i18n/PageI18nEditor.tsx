@@ -2,7 +2,7 @@
 // @useState-hatch — missingOnly는 view-only ephemeral toggle (OS 축에 해당 없음)
 import { useMemo, useState, useCallback, useRef } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { useStore } from '@os/store/useStore'
 import type { NormalizedData } from '@os/store/types'
@@ -43,7 +43,7 @@ const i18nWidgets = createWidgetRegistry({
   I18nGrid: I18nGridWidget,
 })
 
-const i18nLayout = definePage({
+const i18nLayout = defineLayout({
   entities: {
     root:         { data: { type: 'split', direction: 'vertical', sizes: ['auto', 'auto', 'flex', 'auto'], resizable: false, padding: 'sm' }, children: ['header', 'toolbar', 'grid', 'footer'] },
     header:       { data: { type: 'bar', justify: 'between', padding: 'sm', gap: 'md' }, children: ['title', 'stats'] },

@@ -39,7 +39,7 @@ ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
 
 **외부 표면 (npm 사용자, LLM 시스템 프롬프트):**
 - `aria-os/ui` — 100+ 완성품 컴포넌트 + AriaComponentProps 타입 + indicators/items/panels/cells/composites namespaces
-- `aria-os/layout` — definePage, LayoutNode 9 variants, FlatLayout, widgetRegistry
+- `aria-os/layout` — defineLayout, LayoutNode 9 variants, FlatLayout, widgetRegistry
 - `aria-os/schema` — NormalizedData/Entity 타입, ROOT_ID, createStore (defineData 빌더는 후속 plan)
 - `aria-os/advanced` — useAria, useAriaZone, useControlledAria, composePattern, createCommandEngine, useEngine, definePlugin (사람-개발자 escape hatch, LLM 비노출)
 

@@ -6,7 +6,7 @@ import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { ax } from '@styles/ax'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { definePage } from '@os/layout'
+import { defineLayout } from '@os/layout'
 import { updateEntityData } from '@os/store/createStore'
 import { buildBook, buildTocStore, buildChapterStore, buildChapterPageStore, splitIntoSlides, type BookPage, type Chapter } from './bookContent'
 import { BookProvider, type BookContextValue } from './bookContext'
@@ -35,7 +35,7 @@ export function loader() {
 
 // ── Base layout definition ──
 
-const baseLayout = definePage({
+const baseLayout = defineLayout({
   entities: {
     root:             { data: { type: 'split' as const, direction: 'horizontal' as const, sizes: [0.18, 0.22, 'flex' as const], resizable: true }, children: ['chapter-panel', 'page-panel', 'reader-area'] },
 

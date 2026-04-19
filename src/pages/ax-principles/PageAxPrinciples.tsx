@@ -5,7 +5,7 @@ import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { useEngine } from '@os/engine/useEngine'
 import { definePlugin } from '@os/plugins/definePlugin'
 import { axPrinciplesStore, axPrinciplesCommands } from './axPrinciplesStore'
-import { axPrinciplesLayout } from './axPrinciplesDefinePage'
+import { axPrinciplesLayout } from './axPrinciplesLayout'
 import { AxPrinciplesProvider } from './axPrinciplesContext'
 import {
   AxPrinciplesHeader,

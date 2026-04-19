@@ -15,7 +15,7 @@ import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { RouteModal } from '@os/ui/RouteModal'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { definePage } from '@os/layout'
+import { defineLayout } from '@os/layout'
 import { useEngine } from '@os/engine/useEngine'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
@@ -42,7 +42,7 @@ import SlidesPresent from './slidesPresent'
 // Layout
 // ─────────────────────────────────────────────────────────────
 
-const slidesLayout = definePage({
+const slidesLayout = defineLayout({
   entities: {
     root: {
       data: { type: 'split', direction: 'vertical', sizes: [0.06, 'flex'], resizable: false },

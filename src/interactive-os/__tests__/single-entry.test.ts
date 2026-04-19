@@ -21,9 +21,9 @@ describe('single-entry barrel', () => {
     expect(ui.composites).toBeDefined()
   })
 
-  it('aria-os/layout exports definePage and FlatLayout', async () => {
+  it('aria-os/layout exports defineLayout and FlatLayout', async () => {
     const layout = await import('../layout/index')
-    expect(typeof layout.definePage).toBe('function')
+    expect(typeof layout.defineLayout).toBe('function')
     expect(typeof layout.FlatLayout).toBe('function')
     expect(typeof layout.createWidgetRegistry).toBe('function')
   })

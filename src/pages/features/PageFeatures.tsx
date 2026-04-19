@@ -7,7 +7,7 @@ import { updateEntityData } from '@os/schema'
 import { useGlobalTrap, type GlobalTrapKeyMap } from '@os/primitives/useGlobalTrap'
 import { FeaturesProvider, type FeaturesTab, type FeaturesFilter, type FeaturesContextValue } from './featuresContext'
 import { useFeaturesData } from './featuresStore'
-import { featuresLayout } from './featuresDefinePage'
+import { featuresLayout } from './featuresLayout'
 import {
   FeatureBreadcrumb,
   FeatureTreeGrid,

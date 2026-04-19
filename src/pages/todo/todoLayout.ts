@@ -1,7 +1,7 @@
-// Stage 4 — FlatLayout definePage: header + list + composer.
-import { definePage } from '@os/layout/flatLayout'
+// Stage 4 — FlatLayout defineLayout: header + list + composer.
+import { defineLayout } from '@os/layout/flatLayout'
 
-export const todoLayout = definePage({
+export const todoLayout = defineLayout({
   entities: {
     root: {
       data: { type: 'split', direction: 'vertical', sizes: ['auto', 'flex', 'auto'], resizable: false },

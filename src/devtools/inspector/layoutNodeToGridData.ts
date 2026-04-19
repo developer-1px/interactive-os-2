@@ -2,7 +2,7 @@
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 
-/** MVP 편집 대상 — definePage가 소유하는 배치/가시성 축만. surface는 ax()·테마 소유 */
+/** MVP 편집 대상 — defineLayout가 소유하는 배치/가시성 축만. surface는 ax()·테마 소유 */
 export const EDITABLE_KEYS = ['padding', 'hidden', 'gap'] as const
 export type EditableKey = typeof EDITABLE_KEYS[number]
 

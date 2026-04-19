@@ -80,6 +80,22 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
   )
 }
 
+// ── Scroll axis ───────────────────────────────────────
+// defineLayout의 LayoutBase.scroll 필드가 SSOT.
+// 'y' → layout:'scroll' (column flex + overflow-y:auto)
+// 'x' → layout:'scroll-x' (row flex + overflow-x:auto)
+// 미지정 → fallback (노드 타입별 기본 layout 유지)
+// pages·widget·module.css에서 overflow 직접 선언 금지.
+
+type ScrollField = 'y' | 'x' | undefined
+type AxLayoutCore = 'row' | 'center' | 'bar' | 'spread' | 'stack' | 'scroll' | 'scroll-x' | 'clip' | 'fill' | 'row-fill' | 'wrap' | 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7' | 'table'
+
+function resolveScrollLayout<T extends AxLayoutCore>(scroll: ScrollField, fallback: T): T | 'scroll' | 'scroll-x' {
+  if (scroll === 'y') return 'scroll'
+  if (scroll === 'x') return 'scroll-x'
+  return fallback
+}
+
 // ── OCP renderer map ──────────────────────────────────
 
 const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactNode> = {
@@ -138,9 +154,10 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const preset = resolveContainerPreset('stack')
     const gap = node.gap ?? preset.gap
     const padding = node.padding ?? preset.padding
+    const layout = resolveScrollLayout(node.scroll, 'stack')
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', width: 'full', flex: '1', ...(gap ? { gap } : {}), ...(padding ? { padding } : {}) })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', flex: '1', ...(gap ? { gap } : {}), ...(padding ? { padding } : {}) })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'stack')}</React.Fragment>
         ))}
@@ -169,10 +186,11 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const node = getEntityData<BarNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
-    const layout = node.justify === 'between' ? 'spread' as const : 'bar' as const
+    const base = node.justify === 'between' ? 'spread' as const : 'bar' as const
     const preset = resolveContainerPreset('bar')
     const gap = node.gap ?? preset.gap
     const padding = node.padding ?? preset.padding
+    const layout = resolveScrollLayout(node.scroll, base)
 
     return (
       <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', ...(gap ? { gap } : {}), ...(padding ? { padding } : {}) })}>
@@ -372,8 +390,14 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const widgetPreset = resolveContainerPreset('widget')
     const padding = node.padding ?? widgetPreset.padding
 
+    // scroll 필드가 1순위. 그 다음 fillSlot. 그 외는 clip (사일런트 overflow 차단).
+    const layout = node.scroll === 'y' ? 'scroll' as const
+                 : node.scroll === 'x' ? 'scroll-x' as const
+                 : fillSlot ? 'fill' as const
+                 : 'clip' as const
+
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', ...(fillSlot ? { layout: 'fill' } : { scroll: 'hidden' }), ...(padding ? { padding } : {}) })} ${isSplitChild ? styles.splitChild : ''}`}>
+      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', layout, ...(padding ? { padding } : {}) })} ${isSplitChild ? styles.splitChild : ''}`}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )

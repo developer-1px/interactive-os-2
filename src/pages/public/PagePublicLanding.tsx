@@ -20,7 +20,7 @@ const CARDS = [
   {
     to: '/showcase/gmail',
     title: 'Gmail Mockup',
-    desc: 'FlatLayout definePage로 설계한 Gmail 레이아웃 목업',
+    desc: 'FlatLayout defineLayout로 설계한 Gmail 레이아웃 목업',
   },
 ]
 

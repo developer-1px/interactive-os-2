@@ -1,5 +1,5 @@
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import {
   TopBarWidget,
@@ -19,7 +19,7 @@ const registry = createWidgetRegistry({
 
 // ── Layout ──
 
-const gmailLayout = definePage({
+const gmailLayout = defineLayout({
   entities: {
     root: {
       data: { type: 'split', direction: 'vertical', sizes: [0.06, 'flex'], resizable: false },

@@ -1,7 +1,7 @@
 // ② cmux-layout-prd.md
 import { useMemo } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import type { FocusStateData } from '@os/layout/layoutCommands'
 import {
@@ -20,7 +20,7 @@ import './PageAgentChat.css'
 // __focus = FOCUS_STATE_ID state node — layoutCommands.setFocus/splitHere/closeHere가 읽어 dispatch
 // ChatKeybindings는 FlatLayout children slot으로 mount (DOM 비점유 side-effect widget).
 
-const chatBaseLayout = definePage({
+const chatBaseLayout = defineLayout({
   entities: {
     root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
     sidebar:   { data: { type: 'widget', widget: 'WorkspaceSidebar' } },

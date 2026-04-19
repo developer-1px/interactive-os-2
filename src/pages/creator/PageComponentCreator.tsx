@@ -1,11 +1,11 @@
 // ② flatlayout-resizable-split-prd.md
 import { useMemo, useCallback } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { definePage } from '@os/layout'
+import { defineLayout } from '@os/layout'
 import type { NormalizedData } from '@os/store/types'
 import { creatorWidgets } from './creatorWidgets'
 
-const creatorLayout = definePage({
+const creatorLayout = defineLayout({
   entities: {
     root:     { data: { type: 'split', direction: 'horizontal', sizes: [0.15, 'flex', 0.35] }, children: ['sidebar', 'preview', 'source'] },
     sidebar:  { data: { type: 'widget', widget: 'CreatorSidebar' } },

@@ -1,8 +1,8 @@
 /**
- * cmux preview scenarios — definePage 변형 매트릭스.
+ * cmux preview scenarios — defineLayout 변형 매트릭스.
  *
  * 목적: "선언만으로 N개 화면 상태를 즉시 스냅한다"의 POC.
- *   - 각 scenario는 definePage 변형 + Context value 조합
+ *   - 각 scenario는 defineLayout 변형 + Context value 조합
  *   - URL `?scenario=<id>` 쿼리로 스위치 → quickShot 반복으로 N장 자동
  *
  * 시나리오 축:
@@ -12,7 +12,7 @@
  *   multi   — 6 tabs, 긴 레이블 포함 (overflow 테스트)
  *   empty   — 세션 선택 없음 (본문 전체 EmptyState)
  */
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import type { NormalizedData } from '@os/schema'
 import type { CmuxPreviewContextValue } from './cmuxPreviewContext'
 
@@ -42,7 +42,7 @@ const chatBody = (prefix: string) => ({
 export const scenarioDefault: CmuxScenario = {
   id: 'default',
   label: 'default — 3 tabs (Chat / Files / Entities)',
-  page: definePage({
+  page: defineLayout({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
       sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
@@ -63,7 +63,7 @@ export const scenarioDefault: CmuxScenario = {
 export const scenarioSingle: CmuxScenario = {
   id: 'single',
   label: 'single — 1 tab (onboarding)',
-  page: definePage({
+  page: defineLayout({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
       sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
@@ -80,7 +80,7 @@ export const scenarioSingle: CmuxScenario = {
 export const scenarioSplit: CmuxScenario = {
   id: 'split',
   label: 'split — 2 tabgroup (⌘D horizontal)',
-  page: definePage({
+  page: defineLayout({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'work'] },
       sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
@@ -103,7 +103,7 @@ export const scenarioSplit: CmuxScenario = {
 export const scenarioMulti: CmuxScenario = {
   id: 'multi',
   label: 'multi — 6 tabs (overflow + long label)',
-  page: definePage({
+  page: defineLayout({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
       sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
@@ -130,7 +130,7 @@ export const scenarioMulti: CmuxScenario = {
 export const scenarioEmpty: CmuxScenario = {
   id: 'empty',
   label: 'empty — no session selected',
-  page: definePage({
+  page: defineLayout({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
       sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },

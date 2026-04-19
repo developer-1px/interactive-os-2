@@ -14,7 +14,7 @@ import {
 import { layoutCommands } from '@os/layout/layoutCommands'
 import { layoutStoreToTree } from './layoutStoreToTree'
 import { layoutNodeToGridData, gridDataToLayoutPatch } from './layoutNodeToGridData'
-import { serializeToDefinePage } from './serializeToDefinePage'
+import { serializeToDefineLayout } from './serializeToDefineLayout'
 import { renderInspectorItem } from './renderInspectorItem'
 import { ax } from '@styles/ax'
 
@@ -74,7 +74,7 @@ export function InspectorPageTab() {
 
   const handleCopy = useCallback(async () => {
     if (!store) return
-    await navigator.clipboard.writeText(serializeToDefinePage(store))
+    await navigator.clipboard.writeText(serializeToDefineLayout(store))
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
   }, [store])
@@ -82,7 +82,7 @@ export function InspectorPageTab() {
   if (registry.size === 0) {
     return (
       <div className={ax({ textStyle: 'caption' })}>
-        No definePage detected. This page may be hand-coded outside FlatLayout.
+        No defineLayout detected. This page may be hand-coded outside FlatLayout.
       </div>
     )
   }
@@ -127,7 +127,7 @@ export function InspectorPageTab() {
         >
           <span className={ax({ layout: 'bar' })}>
             <CopyIndicator copied={copied} />
-            {copied ? 'Copied' : 'Copy as definePage'}
+            {copied ? 'Copied' : 'Copy as defineLayout'}
           </span>
         </button>
       </div>

@@ -2,7 +2,7 @@
 // Builds FlatLayout NormalizedData from CatalogData
 // TreeView nav (categories as folders, demos as leaves) + activeIndex-driven detail
 
-import { definePage } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/flatLayout'
 import type { LayoutNode } from '@os/layout/flatLayout'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -216,5 +216,5 @@ export function buildCatalogLayout(catalog: CatalogData) {
     children: ['nav', ...contentIds],
   }
 
-  return definePage({ entities })
+  return defineLayout({ entities })
 }

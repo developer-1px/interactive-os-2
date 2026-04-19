@@ -1,12 +1,12 @@
 /**
- * cmux preview widgets — 오로지 definePage 선언만으로 cmux 화면을 뿌리기 위한
+ * cmux preview widgets — 오로지 defineLayout 선언만으로 cmux 화면을 뿌리기 위한
  * 정적 presentation widget 모음. widget은 props가 아닌 CmuxPreviewContext에서
  * 값을 pull 한다 (feedback_flatlayout_pull_not_push).
  *
  * 의도적 제약:
  *   - pages/cmux-preview/ 안에 JSX 날코딩 최소화 — 각 widget은 ui/ 완성품 1개 + 데이터 어댑터
- *   - PageCmuxPreview.tsx 는 definePage 선언 + <FlatLayout/> 한 번으로 끝난다
- *   - widget 간 값 차이는 Context value만 교체하면 재현 (1 definePage → N variant)
+ *   - PageCmuxPreview.tsx 는 defineLayout 선언 + <FlatLayout/> 한 번으로 끝난다
+ *   - widget 간 값 차이는 Context value만 교체하면 재현 (1 defineLayout → N variant)
  */
 import { NavList } from '@os/ui/NavList'
 import { Feed } from '@os/ui/Feed'

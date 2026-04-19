@@ -3,7 +3,7 @@
 // rolePreset은 Item/Control의 role × surface × content 베이스 정책을 소유하고,
 // containerPreset은 컨테이너의 type × variant 베이스 정책을 소유한다.
 //
-// @invariant 호출부(definePage, ui 컴포넌트)는 override가 필요할 때만 명시 —
+// @invariant 호출부(defineLayout, ui 컴포넌트)는 override가 필요할 때만 명시 —
 //            지정 없으면 이 테이블의 기본값이 주입된다.
 // @invariant 값 변경은 이 파일 1곳 수정으로 완결. 토큰 바뀌면 여기만 고치면 됨.
 
