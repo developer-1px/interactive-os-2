@@ -14,7 +14,7 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')
     expect(panel).not.toBeNull()
-    const inputs = panel!.querySelectorAll('input')
+    const inputs = panel!.querySelectorAll('input, textarea')
     expect(inputs.length).toBeGreaterThan(0)
   })
 
@@ -23,7 +23,7 @@ describe('CMS Detail Panel', () => {
     const panel = container.querySelector('.cms-detail-panel')
     expect(panel).not.toBeNull()
     // Spatial pattern auto-focuses first section (hero) which has child fields
-    const inputs = panel!.querySelectorAll('input')
+    const inputs = panel!.querySelectorAll('input, textarea')
     expect(inputs.length).toBeGreaterThan(0)
   })
 
@@ -35,7 +35,7 @@ describe('CMS Detail Panel', () => {
     act(() => { (badge as HTMLElement).click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const input = panel.querySelector('input')!
+    const input = panel.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')!
 
     await user.clear(input)
     await user.type(input, 'Updated Badge')
@@ -51,13 +51,13 @@ describe('CMS Detail Panel', () => {
     act(() => { (badge as HTMLElement).click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const firstInput = panel.querySelector('input')
+    const firstInput = panel.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
     const firstValue = firstInput?.value
 
     const title = container.querySelector('[data-cms-id="hero-title"]')
     act(() => { (title as HTMLElement).click() })
 
-    const updatedInput = panel.querySelector('input')
+    const updatedInput = panel.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
     expect(updatedInput?.value).not.toBe(firstValue)
   })
 
@@ -76,7 +76,7 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     // Card has children: icon (no fields), title (1 field), desc (1 field) → 2 inputs
-    const inputs = panel.querySelectorAll('input')
+    const inputs = panel.querySelectorAll('input, textarea')
     expect(inputs.length).toBe(2)
 
     // Should show group with label (card title text) — Form renders <fieldset><legend>
@@ -118,9 +118,9 @@ describe('CMS Detail Panel', () => {
     act(() => { cardStore.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const inputs = panel.querySelectorAll('input')
+    const inputs = panel.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
     // First input should be the title field
-    const titleInput = inputs[0]
+    const titleInput = inputs[0]!
 
     await user.clear(titleInput)
     await user.type(titleInput, 'Updated Store Title')
@@ -173,7 +173,7 @@ describe('CMS Detail Panel', () => {
   // V6: undo via Mod+Z — skipped in jsdom (Cmd+Z keyboard dispatch limitation)
   // Verified via existing history plugin unit tests + manual browser testing
 
-  // V8: patterns section → 17 fields scrollable
+  // V8: patterns section → scrollable fields (section-cta.label+href + label+title+desc + 16 pattern names = 21)
   it('shows all 17 fields for patterns section', async () => {
     const { container } = render(<PageCms />)
 
@@ -181,8 +181,8 @@ describe('CMS Detail Panel', () => {
     act(() => { patterns.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const inputs = panel.querySelectorAll('input')
-    expect(inputs.length).toBe(20)
+    const inputs = panel.querySelectorAll('input, textarea')
+    expect(inputs.length).toBe(21)
   })
 
   // V9: edit in progress + focus change → commit
@@ -194,7 +194,7 @@ describe('CMS Detail Panel', () => {
     await user.click(badge)
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const input = panel.querySelector('input')!
+    const input = panel.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')!
 
     await user.clear(input)
     await user.type(input, 'Auto Committed')
@@ -228,7 +228,7 @@ describe('CMS Detail Panel', () => {
     act(() => { footerLinks.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const inputs = panel.querySelectorAll('input')
+    const inputs = panel.querySelectorAll('input, textarea')
     expect(inputs.length).toBe(8)
   })
 })

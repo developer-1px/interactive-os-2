@@ -127,7 +127,7 @@ export default function FormDemo() {
             {showError && (
               <span
                 role="alert"
-                className={ax({ textStyle: 'caption', tone: 'danger' })}
+                className={ax({ role: 'item', textStyle: 'caption', tone: 'danger' })}
               >
                 {fieldErrors.value}
               </span>
@@ -144,12 +144,12 @@ export default function FormDemo() {
           Reset
         </Button>
         {submitted && (
-          <span className={ax({ textStyle: 'caption', tone: 'success' })}>
+          <span className={ax({ role: 'item', textStyle: 'caption', tone: 'success' })}>
             Submitted successfully
           </span>
         )}
         {errorCount > 0 && !submitted && (
-          <span className={ax({ textStyle: 'caption', tone: 'danger' })}>
+          <span className={ax({ role: 'item', textStyle: 'caption', tone: 'danger' })}>
             {errorCount} field(s) invalid
           </span>
         )}

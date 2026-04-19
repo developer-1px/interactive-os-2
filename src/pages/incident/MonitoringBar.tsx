@@ -32,7 +32,7 @@ export function MonitoringBar({ services, onActivate }: {
   const renderItem = useCallback((
     props: React.HTMLAttributes<HTMLElement>,
     node: Record<string, unknown>,
-    state: NodeState,
+    _state: NodeState,
   ) => {
     const svc = node.data as unknown as ServiceInfo
     if (!svc) return <span {...props} />
@@ -61,7 +61,7 @@ export function MonitoringBar({ services, onActivate }: {
       />
       <div className={ax({ layout: 'bar' })}>
         <span className={ax({ textStyle: 'code' })}>INC-1284</span>
-        <span className={`${ax({ textStyle: 'code', tone: 'danger' })} incident-monitor-meta-live`}>REC</span>
+        <span className={`${ax({ role: 'item', textStyle: 'code', tone: 'danger' })} incident-monitor-meta-live`}>REC</span>
       </div>
     </div>
   )

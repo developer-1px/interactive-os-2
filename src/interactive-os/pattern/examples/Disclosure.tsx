@@ -68,8 +68,8 @@ const renderItem = (
       <div
         {...props}
         className={`${ax({
-            role: 'control-group',
-            layout: 'bar', content: 'text', surface: 'sunken', interactive: 'item' })} cursor-default`}
+            role: 'control',
+            layout: 'bar', content: 'text', surface: 'action', interactive: 'item' })} cursor-default`}
         data-focused={state.focused || undefined}
       >
         <span className={ax({ textStyle: 'caption' })} aria-hidden="true">
@@ -81,7 +81,7 @@ const renderItem = (
   }
 
   return (
-    <div {...props} className={ax({ textStyle: 'body', content: 'text' })}>
+    <div {...props} className={ax({ role: 'item', textStyle: 'body', content: 'text' })}>
       {label}
     </div>
   )

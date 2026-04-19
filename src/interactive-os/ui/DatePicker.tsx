@@ -250,7 +250,7 @@ export function DatePicker({
           onKeyDown={(e) => { if (e.key === 'ArrowDown') { e.preventDefault(); openDialog() } }}
         />
         <button
-          className={`${ax({ surface: 'ghost', layout: 'center',  })} dp-trigger`}
+          className={`${ax({ role: 'control', surface: 'ghost', layout: 'center' })} dp-trigger`}
           aria-label="Choose Date"
           tabIndex={-1}
           onClick={() => isOpen ? closeDialog() : openDialog()}
@@ -266,7 +266,7 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`${ax({ surface: 'trap', placement: 'anchor-below-start' })} dp-dialog`}
+          className={`${ax({ role: 'tip', surface: 'overlay', placement: 'anchor-below-start' })} dp-dialog`}
           style={{ positionAnchor: anchorName } as React.CSSProperties}
           onKeyDown={handleDialogKeyDown}
         >

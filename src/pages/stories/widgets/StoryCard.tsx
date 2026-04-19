@@ -12,8 +12,8 @@ function ProgressSummary({ done, wip, todo }: { done: number; wip: number; todo:
   if (total === 0) return null
   return (
     <div className={ax({ layout: 'row' })}>
-      <span className={ax({ textStyle: 'caption', tone: 'success' })}>{done} done</span>
-      <span className={ax({ textStyle: 'caption', tone: 'warning' })}>{wip} wip</span>
+      <span className={ax({ role: 'item', textStyle: 'caption', tone: 'success' })}>{done} done</span>
+      <span className={ax({ role: 'item', textStyle: 'caption', tone: 'warning' })}>{wip} wip</span>
       <span className={ax({ textStyle: 'caption' })}>{todo} todo</span>
     </div>
   )
@@ -24,7 +24,7 @@ export function StoryCard({ doc }: StoryCardProps) {
   const storyLabel = doc.number != null ? `[ Story #${doc.number} ] ${doc.title}` : doc.title
 
   return (
-    <div className={ax({ layout: 'stack', surface: 'display' })}>
+    <div className={ax({ role: 'cell', layout: 'stack', surface: 'display' })}>
       {/* Title bar */}
       <div className={ax({
           role: 'control',

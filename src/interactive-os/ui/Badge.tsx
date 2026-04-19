@@ -1,9 +1,9 @@
 /** @catalog 상태·카운트 라벨 뱃지 */
 import { ax } from '@styles/ax'
-import type { Axes } from '@styles/ax'
+import type { AxTone } from '@styles/ax'
 
 interface BadgeProps {
-  tone?: Axes['tone']
+  tone?: AxTone
   variant?: 'solid' | 'outline'
   children: React.ReactNode
 }
@@ -13,7 +13,7 @@ export function Badge({ tone = 'neutral', variant = 'solid', children }: BadgePr
     <span
       className={ax({
         role: 'badge',
-        surface: variant === 'solid' ? 'action' : 'ghost',
+        surface: variant === 'solid' ? 'display' : 'ghost',
         tone,
         content: 'text',
         clamp: '1'

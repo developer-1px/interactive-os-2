@@ -11,7 +11,7 @@ export function ShowcaseDemo({ slug }: { slug?: string }) {
   const entry = components.find((c) => c.slug === slug)
 
   if (!entry) {
-    return <div className={ax({ tone: 'danger' })}>Unknown component: {slug}</div>
+    return <div className={ax({ role: 'item', tone: 'danger' })}>Unknown component: {slug}</div>
   }
 
   return (

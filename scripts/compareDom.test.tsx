@@ -27,7 +27,7 @@ import { RadioGroup as SRadioGroup, RadioGroupItem as SRadioGroupItem } from './
 import { Switch as SSwitch } from './shadcn-ref/switch'
 import { Progress as SProgress } from './shadcn-ref/progress'
 import { Slider as SSlider } from './shadcn-ref/slider'
-import { Select as SSelect, SelectTrigger as SSelectTrigger, SelectValue as SSelectValue, SelectContent as SSelectContent, SelectItem as SSelectItem } from './shadcn-ref/select'
+import { Select as SSelect, SelectTrigger as SSelectTrigger, SelectValue as SSelectValue } from './shadcn-ref/select'
 import { Tabs as STabs, TabsList as STabsList, TabsTrigger as STabsTrigger, TabsContent as STabsContent } from './shadcn-ref/tabs'
 import { Accordion as SAccordion, AccordionItem as SAccordionItem, AccordionTrigger as SAccordionTrigger, AccordionContent as SAccordionContent } from './shadcn-ref/accordion'
 import { ScrollArea as SScrollArea } from './shadcn-ref/scroll-area'

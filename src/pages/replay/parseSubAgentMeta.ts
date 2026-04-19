@@ -32,7 +32,7 @@ export function parseSubAgentMeta(text: string, filename: string): SubAgentMeta 
   try {
     raw = JSON.parse(text)
   } catch (err) {
-    throw new Error(`parseSubAgentMeta: invalid JSON (${filename}): ${(err as Error).message}`)
+    throw new Error(`parseSubAgentMeta: invalid JSON (${filename}): ${(err as Error).message}`, { cause: err })
   }
   if (!raw || typeof raw !== 'object') {
     throw new Error(`parseSubAgentMeta: expected object (${filename})`)

@@ -21,8 +21,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const indicatorTone = tone === 'danger' || tone === 'error' ? 'error' : tone === 'success' ? 'success' : tone === 'warning' ? 'warning' : 'info'
   return (
     <div {...props} className={ax({
-        role: 'control-group',
-        surface: 'raised', tone: resolvedTone, layout: 'row' })}>
+        role: 'item',
+        surface: 'display', tone: resolvedTone, layout: 'row' })}>
       <StatusIndicator tone={indicatorTone} />
       <div className={ax({ layout: 'stack' })}>
         <span className={ax({ textStyle: 'label',  })}>{label}</span>

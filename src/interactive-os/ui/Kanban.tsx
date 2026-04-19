@@ -110,7 +110,7 @@ export function Kanban({
         focused={cardState.focused}
         className={ax({
             role: 'control-group',
-            surface: 'raised', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'stack' })}
+            surface: 'raised', layout: compact ? 'row' : 'stack' })}
         style={cardStyle}
         title={cardTooltip ?? cardTitle}
         data-weight={cardWeight || undefined}
@@ -126,7 +126,7 @@ export function Kanban({
             <span className={`tabular-nums ${ax({ flex: 'none' })}`} style={{ marginLeft: 'auto' }}>
               {cardSubtitle}
               {cardDepUp != null && cardDepUp > 0 && <span className={ax({  })} style={{ color: 'var(--tone-success-base)' }}> ↑{cardDepUp}</span>}
-              {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({  })} ${ax({ tone: 'accent' })}`}> ↓{cardDepDown}</span>}
+              {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({  })} ${ax({ role: 'item', tone: 'accent' })}`}> ↓{cardDepDown}</span>}
             </span>
           )}
         </AriaItemContext.Provider>

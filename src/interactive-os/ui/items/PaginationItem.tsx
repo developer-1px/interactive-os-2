@@ -46,7 +46,7 @@ export function PaginationItem(
   return (
     <button
       {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-      className={ax({ role: 'item', interactive: 'button', surface: isCurrent ? 'action' : 'ghost', tone: isCurrent ? 'accent' : undefined })}
+      className={ax({ role: 'control', interactive: 'button', surface: isCurrent ? 'action' : 'ghost', tone: isCurrent ? 'accent' : undefined })}
       aria-current={isCurrent ? 'page' : undefined}
       disabled={isDisabled}
     >

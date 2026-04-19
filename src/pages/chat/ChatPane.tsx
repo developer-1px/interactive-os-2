@@ -177,8 +177,8 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
           {isRunning && (
             <div className={ax({ layout: 'bar', textStyle: 'caption' }) + ' tabular-nums chat-activity-bar'}>
               <span className={`${ax({
-                  role: 'control-group',
-                surface: 'base', tone: 'accent' })} chat-dot`} />
+                  role: 'badge',
+                surface: 'display', tone: 'accent' })} chat-dot`} />
               <span>{label}</span>
               <span>{elapsed}s</span>
               {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}

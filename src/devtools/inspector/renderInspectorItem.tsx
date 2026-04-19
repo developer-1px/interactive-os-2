@@ -30,10 +30,16 @@ export function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, no
 
   const isGroup = type === 'group'
 
+  const surfaceCls = changed
+    ? ax({ role: 'control', surface: 'action', tone: 'accent', layout: 'bar', textStyle: 'code' })
+    : state.focused
+      ? ax({ role: 'control', surface: 'ghost', layout: 'bar', textStyle: 'code' })
+      : ax({ layout: 'bar', textStyle: 'code' })
+
   return (
     <div
       {...props}
-      className={`${props.className ?? ''} inspector-item ${ax({ layout: 'bar', textStyle: 'code', surface: changed ? 'action' : state.focused ? 'ghost' : undefined })}`}
+      className={`${props.className ?? ''} inspector-item ${surfaceCls}`}
       style={{ '--_indent': `${indent}px` } as React.CSSProperties}
       data-focused={state.focused || undefined}
       data-changed={changed || undefined}

@@ -97,8 +97,8 @@ export default function PageCms() {
       () => localeRef.current,
       setLocale,
     )
-    ;(window as any).cms = api
-    return () => { delete (window as any).cms }
+    ;(window as unknown as Record<string, unknown>).cms = api
+    return () => { delete (window as unknown as Record<string, unknown>).cms }
   }, [engine])
 
   const onSlotDrillDown = useCallback((_nodeId: string) => {

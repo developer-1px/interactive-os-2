@@ -146,16 +146,16 @@ export function CapturePanelWidget() {
       {capture ? (
         <div className={ax({ layout: 'stack', flex: '1' })}>
           <div className={ax({ layout: 'grid-2' })}>
-            <div className={ax({ surface: 'display', layout: 'stack' })}>
+            <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
               <div className={ax({ textStyle: 'overline' })}>Before</div>
               <span className={ax({ textStyle: 'code' })}>{capture.before}</span>
             </div>
-            <div className={ax({ surface: 'display', layout: 'stack' })}>
+            <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
               <div className={ax({ textStyle: 'overline' })}>After</div>
               <span className={ax({ textStyle: 'code' })}>{capture.after}</span>
             </div>
           </div>
-          <div className={ax({ layout: 'bar', textStyle: 'caption', tone: 'accent' })}>
+          <div className={ax({ role: 'item', layout: 'bar', textStyle: 'caption', tone: 'accent' })}>
             <Bot size={12} /><span>{capture.aiNote}</span>
           </div>
         </div>
@@ -176,7 +176,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
     <div className={ax({ layout: 'bar' })}>
-      <div className={ax({ role: 'control', layout: 'center', tone: 'accent' })}><Bot size={14} /></div>
+      <div className={ax({ role: 'control', surface: 'ghost', layout: 'center', tone: 'accent' })}><Bot size={14} /></div>
       <div className={ax({ layout: 'stack', flex: '1' })}>
         <div className={ax({ textStyle: 'caption' })}>{displayed}{!done && <StreamCursor />}</div>
         {done && msg.block && <msg.block />}
@@ -190,12 +190,12 @@ function chatRenderItem(msg: Msg) {
     return (
       <div className={ax({ layout: 'bar' })}>
         <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption' })}>{msg.text}</div></div>
-        <div className={ax({ role: 'control', layout: 'center' })}><User size={14} /></div>
+        <div className={ax({ role: 'control', surface: 'ghost', layout: 'center' })}><User size={14} /></div>
       </div>
     )
   }
   if (msg.type === 'system') {
-    return <div className={ax({ surface: 'display' })}><div className={ax({ textStyle: 'caption', tone: 'danger' })}>{msg.text}</div></div>
+    return <div className={ax({ role: 'cell', surface: 'display' })}><div className={ax({ role: 'item', textStyle: 'caption', tone: 'danger' })}>{msg.text}</div></div>
   }
   if (msg.type === 'tool') {
     return (

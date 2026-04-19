@@ -43,7 +43,7 @@ const renderTab = (
   return (
     <div
       {...props}
-      className={`${ax({ textStyle: 'body', layout: 'row', interactive: 'tab' })} cursor-default`}
+      className={`${ax({ role: 'item', textStyle: 'body', layout: 'row', interactive: 'tab' })} cursor-default`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

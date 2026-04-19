@@ -9,7 +9,7 @@ export function DocLinkCell({ docs }: DocLinkCellProps) {
   return (
     <span className={ax({ role: 'item', surface: 'display', layout: 'bar' })}>
       {docs.map((doc) => (
-        <span key={doc.path} className={ax({ tone: 'accent' })}>
+        <span key={doc.path} className={ax({ role: 'item', tone: 'accent' })}>
           {doc.label}
         </span>
       ))}

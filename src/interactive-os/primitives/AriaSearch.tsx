@@ -68,14 +68,14 @@ function AriaSearch({ placeholder = 'Search...', className }: { placeholder?: st
           type="button"
           onClick={handleClear}
           aria-label="Clear search"
-          className={ax({ surface: 'ghost', layout: 'center', flex: 'none' })}
+          className={ax({ role: 'control', surface: 'ghost', layout: 'center', flex: 'none', interactive: 'button' })}
         >
           <X size={14} aria-hidden />
         </button>
       )}
       <kbd className={ax({
-          role: 'control-group',
-        surface: 'base', textStyle: 'code', flex: 'none', content: 'text' })}>
+          role: 'badge',
+        surface: 'display', textStyle: 'code', content: 'text' })}>
         {filterText ? 'ESC' : '⌘F'}
       </kbd>
     </div>

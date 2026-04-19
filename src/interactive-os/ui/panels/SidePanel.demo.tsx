@@ -12,7 +12,7 @@ export const meta = {
 export function Demo() {
   return (
     <div className={ax({ width: 'md' })}>
-      <SidePanel header="Side Panel" surface="display" collapsible defaultCollapsed={false}>
+      <SidePanel header="Side Panel" surface="base" collapsible defaultCollapsed={false}>
         <div className={ax({ textStyle: 'body' })}>
           Collapsible side panel content.
         </div>

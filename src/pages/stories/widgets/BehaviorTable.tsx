@@ -11,8 +11,8 @@ interface BehaviorTableProps {
 function HeaderCell({ children }: { children: React.ReactNode }) {
   return (
     <th className={ax({
-        role: 'control-group',
-        textStyle: 'label', content: 'text', surface: 'sunken' })}>
+        role: 'cell',
+        textStyle: 'label', content: 'text', surface: 'display' })}>
       {children}
     </th>
   )
@@ -22,8 +22,8 @@ function BubbleCell({ children }: { children: React.ReactNode }) {
   return (
     <td className={ax({ })}>
       <span className={ax({
-          role: 'control-group',
-        surface: 'sunken', textStyle: 'caption', content: 'text' })}>
+          role: 'cell',
+        surface: 'display', textStyle: 'caption', content: 'text' })}>
         {children}
       </span>
     </td>
@@ -48,8 +48,8 @@ export function BehaviorTable({ behaviors }: BehaviorTableProps) {
             <BubbleCell>{b.when}</BubbleCell>
             <td className={ax({ })}>
               <span className={ax({
-                  role: 'control-group',
-                surface: 'sunken', textStyle: 'caption', content: 'text', layout: 'row' })}>
+                  role: 'cell',
+                surface: 'display', textStyle: 'caption', content: 'text', layout: 'row' })}>
                 <ArrowRight className={ax({ flex: 'none' })} />
                 {b.then}
               </span>

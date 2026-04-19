@@ -12,7 +12,7 @@ import { layout } from '@os/layout/layoutPlugin'
 import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode, FloatingNode, TabgroupNode, TabNode } from '@os/layout/flatLayout'
 import { resolveContainerPreset } from '@os/layout/containerPreset'
 import { layoutCommands, FOCUS_STATE_ID, type FocusStateData } from '@os/layout/layoutCommands'
-import { ax, type Axes } from '@styles/ax'
+import { ax, type AxPlacement } from '@styles/ax'
 import styles from './FlatLayout.module.css'
 import { NavLayoutContext } from './NavLayoutContext'
 import { SplitPane } from './SplitPane'
@@ -31,6 +31,7 @@ export interface FlatLayoutSurfaceCtx {
 
 const FlatLayoutSurfaceContext = React.createContext<FlatLayoutSurfaceCtx | null>(null)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useFlatLayoutSurface = (): FlatLayoutSurfaceCtx | null =>
   React.useContext(FlatLayoutSurfaceContext)
 
@@ -192,7 +193,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       popup: 'anchor-below',
       hint: 'anchor-below',
     }
-    const pl = (node.placement ?? defaultPlacement[node.overlayType] ?? 'center') as Axes['placement']
+    const pl = (node.placement ?? defaultPlacement[node.overlayType] ?? 'center') as AxPlacement
 
     return (
       <div ref={refCallback(nodeId)} className={ax({ placement: pl })}>
@@ -354,7 +355,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       return (
         <div className={ax({
             role: 'control-group',
-            surface: 'sunken', textStyle: 'caption',  })}>
+            surface: 'sunken' })}>
           Unknown widget: {node.widget}
         </div>
       )
@@ -466,7 +467,7 @@ export function FlatLayout({ id: propId, data, registry, plugins: extraPlugins, 
   return (
     <FlatLayoutContext.Provider value={layoutCtx}>
       <div {...aria.containerProps} className={ax(isAppMode
-        ? { layout: 'fill', width: 'full', scroll: 'hidden' }
+        ? { layout: 'clip', width: 'full' }
         : { layout: 'scroll', width: 'full', flex: '1' }
       )}>
         {rootIds.map((id) => (

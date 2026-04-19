@@ -8,11 +8,19 @@ interface SearchableCellProps {
   muted?: boolean
 }
 
-export function SearchableCell({ children, empty, muted: _muted }: SearchableCellProps) {
+export function SearchableCell({ children, empty, muted }: SearchableCellProps) {
+  // Render tone via ax() — empty: muted em-dash, key column: secondary tone.
+  const innerClass = empty || muted ? ax({ role: 'item', tone: 'neutral-dim' }) : undefined
   return (
     <Aria.SearchHighlight>
-      <span className={ax({ role: 'item', surface: 'input' })}>
-        {empty ? '' : children}
+      <span className={ax({ role: 'cell', surface: 'input' })}>
+        <span
+          className={innerClass}
+          data-cell-empty={empty ? '' : undefined}
+          data-cell-muted={muted ? '' : undefined}
+        >
+          {empty ? '—' : children}
+        </span>
       </span>
     </Aria.SearchHighlight>
   )

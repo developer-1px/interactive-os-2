@@ -162,7 +162,7 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
       {children}
       <dialog
         ref={dialogRef}
-        className={`lightbox-dialog ${ax({ surface: 'trap', layout: 'center' })}`}
+        className={`lightbox-dialog ${ax({ role: 'cell', surface: 'display', layout: 'center' })}`}
         onClick={handleBackdropClick}
         aria-label="Lightbox"
       >

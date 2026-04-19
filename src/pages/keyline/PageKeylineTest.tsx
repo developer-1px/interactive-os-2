@@ -38,7 +38,7 @@ function DemoProbe({ entry, onRole }: { entry: DemoEntry; onRole: (label: string
 }
 
 export default function PageKeylineTest() {
-  const entries = useMemo(buildDemoEntries, [])
+  const entries = useMemo(() => buildDemoEntries(), [])
   // @useState-hatch — rl-* DOM 측정 결과 캐시, engine 축 해당 없음 (뷰 분류 버퍼)
   const [roleByLabel, setRoleByLabel] = useState<Record<string, RoleKey>>({})
 

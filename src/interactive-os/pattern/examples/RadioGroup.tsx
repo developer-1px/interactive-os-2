@@ -31,11 +31,11 @@ const renderRadio = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })} cursor-default`}
+      className={`${ax({ role: 'item', layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })} cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${ax({ layout: 'center', interactive: 'check' })} inline-flex`}
+        className={`${ax({ role: 'item', layout: 'center', interactive: 'check' })} inline-flex`}
         data-checked={state.selected || undefined}
         aria-hidden="true"
       />

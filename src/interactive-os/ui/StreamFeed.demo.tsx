@@ -24,7 +24,7 @@ export function Demo() {
       <StreamFeed
         items={items}
         feedRef={feedRef}
-        renderItem={(item, _index, { isLatest }) => (
+        renderItem={(item, _index, _state) => (
           <div key={item.id} className={ax({ })}>
             {item.text}
           </div>

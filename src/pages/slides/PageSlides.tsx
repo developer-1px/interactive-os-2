@@ -107,6 +107,7 @@ export default function PageSlides() {
     const deck = getCurrentDeck(deckStore)
     if (!deck) return
     const first = getSlidesOfDeck(deckStore, deck.id)[0]
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional auto-select guarded by selectedSlideId check
     if (first) setSelectedSlideId(first)
   }, [deckStore, selectedSlideId])
 

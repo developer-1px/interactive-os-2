@@ -5,8 +5,8 @@ import { runTest, demoTest, type RunTestResult, type TestResult } from './runTes
 import css from './TestRunnerPanel.module.css'
 
 function StatusIcon({ status }: { status: 'pass' | 'fail' | 'pending' }) {
-  if (status === 'pass') return <span className={ax({ tone: 'success' })}><CircleCheck size={14} /></span>
-  if (status === 'fail') return <span className={ax({ tone: 'danger' })}><CircleX size={14} /></span>
+  if (status === 'pass') return <span className={ax({ role: 'item', tone: 'success' })}><CircleCheck size={14} /></span>
+  if (status === 'fail') return <span className={ax({ role: 'item', tone: 'danger' })}><CircleX size={14} /></span>
   return <span className={ax({ })}><Circle size={14} /></span>
 }
 
@@ -24,7 +24,7 @@ function ResultItem({ result }: { result: TestResult }) {
         <span className={ax({ textStyle: 'caption' })}>{result.duration.toFixed(0)}ms</span>
       </div>
       {expanded && result.error && (
-        <pre className={`${ax({ tone: 'danger', textStyle: 'caption', clamp: 'pre' })} ${css.errorPre}`}>
+        <pre className={`${ax({ role: 'item', tone: 'danger', textStyle: 'caption', clamp: 'pre' })} ${css.errorPre}`}>
           {result.error}
         </pre>
       )}

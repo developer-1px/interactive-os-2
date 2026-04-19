@@ -54,7 +54,7 @@ export function Drawer({
   return (
     <>
       <div
-        className={ax({ surface: 'overlay', placement: 'viewport' }) + ' drawer-backdrop'}
+        className={ax({ role: 'tip', surface: 'overlay', placement: 'viewport' }) + ' drawer-backdrop'}
         onClick={onClose}
       />
       <div

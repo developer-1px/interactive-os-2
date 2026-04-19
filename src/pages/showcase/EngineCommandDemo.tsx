@@ -116,7 +116,7 @@ export default function EngineCommandDemo() {
             entries.map((e) => (
               <div key={e.seq} className="debug-log-entry">
                 <span className="op-faint">#{e.seq}</span>{' '}
-                <span className={ax({ tone: 'accent' })}>{e.type}</span>{' '}
+                <span className={ax({ role: 'item', tone: 'accent' })}>{e.type}</span>{' '}
                 <span className="op-dim">{e.payload}</span>
                 {e.middlewares.length > 0 && (
                   <span className="op-faint">

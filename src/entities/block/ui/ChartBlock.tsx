@@ -73,13 +73,18 @@ function LinePlaceholder({ items }: { items: ChartData['data'] }): React.ReactEl
 
 function PiePlaceholder({ items }: { items: ChartData['data'] }): React.ReactElement {
   const total = items.reduce((s, d) => s + d.value, 0) || 1
-  let acc = 0
   const R = 50
   const C = 60
-  const segs = items.map((d, i) => {
-    const start = (acc / total) * Math.PI * 2
-    acc += d.value
-    const end = (acc / total) * Math.PI * 2
+  const offsets = items.reduce<number[]>((arr, d) => {
+    const prev = arr.length === 0 ? 0 : arr[arr.length - 1]
+    arr.push(prev + d.value)
+    return arr
+  }, [])
+  const segs = items.map((_d, i) => {
+    const startAcc = i === 0 ? 0 : offsets[i - 1]
+    const endAcc = offsets[i]
+    const start = (startAcc / total) * Math.PI * 2
+    const end = (endAcc / total) * Math.PI * 2
     const large = end - start > Math.PI ? 1 : 0
     const x1 = C + R * Math.cos(start)
     const y1 = C + R * Math.sin(start)

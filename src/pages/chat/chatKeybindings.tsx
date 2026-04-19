@@ -47,6 +47,7 @@ export function ChatKeybindingsWidget() {
       'Mod+t': () => {
         const tgId = getFocusedTg()
         if (!tgId) return
+        // eslint-disable-next-line react-hooks/purity -- invoked at keypress time, not during render
         const tabId = `t-${Date.now()}`
         dispatch(workspaceCommands.addTab(tgId, {
           id: tabId,

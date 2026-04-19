@@ -129,7 +129,7 @@ export function AxPrinciplesMaster() {
           <StatusIndicator tone={statusIndicatorTone(principle.status)} />
           <div className={ax({ layout: 'stack', flex: '1' })}>
             <span
-              className={`${ax({ textStyle: 'label', clamp: '1' })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary' })}`}
+              className={ax({ textStyle: 'label', clamp: '1' })}
             >
               {principle.id} · {principle.name}
             </span>
@@ -145,7 +145,6 @@ export function AxPrinciplesMaster() {
                 textStyle: 'caption',
                 content: 'text',
                 clamp: '1',
-                flex: 'none',
               })}
             >
               {principle.priority}

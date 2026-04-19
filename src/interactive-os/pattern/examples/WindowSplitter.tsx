@@ -32,8 +32,8 @@ const renderSplitter = (
       <div
         {...props}
         className={`${ax({
-            role: 'control-group',
-            surface: 'sunken', interactive: 'button', flex: 'none' })} outline-none`}
+            role: 'control',
+            surface: 'action', interactive: 'button', flex: 'none' })} outline-none`}
         data-focused={state.focused || undefined}
       />
       <div className={ax({ layout: 'center' })} style={{ flexBasis: `${100 - current}%` }}>

@@ -3,15 +3,15 @@
   "policy": "ratchet: counts are upper bounds — current or lower passes; exceeding blocks push. Update via `pnpm baseline:ci` after a genuine reduction.",
   "recordedAt": "2026-04-19",
   "lint": {
-    "errors": 5045,
-    "warnings": 2088
+    "errors": 0,
+    "warnings": 243
   },
   "typecheck": {
-    "errors": 1342
+    "errors": 0
   },
   "test": {
-    "failedFiles": 138,
-    "failedTests": 345,
-    "runtimeErrors": 23
+    "failedFiles": 1,
+    "failedTests": 1,
+    "runtimeErrors": 0
   }
 }

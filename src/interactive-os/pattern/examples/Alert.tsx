@@ -39,8 +39,8 @@ const renderAlert = (
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
     <div {...props} className={`${ax({
-        role: 'control-group',
-        layout: 'bar', textStyle: 'body', surface: 'sunken', content: 'text' })}`}>
+        role: 'item',
+        layout: 'bar', textStyle: 'body', surface: 'display', content: 'text' })}`}>
       <span className={ax({ flex: 'none', textStyle: 'section' })} aria-hidden="true">
         &#9432;
       </span>

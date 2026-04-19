@@ -102,7 +102,7 @@ export function I18nHelpWidget() {
         <HelpCircle size={14} />
       </Button>
       {open && (
-        <div className={ax({ surface: 'overlay', width: 'xl' })}>
+        <div className={ax({ role: 'control-group', surface: 'overlay', width: 'xl' })}>
           <ul className={ax({ layout: 'stack', textStyle: 'caption' })}>
             <li><kbd>Enter</kbd> edit cell</li>
             <li><kbd>F2</kbd> edit cell</li>

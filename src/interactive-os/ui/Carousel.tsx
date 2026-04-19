@@ -156,7 +156,7 @@ export function Carousel({
               <span
                 key={id}
                 {...itemProps}
-                className={`${ax({ role: 'control', interactive: 'tab' })} item-indicator--page-dot${i === activeIndex ? ' item-indicator--page-dot-active' : ''}`}
+                className={`${ax({ role: 'control', surface: 'ghost', interactive: 'tab' })} item-indicator--page-dot${i === activeIndex ? ' item-indicator--page-dot-active' : ''}`}
                 aria-label={`Slide ${i + 1}`}
               />
             )

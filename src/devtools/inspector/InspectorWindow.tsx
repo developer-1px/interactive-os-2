@@ -40,15 +40,15 @@ function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
       <tbody>
         {keyEntries.map(([k, entry]) => (
           <tr key={k}>
-            <td className={`${ax({ tone: 'success' })} inspector-td-key`}>{k}</td>
-            <td className={`${ax({ tone: 'accent' })} inspector-td-command`}>{entry.command ?? '—'}</td>
+            <td className={`${ax({ role: 'item', tone: 'success' })} inspector-td-key`}>{k}</td>
+            <td className={`${ax({ role: 'item', tone: 'accent' })} inspector-td-command`}>{entry.command ?? '—'}</td>
             <td className={`${ax({ })} inspector-td-owner`}>{entry.owner}</td>
           </tr>
         ))}
         {clickEntries.map(([input, commands]) => (
           <tr key={`click:${input}`}>
-            <td className={`${ax({ tone: 'success' })} inspector-td-key`}>{input}</td>
-            <td className={`${ax({ tone: 'accent' })} inspector-td-command`}>{commands.join(', ')}</td>
+            <td className={`${ax({ role: 'item', tone: 'success' })} inspector-td-key`}>{input}</td>
+            <td className={`${ax({ role: 'item', tone: 'accent' })} inspector-td-command`}>{commands.join(', ')}</td>
             <td className={`${ax({ })} inspector-td-owner`}>pattern</td>
           </tr>
         ))}
@@ -109,10 +109,10 @@ function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>;
           const mismatch = domProps && os !== dom
           return (
             <tr key={k}>
-              <td className={`${ax({ tone: 'success' })} inspector-td-key`}>{k}</td>
-              <td className={`${ax({ tone: 'accent' })} inspector-td-command`}>{os ?? '—'}</td>
+              <td className={`${ax({ role: 'item', tone: 'success' })} inspector-td-key`}>{k}</td>
+              <td className={`${ax({ role: 'item', tone: 'accent' })} inspector-td-command`}>{os ?? '—'}</td>
               {domProps && (
-                <td className={mismatch ? `${ax({ tone: 'danger-dim' })} inspector-td-mismatch` : `${ax({ tone: 'accent' })} inspector-td-command`}>{dom ?? '—'}</td>
+                <td className={mismatch ? `${ax({ role: 'item', tone: 'danger-dim' })} inspector-td-mismatch` : `${ax({ role: 'item', tone: 'accent' })} inspector-td-command`}>{dom ?? '—'}</td>
               )}
             </tr>
           )
@@ -171,7 +171,7 @@ const TAB_LIST: { id: DetailTab; label: string }[] = [
 
 function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: DetailTab) => void }) {
   return (
-    <div className={`${ax({ layout: 'row', surface: 'overlay' })} inspector-tab-bar`}>
+    <div className={`${ax({ role: 'control-group', layout: 'row', surface: 'overlay' })} inspector-tab-bar`}>
       {TAB_LIST.map(t => (
         <button
           key={t.id}
@@ -301,7 +301,7 @@ export function InspectorWindow() {
 
   return (
     <div className={`${ax({ layout: 'stack' })} inspector-root`}>
-      <div className={ax({ layout: 'spread', textStyle: 'caption', surface: 'overlay' })}>
+      <div className={`${ax({ role: 'control-group', layout: 'spread', surface: 'overlay' })} ${ax({ textStyle: 'caption' })}`}>
         <div className={ax({ layout: 'row' })}>
           <span className={ax({ })}>Aria Inspector</span>
           <button

@@ -1,10 +1,10 @@
 // ② 2026-04-05-ui-items-prd.md
 import type { ReactNode } from 'react'
-import type { Axes } from '@styles/ax'
+import type { AxTone } from '@styles/ax'
 import { ax } from '@styles/ax'
 
 interface BadgeCellProps {
-  tone: Axes['tone']
+  tone: AxTone
   children: ReactNode
   className?: string
 }

@@ -53,15 +53,12 @@ function EnforcementCell({ layer, state }: { layer: EnforcementLayer; state: Enf
     : state === 'weak' ? 'warning'
     : 'neutral'
 
-  const surface: 'action' | 'display' | 'placeholder' =
-    state === 'core' ? 'action'
-    : state === 'absent' ? 'placeholder'
-    : 'display'
+  const surface: 'display' | 'ghost' = state === 'absent' ? 'ghost' : 'display'
 
   return (
     <div
       className={ax({
-        role: 'item',
+        role: 'cell',
         surface,
         tone,
         layout: 'stack',
@@ -82,6 +79,7 @@ function DetailSection({ title, children }: { title: string; children: React.Rea
   return (
     <section
       className={ax({
+        role: 'cell',
         surface: 'display',
         layout: 'stack'
       })}
@@ -107,6 +105,7 @@ function ExternalLink({ href, children }: { href: string; children: React.ReactN
       target="_blank"
       rel="noopener noreferrer"
       className={ax({
+        role: 'control',
         interactive: 'button',
         surface: 'ghost',
         content: 'text',
@@ -157,9 +156,9 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
           <Paragraph>{principle.summary}</Paragraph>
           <pre
             className={ax({
-                role: 'control-group',
-                textStyle: 'code',
-              surface: 'sunken',
+              role: 'cell',
+              surface: 'input',
+              textStyle: 'code',
               clamp: 'pre',
             })}
           >
@@ -262,6 +261,7 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
                     <li
                       key={i}
                       className={ax({
+                        role: 'cell',
                         surface: 'display',
                         tone: 'success',
                         textStyle: 'code'
@@ -281,6 +281,7 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
                     <li
                       key={i}
                       className={ax({
+                        role: 'cell',
                         surface: 'display',
                         tone: 'danger',
                         textStyle: 'code'

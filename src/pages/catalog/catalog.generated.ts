@@ -17,8 +17,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "gap"
+            "layout"
           ],
           "missing": [
             "role",
@@ -51,10 +50,8 @@ export const catalog: CatalogGenerated = {
             "content",
             "layout",
             "width",
-            "border",
             "flex",
-            "textStyle",
-            "padding"
+            "textStyle"
           ],
           "missing": [
             "surface"
@@ -80,17 +77,13 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "border",
             "tone",
             "layout",
-            "gap",
-            "padding",
-            "shape",
             "textStyle"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -176,14 +169,13 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "square",
-            "shape",
+            "role",
             "surface",
+            "cs",
             "layout",
             "textStyle"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -198,9 +190,6 @@ export const catalog: CatalogGenerated = {
       "demoPath": "src/interactive-os/ui/Badge.demo.tsx",
       "category": "ui",
       "propsSignature": {
-        "tone": [
-          "tone"
-        ],
         "variant": [
           "solid",
           "outline"
@@ -210,9 +199,8 @@ export const catalog: CatalogGenerated = {
         "demoFile": "ok",
         "branchCoverage": {
           "covered": 1,
-          "total": 3,
+          "total": 2,
           "missing": [
-            "tone=tone",
             "variant=solid"
           ]
         },
@@ -221,10 +209,8 @@ export const catalog: CatalogGenerated = {
             "role",
             "surface",
             "tone",
-            "border",
             "content",
-            "clamp",
-            "shape"
+            "clamp"
           ],
           "missing": [
             "interactive"
@@ -251,7 +237,6 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
             "textStyle",
             "clamp"
           ],
@@ -271,19 +256,13 @@ export const catalog: CatalogGenerated = {
       "path": "src/interactive-os/ui/Button.tsx",
       "demoPath": "src/interactive-os/ui/Button.demo.tsx",
       "category": "ui",
-      "propsSignature": {
-        "interactive": [
-          "interactive"
-        ]
-      },
+      "propsSignature": {},
       "gaps": {
         "demoFile": "ok",
         "branchCoverage": {
           "covered": 0,
-          "total": 1,
-          "missing": [
-            "interactive=interactive"
-          ]
+          "total": 0,
+          "missing": []
         },
         "axAxes": {
           "declared": [],
@@ -371,15 +350,14 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "interactive",
             "role",
+            "surface",
+            "interactive",
             "content",
             "layout",
             "textStyle"
           ],
-          "missing": [
-            "surface"
-          ]
+          "missing": []
         },
         "aria": "missing",
         "docs": "missing"
@@ -421,27 +399,22 @@ export const catalog: CatalogGenerated = {
       "path": "src/interactive-os/ui/Card.tsx",
       "demoPath": null,
       "category": "ui",
-      "propsSignature": {
-        "padding": [
-          "padding"
-        ]
-      },
+      "propsSignature": {},
       "gaps": {
         "demoFile": "missing",
         "branchCoverage": {
           "covered": 0,
-          "total": 1,
+          "total": 0,
           "missing": []
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "layout",
-            "gap",
             "textStyle"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -466,17 +439,11 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
-            "scroll",
-            "padding",
-            "square",
-            "shape",
             "role",
+            "surface",
             "interactive"
           ],
-          "missing": [
-            "surface"
-          ]
+          "missing": []
         },
         "aria": "ok",
         "docs": "missing"
@@ -551,16 +518,12 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "placement",
+            "role",
             "layout",
-            "textStyle",
             "surface",
-            "scroll",
-            "gap",
-            "padding",
-            "border"
+            "textStyle"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -599,9 +562,6 @@ export const catalog: CatalogGenerated = {
             "width",
             "surface",
             "clamp",
-            "gap",
-            "scroll",
-            "shape",
             "placement"
           ],
           "missing": []
@@ -628,12 +588,9 @@ export const catalog: CatalogGenerated = {
           "declared": [
             "layout",
             "flex",
-            "surface",
-            "shape",
-            "placement",
-            "padding",
-            "scroll",
             "role",
+            "surface",
+            "placement",
             "interactive",
             "content",
             "textStyle",
@@ -692,14 +649,10 @@ export const catalog: CatalogGenerated = {
           "declared": [
             "placement",
             "role",
-            "border",
             "surface",
             "content",
             "flex",
             "layout",
-            "padding",
-            "shape",
-            "gap",
             "textStyle"
           ],
           "missing": [
@@ -782,7 +735,6 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "border",
             "width"
           ],
           "missing": [
@@ -811,11 +763,11 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
             "placement"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -840,9 +792,6 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
-            "padding",
-            "icon",
             "flex",
             "textStyle"
           ],
@@ -927,8 +876,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "flex",
-            "padding"
+            "flex"
           ],
           "missing": [
             "role",
@@ -1012,17 +960,13 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
             "layout",
-            "shape",
-            "scroll",
-            "gap",
             "textStyle",
             "tone",
-            "role",
             "content",
-            "flex",
-            "padding"
+            "flex"
           ],
           "missing": [
             "interactive"
@@ -1052,12 +996,9 @@ export const catalog: CatalogGenerated = {
             "content",
             "layout",
             "width",
-            "padding",
             "surface",
-            "border",
             "clamp",
-            "interactive",
-            "gap"
+            "interactive"
           ],
           "missing": []
         },
@@ -1124,16 +1065,13 @@ export const catalog: CatalogGenerated = {
           "declared": [
             "layout",
             "width",
-            "padding",
             "flex",
-            "scroll",
             "placement",
-            "gap",
             "textStyle",
+            "role",
             "surface"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1158,8 +1096,6 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
-            "padding",
             "textStyle"
           ],
           "missing": [
@@ -1189,14 +1125,11 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
             "textStyle",
             "role",
             "interactive",
             "surface",
-            "flex",
-            "shape",
-            "padding"
+            "flex"
           ],
           "missing": []
         },
@@ -1232,7 +1165,6 @@ export const catalog: CatalogGenerated = {
             "flex",
             "placement",
             "surface",
-            "border",
             "textStyle",
             "content"
           ],
@@ -1291,20 +1223,16 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "border",
-            "textStyle",
             "layout",
-            "padding",
-            "gap",
-            "shape",
             "clamp",
             "flex",
             "tone",
+            "textStyle",
             "placement"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1328,15 +1256,12 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "shape",
             "textStyle",
-            "padding",
-            "content",
-            "border"
+            "content"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1360,12 +1285,11 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "layout",
-            "padding"
+            "layout"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1476,16 +1400,14 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "tone",
             "textStyle",
-            "padding",
             "width",
             "layout",
-            "gap",
             "flex"
           ],
           "missing": [
-            "role",
             "surface",
             "interactive"
           ]
@@ -1615,10 +1537,8 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
             "textStyle",
-            "width",
-            "scroll"
+            "width"
           ],
           "missing": [
             "role",
@@ -1652,8 +1572,7 @@ export const catalog: CatalogGenerated = {
             "interactive",
             "width",
             "clamp",
-            "surface",
-            "textStyle"
+            "surface"
           ],
           "missing": []
         },
@@ -1682,8 +1601,7 @@ export const catalog: CatalogGenerated = {
             "textStyle",
             "tone",
             "cs",
-            "layout",
-            "gap"
+            "layout"
           ],
           "missing": [
             "interactive"
@@ -1763,15 +1681,12 @@ export const catalog: CatalogGenerated = {
           "declared": [
             "layout",
             "textStyle",
-            "padding",
-            "shape",
-            "gap",
             "flex",
+            "role",
             "surface",
             "width"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1821,16 +1736,12 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
             "placement",
-            "padding",
-            "shape",
-            "textStyle",
-            "motion",
-            "border"
+            "textStyle"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1844,31 +1755,22 @@ export const catalog: CatalogGenerated = {
       "path": "src/interactive-os/ui/Progress.tsx",
       "demoPath": "src/interactive-os/ui/Progress.demo.tsx",
       "category": "ui",
-      "propsSignature": {
-        "tone": [
-          "tone"
-        ]
-      },
+      "propsSignature": {},
       "gaps": {
         "demoFile": "ok",
         "branchCoverage": {
           "covered": 0,
-          "total": 1,
-          "missing": [
-            "tone=tone"
-          ]
+          "total": 0,
+          "missing": []
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "shape",
             "width",
-            "square",
-            "scroll",
             "tone"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1895,8 +1797,7 @@ export const catalog: CatalogGenerated = {
             "role",
             "content",
             "layout",
-            "width",
-            "gap"
+            "width"
           ],
           "missing": [
             "surface",
@@ -1929,12 +1830,6 @@ export const catalog: CatalogGenerated = {
             "layout",
             "width",
             "surface",
-            "shape",
-            "border",
-            "motion",
-            "scroll",
-            "gap",
-            "padding",
             "flex",
             "clamp",
             "textStyle"
@@ -2013,8 +1908,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "gap"
+            "layout"
           ],
           "missing": [
             "role",
@@ -2133,14 +2027,12 @@ export const catalog: CatalogGenerated = {
             "layout",
             "flex",
             "textStyle",
-            "padding",
+            "role",
             "surface",
             "placement",
-            "gap",
             "clamp"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -2171,9 +2063,6 @@ export const catalog: CatalogGenerated = {
             "layout",
             "clamp",
             "flex",
-            "scroll",
-            "shape",
-            "border",
             "placement"
           ],
           "missing": [
@@ -2200,8 +2089,6 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "scroll",
-            "shape",
             "textStyle",
             "placement"
           ],
@@ -2248,11 +2135,12 @@ export const catalog: CatalogGenerated = {
       "demoPath": "src/interactive-os/ui/Skeleton.demo.tsx",
       "category": "ui",
       "propsSignature": {
-        "width": [
-          "width"
-        ],
         "height": [
-          "square"
+          "xs",
+          "sm",
+          "md",
+          "lg",
+          "xl"
         ],
         "shape": [
           "text",
@@ -2263,23 +2151,19 @@ export const catalog: CatalogGenerated = {
       "gaps": {
         "demoFile": "ok",
         "branchCoverage": {
-          "covered": 3,
-          "total": 5,
+          "covered": 7,
+          "total": 8,
           "missing": [
-            "width=width",
-            "height=square"
+            "height=md"
           ]
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "motion",
-            "shape",
-            "width",
-            "square"
+            "width"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -2308,9 +2192,7 @@ export const catalog: CatalogGenerated = {
             "layout",
             "width",
             "flex",
-            "placement",
-            "shape",
-            "border"
+            "placement"
           ],
           "missing": [
             "surface",
@@ -2365,7 +2247,6 @@ export const catalog: CatalogGenerated = {
           "declared": [
             "role",
             "layout",
-            "border",
             "surface",
             "content"
           ],
@@ -2400,14 +2281,13 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
             "placement",
             "flex",
-            "layout",
-            "scroll"
+            "layout"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -2443,7 +2323,6 @@ export const catalog: CatalogGenerated = {
             "layout",
             "width",
             "flex",
-            "scroll",
             "textStyle"
           ],
           "missing": [
@@ -2480,8 +2359,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "gap"
+            "layout"
           ],
           "missing": [
             "role",
@@ -2510,17 +2388,13 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "textStyle",
-            "motion",
             "role",
             "surface",
-            "border",
             "content",
             "placement",
             "layout",
             "flex",
-            "gap",
-            "width",
-            "shape"
+            "width"
           ],
           "missing": [
             "interactive"
@@ -2578,10 +2452,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "gap",
-            "padding",
-            "border"
+            "layout"
           ],
           "missing": [
             "role",
@@ -2615,14 +2486,11 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "layout",
-            "gap",
-            "padding",
-            "surface",
-            "shape"
+            "surface"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -2647,9 +2515,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "role",
-            "border",
-            "interactive",
-            "padding"
+            "interactive"
           ],
           "missing": [
             "surface"
@@ -2675,17 +2541,14 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "layout",
-            "textStyle",
             "flex",
             "surface",
             "placement",
-            "gap",
-            "padding",
             "tone"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -2722,7 +2585,6 @@ export const catalog: CatalogGenerated = {
             "content",
             "clamp",
             "width",
-            "shape",
             "interactive"
           ],
           "missing": []
@@ -2802,11 +2664,11 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
-            "flex",
-            "textStyle",
             "role",
             "surface",
+            "tone",
+            "flex",
+            "textStyle",
             "content"
           ],
           "missing": [
@@ -2863,8 +2725,7 @@ export const catalog: CatalogGenerated = {
             "interactive",
             "surface",
             "tone",
-            "content",
-            "border"
+            "content"
           ],
           "missing": []
         },
@@ -2896,10 +2757,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "border",
-            "shape",
-            "scroll"
+            "layout"
           ],
           "missing": [
             "role",
@@ -3009,8 +2867,6 @@ export const catalog: CatalogGenerated = {
             "role",
             "interactive",
             "layout",
-            "gap",
-            "icon",
             "flex",
             "placement",
             "textStyle",
@@ -3067,9 +2923,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "gap",
-            "padding"
+            "layout"
           ],
           "missing": [
             "role",
@@ -3180,15 +3034,11 @@ export const catalog: CatalogGenerated = {
           "declared": [
             "textStyle",
             "layout",
-            "gap",
+            "role",
             "surface",
-            "padding",
-            "shape",
-            "border",
             "width"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3254,19 +3104,13 @@ export const catalog: CatalogGenerated = {
       "path": "src/interactive-os/ui/cells/BadgeCell.tsx",
       "demoPath": "src/interactive-os/ui/cells/BadgeCell.demo.tsx",
       "category": "cells",
-      "propsSignature": {
-        "tone": [
-          "tone"
-        ]
-      },
+      "propsSignature": {},
       "gaps": {
         "demoFile": "ok",
         "branchCoverage": {
           "covered": 0,
-          "total": 1,
-          "missing": [
-            "tone=tone"
-          ]
+          "total": 0,
+          "missing": []
         },
         "axAxes": {
           "declared": [
@@ -3332,7 +3176,6 @@ export const catalog: CatalogGenerated = {
             "role",
             "surface",
             "layout",
-            "gap",
             "tone"
           ],
           "missing": [
@@ -3534,8 +3377,6 @@ export const catalog: CatalogGenerated = {
             "role",
             "surface",
             "layout",
-            "gap",
-            "shape",
             "textStyle",
             "clamp"
           ],
@@ -3597,8 +3438,7 @@ export const catalog: CatalogGenerated = {
           "declared": [
             "role",
             "surface",
-            "layout",
-            "shape"
+            "layout"
           ],
           "missing": [
             "interactive"
@@ -3624,12 +3464,10 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "surface",
-            "padding",
-            "shape"
+            "role",
+            "surface"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3679,17 +3517,14 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "textStyle",
-            "padding",
             "content",
             "surface",
             "tone",
-            "gap",
-            "scroll",
             "layout"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3713,17 +3548,14 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "shape",
-            "scroll",
             "textStyle",
-            "padding",
             "content",
             "layout",
             "tone"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3747,13 +3579,8 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "scroll",
             "textStyle",
-            "shape",
-            "border",
-            "layout",
-            "gap",
-            "padding"
+            "layout"
           ],
           "missing": [
             "role",
@@ -3834,15 +3661,12 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "textStyle",
+            "role",
             "surface",
-            "shape",
-            "padding",
             "layout",
-            "gap",
             "clamp"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3867,17 +3691,11 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "role",
+            "surface",
             "clamp",
             "interactive",
             "layout",
-            "textStyle",
-            "padding",
-            "gap",
-            "icon",
-            "border",
-            "scroll",
-            "shape",
-            "surface"
+            "textStyle"
           ],
           "missing": []
         },
@@ -3901,17 +3719,13 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface",
-            "border",
-            "padding",
-            "shape",
             "layout",
-            "gap",
             "textStyle",
             "width"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3936,15 +3750,11 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
             "flex",
-            "surface",
-            "border",
-            "padding",
-            "shape"
+            "role",
+            "surface"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3969,10 +3779,8 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
             "width",
-            "textStyle",
-            "padding"
+            "textStyle"
           ],
           "missing": [
             "role",
@@ -4001,15 +3809,12 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
+            "role",
             "surface",
-            "padding",
-            "shape",
             "flex",
             "textStyle"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -4034,9 +3839,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "gap",
-            "textStyle",
-            "padding"
+            "textStyle"
           ],
           "missing": [
             "role",
@@ -4093,7 +3896,6 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "role",
-            "flex",
             "surface",
             "tone",
             "content",
@@ -4124,9 +3926,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "flex",
-            "layout",
-            "border",
-            "shape"
+            "layout"
           ],
           "missing": [
             "role",
@@ -4435,10 +4235,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "gap",
-            "square",
-            "shape"
+            "layout"
           ],
           "missing": [
             "role",
@@ -4466,9 +4263,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "width",
-            "scroll",
-            "shape"
+            "width"
           ],
           "missing": [
             "role",
@@ -4497,9 +4292,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "flex",
-            "layout",
-            "border",
-            "shape"
+            "layout"
           ],
           "missing": [
             "role",
@@ -4559,9 +4352,7 @@ export const catalog: CatalogGenerated = {
           "missing": []
         },
         "axAxes": {
-          "declared": [
-            "shape"
-          ],
+          "declared": [],
           "missing": [
             "role",
             "surface",
@@ -4628,8 +4419,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "layout",
-            "motion"
+            "layout"
           ],
           "missing": [
             "role",
@@ -4658,8 +4448,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "flex",
-            "layout",
-            "square"
+            "layout"
           ],
           "missing": [
             "role",
@@ -4700,9 +4489,7 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "flex",
-            "square",
-            "shape"
+            "flex"
           ],
           "missing": [
             "role",
@@ -4731,9 +4518,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "layout",
-            "flex",
-            "border",
-            "shape"
+            "flex"
           ],
           "missing": [
             "role",
@@ -4762,9 +4547,7 @@ export const catalog: CatalogGenerated = {
         "axAxes": {
           "declared": [
             "flex",
-            "placement",
-            "border",
-            "shape"
+            "placement"
           ],
           "missing": [
             "role",
@@ -5696,19 +5479,13 @@ export const catalog: CatalogGenerated = {
       "path": "src/interactive-os/ui/panels/Panel.tsx",
       "demoPath": "src/interactive-os/ui/panels/Panel.demo.tsx",
       "category": "panels",
-      "propsSignature": {
-        "surface": [
-          "surface"
-        ]
-      },
+      "propsSignature": {},
       "gaps": {
         "demoFile": "ok",
         "branchCoverage": {
           "covered": 0,
-          "total": 1,
-          "missing": [
-            "surface=surface"
-          ]
+          "total": 0,
+          "missing": []
         },
         "axAxes": {
           "declared": [
@@ -5730,19 +5507,13 @@ export const catalog: CatalogGenerated = {
       "path": "src/interactive-os/ui/panels/SidePanel.tsx",
       "demoPath": "src/interactive-os/ui/panels/SidePanel.demo.tsx",
       "category": "panels",
-      "propsSignature": {
-        "surface": [
-          "surface"
-        ]
-      },
+      "propsSignature": {},
       "gaps": {
         "demoFile": "ok",
         "branchCoverage": {
           "covered": 0,
-          "total": 1,
-          "missing": [
-            "surface=surface"
-          ]
+          "total": 0,
+          "missing": []
         },
         "axAxes": {
           "declared": [
@@ -5798,5 +5569,5 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     }
   ],
-  "generatedAt": "2026-04-19T04:34:26.036Z"
+  "generatedAt": "2026-04-19T05:35:41.760Z"
 } as const

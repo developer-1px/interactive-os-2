@@ -63,7 +63,7 @@ function makeFormCtx(
 
 function Section({ title, children, className }: { title?: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={`${ax({ surface: 'display', layout: 'stack' })}${className ? ` ${className}` : ''}`}>
+    <div className={`${ax({ role: 'cell', surface: 'display', layout: 'stack' })}${className ? ` ${className}` : ''}`}>
       {title && <h3 className={ax({ textStyle: 'overline' })}>{title}</h3>}
       {children}
     </div>

@@ -70,7 +70,7 @@ const renderTreeitem = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', textStyle: 'body', interactive: 'item' })} whitespace-nowrap outline-none cursor-default`}
+      className={`${ax({ role: 'item', layout: 'bar', textStyle: 'body', interactive: 'item' })} whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span className={ax({ textStyle: 'caption' })} aria-hidden="true">

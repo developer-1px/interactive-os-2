@@ -61,6 +61,7 @@ export default function PagePublicLanding() {
             key={c.to}
             to={c.to}
             className={ax({
+              role: 'item',
               surface: 'display',
               layout: 'stack',
               interactive: 'item',

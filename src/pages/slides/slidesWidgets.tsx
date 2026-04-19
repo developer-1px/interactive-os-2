@@ -361,7 +361,7 @@ function OutlineView(): ReactElement {
         const bd = deckStore.entities[bid]?.data as BlockData | undefined
         if (!bd) continue
         const rowId = `outline-${bid}`
-        let label = ''
+        let label: string
         if (bd.type === 'title') label = bd.text
         else if (bd.type === 'bullets') label = bd.items.join(' • ')
         else if (bd.type === 'quote') label = bd.text
@@ -542,7 +542,7 @@ function PromptComposer(): ReactElement {
       />
       <div className={ax({ layout: 'bar', width: 'full' })}>
         <span className={`${ax({ flex: '1', textStyle: 'caption' })}`}>Enter to send · Shift+Enter for newline</span>
-        <Badge tone="info">mock-llm</Badge>
+        <Badge tone="neutral">mock-llm</Badge>
       </div>
     </div>
   )

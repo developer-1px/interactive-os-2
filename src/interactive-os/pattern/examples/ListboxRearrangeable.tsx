@@ -48,11 +48,11 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={ax({ layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })}
+      className={ax({ role: 'item', layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
-      {state.selected && <span aria-hidden="true" className={`${ax({ textStyle: 'caption', tone: 'accent' })}`}>✓</span>}
+      {state.selected && <span aria-hidden="true" className={`${ax({ role: 'item', textStyle: 'caption', tone: 'accent' })}`}>✓</span>}
       {label}
     </div>
   )
@@ -124,7 +124,7 @@ export function ListboxRearrangeable() {
 
       <div role="toolbar" aria-label="Actions" className={ax({ layout: 'stack' })}>
         <button
-          className={`${ax({ textStyle: 'caption', surface: 'display', interactive: 'button' })} whitespace-nowrap`}
+          className={`${ax({ role: 'control', surface: 'ghost', textStyle: 'caption', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Enter"
           disabled={availableSelected.length === 0}
           onClick={addToChosen}
@@ -132,7 +132,7 @@ export function ListboxRearrangeable() {
           Add →
         </button>
         <button
-          className={`${ax({ textStyle: 'caption', surface: 'display', interactive: 'button' })} whitespace-nowrap`}
+          className={`${ax({ role: 'control', surface: 'ghost', textStyle: 'caption', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Delete"
           disabled={chosenSelected.length === 0}
           onClick={removeFromChosen}

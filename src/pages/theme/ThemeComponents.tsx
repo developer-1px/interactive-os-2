@@ -100,7 +100,7 @@ export function ThemeComponents() {
             {categories[catName].map(entry => (
               <div
                 key={entry.slug}
-                className={ax({ surface: 'display', layout: 'stack' })}
+                className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}
               >
                 <span className={ax({ textStyle: 'label' })}>{entry.label}</span>
                 <entry.Demo />

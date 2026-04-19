@@ -15,7 +15,7 @@ export function ToggleItem(
     <div
       {...props}
       className={ax({
-        role: 'item',
+        role: 'control',
         interactive: 'check',
         surface: pressed ? 'action' : 'ghost',
         tone: pressed ? 'accent-dim' : undefined,

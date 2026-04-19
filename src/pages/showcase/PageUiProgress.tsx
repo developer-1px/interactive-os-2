@@ -48,7 +48,7 @@ function DetailPanel({ data, rowId, colKey }: { data: Parameters<typeof getProgr
       {tier === 'component' && stages && (
         <div className={ax({ layout: 'stack' })}>
           {colKey && colKey !== 'feature' && (
-            <span className={ax({ textStyle: 'caption', tone: stages[colKey]?.status === 'done' ? 'success' : 'neutral' })}>
+            <span className={ax({ role: 'item', textStyle: 'caption', tone: stages[colKey]?.status === 'done' ? 'success' : 'neutral' })}>
               {colKey}: {stages[colKey]?.status ?? 'unknown'}
             </span>
           )}
@@ -125,7 +125,7 @@ export default function PageUiProgress() {
           />
         </ScrollArea>
 
-        <Panel header={panelTitle} surface="display">
+        <Panel header={panelTitle} surface="base">
           <ScrollArea className={ax({ flex: '1' })}>
             <DetailPanel
               data={data}

@@ -110,8 +110,9 @@ export function Demo() {
             type="button"
             onClick={() => setScenario(s)}
             className={ax({
+              role: 'control',
               interactive: 'button',
-              surface: scenario === s ? 'raised' : 'ghost'
+              surface: scenario === s ? 'action' : 'ghost',
             })}
           >{s}</button>
         ))}

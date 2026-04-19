@@ -19,7 +19,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
   })
 
   return (
-    <div className={`${ax({ textStyle: 'caption', surface: settled ? undefined : 'sunken' })} thinking-block${settled ? ' thinking-settled' : ''}`}>
+    <div className={`${settled ? ax({ textStyle: 'caption' }) : ax({ role: 'control-group', surface: 'sunken' })} thinking-block${settled ? ' thinking-settled' : ''}`}>
       <div
         {...toggleProps}
         className={`cursor-pointer select-none ${ax({ })}`}

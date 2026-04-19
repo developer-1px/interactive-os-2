@@ -127,7 +127,7 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
       {/* Filter bar */}
-      <div className={`${ax({ layout: 'row', surface: 'overlay' })} inspector-log-filter`}>
+      <div className={`${ax({ role: 'control-group', layout: 'row', surface: 'overlay' })} inspector-log-filter`}>
         <input
           className={`${ax({ textStyle: 'caption', flex: '1' })} inspector-log-input`}
           placeholder="command type..."
@@ -175,14 +175,14 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
             return (
               <div key={`${log.instanceName}-${log.seq}`}>
                 <div
-                  className={`cursor-pointer ${ax({ clamp: '1' })} inspector-log-entry ${log.error ? ax({ tone: 'danger' }) : ''}`}
+                  className={`cursor-pointer ${ax({ clamp: '1' })} inspector-log-entry ${log.error ? ax({ role: 'item', tone: 'danger' }) : ''}`}
                   onClick={() => toggleExpand(log.seq)}
                 >
                   <span className={ax({ })}>{new Date(log.timestamp).toLocaleTimeString('en', { hour12: false, fractionalSecondDigits: 3 })}</span>
                   {' '}
                   <span className={`${ax({ })} inspector-log-seq`}>#{log.seq}</span>
                   {' '}
-                  <span className={`${ax({ tone: 'success' })} inspector-log-instance`}>[{log.instanceName}]</span>
+                  <span className={`${ax({ role: 'item', tone: 'success' })} inspector-log-instance`}>[{log.instanceName}]</span>
                   {' '}
                   <span className={ax({ })}>{log.commandType}</span>
                   {' '}
@@ -203,7 +203,7 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
                         ))}
                       </div>
                     )}
-                    {log.error && <div className={`${ax({ tone: 'danger' })} inspector-log-error-text`}>Error: {log.error}</div>}
+                    {log.error && <div className={`${ax({ role: 'item', tone: 'danger' })} inspector-log-error-text`}>Error: {log.error}</div>}
                   </div>
                 )}
               </div>

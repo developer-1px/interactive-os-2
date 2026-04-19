@@ -132,7 +132,7 @@ function FilterGroup<T extends string>({
               onClick={() => onChange(active ? undefined : opt)}
               className={ax({
                 role: 'badge',
-                surface: active ? 'action' : 'ghost',
+                surface: active ? 'display' : 'ghost',
                 tone: active ? 'accent' : 'neutral',
                 interactive: 'button',
                 content: 'text',

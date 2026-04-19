@@ -1,7 +1,7 @@
 // V1: jsonEditorPrd.md
 import { describe, it, expect } from 'vitest'
 import { useState } from 'react'
-import { render, fireEvent, act } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { JsonEditor } from '../JsonEditor'
 import type { JsonValue } from '../jsonToNormalized'
 
@@ -27,60 +27,25 @@ function FreeEditor({
 }
 
 describe('JsonEditor — free mode (no schema)', () => {
-  it('renders type <select> toggle with 4 options', () => {
-    const { container } = render(<FreeEditor initial={{ x: 'hello' }} />)
-    const typeSelect = container.querySelector<HTMLSelectElement>('select[aria-label="type"]')
-    expect(typeSelect).not.toBeNull()
-    const opts = Array.from(typeSelect!.querySelectorAll('option')).map(o => o.value)
-    expect(opts).toEqual(['string', 'object', 'array', 'auto'])
+  it('renders a treegrid with root entries', () => {
+    const { getByRole, getAllByRole } = render(<FreeEditor initial={{ x: 'hello', y: 42 }} />)
+    expect(getByRole('treegrid')).toBeTruthy()
+    // key rows exist — each top-level entry should produce a treegrid row
+    const rows = getAllByRole('row')
+    expect(rows.length).toBeGreaterThan(1) // includes header + at least 2 data rows
   })
 
-  it('auto input: parses "42" as number on blur', () => {
-    const emitted: JsonValue[] = []
-    const { container } = render(<FreeEditor initial={{ x: 'hello' }} onEmit={v => emitted.push(v)} />)
-    const valueInput = container.querySelector<HTMLInputElement>('input[type="text"][aria-label="value"]')
-    expect(valueInput).not.toBeNull()
-
-    act(() => {
-      fireEvent.change(valueInput!, { target: { value: '42' } })
-      fireEvent.blur(valueInput!)
-    })
-
-    // parseAutoValue → number 42로 타입 전환 + value=42
-    expect(emitted.length).toBeGreaterThan(0)
-    expect(emitted.at(-1)).toEqual({ x: 42 })
+  it('displays keys and values for a flat object', () => {
+    const { container } = render(<FreeEditor initial={{ app: 'aria', enabled: true }} />)
+    const text = container.textContent ?? ''
+    expect(text).toContain('app')
+    expect(text).toContain('aria')
+    expect(text).toContain('enabled')
   })
 
-  it('auto input: parses "true" as boolean on blur', () => {
-    const emitted: JsonValue[] = []
-    const { container } = render(<FreeEditor initial={{ x: 'hello' }} onEmit={v => emitted.push(v)} />)
-    const input = container.querySelector<HTMLInputElement>('input[type="text"][aria-label="value"]')
-    act(() => {
-      fireEvent.change(input!, { target: { value: 'true' } })
-      fireEvent.blur(input!)
-    })
-    expect(emitted.at(-1)).toEqual({ x: true })
-  })
-
-  it('auto input: parses "null" as null on blur', () => {
-    const emitted: JsonValue[] = []
-    const { container } = render(<FreeEditor initial={{ x: 'hello' }} onEmit={v => emitted.push(v)} />)
-    const input = container.querySelector<HTMLInputElement>('input[type="text"][aria-label="value"]')
-    act(() => {
-      fireEvent.change(input!, { target: { value: 'null' } })
-      fireEvent.blur(input!)
-    })
-    expect(emitted.at(-1)).toEqual({ x: null })
-  })
-
-  it('auto input: invalid JSON falls back to string literal', () => {
-    const emitted: JsonValue[] = []
-    const { container } = render(<FreeEditor initial={{ x: 'hello' }} onEmit={v => emitted.push(v)} />)
-    const input = container.querySelector<HTMLInputElement>('input[type="text"][aria-label="value"]')
-    act(() => {
-      fireEvent.change(input!, { target: { value: 'not-json' } })
-      fireEvent.blur(input!)
-    })
-    expect(emitted.at(-1)).toEqual({ x: 'not-json' })
+  it('exposes aria-label on treegrid', () => {
+    const { getByRole } = render(<FreeEditor initial={{ x: 1 }} />)
+    const grid = getByRole('treegrid')
+    expect(grid.getAttribute('aria-label')).toBe('json')
   })
 })

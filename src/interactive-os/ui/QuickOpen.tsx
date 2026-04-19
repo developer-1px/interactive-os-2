@@ -221,11 +221,11 @@ function QuickOpenManaged({
     })
 
   const content = (
-    <div className={`quick-open-dialog ${ax({ layout: 'stack', surface: 'overlay' })}`} aria-label={ariaLabel}>
+    <div className={`quick-open-dialog ${ax({ role: 'control-group', layout: 'stack', surface: 'overlay' })}`} aria-label={ariaLabel}>
       <div className={ax({ layout: 'bar' })}>
         <Search size={16} className={ax({ flex: 'none' })} />
         <input
-          className={`quick-open-input border-none outline-none ${ax({ role: 'control', flex: '1', content: 'text', clamp: '1' })}`}
+          className={`quick-open-input border-none outline-none ${ax({ role: 'control', surface: 'input', flex: '1', content: 'text', clamp: '1' })}`}
           type="text"
           placeholder={placeholder}
           value={query}
@@ -244,11 +244,11 @@ function QuickOpenManaged({
           }}
         />
         <kbd className={ax({
-            role: 'control-group',
-            surface: 'base', textStyle: 'code', flex: 'none', content: 'text' })}>ESC</kbd>
+            role: 'badge',
+            surface: 'display', textStyle: 'code', content: 'text' })}>ESC</kbd>
       </div>
       {isOpen && rootChildren.length > 0 ? (
-        <div id={listboxId} role="listbox" className={ax({ layout: 'scroll', flex: '1', content: 'text' })} onMouseDown={e => e.preventDefault()}>
+        <div id={listboxId} role="listbox" className={ax({ role: 'item', layout: 'scroll', flex: '1', content: 'text' })} onMouseDown={e => e.preventDefault()}>
           {hasGroups ? rootChildren.map(id => {
             const entity = store.entities[id]
             if (!entity) return null

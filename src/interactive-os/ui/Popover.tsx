@@ -80,6 +80,7 @@ export function Popover({ content, placement = 'bottom', children }: PopoverProp
         role="dialog"
         tabIndex={-1}
         className={ax({
+          role: 'tip',
           surface: 'overlay',
           placement: placementMap[placement],
           textStyle: 'body'

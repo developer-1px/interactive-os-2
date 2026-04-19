@@ -8,7 +8,7 @@ export function A2UIBlock({ block }: { block: DataBlock }) {
   if (!payload?.components) return null
 
   return (
-    <div className={ax({ surface: 'display' })}>
+    <div className={ax({ role: 'cell', surface: 'display' })}>
       <A2UISurface payload={payload} />
     </div>
   )

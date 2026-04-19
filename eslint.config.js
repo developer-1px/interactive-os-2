@@ -12,7 +12,7 @@ const localPlugin = {
 }
 
 export default defineConfig([
-  globalIgnores(['dist', 'dist-lib', '.worktrees']),
+  globalIgnores(['dist', 'dist-lib', '.worktrees', '.claude/worktrees']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

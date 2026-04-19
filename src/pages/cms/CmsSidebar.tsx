@@ -250,7 +250,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
               <div
                 key={sectionId}
                 {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                className={`cms-sidebar__thumb w-full cursor-pointer ${ax({ flex: 'none', placement: 'relative', surface: 'display' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+                className={`cms-sidebar__thumb w-full cursor-pointer ${ax({ role: 'item', flex: 'none', placement: 'relative', surface: 'display' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
                 aria-label={ariaLabel}
                 onClick={() => {
                   aria.dispatch(focusCommands.setFocus(sectionId))
@@ -271,7 +271,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
         <button
           ref={addBtnRef}
           type="button"
-          className={`cms-sidebar__add-btn ${ax({ surface: 'placeholder', layout: 'center', textStyle: 'body' })}`}
+          className={`cms-sidebar__add-btn ${ax({ surface: 'placeholder' as never, layout: 'center', textStyle: 'body' })}`}
           aria-label="Add section"
           onClick={() => setPickerOpen(o => !o)}
         >

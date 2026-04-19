@@ -1,11 +1,11 @@
-import { type Axes, ax } from '@styles/ax'
+import { type AxTone, type AxLayout, ax } from '@styles/ax'
 import './PageThemeCreator.css'
 
 /* ══ Section Card ══ */
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'display', layout: 'stack' })}>
+    <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
       <h3 className={ax({ textStyle: 'overline' })}>{title}</h3>
       {children}
     </div>
@@ -81,14 +81,33 @@ function ZoneCompositionAxis() {
 /* ══ Visual Axes ══ */
 
 function SurfaceAxis() {
-  const values = ['action', 'input', 'display', 'overlay', 'ghost', 'sunken', 'base'] as const
+  // role-별 subset으로 좁혀 순회 — 각 브랜치의 surface만 사용
+  const controlSurfaces = ['action', 'input', 'ghost'] as const
+  const cellSurfaces = ['display'] as const
+  const panelSurfaces = ['sunken', 'base', 'overlay'] as const
   return (
     <Section title="SURFACE">
       <div className={ax({ layout: 'stack' })}>
-        {values.map(v => (
+        {controlSurfaces.map(v => (
           <div key={v} className={ax({ layout: 'bar' })}>
             <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>{v}</span>
-            <div className={ax({ surface: v, role: 'control', content: 'text', flex: '1' })}>
+            <div className={ax({ role: 'control', surface: v, content: 'text', flex: '1' })}>
+              <span className={ax({ })}>surface: '{v}'</span>
+            </div>
+          </div>
+        ))}
+        {cellSurfaces.map(v => (
+          <div key={v} className={ax({ layout: 'bar' })}>
+            <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>{v}</span>
+            <div className={ax({ role: 'cell', surface: v, content: 'text', flex: '1' })}>
+              <span className={ax({ })}>surface: '{v}'</span>
+            </div>
+          </div>
+        ))}
+        {panelSurfaces.map(v => (
+          <div key={v} className={ax({ layout: 'bar' })}>
+            <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>{v}</span>
+            <div className={ax({ role: 'control-group', surface: v, flex: '1' })}>
               <span className={ax({ })}>surface: '{v}'</span>
             </div>
           </div>
@@ -99,18 +118,28 @@ function SurfaceAxis() {
 }
 
 function RoleAxis() {
-  const values = ['control', 'item', 'badge'] as const
+  // 각 role 브랜치의 대표 surface를 subset으로 사용
   return (
     <Section title="ROLE">
       <div className={ax({ layout: 'stack' })}>
-        {values.map(v => (
-          <div key={v} className={ax({ layout: 'bar' })}>
-            <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>{v}</span>
-            <button className={ax({ role: v, surface: 'action', content: 'text', tone: 'neutral' })}>
-              role: '{v}'
-            </button>
-          </div>
-        ))}
+        <div className={ax({ layout: 'bar' })}>
+          <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>control</span>
+          <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'neutral' })}>
+            role: &apos;control&apos;
+          </button>
+        </div>
+        <div className={ax({ layout: 'bar' })}>
+          <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>item</span>
+          <button className={ax({ role: 'item', surface: 'display', content: 'text', tone: 'neutral' })}>
+            role: &apos;item&apos;
+          </button>
+        </div>
+        <div className={ax({ layout: 'bar' })}>
+          <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>badge</span>
+          <button className={ax({ role: 'badge', surface: 'display', content: 'text', tone: 'neutral' })}>
+            role: &apos;badge&apos;
+          </button>
+        </div>
       </div>
     </Section>
   )
@@ -146,7 +175,7 @@ function ToneAxis() {
         </div>
         <div className={ax({ layout: 'row' })}>
           {values.map(v => {
-            const dim = `${v}-dim` as Axes['tone']
+            const dim = `${v}-dim` as AxTone
             return (
               <AxisRow key={v} label={`${v}-dim`}>
                 <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: dim })}>{v}</button>
@@ -201,13 +230,13 @@ function StateAxis() {
     <Section title="STATE">
       <div className={ax({ layout: 'row' })}>
         <AxisRow label="(none)">
-          <div className={ax({ surface: 'display' })}>
+          <div className={ax({ role: 'cell', surface: 'display' })}>
             <span className={ax({ textStyle: 'body' })}>default</span>
           </div>
         </AxisRow>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax({ surface: 'display' })}>
+            <div className={ax({ role: 'cell', surface: 'display' })}>
               <span className={ax({ textStyle: 'body' })}>{v}</span>
             </div>
           </AxisRow>
@@ -261,7 +290,7 @@ function MotionAxis() {
       <div className={ax({ layout: 'row' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax({ surface: 'display', layout: 'center' })}>
+            <div className={ax({ role: 'cell', surface: 'display', layout: 'center' })}>
               <span className={ax({ textStyle: 'body' })}>A</span>
             </div>
           </AxisRow>
@@ -293,7 +322,7 @@ function BorderAxis() {
       <div className={ax({ layout: 'row' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax((['bottom', 'top', 'start', 'end'].includes(v) ? { padding: 'sm', border: v as 'bottom' } : { padding: 'sm', shape: 'md', border: v as 'subtle' }))}>
+            <div className={ax.raw((['bottom', 'top', 'start', 'end'].includes(v) ? { padding: 'sm', border: v as 'bottom' } : { padding: 'sm', shape: 'md', border: v as 'subtle' }))}>
               <span className={ax({ textStyle: 'code' })}>{v}</span>
             </div>
           </AxisRow>
@@ -306,13 +335,14 @@ function BorderAxis() {
 /* ══ Structural Axes ══ */
 
 function LayoutAxis() {
-  const values = ['row', 'column', 'center', 'bar', 'spread', 'stack', 'scroll', 'fill'] as const
+  // 'column'은 AxLayout 공개 값이 아니지만 demo 전시용 — stack 치환
+  const values = ['row', 'center', 'bar', 'spread', 'stack', 'scroll', 'fill'] as const satisfies readonly AxLayout[]
   return (
     <Section title="LAYOUT">
       <div className={ax({ layout: 'grid-4' })}>
         {values.map(l => (
           <AxisRow key={l} label={l}>
-            <div className={`${ax({ layout: l as Axes['layout'] })} theme-layout-box`}>
+            <div className={`${ax({ layout: l })} theme-layout-box`}>
               <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
               <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
               <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
@@ -352,7 +382,7 @@ function PaddingAxis() {
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar' })}>
             <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>{v}</span>
-            <div className={ax({ surface: 'display' })}>
+            <div className={ax({ role: 'cell', surface: 'display' })}>
               <span className={ax({ textStyle: 'code' })}>content</span>
             </div>
           </div>
@@ -371,11 +401,11 @@ function FlexAxis() {
           <div key={v} className={ax({ layout: 'bar' })}>
             <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>{v}</span>
             <div className={ax({ layout: 'row', width: 'full' })}>
-              <div className={ax({ surface: 'display', flex: v })}>
-                <span className={ax({ textStyle: 'code' })}>flex: '{v}'</span>
+              <div className={ax({ role: 'cell', surface: 'display', flex: v })}>
+                <span className={ax({ textStyle: 'code' })}>flex: &apos;{v}&apos;</span>
               </div>
-              <div className={ax({ surface: 'display', flex: '1' })}>
-                <span className={ax({ textStyle: 'code' })}>flex: '1'</span>
+              <div className={ax({ role: 'cell', surface: 'display', flex: '1' })}>
+                <span className={ax({ textStyle: 'code' })}>flex: &apos;1&apos;</span>
               </div>
             </div>
           </div>
@@ -393,7 +423,7 @@ function ClampAxis() {
       <div className={ax({ layout: 'grid-4' })}>
         {values.map(v => (
           <AxisRow key={v} label={`${v} line${v === '1' ? '' : 's'}`}>
-            <div className={ax({ surface: 'display' })}>
+            <div className={ax({ role: 'cell', surface: 'display' })}>
               <span className={ax({ textStyle: 'body', clamp: v })}>{sampleText}</span>
             </div>
           </AxisRow>
@@ -459,7 +489,7 @@ function WidthAxis() {
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar' })}>
             <span className={`${ax({ textStyle: 'code' })} theme-btn-label`}>{v}</span>
-            <div className={ax({ surface: 'display', width: v })}>
+            <div className={ax({ role: 'cell', surface: 'display', width: v })}>
               <span className={ax({ textStyle: 'code' })}>{v}</span>
             </div>
           </div>
@@ -476,7 +506,7 @@ function AspectAxis() {
       <div className={ax({ layout: 'row' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax({ surface: 'display', aspect: v })} />
+            <div className={ax({ role: 'control', surface: 'ghost', aspect: v })} />
           </AxisRow>
         ))}
       </div>

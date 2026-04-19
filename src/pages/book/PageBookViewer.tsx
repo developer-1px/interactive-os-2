@@ -37,7 +37,7 @@ export function loader() {
 
 const baseLayout = definePage({
   entities: {
-    root:             { data: { type: 'split' as const, direction: 'horizontal' as const, sizes: ['200px', '240px', '1fr'], resizable: true }, children: ['chapter-panel', 'page-panel', 'reader-area'] },
+    root:             { data: { type: 'split' as const, direction: 'horizontal' as const, sizes: [0.18, 0.22, 'flex' as const], resizable: true }, children: ['chapter-panel', 'page-panel', 'reader-area'] },
 
     // ── Left: Chapter list ──
     'chapter-panel':  { data: { type: 'stack' as const }, children: ['chapter-header', 'chapter-list'] },
@@ -66,21 +66,6 @@ const baseLayout = definePage({
     'qo-content':     { data: { type: 'widget' as const, widget: 'BookQuickOpen' } },
     'layer-overlay':  { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['layer-content'] },
     'layer-content':  { data: { type: 'widget' as const, widget: 'BookLayerOverlay' } },
-  },
-})
-
-const slideLayout = definePage({
-  entities: {
-    root:             { data: { type: 'stack' as const }, children: ['slide-content', 'slide-footer-float', 'slide-progress'] },
-    'slide-content':  { data: { type: 'widget' as const, widget: 'SlideContent' } },
-    'slide-footer-float': { data: { type: 'floating' as const, anchor: 'float-bottom' as const }, children: ['slide-footer'] },
-    'slide-footer':   { data: { type: 'bar' as const, justify: 'between' as const, padding: 'lg' as const }, children: ['slide-prev', 'slide-info', 'slide-next'] },
-    'slide-prev':     { data: { type: 'widget' as const, widget: 'SlidePrevButton' } },
-    'slide-info':     { data: { type: 'widget' as const, widget: 'SlideInfo' } },
-    'slide-next':     { data: { type: 'widget' as const, widget: 'SlideNextButton' } },
-    'slide-progress': { data: { type: 'widget' as const, widget: 'SlideProgressBar' } },
-    'quick-open':     { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['qo-content'] },
-    'qo-content':     { data: { type: 'widget' as const, widget: 'BookQuickOpen' } },
   },
 })
 
@@ -193,8 +178,12 @@ export default function PageBookViewer() {
   const slides = useMemo(() => page ? splitIntoSlides(page.content) : [], [page])
   const totalSlides = slides.length
 
-  // Reset slide index on page change
-  useEffect(() => { setCurrentSlide(0) }, [currentPage])
+  // Reset slide index on page change — render-phase reset via state (official React pattern)
+  const [prevPageForSlide, setPrevPageForSlide] = useState(currentPage) // @useState-hatch: derived-reset sentinel
+  if (prevPageForSlide !== currentPage) {
+    setPrevPageForSlide(currentPage)
+    setCurrentSlide(0)
+  }
 
   const handleSlideNext = useCallback(() => {
     if (currentSlide < totalSlides - 1) {

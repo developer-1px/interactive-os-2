@@ -24,7 +24,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
     <div className={ax({ layout: 'bar' })}>
-      <div className={`${ax({ layout: 'center', tone: 'accent' })} incident-avatar`}><Bot size={14} /></div>
+      <div className={`${ax({ role: 'item', layout: 'center', tone: 'accent' })} incident-avatar`}><Bot size={14} /></div>
       <div className={ax({ layout: 'stack', flex: '1' })}>
         <div className={ax({ textStyle: 'caption' })}>
           {displayed}
@@ -164,8 +164,8 @@ export default function PageIncidentInterface() {
               }
               if (msg.type === 'system') {
                 return (
-                  <div className={ax({ surface: 'display' })}>
-                    <div className={ax({ textStyle: 'caption', tone: 'danger' })}>{msg.text}</div>
+                  <div className={ax({ role: 'cell', surface: 'display' })}>
+                    <div className={ax({ role: 'item', textStyle: 'caption', tone: 'danger' })}>{msg.text}</div>
                   </div>
                 )
               }

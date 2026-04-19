@@ -34,7 +34,7 @@ const renderArticle = (
   return (
     <div
       {...props}
-      className={`${ax({ interactive: 'item' })} outline-none`}
+      className={`${ax({ role: 'item', interactive: 'item' })} outline-none`}
       data-focused={state.focused || undefined}
     >
       <h3 className={`${ax({ textStyle: 'body' })}`}>{label}</h3>

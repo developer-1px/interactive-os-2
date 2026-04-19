@@ -1,34 +1,43 @@
 /** @catalog 그룹화된 콘텐츠 표면 카드 */
 import type { ReactNode } from 'react'
-import { ax, type Axes } from '@styles/ax'
+import { ax } from '@styles/ax'
+import type { CsScale } from '@styles/ax'
 
 type CardVariant = 'outlined' | 'elevated' | 'filled'
 
 interface CardProps {
   variant?: CardVariant
-  padding?: Axes['padding']
+  padding?: CsScale
   clickable?: boolean
   onClick?: () => void
   className?: string
   children: ReactNode
 }
 
-const variantAxes: Record<CardVariant, Partial<Axes>> = {
-  outlined: { surface: 'display', border: 'default', shape: 'lg' },
-  elevated: { surface: 'raised', border: 'ring', shape: 'lg' },
-  filled: { surface: 'sunken', shape: 'lg' },
+function buildCardClass(variant: CardVariant, clickable: boolean | undefined): string {
+  if (clickable) {
+    // control 브랜치 — surface: 'action'|'ghost'|'input'|'placeholder' only
+    const surface = variant === 'filled' ? 'ghost' : 'action'
+    return ax({ role: 'control', surface, layout: 'stack' })
+  }
+  // control-group — surface: sunken|base|raised|overlay|ghost
+  const panelSurface = variant === 'elevated'
+    ? 'raised'
+    : variant === 'filled'
+    ? 'sunken'
+    : 'base'
+  return ax({ role: 'control-group', surface: panelSurface, layout: 'stack' })
 }
 
 export function Card({
   variant = 'outlined',
-  padding = 'md',
+  padding: _padding = 'md',
   clickable,
   onClick,
   className,
   children,
 }: CardProps) {
-  const axes = { ...variantAxes[variant], padding, layout: 'stack' as const, gap: 'sm' as const }
-  const cls = `${ax(clickable ? { ...axes, interactive: 'button' } : axes)}${className ? ` ${className}` : ''}`
+  const cls = `${buildCardClass(variant, clickable)}${className ? ` ${className}` : ''}`
 
   if (clickable) {
     return (

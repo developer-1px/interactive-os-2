@@ -1,4 +1,4 @@
-import { type Axes, ax } from '@styles/ax'
+import { type AxTextStyle, type AxLayout, ax } from '@styles/ax'
 import './PageThemeCreator.css'
 
 /* ══ Data ══ */
@@ -35,7 +35,7 @@ const layouts = ['row', 'column', 'center', 'bar', 'spread', 'stack', 'scroll'] 
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'display', layout: 'stack' })}>
+    <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
       <h3 className={ax({ textStyle: 'overline' })}>{title}</h3>
       {children}
     </div>
@@ -120,7 +120,7 @@ export function ThemeTokens() {
             <div className={ax({ layout: 'stack' })}>
               {textStyles.map(t => (
                 <div key={t.name} className={`${ax({ layout: 'spread' })} theme-type-row`}>
-                  <span className={ax({ textStyle: t.name as Axes['textStyle'] })}>{t.name}</span>
+                  <span className={ax({ textStyle: t.name as AxTextStyle })}>{t.name}</span>
                   <span className={ax({ textStyle: 'code' })}>{t.desc}</span>
                 </div>
               ))}
@@ -143,7 +143,7 @@ export function ThemeTokens() {
             <div className={ax({ layout: 'row' })}>
               {shadows.map(s => (
                 <div key={s} className={ax({ layout: 'stack', flex: '1' })}>
-                  <div className={`${ax({ layout: 'center', aspect: '1', surface: 'display' })} theme-shadow-swatch`} data-shadow={s} />
+                  <div className={`${ax({ role: 'control', surface: 'ghost', layout: 'center', aspect: '1' })} theme-shadow-swatch`} data-shadow={s} />
                   <span className={ax({ textStyle: 'code' })}>{s}</span>
                 </div>
               ))}
@@ -154,7 +154,7 @@ export function ThemeTokens() {
             <div className={ax({ layout: 'row' })}>
               {shapes.map(s => (
                 <div key={s} className={ax({ layout: 'stack' })}>
-                  <div className={`${ax({ tone: 'accent' })} theme-shape-swatch`} />
+                  <div className={`${ax({ role: 'item', tone: 'accent' })} theme-shape-swatch`} />
                   <span className={ax({ textStyle: 'code' })}>{s}</span>
                 </div>
               ))}
@@ -165,7 +165,7 @@ export function ThemeTokens() {
             <div className={ax({ layout: 'row' })}>
               {(['subtle', 'default', 'strong'] as const).map(b => (
                 <div key={b} className={ax({ layout: 'stack', flex: '1' })}>
-                  <div className={`${ax({ aspect: 'card', surface: 'display' })} theme-border-swatch`} data-border={b} />
+                  <div className={`${ax({ role: 'control', surface: 'ghost', aspect: 'card' })} theme-border-swatch`} data-border={b} />
                   <span className={ax({ textStyle: 'code' })}>{b}</span>
                 </div>
               ))}
@@ -176,7 +176,7 @@ export function ThemeTokens() {
             <div className={ax({ layout: 'grid-4' })}>
               {layouts.map(l => (
                 <div key={l} className={ax({ layout: 'stack' })}>
-                  <div className={`${ax({ layout: l as Axes['layout'] })} theme-layout-box`}>
+                  <div className={`${ax({ layout: l as AxLayout })} theme-layout-box`}>
                     <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
                     <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
                     <div className={`${ax({ flex: 'none' })} theme-layout-child`} />

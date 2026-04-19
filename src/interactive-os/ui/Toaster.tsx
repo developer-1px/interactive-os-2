@@ -4,12 +4,12 @@ import type { ReactNode } from 'react'
 import type { Toaster as ToasterInstance, ToastData } from './createToaster'
 import { CloseIndicator } from './indicators'
 import { ax } from '@styles/ax'
-import type { Axes } from '@styles/ax'
+import type { AxTone } from '@styles/ax'
 
-const variantTone: Record<string, Axes> = {
-  default: { surface: 'overlay' },
-  success: { surface: 'overlay', tone: 'success' },
-  error: { surface: 'overlay', tone: 'danger' },
+const variantToneMap: Record<string, AxTone | undefined> = {
+  default: undefined,
+  success: 'success',
+  error: 'danger',
 }
 
 const variantBorder: Record<string, React.CSSProperties | undefined> = {
@@ -46,9 +46,12 @@ function ToastItem({
   onDismiss: (id: string) => void
 }): ReactNode {
   const variant = toast.variant ?? 'default'
-  const axes = variantTone[variant] ?? variantTone.default
+  const tone = variantToneMap[variant]
   return (
-    <div className={`pointer-auto ${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' } as Axes)}`} style={variantBorder[variant]}>
+    <div
+      className={`pointer-auto ${ax({ role: 'cell', surface: 'display', tone, layout: 'row' })}`}
+      style={variantBorder[variant]}
+    >
       <div className={ax({ flex: '1', layout: 'self-start' })}>
         <div className={ax({ textStyle: 'body',  })}>{toast.title}</div>
         {toast.description && (

@@ -39,7 +39,7 @@ function EditorWithRaw({ title, editor, raw }: { title: string; editor: ReactNod
           <div className={ax({ layout: 'fill' })}>{editor}</div>
           <pre className={ax({
               role: 'control-group',
-            textStyle: 'caption', surface: 'sunken' })}>{raw}</pre>
+              surface: 'sunken' })}>{raw}</pre>
         </SplitPane>
       </div>
     </section>

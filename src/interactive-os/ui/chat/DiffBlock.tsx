@@ -9,22 +9,22 @@ export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockTy
   const newLines = useMemo(() => block.new.split('\n'), [block.new])
 
   return (
-    <div className={ax({ surface: 'display' })}>
+    <div className={ax({ role: 'cell', surface: 'display' })}>
       {block.filePath && (
-        <div className={ax({ textStyle: 'code', content: 'text' })}>{block.filePath}</div>
+        <div className={ax({ role: 'item', textStyle: 'code', content: 'text' })}>{block.filePath}</div>
       )}
       <div className={ax({ layout: 'grid-2' })}>
         <div className={ax({ })}>
           <pre className={`pre-wrap break-word ${ax({ textStyle: 'code' })}`}>
             {oldLines.map((line, i) => (
-              <div key={i} className={ax({ tone: 'danger-dim', content: 'code' })}>{line || ' '}</div>
+              <div key={i} className={ax({ role: 'item', tone: 'danger-dim', content: 'code' })}>{line || ' '}</div>
             ))}
           </pre>
         </div>
         <div className={ax({ })}>
           <pre className={`pre-wrap break-word ${ax({ textStyle: 'code' })}`}>
             {newLines.map((line, i) => (
-              <div key={i} className={ax({ tone: 'success-dim', content: 'code' })}>{line || ' '}</div>
+              <div key={i} className={ax({ role: 'item', tone: 'success-dim', content: 'code' })}>{line || ' '}</div>
             ))}
           </pre>
         </div>

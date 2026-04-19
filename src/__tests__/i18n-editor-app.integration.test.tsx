@@ -6,19 +6,30 @@ import PageI18nEditor from '../pages/i18n/PageI18nEditor'
 import { translatableEntriesToGrid } from '../pages/cms/cmsI18nTransform'
 import { cmsStore } from '../pages/cms/cmsStore'
 
+// PageI18nEditor mutates cmsStore.entities via persistChanges() — snapshot entities
+// at module load so each test starts from the same clean state.
+const initialCmsEntities = JSON.parse(JSON.stringify(cmsStore.entities)) as typeof cmsStore.entities
+
 // ── Helpers ──
 
 function getFocusedRowId(container: HTMLElement): string | null {
-  const focused = container.querySelector('[role="row"][tabindex="0"]')
+  const focused = container.querySelector('[role="row"][data-node-id][tabindex="0"]')
   return focused?.getAttribute('data-node-id') ?? null
 }
 
 function getRowCount(container: HTMLElement): number {
-  return container.querySelectorAll('[role="row"]').length
+  return container.querySelectorAll('[role="row"][data-node-id]').length
 }
 
 function getAllRows(container: HTMLElement): HTMLElement[] {
+  // Include header as rows[0] for backwards-compat with tests that assumed
+  // row[0] = header (header was not focusable so focusRow(rows[0]) was a no-op
+  // and initial focus remained on first data row).
   return Array.from(container.querySelectorAll('[role="row"]'))
+}
+
+function getDataRows(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll('[role="row"][data-node-id]'))
 }
 
 function getCellText(row: HTMLElement, colIndex: number): string {
@@ -33,17 +44,23 @@ function focusRow(row: HTMLElement) {
 // ── Tests ──
 
 describe('PageI18nEditor', () => {
-  beforeEach(() => resetClipboard())
+  beforeEach(() => {
+    resetClipboard()
+    // Restore cmsStore.entities from snapshot — tests mutate it via persistChanges
+    cmsStore.entities = JSON.parse(JSON.stringify(initialCmsEntities)) as typeof cmsStore.entities
+  })
 
   // ── Rendering ──
 
   describe('rendering', () => {
     it('renders page title and key hints', () => {
       const { container } = render(<PageI18nEditor />)
-      expect(container.querySelector('.page-title')?.textContent).toBe('i18n Editor')
-      expect(container.querySelector('.page-desc')).not.toBeNull()
+      // Title renders via I18nTitleWidget (span with ts-label)
+      const titleEl = Array.from(container.querySelectorAll('span'))
+        .find((el) => el.textContent === 'i18n Editor')
+      expect(titleEl).toBeDefined()
       const kbds = container.querySelectorAll('kbd')
-      expect(kbds.length).toBeGreaterThanOrEqual(7) // Enter, Shift+Enter, F2, Tab, Delete, ⌘X/C/V, ⌘Z
+      expect(kbds.length).toBeGreaterThanOrEqual(6) // Enter, ↑↓←→, ⇧+Arrow, Del, ⌘Z, ⌘F
     })
 
     it('renders Grid with role="grid" and aria-label', () => {
@@ -72,7 +89,7 @@ describe('PageI18nEditor', () => {
 
     it('key column shows identifier text with secondary style', () => {
       const { container } = render(<PageI18nEditor />)
-      const keyCell = container.querySelector('[role="row"] .tx-secondary')
+      const keyCell = container.querySelector('[role="row"] [data-cell-muted]')
       expect(keyCell).not.toBeNull()
       // Key format: "entityId.fieldName"
       expect(keyCell?.textContent).toMatch(/\w+\.\w+/)
@@ -81,7 +98,7 @@ describe('PageI18nEditor', () => {
     it('empty locale cells show "—" with muted style', () => {
       const { container } = render(<PageI18nEditor />)
       // localeMap() creates { ko: 'text', en: '', ja: '' } — en/ja are empty for most entries
-      const emptyCells = container.querySelectorAll('.tx-muted')
+      const emptyCells = container.querySelectorAll('[data-cell-empty]')
       expect(emptyCells.length).toBeGreaterThan(0)
       // All empty cells show "—"
       for (const cell of emptyCells) {
@@ -92,8 +109,8 @@ describe('PageI18nEditor', () => {
     it('non-empty locale cells show actual text without cell-empty class', () => {
       const { container } = render(<PageI18nEditor />)
       const rows = getAllRows(container)
-      // First row ko column should have actual text (not "—")
-      const koText = getCellText(rows[0]!, 1)
+      // rows[0] is header row — use rows[1] for first data row
+      const koText = getCellText(rows[1]!, 1)
       expect(koText).not.toBe('—')
       expect(koText).not.toBe('')
     })
@@ -117,10 +134,11 @@ describe('PageI18nEditor', () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
       const rows = getAllRows(container)
-      const firstRowId = rows[0]!.getAttribute('data-node-id')
-      focusRow(rows[1]!)
+      // rows[0] is header; rows[1] is first data row
+      const firstDataRowId = rows[1]!.getAttribute('data-node-id')
+      focusRow(rows[2]!)
       await user.keyboard('{Shift>}{Enter}{/Shift}')
-      expect(getFocusedRowId(container)).toBe(firstRowId)
+      expect(getFocusedRowId(container)).toBe(firstDataRowId)
     })
 
     it('ArrowDown moves focus to next row', async () => {
@@ -162,10 +180,11 @@ describe('PageI18nEditor', () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
       const rows = getAllRows(container)
-      const firstRowId = rows[0]!.getAttribute('data-node-id')
-      focusRow(rows[0]!)
+      // rows[0] is header; rows[1] is first data row
+      const firstDataRowId = rows[1]!.getAttribute('data-node-id')
+      focusRow(rows[1]!)
       await user.keyboard('{Shift>}{Enter}{/Shift}')
-      expect(getFocusedRowId(container)).toBe(firstRowId)
+      expect(getFocusedRowId(container)).toBe(firstDataRowId)
     })
   })
 
@@ -176,7 +195,8 @@ describe('PageI18nEditor', () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
       const rows = getAllRows(container)
-      focusRow(rows[0]!)
+      // rows[0] is header (no data-node-id); focus first data row
+      focusRow(rows[1]!)
       await user.keyboard('{ArrowRight}') // move to ko column
       await user.keyboard('{F2}')
       expect(container.querySelector('[data-renaming]')).not.toBeNull()
@@ -197,7 +217,7 @@ describe('PageI18nEditor', () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
       const rows = getAllRows(container)
-      focusRow(rows[0]!)
+      focusRow(rows[1]!)
       await user.keyboard('{ArrowRight}') // ko column
       await user.keyboard('a')
       // Should be in edit mode with the typed character
@@ -209,25 +229,25 @@ describe('PageI18nEditor', () => {
     it('Escape cancels edit and restores original value', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
       await user.keyboard('{ArrowRight}')
-      const originalText = getCellText(rows[0]!, 1)
+      const originalText = getCellText(dataRows[0]!, 1)
       await user.keyboard('{F2}')
       await user.keyboard('new value')
       await user.keyboard('{Escape}')
       expect(container.querySelector('[data-renaming]')).toBeNull()
       // Value should be restored
-      const restoredText = getCellText(getAllRows(container)[0]!, 1)
+      const restoredText = getCellText(getDataRows(container)[0]!, 1)
       expect(restoredText).toBe(originalText)
     })
 
     it('Enter in edit mode confirms and moves down', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      const secondRowId = rows[1]!.getAttribute('data-node-id')
-      focusRow(rows[0]!)
+      const dataRows = getDataRows(container)
+      const secondRowId = dataRows[1]!.getAttribute('data-node-id')
+      focusRow(dataRows[0]!)
       await user.keyboard('{ArrowRight}')
       await user.keyboard('{F2}')
       await user.keyboard('{Enter}')
@@ -239,9 +259,9 @@ describe('PageI18nEditor', () => {
     it('Shift+Enter in edit mode confirms and moves up', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      const firstRowId = rows[0]!.getAttribute('data-node-id')
-      focusRow(rows[1]!)
+      const dataRows = getDataRows(container)
+      const firstRowId = dataRows[0]!.getAttribute('data-node-id')
+      focusRow(dataRows[1]!)
       await user.keyboard('{ArrowRight}')
       await user.keyboard('{F2}')
       await user.keyboard('{Shift>}{Enter}{/Shift}')
@@ -253,8 +273,8 @@ describe('PageI18nEditor', () => {
     it('Tab in edit mode confirms and moves to next cell in edit mode', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
       await user.keyboard('{ArrowRight}') // ko column
       await user.keyboard('{F2}')
       expect(container.querySelector('[data-renaming]')).not.toBeNull()
@@ -267,8 +287,8 @@ describe('PageI18nEditor', () => {
     it('double-click on editable cell enters edit mode', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
       await user.keyboard('{ArrowRight}') // activate ko column
       // Find the Editable span and double-click
       const editableWrapper = container.querySelector('[data-placeholder]')
@@ -286,85 +306,82 @@ describe('PageI18nEditor', () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
       const initialCount = getRowCount(container)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
-      await user.keyboard('{ArrowRight}') // ko column
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
+      // Grid initialColIndex=1 — already on ko column
       await user.keyboard('{Delete}')
       expect(getRowCount(container)).toBe(initialCount)
       // Cell should show "—" (empty placeholder)
-      const cell = getAllRows(container)[0]!.querySelectorAll('[role="gridcell"]')[1]
+      const cell = getDataRows(container)[0]!.querySelectorAll('[role="gridcell"]')[1]
       expect(cell?.textContent).toBe('—')
     })
 
     it('Mod+C → ArrowDown → Mod+V pastes cell value', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
-      await user.keyboard('{ArrowRight}')
-      const sourceText = getCellText(rows[0]!, 1)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
+      // initialColIndex=1 — already on ko column
+      const sourceText = getCellText(dataRows[0]!, 1)
       await user.keyboard('{Control>}c{/Control}')
       await user.keyboard('{ArrowDown}')
       await user.keyboard('{Control>}v{/Control}')
-      const targetText = getCellText(getAllRows(container)[1]!, 1)
+      const targetText = getCellText(getDataRows(container)[1]!, 1)
       expect(targetText).toBe(sourceText)
     })
 
     it('Mod+X cuts cell value (copy + clear)', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
-      await user.keyboard('{ArrowRight}')
-      const originalText = getCellText(rows[0]!, 1)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
+      const originalText = getCellText(dataRows[0]!, 1)
       expect(originalText).not.toBe('—')
       await user.keyboard('{Control>}x{/Control}')
       // Source cell cleared
-      const clearedText = getCellText(getAllRows(container)[0]!, 1)
+      const clearedText = getCellText(getDataRows(container)[0]!, 1)
       expect(clearedText).toBe('—')
       // Paste to next row
       await user.keyboard('{ArrowDown}')
       await user.keyboard('{Control>}v{/Control}')
-      const pastedText = getCellText(getAllRows(container)[1]!, 1)
+      const pastedText = getCellText(getDataRows(container)[1]!, 1)
       expect(pastedText).toBe(originalText)
     })
 
     it('Mod+Z undoes Delete', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
-      await user.keyboard('{ArrowRight}')
-      const originalText = getCellText(rows[0]!, 1)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
+      const originalText = getCellText(dataRows[0]!, 1)
       await user.keyboard('{Delete}')
-      expect(getCellText(getAllRows(container)[0]!, 1)).toBe('—')
+      expect(getCellText(getDataRows(container)[0]!, 1)).toBe('—')
       await user.keyboard('{Control>}z{/Control}')
-      expect(getCellText(getAllRows(container)[0]!, 1)).toBe(originalText)
+      expect(getCellText(getDataRows(container)[0]!, 1)).toBe(originalText)
     })
 
     it('Mod+Z undoes Mod+X cut', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
-      await user.keyboard('{ArrowRight}')
-      const originalText = getCellText(rows[0]!, 1)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
+      const originalText = getCellText(dataRows[0]!, 1)
       await user.keyboard('{Control>}x{/Control}')
-      expect(getCellText(getAllRows(container)[0]!, 1)).toBe('—')
+      expect(getCellText(getDataRows(container)[0]!, 1)).toBe('—')
       await user.keyboard('{Control>}z{/Control}')
-      expect(getCellText(getAllRows(container)[0]!, 1)).toBe(originalText)
+      expect(getCellText(getDataRows(container)[0]!, 1)).toBe(originalText)
     })
 
     it('Delete on already empty cell is no-op', async () => {
       const user = userEvent.setup()
       const { container } = render(<PageI18nEditor />)
-      const rows = getAllRows(container)
-      focusRow(rows[0]!)
+      const dataRows = getDataRows(container)
+      focusRow(dataRows[0]!)
       // Move to ja column (col 3) — likely empty for most entries
       await user.keyboard('{ArrowRight}{ArrowRight}{ArrowRight}')
-      const textBefore = getCellText(getAllRows(container)[0]!, 3)
+      const textBefore = getCellText(getDataRows(container)[0]!, 3)
       await user.keyboard('{Delete}')
-      const textAfter = getCellText(getAllRows(container)[0]!, 3)
+      const textAfter = getCellText(getDataRows(container)[0]!, 3)
       expect(textAfter).toBe(textBefore)
     })
   })

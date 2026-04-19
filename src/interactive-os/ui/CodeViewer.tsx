@@ -68,7 +68,7 @@ export function CodeViewer({
       <figure
         className={`code-viewer code-viewer--${preset}${resolvedWrap ? ' code-viewer--wrap' : ''}${!resolvedShowLineNumbers ? ' code-viewer--no-gutter' : ''} ${ax({
             role: 'control-group',
-            layout: 'stack', textStyle: 'code', surface: 'raised' })}`}
+            layout: 'stack', surface: 'raised' })}`}
         role={recipe.region ? 'region' : undefined}
         aria-labelledby={ariaLabelledBy}
         aria-label={ariaLabel}

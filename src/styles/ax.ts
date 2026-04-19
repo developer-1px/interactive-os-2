@@ -137,6 +137,7 @@ export function ax(axes: Axes): string {
 ;(ax as typeof ax & { raw: typeof axRaw }).raw = axRaw
 
 // namespace 선언으로 ax.raw 의 d.ts 형태 제공
+// eslint-disable-next-line @typescript-eslint/no-namespace -- namespace merging is required to attach `raw` to the ax callable's type
 export declare namespace ax {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const raw: typeof axRaw

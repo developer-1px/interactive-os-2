@@ -43,7 +43,7 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${ax({ content: 'text', surface: 'display' })} outline-none`}
+        className={`${ax({ role: 'item', content: 'text', surface: 'display' })} outline-none`}
         data-focused={state.focused || undefined}
       >
         <h2 className={ax({ textStyle: 'section' })}>{label}</h2>

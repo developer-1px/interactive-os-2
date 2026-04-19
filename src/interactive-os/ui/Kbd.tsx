@@ -9,6 +9,7 @@ export function Kbd({ children }: KbdProps) {
   return (
     <kbd
       className={ax({
+        role: 'badge',
         surface: 'overlay',
         textStyle: 'code',
         content: 'text'

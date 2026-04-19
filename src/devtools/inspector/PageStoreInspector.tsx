@@ -102,7 +102,7 @@ function renderEntityList(store: NormalizedData): React.ReactNode {
         const children = store.relationships[id]
         return (
           <div key={id} className={`${ax({ clamp: '1' })} store-inspector-log-entity`}>
-            <span className={ax({ tone: 'accent' })}>{id}</span>
+            <span className={ax({ role: 'item', tone: 'accent' })}>{id}</span>
             {dataStr && <span className={`${ax({ })} store-inspector-log-entity-data`}> {dataStr}</span>}
             {children && children.length > 0 && (
               <span className={`${ax({ })} store-inspector-log-entity-children`}> [{children.join(', ')}]</span>
@@ -212,7 +212,7 @@ export default function PageStoreInspector() {
           <div
             className={`${ax({
                 role: 'control-group',
-                textStyle: 'caption', surface: 'sunken' })} store-inspector-log`}
+                surface: 'sunken' })} ${ax({ textStyle: 'caption' })} store-inspector-log`}
             ref={logRef}
             aria-label="Operation Log"
           >
@@ -226,8 +226,8 @@ export default function PageStoreInspector() {
                   return (
                     <div key={entry.seq} className={`${ax({ clamp: '1' })} store-inspector-log-entry`}>
                       <span className={ax({ })}>#{entry.seq}</span>{' '}
-                      <span className={ax({ tone: 'warning-dim' })}>unhandled</span>{' '}
-                      <span className={ax({ tone: 'warning-dim' })}>| {formatDiffSummary(entry)}</span>
+                      <span className={ax({ role: 'item', tone: 'warning-dim' })}>unhandled</span>{' '}
+                      <span className={ax({ role: 'item', tone: 'warning-dim' })}>| {formatDiffSummary(entry)}</span>
                     </div>
                   )
                 }
@@ -258,7 +258,7 @@ export default function PageStoreInspector() {
                       <span>{entry.type}{fromLabel}</span>
                       {isBatch && <span className={`${ax({ })} store-inspector-log-batch-count`}> ({batchChildren.length} commands)</span>}
                       {' '}
-                      <span className={ax({ tone: 'accent' })}>| {formatDiffSummary(entry)}</span>
+                      <span className={ax({ role: 'item', tone: 'accent' })}>| {formatDiffSummary(entry)}</span>
                     </div>
 
                     {isExpanded && (
@@ -290,7 +290,7 @@ export default function PageStoreInspector() {
                         {/* Store snapshot toggle */}
                         {entry.next && (
                           <button
-                            className={`${ax({ surface: 'ghost', textStyle: 'caption' })} store-inspector-log-store-btn`}
+                            className={`${ax({ role: 'control', surface: 'ghost', textStyle: 'caption' })} store-inspector-log-store-btn`}
                             onClick={(e) => { e.stopPropagation(); toggleStoreVisible(entry.seq) }}
                           >
                             {isStoreVisible ? 'Hide Store' : 'Show Store'}

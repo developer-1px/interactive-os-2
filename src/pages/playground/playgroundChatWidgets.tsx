@@ -20,6 +20,7 @@ function usePlaygroundSession(): ChatSession | null {
   if (idRef.current === null) {
     idRef.current = ensureSession('playground')
   }
+  // eslint-disable-next-line react-hooks/refs -- lazy-init ref: stable after first render
   return useChatSession(idRef.current)
 }
 

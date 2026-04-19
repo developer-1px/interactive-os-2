@@ -49,14 +49,14 @@ const renderTab = (
     <div>
       <button
         {...props}
-        className={`${ax({ textStyle: 'caption', layout: 'row', interactive: 'tab' })} outline-none`}
+        className={`${ax({ role: 'item', textStyle: 'caption', layout: 'row', interactive: 'tab' })} outline-none`}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
       >
         {label}
       </button>
       {state.slotProps && (
-        <div {...state.slotProps} className={ax({ surface: 'display' })} aria-roledescription="slide">
+        <div {...state.slotProps} className={ax({ role: 'item', surface: 'display' })} aria-roledescription="slide">
           <h3 className={ax({ textStyle: 'section' })}>{label}</h3>
           <p className={ax({ textStyle: 'body' })}>{desc}</p>
         </div>
@@ -125,9 +125,9 @@ export function CarouselTabs() {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className={`${ax({ layout: 'row', surface: 'display' })} justify-end`}>
+      <div className={`${ax({ role: 'item', layout: 'row', surface: 'display' })} justify-end`}>
         <button
-          className={ax({ interactive: 'button', layout: 'center' })}
+          className={ax({ role: 'control', surface: 'ghost', interactive: 'button', layout: 'center' })}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
@@ -150,7 +150,7 @@ export function CarouselTabs() {
         </Aria>
       </div>
 
-      <div className={`${ax({ textStyle: 'caption', surface: 'display' })} text-center`} aria-hidden="true">
+      <div className={`${ax({ role: 'item', textStyle: 'caption', surface: 'display' })} text-center`} aria-hidden="true">
         {slideIndex} / {slides.length}
       </div>
     </section>

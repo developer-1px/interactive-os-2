@@ -1,12 +1,14 @@
 // ② 2026-04-05-ui-items-prd.md
 import { useState, type ReactNode } from 'react'
-import { ax, type Axes } from '@styles/ax'
+import { ax } from '@styles/ax'
 import { PanelHeader } from '../PanelHeader'
 import { CloseIndicator } from '../indicators'
 
+type PanelSurface = 'sunken' | 'base' | 'raised' | 'overlay' | 'ghost'
+
 interface SidePanelProps {
   header?: string
-  surface?: Axes['surface']
+  surface?: PanelSurface
   children: ReactNode
   className?: string
   scroll?: boolean

@@ -1,4 +1,5 @@
 /** @catalog A2UI renderer 함수들과 defaultComponentMap */
+/* eslint-disable react-refresh/only-export-components -- 렌더러 함수 묶음: fallbackRenderer + defaultComponentMap 공존 */
 import { useState } from 'react'
 import type { A2UIComponentMap, A2UIRenderContext } from './a2uiComponentMap'
 import { ROOT_ID } from '@os/store/types'
@@ -57,7 +58,7 @@ function columnRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
 }
 
 function cardRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
-  return <div className={ax({ surface: 'display' })}>{renderChildren(entity.id, depth)}</div>
+  return <div className={ax({ role: 'cell', surface: 'display' })}>{renderChildren(entity.id, depth)}</div>
 }
 
 function buttonRenderer({ entity, renderNode, depth, onAction }: A2UIRenderContext) {
@@ -233,7 +234,7 @@ function modalRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) 
   const contentChildId = (entity.data as Record<string, unknown>).contentChild as string | undefined
   if (contentChildId && store.entities[contentChildId]) {
     return (
-      <div className={ax({ surface: 'overlay' })}>
+      <div className={ax({ role: 'control-group', surface: 'overlay' })}>
         {renderNode(contentChildId, depth + 1)}
       </div>
     )
@@ -257,7 +258,7 @@ export function fallbackRenderer({ entity }: A2UIRenderContext) {
   return (
     <div className={ax({
         role: 'control-group',
-        surface: 'sunken', textStyle: 'code' })}>
+        surface: 'sunken' })}>
       <div className={ax({ textStyle: 'caption' })}>Unknown: {component}</div>
       <pre className={ax({ textStyle: 'code',  })}>{JSON.stringify(d, null, 2)}</pre>
     </div>

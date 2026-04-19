@@ -52,7 +52,7 @@ const renderItem = (
     const labelId = `group-label-${node.id}`
     return (
       <ul {...props} aria-labelledby={labelId} className={`list-none`}>
-        <li role="presentation" id={labelId} className={`${ax({ textStyle: 'label', content: 'text' })}`}>
+        <li role="presentation" id={labelId} className={`${ax({ role: 'item', textStyle: 'label', content: 'text' })}`}>
           {label}
         </li>
         {children}
@@ -63,7 +63,7 @@ const renderItem = (
   return (
     <li
       {...props}
-      className={ax({ layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })}
+      className={ax({ role: 'item', layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })}
       data-focused={state.focused || undefined}
     >
       {label}

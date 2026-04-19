@@ -206,10 +206,11 @@ function SessionReplaySlot({ sessionId }: { sessionId: string }) {
     enqueueAll(unified)
   }, [allMessages, enqueueAll, clearReplay, viewerTabs])
 
-  // Auto-start on load
+  // Auto-start on load — one-shot trigger guarded by hasStartedRef
   useEffect(() => {
     if (allMessages.length > 0 && !hasStartedRef.current) {
       hasStartedRef.current = true
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional auto-start trigger, guarded by ref
       startReplay()
     }
   }, [allMessages, startReplay])
@@ -258,7 +259,7 @@ export function SessionDetailModal({ card, onClose }: { card: SessionCard | null
   return (
     <dialog
       ref={contentRef as React.RefObject<HTMLDialogElement>}
-      className={`kanban-detail-dialog ${ax({ surface: 'overlay', width: 'full', layout: 'stack' })}`}
+      className={`kanban-detail-dialog ${ax({ role: 'control-group', surface: 'overlay', width: 'full', layout: 'stack' })}`}
       aria-label="Session replay"
     >
       <PanelHeader axes={{ layout: 'spread' }}>

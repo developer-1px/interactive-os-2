@@ -196,12 +196,12 @@ function PlaygroundSurfaceWidget() {
   const name = surface?.tabData?.contentRef ?? ''
   const tabId = surface?.tabNodeId
 
+  const Demo = useMemo(() => (name ? getDemoComponent(name) : null), [name])
+
   if (!name) return <EmptySlot />
 
   const builtin = BUILTIN_WIDGETS[name]
   if (builtin) return builtin()
-
-  const Demo = getDemoComponent(name)
 
   return (
     <div className={ax({ layout: 'stack', flex: '1', width: 'full' })}>
@@ -220,6 +220,7 @@ function PlaygroundSurfaceWidget() {
       <ScrollArea>
         {Demo ? (
           <Suspense fallback={<LoadingSlot />}>
+            {/* eslint-disable-next-line react-hooks/static-components -- Demo is lazy-loaded, cached by name outside render */}
             <Demo />
           </Suspense>
         ) : (

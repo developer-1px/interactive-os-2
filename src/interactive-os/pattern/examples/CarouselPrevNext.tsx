@@ -64,18 +64,18 @@ export function CarouselPrevNext() {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className={`${ax({ layout: 'row', surface: 'display' })} justify-end`}>
+      <div className={`${ax({ role: 'item', layout: 'row', surface: 'display' })} justify-end`}>
         <button
-          className={ax({ interactive: 'button', layout: 'center' })}
+          className={ax({ role: 'control', surface: 'ghost', interactive: 'button', layout: 'center' })}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
           {isRotating ? <Pause size="1em" /> : <Play size="1em" />}
         </button>
-        <button className={ax({ interactive: 'button', layout: 'center' })} aria-label="Previous Slide" onClick={prev}>
+        <button className={ax({ role: 'control', surface: 'ghost', interactive: 'button', layout: 'center' })} aria-label="Previous Slide" onClick={prev}>
           <ChevronLeft size="1em" />
         </button>
-        <button className={ax({ interactive: 'button', layout: 'center' })} aria-label="Next Slide" onClick={next}>
+        <button className={ax({ role: 'control', surface: 'ghost', interactive: 'button', layout: 'center' })} aria-label="Next Slide" onClick={next}>
           <ChevronRight size="1em" />
         </button>
       </div>
@@ -85,14 +85,14 @@ export function CarouselPrevNext() {
           role="group"
           aria-roledescription="slide"
           aria-label={`${currentIndex + 1} of ${slides.length}`}
-          className={ax({ surface: 'display' })}
+          className={ax({ role: 'item', surface: 'display' })}
         >
           <h3 className={ax({ textStyle: 'section' })}>{slide.label}</h3>
           <p className={ax({ textStyle: 'body' })}>{slide.desc}</p>
         </div>
       </div>
 
-      <div className={`${ax({ textStyle: 'caption', surface: 'display' })} text-center`} aria-hidden="true">
+      <div className={`${ax({ role: 'item', textStyle: 'caption', surface: 'display' })} text-center`} aria-hidden="true">
         {currentIndex + 1} / {slides.length}
       </div>
     </section>

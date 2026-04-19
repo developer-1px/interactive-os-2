@@ -33,7 +33,7 @@ function createTabData() {
 function ThemePanel() {
   const { theme, toggle } = useTheme()
   return (
-    <div className={ax({ surface: 'display', layout: 'stack', flex: 'none' })}>
+    <div className={ax({ role: 'cell', surface: 'display', layout: 'stack', flex: 'none' })}>
       <span className={ax({ textStyle: 'overline' })}>THEME</span>
       <div className={ax({ layout: 'spread' })}>
         <span className={ax({ textStyle: 'body' })}>Appearance</span>

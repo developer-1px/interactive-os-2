@@ -49,11 +49,11 @@ export function MenubarNavigation() {
 
   return (
     <div className={ax({ })}>
-      <header className={`${ax({ surface: 'display' })} text-center`}>
+      <header className={`${ax({ role: 'item', surface: 'display' })} text-center`}>
         <div className={ax({ textStyle: 'section' })}>Mythical University</div>
         <div className={ax({ textStyle: 'body' })}>Using a Menubar for navigation links</div>
       </header>
-      <nav className={ax({ surface: 'display' })}>
+      <nav className={ax({ role: 'item', surface: 'display' })}>
         <Menubar
           data={store}
           onChange={onChange}

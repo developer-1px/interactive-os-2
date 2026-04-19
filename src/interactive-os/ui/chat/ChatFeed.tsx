@@ -119,7 +119,7 @@ const MessageBubble = memo(function MessageBubble({
   renderers: BlockRendererMap
 }) {
   const roleClass = message.role === 'user'
-    ? `${ax({ textStyle: 'body', content: 'bubble', surface: 'display', tone: 'accent-dim' })} chat-user`
+    ? `${ax({ role: 'cell', textStyle: 'body', content: 'bubble', surface: 'display', tone: 'accent-dim' })} chat-user`
     : message.role === 'system'
       ? `${ax({ textStyle: 'caption' })} chat-system`
       : `${ax({ textStyle: 'body' })} chat-assistant`

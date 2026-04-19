@@ -362,7 +362,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
           <div className={`cms-image-field__actions absolute ${ax({ layout: 'row' })}`}>
             <button
               type="button"
-              className={`cms-image-field__action ${ax({ layout: 'center', surface: 'ghost' })} border-none cursor-pointer`}
+              className={`cms-image-field__action ${ax({ layout: 'center', surface: 'ghost' as never })} border-none cursor-pointer`}
               onClick={() => fileRef.current?.click()}
               title="Replace"
             >
@@ -370,7 +370,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
             </button>
             <button
               type="button"
-              className={`cms-image-field__action ${ax({ layout: 'center', surface: 'ghost' })} border-none cursor-pointer`}
+              className={`cms-image-field__action ${ax({ layout: 'center', surface: 'ghost' as never })} border-none cursor-pointer`}
               onClick={handleRemove}
               title="Remove"
             >
@@ -381,7 +381,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
       ) : (
         <button
           type="button"
-          className={`cms-image-field__placeholder ${ax({ surface: 'placeholder', layout: 'center', textStyle: 'caption' })} w-full`}
+          className={`cms-image-field__placeholder ${ax({ surface: 'placeholder' as never, layout: 'center', textStyle: 'caption' })} w-full`}
           onClick={() => fileRef.current?.click()}
           onKeyDown={handleKeyDown}
         >
@@ -429,7 +429,7 @@ function IconField({ entry, store, engine, expanded }: DetailFieldProps) {
             <button
               key={iconKey}
               type="button"
-              className={`cms-icon-field__option ${ax({ surface: 'ghost', layout: 'center' })}${iconKey === currentValue ? ' cms-icon-field__option--selected' : ''}`}
+              className={`cms-icon-field__option ${ax({ surface: 'ghost' as never, layout: 'center' })}${iconKey === currentValue ? ' cms-icon-field__option--selected' : ''}`}
               title={iconKey}
               onClick={() => handleSelect(iconKey)}
             >

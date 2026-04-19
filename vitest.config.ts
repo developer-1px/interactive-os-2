@@ -12,7 +12,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'happy-dom',
-    exclude: ['node_modules/**', '.claude/worktrees/**'],
+    exclude: ['node_modules/**', '.claude/worktrees/**', '.worktrees/**'],
     coverage: {
       provider: 'v8',
       include: [

@@ -300,7 +300,7 @@ export function Combobox({
               <span key={id} data-combobox-token role="listitem">
                 {getLabel(id)}
                 {' '}
-                <button type="button" className={ax({ surface: 'ghost', layout: 'center', content: 'icon' })} onClick={() => removeToken(id)} aria-label={`Remove ${getLabel(id)}`}>
+                <button type="button" className={ax({ role: 'control', surface: 'ghost', layout: 'center', content: 'icon' })} onClick={() => removeToken(id)} aria-label={`Remove ${getLabel(id)}`}>
                   <CloseIndicator />
                 </button>
               </span>
@@ -334,7 +334,7 @@ export function Combobox({
         />
       )}
       {isOpen && (
-        <div ref={dropdownRef} popover="manual" className={`${ax({ surface: 'overlay', placement: 'anchor-below' })} combo-dropdown`} style={{ positionAnchor: anchorName } as React.CSSProperties} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div ref={dropdownRef} popover="manual" className={`${ax({ role: 'tip', surface: 'overlay', placement: 'anchor-below' })} combo-dropdown`} style={{ positionAnchor: anchorName } as React.CSSProperties} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? renderGroupedOptions() : visibleChildren.map(childId => renderOption(childId))}
           {showCreateOption && (
             <div

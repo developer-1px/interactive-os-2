@@ -9,11 +9,11 @@ import {
 
 export function BlockLog() {
   return (
-    <div className={ax({ surface: 'display' })}>
+    <div className={ax({ role: 'cell', surface: 'display' })}>
       <div className={ax({ layout: 'stack', textStyle: 'code' })}>
-        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:12</span><span className={`${ax({ tone: 'danger' })}`}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
-        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:13</span><span className={ax({ tone: 'danger' })}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
-        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:14</span><span className={ax({ tone: 'warning' })}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
+        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:12</span><span className={`${ax({ role: 'item', tone: 'danger' })}`}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
+        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:13</span><span className={ax({ role: 'item', tone: 'danger' })}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
+        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:14</span><span className={ax({ role: 'item', tone: 'warning' })}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
       </div>
     </div>
   )
@@ -21,7 +21,7 @@ export function BlockLog() {
 
 export function BlockMetric() {
   return (
-    <div className={ax({ surface: 'display' })}>
+    <div className={ax({ role: 'cell', surface: 'display' })}>
       <div className={`incident-metric-grid grid`}>
         <div className={ax({ layout: 'stack' })}><div className={ax({ textStyle: 'body' })}>50/50</div><div className={ax({ textStyle: 'caption' })}>connections</div><div className={`incident-bar-track ${ax({ })}`}><div className={`incident-bar-fill-bad incident-bar-w100 h-full`} /></div></div>
         <div className={ax({ layout: 'stack' })}><div className={ax({ textStyle: 'body' })}>23</div><div className={ax({ textStyle: 'caption' })}>pending</div><div className={`incident-bar-track ${ax({ })}`}><div className={`incident-bar-fill-warn incident-bar-w46 h-full`} /></div></div>
@@ -33,21 +33,21 @@ export function BlockMetric() {
 
 export function BlockCause() {
   return (
-    <div className={ax({ surface: 'display' })}>
+    <div className={ax({ role: 'cell', surface: 'display' })}>
       <div className={ax({ layout: 'stack' })}>
         <div className={ax({ layout: 'bar' })}>
-          <div className={`${ax({ layout: 'center', tone: 'danger' })} incident-cause-icon`}><GitCommit size={12} /></div>
+          <div className={`${ax({ role: 'item', layout: 'center', tone: 'danger' })} incident-cause-icon`}><GitCommit size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption' })}>PR #3421 — config cleanup</div><div className={ax({ textStyle: 'caption' })}>pool_size: 100 → 50</div></div>
-          <span className={ax({ textStyle: 'caption', tone: 'danger' })}>연관 87%</span>
+          <span className={ax({ role: 'item', textStyle: 'caption', tone: 'danger' })}>연관 87%</span>
         </div>
         <div className={`${ax({ })} incident-cause-arrow`}><ChevronDown size={12} /></div>
         <div className={ax({ layout: 'bar' })}>
-          <div className={`${ax({ layout: 'center', tone: 'warning' })} incident-cause-icon`}><Database size={12} /></div>
+          <div className={`${ax({ role: 'item', layout: 'center', tone: 'warning' })} incident-cause-icon`}><Database size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption' })}>DB pool 고갈</div><div className={ax({ textStyle: 'caption' })}>max=50, 동시 요청 처리 불가</div></div>
         </div>
         <div className={`${ax({ })} incident-cause-arrow`}><ChevronDown size={12} /></div>
         <div className={ax({ layout: 'bar' })}>
-          <div className={`${ax({ layout: 'center', tone: 'danger' })} incident-cause-icon`}><AlertTriangle size={12} /></div>
+          <div className={`${ax({ role: 'item', layout: 'center', tone: 'danger' })} incident-cause-icon`}><AlertTriangle size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption' })}>p99 2.4s → 3개 서비스 전파</div></div>
         </div>
       </div>
@@ -57,14 +57,14 @@ export function BlockCause() {
 
 export function BlockSimilar() {
   return (
-    <div className={ax({ surface: 'display', layout: 'stack' })}>
+    <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
       <div className={ax({ layout: 'bar' })}>
-        <span className={ax({ textStyle: 'caption', tone: 'accent' })}>INC-847</span>
+        <span className={ax({ role: 'item', textStyle: 'caption', tone: 'accent' })}>INC-847</span>
         <span className={ax({ role: 'badge', tone: 'success', surface: 'ghost', content: 'text' })}>92%</span>
         <span className={ax({ textStyle: 'caption' })}>2주 전</span>
       </div>
       <div className={ax({ textStyle: 'caption' })}>동일: DB pool exhaustion after config change</div>
-      <div className={ax({ layout: 'bar', textStyle: 'caption', tone: 'success' })}>
+      <div className={ax({ role: 'item', layout: 'bar', textStyle: 'caption', tone: 'success' })}>
         <CheckCircle size={12} />
         <span>해결: pool_size 50→200 (PR #2891) — 3분 정상화</span>
       </div>
@@ -82,12 +82,12 @@ const BLAST_SERVICES = [
 
 export function BlockBlast() {
   return (
-    <div className={ax({ surface: 'display', layout: 'stack' })}>
+    <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
       {BLAST_SERVICES.map((s, i) => (
         <div key={i} className={ax({ layout: 'bar', textStyle: 'caption' })}>
           <Server size={12} />
           <span className={ax({ flex: '1' })}>{s.name}</span>
-          <span className={ax({ tone: s.tone })}>{s.status}</span>
+          <span className={ax({ role: 'item', tone: s.tone })}>{s.status}</span>
         </div>
       ))}
     </div>

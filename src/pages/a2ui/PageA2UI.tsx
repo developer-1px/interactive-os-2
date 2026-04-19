@@ -174,12 +174,12 @@ export default function PageA2UI() {
           <div className={ax({ layout: 'bar' })}>
             <span className={ax({ textStyle: 'label' })}>A2UI v0.9 Envelope</span>
             {streaming && (
-              <span className={ax({ textStyle: 'caption', tone: 'accent' })}>
+              <span className={ax({ role: 'item', textStyle: 'caption', tone: 'accent' })}>
                 Streaming... {progress}%
               </span>
             )}
             {!streaming && error && (
-              <span className={ax({ textStyle: 'caption', tone: 'danger' })}>
+              <span className={ax({ role: 'item', textStyle: 'caption', tone: 'danger' })}>
                 {error}
               </span>
             )}
@@ -190,8 +190,8 @@ export default function PageA2UI() {
             readOnly={streaming}
             spellCheck={false}
             className={`${ax({
-                role: 'control-group',
-                surface: 'sunken', textStyle: 'code', flex: '1' })} ${styles.editor}`}
+                role: 'cell',
+                surface: 'input', textStyle: 'code', flex: '1' })} ${styles.editor}`}
           />
         </div>
 
@@ -200,12 +200,12 @@ export default function PageA2UI() {
           <div className={ax({ layout: 'bar' })}>
             <span className={ax({ textStyle: 'label' })}>Rendered UI</span>
             {streaming && (
-              <span className={ax({ textStyle: 'caption', tone: 'accent' })}>
+              <span className={ax({ role: 'item', textStyle: 'caption', tone: 'accent' })}>
                 {partialPayload ? `${partialPayload.components.length} components` : 'Starting...'}
               </span>
             )}
           </div>
-          <div className={ax({ surface: 'display', flex: '1' })}>
+          <div className={ax({ role: 'cell', surface: 'display', flex: '1' })}>
             {payload ? (
               <A2UISurface payload={payload} />
             ) : (

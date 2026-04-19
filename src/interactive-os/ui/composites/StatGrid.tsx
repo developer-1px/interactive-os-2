@@ -15,7 +15,7 @@ export function statGridRenderer({ entity }: A2UIRenderContext) {
       {items.map((item, i) => (
         <div
           key={item.id ?? `stat-${i}`}
-          className={ax({ surface: 'display', flex: '1' })}
+          className={ax({ role: 'cell', surface: 'display', flex: '1' })}
         >
           <div className={ax({ layout: 'stack' })}>
             <div className={ax({ textStyle: 'display' })}>{item.value}</div>

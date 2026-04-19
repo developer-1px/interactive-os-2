@@ -61,7 +61,7 @@ export interface PreviewBeat extends BeatBase {
   eyebrow: string
 }
 
-export type Beat = ThinkingBeat | TerminalBeat | DiffBeat | CommitBeat | FiletreeBeat | PreviewBeat
+export type Beat = ThinkingBeat | TerminalBeat | DiffBeat | ReadBeat | CommitBeat | FiletreeBeat | PreviewBeat
 
 /** 세션 메타 — ShortCard에 표시 */
 export interface BeatSession {

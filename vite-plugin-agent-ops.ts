@@ -161,7 +161,7 @@ function scanSubAgentFiles(parentSessionId: string, dir: string): SubAgentFile[]
     const agentHash = m[1]
     const jsonlPath = path.join(subDir, name)
     const metaPath = path.join(subDir, `${agentHash}.meta.json`)
-    let mtime = 0
+    let mtime: number
     try { mtime = fs.statSync(jsonlPath).mtimeMs } catch { continue }
     out.push({ parentSessionId, agentHash, jsonlPath, metaPath, mtime })
   }

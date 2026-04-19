@@ -45,6 +45,7 @@ function collectEdges(root?: HTMLElement | null): EdgeLines {
   return { horizontals, verticals }
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function computeStats(edges: EdgeLines): KeylineStats {
   const hFreq = new Map<number, number>()
   const vFreq = new Map<number, number>()

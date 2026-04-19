@@ -162,7 +162,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           role: 'control',
         surface: 'input', flex: '1', placement: 'relative' })}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
-          <ul className={`composer-suggestion-list ${ax({ surface: 'overlay', placement: 'above' })}`} role="listbox" aria-label="Command suggestions">
+          <ul className={`composer-suggestion-list ${ax({ role: 'tip', surface: 'overlay', placement: 'above' })}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
               const nodeProps = aria.getNodeProps(cmd) as Record<string, unknown>
               const state = aria.getNodeState(cmd)
@@ -201,7 +201,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           {hasOverlay && (
             <div className={`composer-overlay absolute inset-0 pointer-none font-inherit pre-wrap ${ax({ textStyle: 'body' })}`} aria-hidden="true">
               {commandHighlight > 0 && (
-                <span className={ax({ tone: 'accent' })}>{overlayText.slice(0, commandHighlight)}</span>
+                <span className={ax({ role: 'item', tone: 'accent' })}>{overlayText.slice(0, commandHighlight)}</span>
               )}
               {commandHighlight > 0 && overlayText.length > commandHighlight && (
                 <span className={ax({})}>{overlayText.slice(commandHighlight)}</span>

@@ -31,8 +31,8 @@ class DemoErrorBoundary extends React.Component<
     if (this.state.error) {
       return (
         <div className={ax({
-            role: 'control-group',
-            surface: 'sunken', textStyle: 'caption' })}>
+            role: 'cell',
+            surface: 'display', textStyle: 'caption' })}>
           {this.props.name}: {this.state.error.message}
         </div>
       )
@@ -68,8 +68,8 @@ function CatalogNavWidget({ navData, nodeIdToIndex }: Record<string, unknown>) {
 function EmptyStateWidget({ componentName }: Record<string, unknown>) {
   return (
     <div className={ax({
-        role: 'control-group',
-        surface: 'sunken', textStyle: 'caption' })}>
+        role: 'cell',
+        surface: 'display', textStyle: 'caption' })}>
       {String(componentName ?? 'unknown')}
     </div>
   )
@@ -85,17 +85,17 @@ function createDemoWidget(entry: CatalogEntry) {
       default: function DemoWidget() {
         return (
           <DemoErrorBoundary name={entry.slug}>
-            <div className={ax({ surface: 'display', layout: 'stack' })}>
+            <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
               <div className={ax({ layout: 'spread' })}>
-                <div className={ax({ textStyle: 'caption', content: 'text' })}>
+                <div className={ax({ textStyle: 'caption' })}>
                   {entry.label}
                 </div>
                 {entry.axes && entry.axes.length > 0 && (
                   <div className={ax({ layout: 'row' })}>
                     {entry.axes.map((axis) => (
                       <span key={axis} className={ax({
-                          role: 'control-group',
-                        surface: 'sunken', textStyle: 'caption' })}>
+                          role: 'badge',
+                        surface: 'display', textStyle: 'caption' })}>
                         {axis}
                       </span>
                     ))}
@@ -114,7 +114,7 @@ function createDemoWidget(entry: CatalogEntry) {
     return (
       <React.Suspense
         fallback={
-          <div className={ax({ surface: 'display', textStyle: 'caption' })}>
+          <div className={ax({ role: 'cell', surface: 'display', textStyle: 'caption' })}>
             Loading {entry.slug}...
           </div>
         }

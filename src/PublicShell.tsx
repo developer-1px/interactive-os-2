@@ -54,7 +54,7 @@ export default function PublicShell() {
               <Link
                 key={item.to}
                 to={item.to}
-                className={ax({ surface: 'ghost', textStyle: 'body', interactive: 'item' })}
+                className={ax({ role: 'item', surface: 'ghost', textStyle: 'body', interactive: 'item' })}
                 style={{
                   textDecoration: 'none',
                   color: active ? 'var(--text-bright)' : 'var(--text-secondary)',

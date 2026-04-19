@@ -88,6 +88,7 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
   const data = useMemo(() => jsonToNormalized(value), [value])
 
   const rootValueRef = useRef<T>(value)
+  // eslint-disable-next-line react-hooks/refs -- ref write is idempotent; tracks latest prop for event-time reads
   rootValueRef.current = value
 
   const plugins = useMemo(() => {
@@ -100,6 +101,7 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
       }),
       rename(),
       focusRecovery(),
+      // eslint-disable-next-line react-hooks/refs -- getRootValue invoked at event time, not during render
       jsonEditPlugin({
         schema: schema as ZodType<unknown> | undefined,
         getRootValue: () => rootValueRef.current as JsonValue,
@@ -129,6 +131,7 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
   const keyMap = useMemo(() => ({
     Enter: key(
       ['core:expand', 'rename:start', 'jsonEditor:toggleBoolean', 'jsonEditor:setType', 'jsonEditor:setValue'],
+      // eslint-disable-next-line react-hooks/refs -- handler invoked at keypress time, not during render
       (ctx) => {
         const col = ctx.grid?.colIndex ?? -1
         const nodeData = ctx.getEntity(ctx.focused)?.data as JsonNodeCore | undefined

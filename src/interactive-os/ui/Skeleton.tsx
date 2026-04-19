@@ -1,19 +1,14 @@
 /** @catalog 로딩 상태 스켈레톤 플레이스홀더 */
 import { ax } from '@styles/ax'
-import type { Axes } from '@styles/ax'
+import type { AxWidth } from '@styles/ax'
 
 interface SkeletonProps {
-  width?: Axes['width']
-  height?: Axes['square']
+  width?: AxWidth
+  height?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   shape?: 'text' | 'circle' | 'rect'
 }
 
-export function Skeleton({ width = 'full', height = 'sm', shape = 'rect' }: SkeletonProps) {
-  const resolvedShape: Axes['shape'] =
-    shape === 'circle' ? 'pill' :
-    shape === 'text' ? 'sm' :
-    'md'
-
+export function Skeleton({ width = 'full', height: _height = 'sm', shape = 'rect' }: SkeletonProps) {
   return (
     <div
       className={ax({

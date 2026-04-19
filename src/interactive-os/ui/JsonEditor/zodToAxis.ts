@@ -86,7 +86,6 @@ export function resolveSchemaAt(
       )
       const picked = axis.options[dVal]
       if (!picked) return undefined
-      cur = picked
       axis = zodToAxis(picked)
     }
     if (axis.kind === 'object' && typeof seg === 'string') {

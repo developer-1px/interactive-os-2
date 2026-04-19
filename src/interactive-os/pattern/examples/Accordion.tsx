@@ -89,8 +89,8 @@ const renderItem = (
           {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           id={node.id as string}
           className={`${ax({
-              role: 'control-group',
-            layout: 'spread', surface: 'sunken', textStyle: 'body', content: 'text', interactive: 'item' })} w-full`}
+              role: 'control',
+            layout: 'spread', surface: 'action', textStyle: 'body', content: 'text', interactive: 'item' })} w-full`}
           type="button"
           data-focused={state.focused || undefined}
         >
@@ -98,7 +98,7 @@ const renderItem = (
           <ExpandIndicator expanded={state.expanded === true} />
         </button>
       </h3>
-      <div {...state.slotProps} className={ax({ textStyle: 'body', content: 'text' })}>
+      <div {...state.slotProps} className={ax({ role: 'item', textStyle: 'body', content: 'text' })}>
         {panels[node.id as string]}
       </div>
     </div>

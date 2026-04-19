@@ -79,7 +79,7 @@ function BookPill() {
   const { page, chromeVisible, currentIsFavorite, onToggleFavorite, onOpenToc, onOpenLayerOverlay, onOpenQuickOpen } = useBook()
 
   return (
-    <div className={`book-pill ${ax({ surface: 'overlay', width: 'fit', layout: 'bar' })}`} data-visible={chromeVisible}>
+    <div className={`book-pill ${ax({ role: 'control-group', surface: 'overlay', width: 'fit', layout: 'bar' })}`} data-visible={chromeVisible}>
       <Button icon variant="ghost" onClick={onOpenToc} aria-label="Open table of contents">
         <List size={14} />
       </Button>
@@ -129,10 +129,10 @@ function BookNextButton() {
 }
 
 function BookFooter() {
-  const { currentPage, totalPages, chapterName, chapterPageIndex, chapterPageCount } = useBook()
+  const { currentPage, totalPages, chapterName, chapterPageIndex, chapterPageCount, page } = useBook()
 
   return (
-    <div className={ax({ layout: 'bar', textStyle: 'caption' })}>
+    <div className={`book-page-number ${ax({ layout: 'bar', textStyle: 'caption' })}`} data-page-id={page?.id}>
       <span className={ax({ })}>{chapterName}</span>
       <span className={ax({ })}>{chapterPageIndex + 1}/{chapterPageCount}</span>
       <span className={ax({ })}>·</span>

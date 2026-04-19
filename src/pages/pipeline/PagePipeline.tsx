@@ -91,7 +91,7 @@ function MarkdownDocPreview({ path, fallback }: { path: string; fallback: string
 
   return (
     <div className={ax({ layout: 'stack' })}>
-      <span className={ax({ textStyle: 'caption', tone: 'accent' })}>{path}</span>
+      <span className={ax({ role: 'item', textStyle: 'caption', tone: 'accent' })}>{path}</span>
       <FilePreview content={content ?? fallback} filename={filename} />
     </div>
   )
@@ -175,7 +175,7 @@ export default function PagePipeline() {
           />
         </ScrollArea>
 
-        <Panel header={panelTitle} surface="display">
+        <Panel header={panelTitle} surface="base">
           <ScrollArea className={ax({ flex: '1' })}>
             <PreviewPanel content={preview} />
           </ScrollArea>

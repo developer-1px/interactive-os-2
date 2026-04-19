@@ -152,7 +152,9 @@ async function inferCreatedFromGit(relPath: string): Promise<string | null> {
       { cwd: PROJECT_ROOT, encoding: 'utf8' },
     ).trim()
     if (out && /^\d{4}-\d{2}-\d{2}/.test(out)) return out.slice(0, 10)
-  } catch {}
+  } catch {
+    // git log 실패 시 null 반환
+  }
   return null
 }
 

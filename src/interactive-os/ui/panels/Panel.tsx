@@ -1,11 +1,13 @@
 // ② 2026-04-05-ui-items-prd.md
 import type { ReactNode } from 'react'
-import { ax, type Axes } from '@styles/ax'
+import { ax } from '@styles/ax'
 import { PanelHeader } from '../PanelHeader'
+
+type PanelSurface = 'sunken' | 'base' | 'raised' | 'overlay' | 'ghost'
 
 interface PanelProps {
   header?: string
-  surface?: Axes['surface']
+  surface?: PanelSurface
   children: ReactNode
   className?: string
   /** body에 layout:'scroll' 적용. 기본 true */

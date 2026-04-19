@@ -50,7 +50,7 @@ function ExpandSection() {
           <ExpandIndicator expanded={true} variant="tree" />
         </Row>
         <Row label="interactive">
-          <div className={`${ax({ surface: 'ghost', layout: 'bar' })}`} onClick={() => setExpanded(!expanded)}>
+          <div className={`${ax({ role: 'item', surface: 'ghost', layout: 'bar' })}`} onClick={() => setExpanded(!expanded)}>
             <ExpandIndicator expanded={expanded} />
             <span className={ax({ textStyle: 'code' })}>{expanded ? 'expanded' : 'collapsed'}</span>
           </div>
@@ -137,7 +137,7 @@ function SortSection() {
         </Row>
         <Row label="interactive">
           <div
-            className={`${ax({ surface: 'ghost', layout: 'bar' })}`}
+            className={`${ax({ role: 'item', surface: 'ghost', layout: 'bar' })}`}
             onClick={() => setDir(d => d === undefined ? 'ascending' : d === 'ascending' ? 'descending' : undefined)}
           >
             <SortIndicator direction={dir} />
@@ -167,7 +167,7 @@ function ProgressSection() {
       <Row label="60%"><ProgressIndicator value={60} /></Row>
       <Row label="100%"><ProgressIndicator value={100} /></Row>
       <Row label="interactive">
-        <div className={`${ax({ surface: 'ghost', layout: 'bar' })}`} onClick={() => setValue(v => v >= 100 ? 0 : v + 20)}>
+        <div className={`${ax({ role: 'item', surface: 'ghost', layout: 'bar' })}`} onClick={() => setValue(v => v >= 100 ? 0 : v + 20)}>
           <span className={ax({ textStyle: 'code' })}>{value}%</span>
         </div>
         <ProgressIndicator value={value} />
@@ -204,7 +204,7 @@ function PageSection() {
       <Row label="5 dots, #2"><PageIndicator total={5} current={2} /></Row>
       <Row label="3 dots, #0"><PageIndicator total={3} current={0} /></Row>
       <Row label="interactive">
-        <div className={`${ax({ surface: 'ghost', layout: 'bar' })}`} onClick={() => setCurrent(c => (c + 1) % 5)}>
+        <div className={`${ax({ role: 'item', surface: 'ghost', layout: 'bar' })}`} onClick={() => setCurrent(c => (c + 1) % 5)}>
           <PageIndicator total={5} current={current} />
           <span className={ax({ textStyle: 'code' })}>page {current + 1}</span>
         </div>

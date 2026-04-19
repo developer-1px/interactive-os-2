@@ -32,7 +32,7 @@ class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: st
   static getDerivedStateFromError(err: Error) { return { error: err.message } }
   render() {
     if (this.state.error) {
-      return <div className={ax({ tone: 'danger', textStyle: 'caption' })}>Render error: {this.state.error}</div>
+      return <div className={ax({ role: 'item', tone: 'danger', textStyle: 'caption' })}>Render error: {this.state.error}</div>
     }
     return this.props.children
   }
@@ -41,7 +41,7 @@ class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: st
 function RenderBlock({ children, config }: { children: string; config?: MarkdownRendererConfig }) {
   if (!config?.parseComponent || !config?.componentRegistry) {
     return (
-      <div className={ax({ tone: 'danger', textStyle: 'caption' })}>
+      <div className={ax({ role: 'item', tone: 'danger', textStyle: 'caption' })}>
         No config provided for render block
       </div>
     )
@@ -56,7 +56,7 @@ function RenderBlock({ children, config }: { children: string; config?: Markdown
     const parsed = config.parseComponent(line)
     if (!parsed) {
       elements.push(
-        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption' })}>
+        <div key={i} className={ax({ role: 'item', tone: 'danger', textStyle: 'caption' })}>
           Parse error: {line}
         </div>
       )
@@ -65,7 +65,7 @@ function RenderBlock({ children, config }: { children: string; config?: Markdown
     const Comp = config.componentRegistry[parsed.name]
     if (!Comp) {
       elements.push(
-        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption' })}>
+        <div key={i} className={ax({ role: 'item', tone: 'danger', textStyle: 'caption' })}>
           Unknown component: {parsed.name}
         </div>
       )
@@ -83,6 +83,7 @@ function RenderBlock({ children, config }: { children: string; config?: Markdown
 
 // ② lightbox-prd.md — img/mermaid click → Lightbox
 /** YAML frontmatter를 파싱하여 data와 body로 분리한다. */
+// eslint-disable-next-line react-refresh/only-export-components
 export function parseFrontmatter(content: string): { data: Record<string, unknown>; body: string } {
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(content)
   if (!match) return { data: {}, body: content }

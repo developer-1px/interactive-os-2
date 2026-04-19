@@ -146,7 +146,7 @@ export function MillerColumns({
           {!hasPreview && focusedId && !focusedIsFile && getChildren(store, focusedId).length === 0 && (
             <div className={`${ax({
                 role: 'control-group',
-                layout: 'center', surface: 'sunken', flex: 'none', textStyle: 'caption' })} miller-column`} style={{ minWidth: COLUMN_MIN_WIDTH }}>
+                layout: 'center', surface: 'sunken', flex: 'none' })} miller-column`} style={{ minWidth: COLUMN_MIN_WIDTH }}>
               <EmptyState title="Empty" />
             </div>
           )}

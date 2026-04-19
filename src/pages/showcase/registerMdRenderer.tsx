@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- 사이드이펙트 전용 register 모듈: defineFileRenderer 호출 */
 import { useMemo } from 'react'
 import { Info } from 'lucide-react'
 import { defineFileRenderer, type FileRenderProps } from '@os/ui/fileRenderers'

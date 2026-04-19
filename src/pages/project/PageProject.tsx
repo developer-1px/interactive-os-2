@@ -5,7 +5,7 @@ import { Grid } from '@os/ui/Grid'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { StatusIndicator, ProgressIndicator } from '@os/ui/indicators'
 import type { NodeState } from '@os/pattern/types'
-import { ax, type Axes } from '@styles/ax'
+import { ax, type AxTone } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
 import { buildProjectStore, PROJECT_COLUMNS } from './projectStore'
 import type { Maturity } from './projectData'
@@ -16,20 +16,12 @@ const totalFiles = projects.reduce((sum, p) => sum + p.fileCount, 0)
 const totalOpen = projects.reduce((sum, p) => sum + p.openBacklogs, 0)
 const totalDone = projects.reduce((sum, p) => sum + p.doneBacklogs, 0)
 
-const MATURITY_TONE: Record<Maturity, Axes['tone']> = {
+const MATURITY_TONE: Record<Maturity, AxTone | undefined> = {
   Concept: undefined,
   Prototype: 'warning',
   Validated: 'accent',
   Integrated: 'success',
   Production: 'accent',
-}
-
-const MATURITY_TEXT: Record<Maturity, Axes['text']> = {
-  Concept: 'muted',
-  Prototype: undefined,
-  Validated: undefined,
-  Integrated: undefined,
-  Production: undefined,
 }
 
 const KIND_LABEL: Record<string, string> = {
@@ -44,6 +36,7 @@ const renderCell = (
   column: { key: string },
   state: NodeState,
 ) => {
+  void state
   switch (column.key) {
     case 'name': {
       const v = value as { text: string; hasP0: boolean; openBacklogs: number }
@@ -54,6 +47,7 @@ const renderCell = (
             : <StatusIndicator tone={v.openBacklogs > 0 ? 'warning' : 'success'} />
           }
           <span className={ax({
+            role: 'item',
             textStyle: 'body',
             tone: v.hasP0 ? 'danger' : undefined
           })}>
@@ -68,6 +62,7 @@ const renderCell = (
       const maturity = value as Maturity
       return (
         <span className={ax({
+          role: 'item',
           textStyle: 'caption',
           tone: MATURITY_TONE[maturity]
         })}>
@@ -90,6 +85,7 @@ const renderCell = (
         <span className={ax({ layout: 'bar' })}>
           <ProgressIndicator value={p.done} max={p.total} />
           <span className={ax({
+            role: 'item',
             textStyle: 'caption',
             tone: p.open > 0 ? 'accent' : 'success',
           })}>

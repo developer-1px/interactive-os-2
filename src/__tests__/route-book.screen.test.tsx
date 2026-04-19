@@ -71,13 +71,15 @@ describe('Book screen: Breadcrumb 표시', () => {
   it('페이지 ID가 Breadcrumb에 잘리지 않고 표시', () => {
     const { container } = renderBook('/book/overview')
     const breadcrumb = getBreadcrumb(container)
-    expect(breadcrumb).toContain('overview')
+    // Breadcrumb shows chapter name (capitalized) + page position — verify
+    // first character isn't truncated (regression guard).
+    expect(breadcrumb.toLowerCase()).toContain('overview')
   })
 
   it('중첩 경로도 첫 글자 잘리지 않음', () => {
     const { container } = renderBook('/book/plugins/useSpatialNav')
     const breadcrumb = getBreadcrumb(container)
-    expect(breadcrumb).toContain('plugins')
+    expect(breadcrumb.toLowerCase()).toContain('plugins')
   })
 })
 
@@ -87,7 +89,7 @@ describe('Book screen: Quick Open', () => {
     const { container } = renderBook()
 
     // Quick Open 닫혀있음
-    expect(container.querySelector('[data-open="true"].book-quick-open-overlay')).toBeNull()
+    expect(container.querySelector('.quick-open-dialog')).toBeNull()
 
     // Quick Open 버튼 클릭
     const btn = container.querySelector('[aria-label="Quick open"]') as HTMLElement
@@ -95,14 +97,14 @@ describe('Book screen: Quick Open', () => {
     await user.click(btn)
 
     await waitFor(() => {
-      expect(container.querySelector('[data-open="true"].book-quick-open-overlay')).toBeTruthy()
+      expect(container.querySelector('.quick-open-dialog')).toBeTruthy()
     })
 
     // Escape로 닫기
     await user.keyboard('{Escape}')
 
     await waitFor(() => {
-      expect(container.querySelector('[data-open="true"].book-quick-open-overlay')).toBeNull()
+      expect(container.querySelector('.quick-open-dialog')).toBeNull()
     })
   })
 
@@ -123,7 +125,7 @@ describe('Book screen: Quick Open', () => {
 
     await waitFor(() => {
       // Quick Open이 닫혀야 함 = 페이지 이동 성공
-      expect(container.querySelector('[data-open="true"].book-quick-open-overlay')).toBeNull()
+      expect(container.querySelector('.quick-open-dialog')).toBeNull()
     })
   })
 })
@@ -146,7 +148,7 @@ describe('Book screen: Quick Open 키보드 이동', () => {
 
     await waitFor(() => {
       // Quick Open이 닫혀야 함 = 키보드 이동 후 선택 성공
-      expect(container.querySelector('[data-open="true"].book-quick-open-overlay')).toBeNull()
+      expect(container.querySelector('.quick-open-dialog')).toBeNull()
     })
   })
 })

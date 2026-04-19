@@ -84,7 +84,7 @@ function describeType(t: ZodLike): TypeDescription {
   const def = cur._def
   if (!def) return { type: '?', isObject: false, isArrayOfObject: false }
 
-  let baseType = '?'
+  let baseType: string
   let isObject = false
   let shape: Record<string, ZodLike> | undefined
   let isArrayOfObject = false

@@ -12,7 +12,7 @@ export function ShowcaseSidebarWidget() {
     <nav className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>UI Components</PanelHeader>
       <div className={ax({ })}>
-        <Link to="/ui/progress" className={ax({ textStyle: 'caption', tone: 'accent' })}>
+        <Link to="/ui/progress" className={ax({ role: 'item', textStyle: 'caption', tone: 'accent' })}>
           Progress Dashboard
         </Link>
       </div>

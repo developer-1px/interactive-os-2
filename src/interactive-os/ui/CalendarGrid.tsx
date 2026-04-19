@@ -27,7 +27,7 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <div
     {...props}
-    className={ax({ interactive: 'item', role: 'control', content: 'text' })}
+    className={ax({ role: 'cell', surface: 'ghost', interactive: 'item', content: 'text' })}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     onClick={onClick}
@@ -72,7 +72,7 @@ export function CalendarGrid({
       {...(grid.containerProps as React.HTMLAttributes<HTMLDivElement>)}
     >
       <div role="row">
-        {DAYS.map(d => <div key={d} role="columnheader" className={ax({ role: 'control', layout: 'center', textStyle: 'caption' })}>{d}</div>)}
+        {DAYS.map(d => <div key={d} role="columnheader" className={ax({ role: 'cell', surface: 'ghost', layout: 'center', textStyle: 'caption' })}>{d}</div>)}
       </div>
       {rows.map((row, ri) => (
         <div key={ri} role="row">

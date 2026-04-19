@@ -173,8 +173,8 @@ export default function StoreInspectorDemo() {
                   <span className={ax({ })}>#{entry.seq}</span>{' '}
                   {entry.kind === 'unhandled-key' ? (
                     <>
-                      <span className={ax({ tone: 'warning-dim' })}>unhandled</span>{' '}
-                      <span className={ax({ tone: 'warning-dim' })}>| {formatDiffSummary(entry)}</span>
+                      <span className={ax({ role: 'item', tone: 'warning-dim' })}>unhandled</span>{' '}
+                      <span className={ax({ role: 'item', tone: 'warning-dim' })}>| {formatDiffSummary(entry)}</span>
                     </>
                   ) : (
                     <>

@@ -35,7 +35,7 @@ const renderMeter = (
       <span className={`${ax({
           role: 'control-group',
         surface: 'sunken', flex: '1', placement: 'relative' })}`}>
-        <span className={`${ax({ tone: 'accent' })} h-full`} style={{ width: `${pct}%` }} />
+        <span className={`${ax({ role: 'item', tone: 'accent' })} h-full`} style={{ width: `${pct}%` }} />
       </span>
       <span className={`${ax({ })} text-right tabular-nums`}>{value}%</span>
     </div>

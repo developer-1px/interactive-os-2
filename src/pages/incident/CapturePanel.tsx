@@ -18,16 +18,16 @@ export function CapturePanel({ selectedEventId }: { selectedEventId: string | nu
       {capture ? (
         <div className={ax({ layout: 'stack', flex: '1' })}>
           <div className={`incident-capture-comparison grid ${ax({ })}`}>
-            <div className={ax({ surface: 'display', layout: 'stack' })}>
+            <div className={ax({ role: 'cell', surface: 'display', layout: 'stack' })}>
               <div className={ax({ textStyle: 'overline' })}>Before</div>
               <span className={ax({ textStyle: 'code' })}>{capture.before}</span>
             </div>
-            <div className={`${ax({ surface: 'display', layout: 'stack' })} incident-capture-changed`}>
+            <div className={`${ax({ role: 'cell', surface: 'display', layout: 'stack' })} incident-capture-changed`}>
               <div className={ax({ textStyle: 'overline' })}>After</div>
               <span className={`${ax({ textStyle: 'code' })} incident-capture-text`}>{capture.after}</span>
             </div>
           </div>
-          <div className={ax({ layout: 'bar', textStyle: 'caption', tone: 'accent' })}>
+          <div className={ax({ role: 'item', layout: 'bar', textStyle: 'caption', tone: 'accent' })}>
             <Bot size={12} />
             <span>{capture.aiNote}</span>
           </div>

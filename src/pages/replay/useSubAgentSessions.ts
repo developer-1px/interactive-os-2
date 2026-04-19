@@ -31,6 +31,7 @@ export function useSubAgentSessions(args: {
   const mtimeCacheRef = useRef<Map<string, number>>(new Map())
   // keep latest parentEvents for async fetches without re-triggering on every event change
   const parentEventsRef = useRef(parentEvents)
+  // eslint-disable-next-line react-hooks/refs -- idempotent write tracking latest prop for async fetch closure
   parentEventsRef.current = parentEvents
 
   // fetch/merge effect driven by subagentFiles identity (agentHash+mtime signature)

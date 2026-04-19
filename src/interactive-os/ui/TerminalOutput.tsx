@@ -11,11 +11,11 @@ export function TerminalOutput({ command, output }: TerminalOutputProps) {
   return (
     <div className={ax({
         role: 'control-group',
-        layout: 'stack', textStyle: 'code', flex: '1', surface: 'sunken',  })}>
+        layout: 'stack', flex: '1', surface: 'sunken' })}>
       <div className={ax({
           role: 'control-group',
         placement: 'sticky', surface: 'sunken' })}>
-        <span className={ax({ tone: 'success', flex: 'none' })}>$</span>
+        <span className={ax({ role: 'item', tone: 'success', flex: 'none' })}>$</span>
         <span className={ax({  })} style={{ wordBreak: 'break-all' }}>{command}</span>
       </div>
       <div className={ax({ })} style={{ wordBreak: 'break-all' }}>{output || '(no output)'}</div>

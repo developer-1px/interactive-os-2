@@ -77,7 +77,7 @@ const renderRow = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })} whitespace-nowrap outline-none cursor-default`}
+      className={`${ax({ role: 'item', layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })} whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
