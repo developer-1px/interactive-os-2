@@ -28,7 +28,7 @@ interface EditStats {
  * @invariant beats[last].kind === 'commit'
  */
 export function toBeats({ sessionId, agent, title, repo, messages }: ToBeatsArgs): BeatSession {
-  const beats: Beat[] = []
+  const raw: Beat[] = []
   const stats: EditStats = { edits: 0, additions: 0, deletions: 0 }
   let subtitle: string | undefined
 
@@ -36,22 +36,48 @@ export function toBeats({ sessionId, agent, title, repo, messages }: ToBeatsArgs
     if (msg.role === 'assistant') {
       const t = lastTextOf(msg.blocks)
       if (t) subtitle = t
-      // timeline 변환 결과: tool_group block도 assistant role로 옴
       for (const b of msg.blocks) {
         if (b.type === 'tool_group' && 'data' in b) {
           const group = b.data as { events: TimelineEvent[] }
-          beats.push(...extractToolBeatsFromEvents(group.events, stats, subtitle))
+          raw.push(...extractToolBeatsFromEvents(group.events, stats, subtitle))
         }
       }
       continue
     }
     if (msg.role === 'system') {
-      beats.push(...extractToolBeats(msg.blocks, stats, subtitle))
+      raw.push(...extractToolBeats(msg.blocks, stats, subtitle))
     }
   }
 
+  // Read beats는 모두 모아서 1개로 (사용자 요구)
+  const beats = collapseReads(raw)
   beats.push({ ...synthesizeCommitBeat(messages, stats), subtitle })
   return { id: sessionId, agent, title, repo, beats }
+}
+
+/** 연속/누적된 ReadBeat을 1개의 ReadBeat으로 collapse — 파일 경로 list로 변환 */
+function collapseReads(beats: Beat[]): Beat[] {
+  const out: Beat[] = []
+  const reads: ReadBeat[] = []
+  const flushReads = () => {
+    if (reads.length === 0) return
+    const files = [...new Set(reads.map(r => r.file))]
+    const lastSubtitle = reads[reads.length - 1].subtitle
+    out.push({
+      kind: 'read',
+      duration: 5000,
+      file: `${files.length} file${files.length > 1 ? 's' : ''} read`,
+      content: files.join('\n'),
+      subtitle: lastSubtitle,
+    })
+    reads.length = 0
+  }
+  for (const b of beats) {
+    if (b.kind === 'read') reads.push(b)
+    else { flushReads(); out.push(b) }
+  }
+  flushReads()
+  return out
 }
 
 // ── Helpers ──────────────────────────────────────────────
@@ -110,13 +136,13 @@ function toToolBeat(
 
 function toReadBeat(input: Record<string, unknown>, result: string): ReadBeat {
   const file = (input.file_path as string) ?? (input.path as string) ?? ''
-  return { kind: 'read', duration: 4500, file, content: result || '' }
+  return { kind: 'read', duration: 2000, file, content: result || '' }
 }
 
 function toTerminalBeat(input: Record<string, unknown>, result: string): TerminalBeat {
   return {
     kind: 'terminal',
-    duration: 5500,
+    duration: 2500,
     command: (input.command as string) ?? '',
     lines: parseTerminalOutput(result),
   }
@@ -135,7 +161,7 @@ function toDiffBeat(
   stats.edits += 1
   stats.additions += newStr ? newStr.split('\n').length : 0
   stats.deletions += oldStr ? oldStr.split('\n').length : 0
-  return { kind: 'diff', duration: 8000, file, preContent: oldStr, oldStr, newStr }
+  return { kind: 'diff', duration: 3500, file, preContent: oldStr, oldStr, newStr }
 }
 
 /** 첫 user prompt + 마지막 assistant text + 누적 stats → CommitBeat 합성 */
@@ -153,7 +179,7 @@ function synthesizeCommitBeat(messages: ChatMessage[], stats: EditStats): Commit
 
   return {
     kind: 'commit',
-    duration: 6000,
+    duration: 4000,
     message,
     body: parsed.body || assistantText,
     hash: 'draft',
