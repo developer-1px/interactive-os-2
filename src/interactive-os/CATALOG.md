@@ -50,7 +50,7 @@ useAria, useAriaZone, useAriaView, useControlledAria, useCommand, useCommandBind
 
 ## ui
 
-Accordion, Alert, AlertDialog, Avatar, Badge, Breadcrumb, Button, ButtonToggle, ButtonToolbar, CalendarGrid, Camera, Card, Carousel, Checkbox, CheckboxMixed, CodeViewer, Combobox, Composer, DatePicker, Dialog, DisclosureGroup, Divider, Drawer, EmptyState, Feed, FileIcon, FilePreview, FileTreeView, FileViewer, FileViewerModal, FilterBar, FlatLayout, Form, FrontmatterCard, Grid, GroupHeader, Kanban, Kbd, Lightbox, Link, ListBox, ListBoxGrouped, MarkdownViewer, MenuActivedescendant, MenuButton, MenuList, Menubar, Meter, MillerColumns, NavList, Pagination, PanelHeader, PatternDemo, PipelineGrid, Popover, Progress, PropertyRow, QuickOpen, RadioGroup, RadioGroupActivedescendant, Rating, RouteModal, ScrollArea, SearchResults, Select, SelectionOverlay, Skeleton, Slider, Spinbutton, SpatialView, SplitPane, SpreadReader, Stepper, StreamFeed, SwitchGroup, TabGroup, TabList, Table, TerminalOutput, Textarea, TextInput, Timeline, Toaster, TocNavList, Toggle, ToggleGroup, Toolbar, Tooltip, TreeGrid, TreeView, ViewerTabList, WindowSplitter, Workspace, WriterTreeGrid
+Accordion, Alert, AlertDialog, Avatar, Badge, Breadcrumb, Button, ButtonToggle, ButtonToolbar, CalendarGrid, Camera, Card, Carousel, Checkbox, CheckboxMixed, CodeViewer, Combobox, Composer, DatePicker, Dialog, DisclosureGroup, Divider, Drawer, EmptyState, Feed, FileIcon, FilePreview, FileTreeView, FileViewer, FileViewerModal, FilterBar, FlatLayout, Form, FrontmatterCard, Grid, GroupHeader, JsonEditor, Kanban, Kbd, Lightbox, Link, ListBox, ListBoxGrouped, MarkdownViewer, MenuActivedescendant, MenuButton, MenuList, Menubar, Meter, MillerColumns, NavList, Pagination, PanelHeader, PatternDemo, PipelineGrid, Popover, Progress, PropertyRow, QuickOpen, RadioGroup, RadioGroupActivedescendant, Rating, RouteModal, ScrollArea, SearchResults, Select, SelectionOverlay, Skeleton, Slider, Spinbutton, SpatialView, SplitPane, SpreadReader, Stepper, StreamFeed, SwitchGroup, TabGroup, TabList, Table, TerminalOutput, Textarea, TextInput, Timeline, Toaster, TocNavList, Toggle, ToggleGroup, Toolbar, Tooltip, TreeGrid, TreeView, ViewerTabList, WindowSplitter, Workspace, WriterTreeGrid
 
 `ui/{Name}.tsx`
 
@@ -83,3 +83,9 @@ Panel, SidePanel, SubmenuPanel
 BadgeCell, CodeCell, DocLinkCell, EditableCell, PhaseCell, SearchableCell, SummaryCell, TextCell, TierCell, VisualCell
 
 `ui/cells/{Name}.tsx`
+
+## plugins
+
+autoscroll, cellDragSelect, cellEdit, clipboard, combobox, crud, dnd, dragResize, edit, focusHistory, focusRecovery, form, history, rename, scope, scroll, search, spatial, typeahead, urlSync, useUrlSync, useSpatialNav, useVirtualScroll, virtualScroll, workspaceStore, zodSchema
+
+`plugins/{name}.ts`
