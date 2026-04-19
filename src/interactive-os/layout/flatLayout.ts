@@ -6,16 +6,21 @@ import { createStore } from '../store/createStore'
 
 // ── Layout node types ─────────────────────────────────
 
-/** 모든 레이아웃 노드의 공통 속성 — 배치 + 가시성 + 스크롤 오너십.
- *  surface/재질은 ax()·테마의 책임.
- *  스크롤은 defineLayout의 1급 축 — scroll 필드 외에는 pages·widget·module.css에서
- *  overflow를 직접 선언하지 않는다(단일 SSOT). */
+/** 모든 레이아웃 노드의 공통 속성 — 배치 + 가시성 + 스크롤 + 재질 의도.
+ *  스크롤/재질은 defineLayout의 1급 축 — 각 필드 외에는 pages·widget·module.css에서
+ *  overflow/shape/surface를 직접 선언하지 않는다(단일 SSOT). */
 export interface LayoutBase extends Record<string, unknown> {
   hidden?: boolean
   padding?: 'xs' | 'sm' | 'md' | 'lg'
   /** 이 노드를 스크롤 컨테이너로 선언. 미지정 = clip (사일런트 overflow 차단).
    *  'y' 세로, 'x' 가로. */
   scroll?: 'y' | 'x'
+  /** 이 컨테이너가 담을 자식의 재질 의도. SSOT — widget은 island/glass 여부를 몰라도 됨.
+   *  - 'island': 자식을 raised island로 감싸고 컨테이너에 ground 여백 제공
+   *  - 'glass':  자식을 overlay glass로 감싸고 blur clearance 제공
+   *  - 'dense':  꽉 채움, gap 최소
+   *  미지정 = 기본 (spacing preset 기본값). */
+  holds?: 'island' | 'glass' | 'dense'
 }
 
 export interface SplitNode extends LayoutBase {

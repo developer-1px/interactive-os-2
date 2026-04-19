@@ -15,12 +15,8 @@ import type { KindGroup } from './finderFilter'
 
 export function FinderSidebarWidget() {
   const { sidebarData, onSidebarActivate } = useFinder()
-  // 사이드바 전체가 하나의 island — control-group.raised preset이 shape:island + padding + gap 자동 주입
-  return (
-    <div className={ax({ role: 'control-group', surface: 'raised', layout: 'stack', flex: '1' })}>
-      <NavList data={sidebarData} onActivate={onSidebarActivate} aria-label="Sidebar" />
-    </div>
-  )
+  // island 재질은 부모 split(holds:'island')이 SSOT로 선언. widget은 내용만 책임.
+  return <NavList data={sidebarData} onActivate={onSidebarActivate} aria-label="Sidebar" />
 }
 
 // ── Toolbar ──

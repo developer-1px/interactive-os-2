@@ -13,6 +13,7 @@ import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, 
 import { resolveContainerPreset } from '@os/layout/containerPreset'
 import { layoutCommands, FOCUS_STATE_ID, type FocusStateData } from '@os/layout/layoutCommands'
 import { ax, type AxPlacement } from '@styles/ax'
+import type { AxPadding } from '@styles/axPrivate'
 import styles from './FlatLayout.module.css'
 import { NavLayoutContext } from './NavLayoutContext'
 import { SplitPane } from './SplitPane'
@@ -96,6 +97,56 @@ function resolveScrollLayout<T extends AxLayoutCore>(scroll: ScrollField, fallba
   return fallback
 }
 
+// ── Container intent cascade ──────────────────────────
+// 부모 split/stack이 holds를 선언하면 자식 widget renderer가 context로 pull하여
+// slot wrapper에 shape/surface를 자동 적용. SSOT = defineLayout의 parent.holds.
+// widget 컴포넌트는 재질 질문 자체를 하지 않는다.
+
+type HoldsField = 'island' | 'glass' | 'dense' | undefined
+
+const ContainerIntentContext = React.createContext<{ holds: HoldsField }>({ holds: undefined })
+
+// ── Widget slot — 부모의 holds를 context로 읽어 shape/surface 자동 주입 ──
+// widget 컴포넌트는 재질을 모르고, slot wrapper가 parent intent 기반으로 장식.
+
+// role+surface로 선언. shape은 role preset이 자동 주입 (Private 축이므로 직접 지정 X).
+type HoldsAxSnippet =
+  | { role: 'control-group'; surface: 'raised' }
+  | { role: 'control-group'; surface: 'overlay' }
+  | Record<string, never>
+
+function holdsToSlotAx(holds: HoldsField): HoldsAxSnippet {
+  if (holds === 'island') return { role: 'control-group', surface: 'raised' }
+  if (holds === 'glass')  return { role: 'control-group', surface: 'overlay' }
+  return {}
+}
+
+interface WidgetSlotProps {
+  nodeId: string
+  refCallback: (id: string) => (el: HTMLElement | null) => void
+  layout: 'scroll' | 'scroll-x' | 'fill' | 'clip'
+  padding: AxPadding | undefined
+  isSplitChild: boolean
+  Component: React.ComponentType<Record<string, unknown>>
+  componentProps: Record<string, unknown>
+  source: string | undefined
+  children?: React.ReactNode
+}
+
+function WidgetSlot({ nodeId, refCallback, layout, padding, isSplitChild, Component, componentProps, source, children }: WidgetSlotProps) {
+  const { holds } = React.useContext(ContainerIntentContext)
+  const slotAx = holdsToSlotAx(holds)
+  // SSOT: widget은 role/surface/shape을 선언하지 않음. slot wrapper가 부모 holds로 자동 주입.
+  return (
+    <div
+      ref={refCallback(nodeId)}
+      className={`${ax({ width: 'full', layout, ...(padding ? { padding } : {}), ...slotAx })} ${isSplitChild ? styles.splitChild : ''}`}
+    >
+      <Component {...componentProps} source={source}>{children}</Component>
+    </div>
+  )
+}
+
 // ── OCP renderer map ──────────────────────────────────
 
 const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactNode> = {
@@ -105,9 +156,10 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const childIds = getChildren(store, nodeId)
     const isHorizontal = node.direction === 'horizontal'
 
-    // Container preset — root split만 바깥 padding 소유
-    const preset = resolveContainerPreset('split', parentType ? 'nested' : 'root')
+    // Container preset — (type × variant × holds). holds는 자식의 재질 의도 SSOT.
+    const preset = resolveContainerPreset('split', parentType ? 'nested' : 'root', node.holds)
     const padding = node.padding ?? preset.padding
+    const holdsAttr = node.holds ? { 'data-holds': node.holds } : {}
 
     // ② flatlayout-resizable-split-prd.md — resizable: false → 고정 비율
     // layout: 'fill'/'row-fill'을 써서 overflow:hidden + flex:1 + min-0으로 자식 panes를
@@ -115,26 +167,28 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     // 못 풀려 content natural height로 팽창 → 내부 scroll 체인 끊김.
     if (node.resizable === false) {
       return (
-        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row-fill' : 'fill', width: 'full', ...(padding ? { padding } : {}) })}>
-          {childIds.map((childId, i) => {
-            const size = node.sizes[i]
-            const isFlex = size === 'flex' || size === undefined
-            const isAuto = size === 'auto'
-            // pane 자체가 flex container여야 자식(widget/nested split)의 flex:1이
-            // 부모 높이에 캡된다. layout:'stack' (flex-column) + inline flex로 sizing.
-            const style: React.CSSProperties = isFlex
-              ? { flex: 1, flexBasis: 'auto', minWidth: 0, minHeight: 0 }
-              : isAuto
-                ? { flex: '0 0 auto', flexBasis: 'auto', minWidth: 0, minHeight: 0 }
-                : { flex: '0 0 auto', flexBasis: `${size * 100}%`, minWidth: 0, minHeight: 0 }
+        <ContainerIntentContext.Provider value={{ holds: node.holds }}>
+          <div ref={refCallback(nodeId)} {...holdsAttr} className={ax({ layout: isHorizontal ? 'row-fill' : 'fill', width: 'full', ...(padding ? { padding } : {}) })}>
+            {childIds.map((childId, i) => {
+              const size = node.sizes[i]
+              const isFlex = size === 'flex' || size === undefined
+              const isAuto = size === 'auto'
+              // pane 자체가 flex container여야 자식(widget/nested split)의 flex:1이
+              // 부모 높이에 캡된다. layout:'stack' (flex-column) + inline flex로 sizing.
+              const style: React.CSSProperties = isFlex
+                ? { flex: 1, flexBasis: 'auto', minWidth: 0, minHeight: 0 }
+                : isAuto
+                  ? { flex: '0 0 auto', flexBasis: 'auto', minWidth: 0, minHeight: 0 }
+                  : { flex: '0 0 auto', flexBasis: `${size * 100}%`, minWidth: 0, minHeight: 0 }
 
-            return (
-              <div key={childId} className={ax({ layout: 'stack' })} style={style}>
-                {renderNode(childId, 'split')}
-              </div>
-            )
-          })}
-        </div>
+              return (
+                <div key={childId} className={ax({ layout: 'stack' })} style={style}>
+                  {renderNode(childId, 'split')}
+                </div>
+              )
+            })}
+          </div>
+        </ContainerIntentContext.Provider>
       )
     }
 
@@ -144,11 +198,13 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     }
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ flex: '1', layout: 'fill', ...(padding ? { padding } : {}) })}>
-        <SplitPane direction={node.direction} sizes={node.sizes} onResize={handleResize}>
-          {childIds.map((childId) => renderNode(childId, 'split'))}
-        </SplitPane>
-      </div>
+      <ContainerIntentContext.Provider value={{ holds: node.holds }}>
+        <div ref={refCallback(nodeId)} {...holdsAttr} className={ax({ flex: '1', layout: 'fill', ...(padding ? { padding } : {}) })}>
+          <SplitPane direction={node.direction} sizes={node.sizes} onResize={handleResize}>
+            {childIds.map((childId) => renderNode(childId, 'split'))}
+          </SplitPane>
+        </div>
+      </ContainerIntentContext.Provider>
     )
   },
 
@@ -156,17 +212,20 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const node = getEntityData<StackNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
-    const preset = resolveContainerPreset('stack')
+    const preset = resolveContainerPreset('stack', undefined, node.holds)
     const gap = node.gap ?? preset.gap
     const padding = node.padding ?? preset.padding
     const layout = resolveScrollLayout(node.scroll, 'stack')
+    const holdsAttr = node.holds ? { 'data-holds': node.holds } : {}
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', flex: '1', ...(gap ? { gap } : {}), ...(padding ? { padding } : {}) })}>
-        {childIds.map((childId) => (
-          <React.Fragment key={childId}>{renderNode(childId, 'stack')}</React.Fragment>
-        ))}
-      </div>
+      <ContainerIntentContext.Provider value={{ holds: node.holds }}>
+        <div ref={refCallback(nodeId)} {...holdsAttr} className={ax({ layout, width: 'full', flex: '1', ...(gap ? { gap } : {}), ...(padding ? { padding } : {}) })}>
+          {childIds.map((childId) => (
+            <React.Fragment key={childId}>{renderNode(childId, 'stack')}</React.Fragment>
+          ))}
+        </div>
+      </ContainerIntentContext.Provider>
     )
   },
 
@@ -401,11 +460,16 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
                  : fillSlot ? 'fill' as const
                  : 'clip' as const
 
-    return (
-      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', layout, ...(padding ? { padding } : {}) })} ${isSplitChild ? styles.splitChild : ''}`}>
-        <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
-      </div>
-    )
+    return <WidgetSlot
+      nodeId={nodeId}
+      refCallback={refCallback}
+      layout={layout}
+      padding={padding}
+      isSplitChild={isSplitChild}
+      Component={Component}
+      componentProps={node.props ?? {}}
+      source={node.source}
+    >{children}</WidgetSlot>
   },
 }
 

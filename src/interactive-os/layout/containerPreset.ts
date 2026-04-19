@@ -18,11 +18,16 @@ export type ContainerType =
   | 'miller.root'  // MillerColumns 바깥 컨테이너
   | 'miller.column' // MillerColumns 각 컬럼
 
-export type ContainerVariant = 'root' | 'nested' | 'island' | 'overlay'
+/** 구조 variant (DOM 위치) */
+export type ContainerVariant = 'root' | 'nested' | 'overlay'
+/** 재질 의도 (holds 축) — 자식의 재질에 따라 spacing을 다르게 줌 */
+export type ContainerHolds = 'island' | 'glass' | 'dense'
 
 export type ContainerPresetKey =
   | ContainerType
   | `${ContainerType}.${ContainerVariant}`
+  | `${ContainerType}.${ContainerHolds}`
+  | `${ContainerType}.${ContainerVariant}.${ContainerHolds}`
 
 export interface ContainerPreset {
   padding?: AxPadding
@@ -40,40 +45,66 @@ export interface ContainerPreset {
  * - widget은 기본값 없음 — 위젯 내부가 자체 padding 소유.
  */
 export const containerPresetTable: Partial<Record<ContainerPresetKey, ContainerPreset>> = {
-  // Split — island가 pane 전체를 채우고 pane 간 separator가 gap 역할.
-  // 외부 padding 불필요 — island 경계 = pane 경계, 수직 정렬 자연스러움.
-  'split.root':    {},
-  'split.nested':  {},
+  // ── Split ──
+  // 기본: 외부 padding 없음 — pane 경계가 그대로 자리잡음.
+  'split.root':          {},
+  'split.nested':        {},
+  // holds:'island' — 자식이 island로 떠있음. 바깥 ground 여백(sm) 필수.
+  'split.root.island':   { padding: 'sm' },
+  // holds:'glass' — overlay glass blur clearance (lg).
+  'split.root.glass':    { padding: 'lg' },
+  // holds:'dense' — 여백 없음 (기본과 동일).
+  'split.root.dense':    {},
 
-  // Stack — 기본 gap md (FlatLayout stack 렌더러 기본값 공식화)
+  // ── Stack ──
+  // 기본: gap md
   'stack':         { gap: 'md' },
+  // holds:'island' — island들 사이 gap sm + 컨테이너 padding sm.
+  'stack.island':  { padding: 'sm', gap: 'sm' },
+  'stack.glass':   { padding: 'lg', gap: 'lg' },
+  'stack.dense':   { gap: 'xs' },
 
-  // Bar — toolbar island들 사이 gap (control-group 간격)
+  // ── Bar ──
   'bar':           { gap: 'sm' },
+  'bar.island':    { padding: 'xs', gap: 'sm' },
+  'bar.dense':     { gap: 'xs' },
 
-  // Grid
+  // ── Grid ──
   'grid':          { gap: 'md' },
+  'grid.island':   { padding: 'sm', gap: 'sm' },
+  'grid.dense':    { gap: 'xs' },
 
-  // Widget — 기본값 없음 (위젯 내부가 소유). island는 pane 전체를 채우고
-  // 내부 자체 스크롤을 관리한다. wrapper padding 없음 — island 경계 = pane 경계.
+  // ── Widget ──
+  // 기본값 없음 — 위젯 내부가 자체 padding 소유. wrapper padding 없음.
   'widget':        {},
-  'widget.island': {},
   'widget.overlay': {},
 
-  // Miller
+  // ── Miller ──
   'miller.root':   { gap: 'sm' },
   'miller.column': { padding: 'xs', gap: 'xs' },
 }
 
 /**
  * 컨테이너 preset 조회.
+ * 우선순위: type.variant.holds > type.holds > type.variant > type
+ *
  * @param type 컨테이너 타입
- * @param variant optional variant (root/nested) — 미지정 시 type 단독 키 조회
+ * @param variant optional 구조 variant (root/nested)
+ * @param holds optional 재질 의도 (island/glass/dense)
  */
 export function resolveContainerPreset(
   type: ContainerType,
   variant?: ContainerVariant,
+  holds?: ContainerHolds,
 ): ContainerPreset {
+  if (variant && holds) {
+    const hit = containerPresetTable[`${type}.${variant}.${holds}` as ContainerPresetKey]
+    if (hit) return hit
+  }
+  if (holds) {
+    const hit = containerPresetTable[`${type}.${holds}` as ContainerPresetKey]
+    if (hit) return hit
+  }
   if (variant) {
     const hit = containerPresetTable[`${type}.${variant}` as ContainerPresetKey]
     if (hit) return hit
