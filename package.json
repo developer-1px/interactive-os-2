@@ -72,6 +72,8 @@
     "baseline:show": "cat ax-baseline.json",
     "baseline:save": "node scripts/saveBaseline.mjs",
     "baseline:compare": "node scripts/compareToBaseline.mjs",
+    "baseline:ci": "node scripts/saveCiBaseline.mjs",
+    "check:ci-baseline": "node scripts/checkCiBaseline.mjs",
     "scan:violations": "node scripts/scanOsViolations.mjs",
     "screenshot": "node scripts/screenshot.mjs",
     "features": "node scripts/features-dashboard.mjs",
@@ -124,8 +126,10 @@
     "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "shiki": "^4.0.2",
+    "simple-git-hooks": "^2.13.1",
     "stylelint": "^17.6.0",
     "stylelint-config-standard": "^40.0.0",
+    "ts-morph": "^28.0.0",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "~6.0.2",
@@ -153,5 +157,8 @@
       "docs/**/*.mdx",
       "vite-plugins/component-inspector/**"
     ]
+  },
+  "simple-git-hooks": {
+    "pre-push": "pnpm -s check:ci-baseline"
   }
 }
