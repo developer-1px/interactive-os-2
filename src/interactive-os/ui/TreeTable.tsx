@@ -69,9 +69,7 @@ export function TreeTable({
             if (i === 0) {
               return (
                 <span key={col.key} className={ax({ layout: 'bar' })} style={{ paddingInlineStart: `calc(${depth} * var(--space-md))` }}>
-                  {hasChildren
-                    ? <ExpandIndicator expanded={state.expanded} hasChildren variant="tree" />
-                    : depth > 0 && <span className={ax({ flex: 'none' })} style={{ width: 'var(--space-md)' }} />}
+                  <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
                   {renderCell(value, col, state, d)}
                 </span>
               )
@@ -88,7 +86,7 @@ export function TreeTable({
     <div className={ax({ layout: 'table' })} style={gridStyle} role="presentation">
       {header && (
         <div role="row" className={ax({ placement: 'sticky' })}>
-          {columns.map((col) => (
+          {columns.map((col, i) => (
             <div key={col.key} role="columnheader">
               <button
                 type="button"
@@ -96,6 +94,7 @@ export function TreeTable({
                 onClick={onSortColumn ? () => onSortColumn(col.key) : undefined}
                 disabled={!onSortColumn}
               >
+                {i === 0 && <ExpandIndicator hasChildren={false} variant="tree" />}
                 {col.header ?? col.key}
                 {sortKey === col.key && <SortIndicator direction={sortDir === 'asc' ? 'ascending' : 'descending'} />}
               </button>
