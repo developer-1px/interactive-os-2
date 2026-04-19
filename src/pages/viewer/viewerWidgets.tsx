@@ -54,8 +54,10 @@ export function ViewerTreeGridWidget() {
     return null
   }
 
+  // outer FlatLayout node가 scroll:'y'로 scroll container를 소유 — widget은 overflow 관여 안 함.
+  // .ly-fill은 overflow:hidden이어서 외부 scroll 체인을 끊으므로 .ly-stack 사용.
   return (
-    <div className={ax({ layout: 'fill', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <FileTreeGrid
         data={listStore}
         onChange={onChange}

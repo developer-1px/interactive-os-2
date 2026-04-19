@@ -490,8 +490,11 @@ export function FlatLayout({ id: propId, data, registry, plugins: extraPlugins, 
 
   return (
     <FlatLayoutContext.Provider value={layoutCtx}>
+      {/* 앱 모드: fill로 부모(page-content .ly-scroll)의 flex-column 안에서 viewport 높이에 캡.
+          내부 split/widget이 그 안에서 배분·scroll 관리. clip으로 두면 flex/height 제약이 없어
+          내부 overflow가 조용히 숨겨지고 pane-level scroll 체인이 끊긴다. */}
       <div {...aria.containerProps} className={ax(isAppMode
-        ? { layout: 'clip', width: 'full' }
+        ? { layout: 'fill', width: 'full' }
         : { layout: 'scroll', width: 'full', flex: '1' }
       )}>
         {rootIds.map((id) => (
