@@ -79,11 +79,8 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
     let raf2 = 0
     const raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => {
-        const lineEl = container.querySelector<HTMLElement>(`[data-line="${lineNumber}"]`)
-        if (lineEl) {
-          const target = lineEl.offsetTop - container.clientHeight / 2 + lineEl.clientHeight / 2
-          container.scrollTop = Math.max(0, target)
-        }
+        container.querySelector<HTMLElement>(`[data-line="${lineNumber}"]`)
+          ?.scrollIntoView({ block: 'center' })
       })
     })
     return () => {
