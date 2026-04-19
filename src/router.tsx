@@ -29,6 +29,7 @@ export const router = createBrowserRouter([
       { path: '/chat/entities', lazy: () => import('./pages/chat/PageChatEntities').then(m => ({ Component: m.default })) },
       { path: '/cmux/preview', lazy: () => import('./pages/cmux-preview/PageCmuxPreview').then(m => ({ Component: m.default })) },
       { path: '/replay/raw', lazy: () => import('./pages/replay/PageReplayRaw').then(m => ({ Component: m.default })) },
+      { path: '/replay/live', lazy: () => import('./pages/replay/PageReplayLive').then(m => ({ Component: m.default })) },
       { path: '/replay/inspect', lazy: () => import('./pages/replay/PageReplayInspect').then(m => ({ Component: m.default })) },
       { path: '/replay', lazy: () => import('./pages/replay/PageReplay').then(m => ({ Component: m.default })) },
       { path: '/i18n', lazy: () => import('./pages/i18n/PageI18nEditor').then(m => ({ Component: m.default })) },
