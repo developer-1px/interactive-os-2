@@ -311,3 +311,115 @@ ax() 축으로 표현 불가능한 CSS만 module.css에 작성한다. 예: 복�
 | padding/margin 직접 값 | ax() padding/gap 축 |
 | background/color 직접 값 | ax() surface/tone/text 축 |
 | position/inset | ax() placement 축 |
+
+---
+
+## 5. Token Hierarchy — 4계층 모델
+
+ax 축은 평면적으로 24개지만, **co-occurrence 패턴**과 **consistency requirement** 렌즈로 보면 **4계층**이 드러난다. 이 위계는 "누가 누구를 결정하는가"의 인과 방향이다.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ L0 — Theme Primitives (앱 공통)                           │
+│                                                          │
+│ 모든 컴포넌트가 공유하는 루트 토큰 번들. :root 공급.         │
+│                                                          │
+│ ├─ Color palette    (accent/neutral/success/danger/…)   │
+│ ├─ Type scale       (hero→overline 9단 × 5 속성)         │
+│ ├─ Depth ladder     (sunken/base/raised/overlay)        │
+│ ├─ Radius language  (7단 스케일)                         │
+│ ├─ Motion profile   (duration + easing)                 │
+│ ├─ Space scale      (xs~2xl)                            │
+│ └─ Density          (잠재 — 미구현)                       │
+│                                                          │
+│ 교체 단위: theme="light" | "dark" | "lifted" 등           │
+└─────────────────────────────────────────────────────────┘
+                    ↓ CSS cascade
+┌─────────────────────────────────────────────────────────┐
+│ L1 — Zone Bundles (구역 컨텍스트)                         │
+│                                                          │
+│ 부모 ax() 선언 → 자식 자동 상속. 구역 단위 일관성.           │
+│                                                          │
+│ ├─ Band Zone    : textStyle → --cs-h/py/px cascade      │
+│ ├─ Surface Zone : surface → --_bg/fg + --depth-* cascade│
+│ └─ Pane Zone    : .ax-interactive → focus-within        │
+└─────────────────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────────────────┐
+│ L2 — Component Bundles (개별 부품 축)                     │
+│                                                          │
+│ ax() 호출 시 지정. 축 하나 = 속성 번들.                     │
+│                                                          │
+│ role / surface / textStyle / content / interactive /    │
+│ tone / layout / placement / width / flex / aspect / clamp│
+└─────────────────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────────────────┐
+│ L3 — Atomic (Private, 외부 비노출)                        │
+│                                                          │
+│ ├─ padding  = textStyle(cs-py) × content(pd-ratio)      │
+│ ├─ gap      = textStyle(cs-gap)                         │
+│ ├─ shape/border/motion = rolePreset 주입                 │
+│ └─ icon/square         = 직접 요소 크기                   │
+│                                                          │
+│ 외부 직접 경로: ax.raw() 단일 escape hatch               │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 5.1 승격 원리
+
+**"같이 다님"이 Level 승격 신호**:
+- 2개 이상 토큰이 **같은 변경 단위로 움직이면** 번들로 승격
+- 예: `--font-size` + `--cs-h` + `--cs-py` + `--cs-px` + weight + family → `textStyle` 번들 (L2)
+- 예: `--tone-primary-base` + `-foreground` + `-hover` + `-bright` + `-dim` → `palette` 번들 (L0)
+
+**"공유되어야 함"이 상위 Level 존재 이유**:
+- 단일 컴포넌트만 쓸 땐 L2·L3로 충분
+- 여러 컴포넌트가 일관성을 요구하면 상위 Level이 필요
+- 앱 전체 accent → L0 / 같은 band 키라인 → L1 / 같은 패널 색 → L1
+
+### 5.2 L1 Zone 카탈로그
+
+#### Band Zone (키라인 일관성)
+
+부모에 `textStyle` 선언 → 자식 모든 인터랙티브가 `--cs-h` 구독.
+
+```tsx
+<div className={ax({ textStyle: 'body', layout: 'bar' })}>
+  <button className={ax({ role: 'control', surface: 'action' })}>Save</button>
+  <div className={ax({ role: 'item' })}>Item</div>
+  <span className={ax({ role: 'badge', surface: 'display' })}>N</span>
+  {/* 3 부품 모두 min-height: 28px (= ts-body의 --cs-h) */}
+</div>
+```
+
+사용처: 툴바, 폼row, 리스트, 탭바.
+
+#### Surface Zone (색/재질 일관성)
+
+부모에 `surface` 선언 → 자식이 `--_bg`/`--_fg`/`--depth-*` 상속. `feedback_contextual_zone_cascade` 원리.
+
+사용처: 패널, 다이얼로그, 오버레이, island.
+
+#### Pane Zone (포커스 컨텍스트)
+
+`.ax-interactive` 컨테이너 → `:focus-within` 시 selection 색 활성화 (Finder 모델).
+
+사용처: 다중 패널 앱.
+
+### 5.3 Token Studio 대응
+
+| Token Studio 용어 | 이 모델 |
+|-------------------|---------|
+| Core / Global tokens | L0 Theme primitives |
+| Semantic tokens | L1 Zone bundles |
+| Component tokens | L2 Component bundles |
+| Raw values | L3 Atomic |
+
+### 5.4 위계 판정 5원칙
+
+1. **한 차원엔 한 주권** — 크기는 textStyle, 색구조는 surface, 물질은 content, 행동은 interactive. 새 축이 기존 차원을 건드리면 주권 경유
+2. **상위 Level이 하위를 결정** — 역방향 금지 (L3가 L2를 override X)
+3. **같은 Level 내부는 직교** — 같은 Level의 축이 겹치면 재분해 필요
+4. **Private(L3)는 외부 비노출** — rolePreset/cascade로만 도달, 직접은 ax.raw() 단일 경로
+5. **Filler는 슬롯 채움** — 새 축이 "값만 주입"이면 L2 내 composition (tone→surface 슬롯 채움처럼)
