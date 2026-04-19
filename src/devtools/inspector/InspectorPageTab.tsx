@@ -44,6 +44,7 @@ interface InspectorPageCtx {
 
 const InspectorPageContext = React.createContext<InspectorPageCtx | null>(null)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useInspectorPage(): InspectorPageCtx {
   const ctx = useContext(InspectorPageContext)
   if (!ctx) throw new Error('InspectorPageContext missing')

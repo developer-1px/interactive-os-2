@@ -66,6 +66,7 @@ export function FlatLayoutOverlay() {
 
   useEffect(() => {
     if (!instanceId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setBoxes([])
       return
     }
