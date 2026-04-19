@@ -1,7 +1,10 @@
 // ② replayV2BeatPrd
+import { useEffect, useRef } from 'react'
 import type { CSSProperties, JSX, ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { ax } from '@styles/ax'
+import { FileViewer } from '@os/ui/FileViewer'
+import type { FileViewerHandle } from '@os/ui/viewerTypes'
 import type {
   Beat,
   ThinkingBeat,
@@ -119,26 +122,28 @@ function TerminalBeatView({ beat, progress }: { beat: TerminalBeat; progress: nu
 // Diff
 // ─────────────────────────────────────────────
 
-function DiffBeatView({ beat, progress }: { beat: DiffBeat; progress: number }) {
-  const total = beat.lines.length
-  const shownCount = Math.floor(total * Math.min(1, progress * 1.1))
-  const sym: Record<'add' | 'del' | 'ctx', string> = { add: '+', del: '-', ctx: ' ' }
-
+function DiffBeatView({ beat }: { beat: DiffBeat; progress: number }) {
+  const ref = useRef<FileViewerHandle>(null)
+  useEffect(() => {
+    const handle = ref.current
+    if (!handle) return
+    handle.dispatch({ type: 'open', content: beat.preContent })
+    handle.dispatch({
+      type: 'editAnimate',
+      preContent: beat.preContent,
+      oldStr: beat.oldStr,
+      newStr: beat.newStr,
+      range: null,
+    })
+  }, [beat.preContent, beat.oldStr, beat.newStr])
   return (
-    <div className={`beat-frame beat-diff ${ax({ layout: 'stack', width: 'full' })}`}>
-      <div className="beat-diff__header">
-        <div className={`beat-label ${ax({ textStyle: 'caption' })}`}>DIFF</div>
-        <div className={`beat-diff__file ${ax({ layout: 'row', textStyle: 'code' })}`}>
-          {beat.file}
-        </div>
+    <div className={`beat-frame beat-fileview ${ax({ layout: 'stack', width: 'full' })}`}>
+      <div className="beat-fileview__header">
+        <div className={`beat-label ${ax({ textStyle: 'caption' })}`}>EDIT</div>
+        <div className={`beat-fileview__file ${ax({ textStyle: 'code' })}`}>{beat.file}</div>
       </div>
-      <div className={ax({ flex: '1', layout: 'stack', textStyle: 'code' })}>
-        {beat.lines.slice(0, shownCount).map((l, i) => (
-          <div key={i} className={`beat-diff__line beat-diff__line--${l.t} ${ax({ layout: 'row' })}`}>
-            <span className={`beat-diff__sym beat-diff__sym--${l.t}`}>{sym[l.t]}</span>
-            <span className="beat-diff__text">{l.v}</span>
-          </div>
-        ))}
+      <div className={`beat-fileview__body ${ax({ flex: '1' })}`}>
+        <FileViewer ref={ref} filename={beat.file} />
       </div>
     </div>
   )
@@ -148,22 +153,21 @@ function DiffBeatView({ beat, progress }: { beat: DiffBeat; progress: number }) 
 // Read — 파일 보기 (file 이름 hero + 라인 점진 reveal)
 // ─────────────────────────────────────────────
 
-function ReadBeatView({ beat, progress }: { beat: ReadBeat; progress: number }) {
-  const total = beat.lines.length
-  const shown = Math.floor(total * Math.min(1, progress * 1.2))
+function ReadBeatView({ beat }: { beat: ReadBeat; progress: number }) {
+  const ref = useRef<FileViewerHandle>(null)
+  useEffect(() => {
+    const handle = ref.current
+    if (!handle) return
+    handle.dispatch({ type: 'open', content: beat.content })
+  }, [beat.content])
   return (
-    <div className={`beat-frame beat-diff ${ax({ layout: 'stack', width: 'full' })}`}>
-      <div className="beat-diff__header">
+    <div className={`beat-frame beat-fileview ${ax({ layout: 'stack', width: 'full' })}`}>
+      <div className="beat-fileview__header">
         <div className={`beat-label ${ax({ textStyle: 'caption' })}`}>READ</div>
-        <div className={`beat-diff__file ${ax({ layout: 'row', textStyle: 'code' })}`}>{beat.file}</div>
+        <div className={`beat-fileview__file ${ax({ textStyle: 'code' })}`}>{beat.file}</div>
       </div>
-      <div className={ax({ flex: '1', layout: 'stack', textStyle: 'code' })}>
-        {beat.lines.slice(0, shown).map((l, i) => (
-          <div key={i} className={`beat-diff__line beat-diff__line--ctx ${ax({ layout: 'row' })}`}>
-            <span className="beat-diff__sym beat-diff__sym--ctx"> </span>
-            <span className="beat-diff__text">{l || '\u00A0'}</span>
-          </div>
-        ))}
+      <div className={`beat-fileview__body ${ax({ flex: '1' })}`}>
+        <FileViewer ref={ref} filename={beat.file} />
       </div>
     </div>
   )

@@ -110,8 +110,7 @@ function toToolBeat(
 
 function toReadBeat(input: Record<string, unknown>, result: string): ReadBeat {
   const file = (input.file_path as string) ?? (input.path as string) ?? ''
-  const lines = result ? result.split('\n').slice(0, 16) : []
-  return { kind: 'read', duration: 3500, file, lines }
+  return { kind: 'read', duration: 4500, file, content: result || '' }
 }
 
 function toTerminalBeat(input: Record<string, unknown>, result: string): TerminalBeat {
@@ -136,7 +135,7 @@ function toDiffBeat(
   stats.edits += 1
   stats.additions += newStr ? newStr.split('\n').length : 0
   stats.deletions += oldStr ? oldStr.split('\n').length : 0
-  return { kind: 'diff', duration: 8000, file, lines: toDiffLines(oldStr, newStr) }
+  return { kind: 'diff', duration: 8000, file, preContent: oldStr, oldStr, newStr }
 }
 
 /** 첫 user prompt + 마지막 assistant text + 누적 stats → CommitBeat 합성 */

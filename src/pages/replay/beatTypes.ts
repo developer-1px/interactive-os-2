@@ -24,13 +24,16 @@ export interface TerminalBeat extends BeatBase {
 export interface DiffBeat extends BeatBase {
   kind: 'diff'
   file: string
-  lines: Array<{ t: 'add' | 'del' | 'ctx'; v: string }>
+  /** Edit 전 파일 콘텐츠 (FileViewer editAnimate 입력). 1차: oldStr fallback */
+  preContent: string
+  oldStr: string
+  newStr: string
 }
 
 export interface ReadBeat extends BeatBase {
   kind: 'read'
   file: string
-  lines: string[]
+  content: string
 }
 
 export interface CommitBeat extends BeatBase {

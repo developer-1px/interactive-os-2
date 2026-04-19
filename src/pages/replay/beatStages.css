@@ -476,6 +476,23 @@
   display: block;
 }
 
+/* FileViewer-based Read/Edit beat */
+.beat-fileview {
+  background: var(--beat-bg-dark);
+}
+.beat-fileview__header {
+  padding: 18px 22px 14px;
+  border-bottom: var(--beat-border-hairline);
+}
+.beat-fileview__file {
+  color: var(--beat-text-strong);
+  font-family: var(--beat-font-mono);
+  font-size: var(--replay-subtitle-fz);
+  font-weight: var(--beat-fw-semi, 600);
+  word-break: break-all;
+  margin-top: 4px;
+}
+
 /* subtitle: title block 안 자식 (position 불필요) */
 .short-card__subtitle {
   font-family: var(--replay-subtitle-font);
