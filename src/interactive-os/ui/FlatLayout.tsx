@@ -125,7 +125,7 @@ interface WidgetSlotProps {
   nodeId: string
   refCallback: (id: string) => (el: HTMLElement | null) => void
   layout: 'scroll' | 'scroll-x' | 'fill' | 'clip'
-  padding: AxPadding | undefined
+  nodePadding: AxPadding | undefined
   isSplitChild: boolean
   Component: React.ComponentType<Record<string, unknown>>
   componentProps: Record<string, unknown>
@@ -133,9 +133,13 @@ interface WidgetSlotProps {
   children?: React.ReactNode
 }
 
-function WidgetSlot({ nodeId, refCallback, layout, padding, isSplitChild, Component, componentProps, source, children }: WidgetSlotProps) {
+function WidgetSlot({ nodeId, refCallback, layout, nodePadding, isSplitChild, Component, componentProps, source, children }: WidgetSlotProps) {
   const { holds } = React.useContext(ContainerIntentContext)
   const slotAx = holdsToSlotAx(holds)
+  // widget.{holds} preset에서 기본 padding 해석 (island → xs, glass → sm).
+  // node.padding override 우선.
+  const widgetPreset = resolveContainerPreset('widget', undefined, holds)
+  const padding = nodePadding ?? widgetPreset.padding
   // SSOT: widget은 role/surface/shape을 선언하지 않음. slot wrapper가 부모 holds로 자동 주입.
   return (
     <div
@@ -451,20 +455,19 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const isSplitChild = parentType === 'split' || parentType === 'nav'
     const fillSlot = isSplitChild || parentType === 'tab' || (node as Record<string, unknown>).fill
 
-    const widgetPreset = resolveContainerPreset('widget')
-    const padding = node.padding ?? widgetPreset.padding
-
     // scroll 필드가 1순위. 그 다음 fillSlot. 그 외는 clip (사일런트 overflow 차단).
     const layout = node.scroll === 'y' ? 'scroll' as const
                  : node.scroll === 'x' ? 'scroll-x' as const
                  : fillSlot ? 'fill' as const
                  : 'clip' as const
 
+    // padding은 WidgetSlot 내부에서 context의 holds를 알아야 계산 가능 —
+    // 여기선 node.padding (override)만 전달. 기본값은 Slot이 widget.{holds} preset에서 resolve.
     return <WidgetSlot
       nodeId={nodeId}
       refCallback={refCallback}
       layout={layout}
-      padding={padding}
+      nodePadding={node.padding}
       isSplitChild={isSplitChild}
       Component={Component}
       componentProps={node.props ?? {}}

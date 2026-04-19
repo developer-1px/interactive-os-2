@@ -78,6 +78,9 @@ export const containerPresetTable: Partial<Record<ContainerPresetKey, ContainerP
   // 기본값 없음 — 위젯 내부가 자체 padding 소유. wrapper padding 없음.
   'widget':        {},
   'widget.overlay': {},
+  // holds로 island 슬롯 래핑 시 내부 inset — 아이템이 island 경계에 닿지 않도록.
+  'widget.island':  { padding: 'xs' },
+  'widget.glass':   { padding: 'sm' },
 
   // ── Miller ──
   'miller.root':   { gap: 'sm' },
