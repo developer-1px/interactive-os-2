@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import { useEngineStore } from '../engine/useEngineStore'
 import type { Command, CommandResult } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
@@ -17,7 +18,13 @@ import { useAriaView } from './useAriaView'
 
 export interface UseAriaZoneOptions {
   engine: CommandEngine
-  store: NormalizedData
+  /**
+   * Optional. When omitted, the zone subscribes to `engine` directly via
+   * useEngineStore and rerenders on store change — parent no longer needs to
+   * hold store in useState. When provided, the prop is used verbatim (legacy
+   * path for callers that derive a transformed/filtered store).
+   */
+  store?: NormalizedData
   pattern: AriaPattern
   scope: string
   plugins?: Plugin[]
@@ -105,12 +112,14 @@ function applyMetaCommand(state: ZoneViewState, command: Command): ZoneViewState
 
 export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
   const {
-    engine, store, pattern, scope,
+    engine, store: storeProp, pattern, scope,
     plugins: zonePlugins,
     keyMap: keyMapOverrides,
     onActivate, initialFocus,
     isReachable, disabled = false,
   } = options
+  const subscribedStore = useEngineStore(engine)
+  const store = storeProp ?? subscribedStore
 
   const [viewState, setViewState] = useState<ZoneViewState>(() => {
     const focusTarget = (initialFocus && store.entities[initialFocus])
