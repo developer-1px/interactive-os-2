@@ -92,19 +92,21 @@ export function FinderPreviewWidget() {
 // ── MillerColumns content (columns mode) ──
 
 export function FinderMillerWidget() {
-  const { initialStore, onChange } = useFinder()
+  const { listStore, onChange } = useFinder()
 
   // knowledge 가상 폴더에서 nodeId는 `${groupId}::${absPath}` 형태이므로
   // entity.data.path 를 우선 사용. 일반 파일 트리는 id === path.
   const handleRenderPreview = useCallback((nodeId: string) => {
-    const entity = initialStore?.entities[nodeId]
+    const entity = listStore?.entities[nodeId]
     const actualPath = ((entity?.data as { path?: string } | undefined)?.path) ?? nodeId
     return <FilePanel path={actualPath} />
-  }, [initialStore])
+  }, [listStore])
+
+  if (!listStore) return null
 
   return (
     <MillerColumns
-      data={initialStore}
+      data={listStore}
       onChange={onChange}
       renderPreview={handleRenderPreview}
       aria-label="File browser"

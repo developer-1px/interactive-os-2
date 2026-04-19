@@ -300,7 +300,7 @@ export default function PageFinder() {
   // ── Derived ──
 
   const listStore = useMemo(() => {
-    if (!initialStore || viewMode !== 'list') return null
+    if (!initialStore) return null
     let store = initialStore
     const spec: FilterSpec = {}
     if (filters.length > 0) spec.extensions = filters
@@ -308,7 +308,7 @@ export default function PageFinder() {
     if (spec.extensions || spec.kinds) store = filterStore(store, spec)
     if (sortKey) store = sortStore(store, sortKey, sortDir)
     return store
-  }, [initialStore, viewMode, filters, kindFilters, sortKey, sortDir])
+  }, [initialStore, filters, kindFilters, sortKey, sortDir])
 
   // ── Layout: viewMode에 따라 hidden 토글 ──
 
