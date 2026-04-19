@@ -53,15 +53,18 @@
  * ════════════════════════════════════════════ */
 
 @layer recipe {
-  /* cell의 cs를 자식 cascade용 var로 노출 */
+  /* ② ax-textstyle-ssot-prd (W2): role --cs-h 구독 */
+  /* cell이 --cs-h를 구독 + 자식 cascade용 --cell-cs로 노출 */
   .rl-cell {
-    --cell-cs: var(--cs);
+    min-height: var(--cs-h, 28px);
+    font-size:  var(--font-size, 14px);
+    --cell-cs:  var(--cs-h);
   }
 
   /* 내부 role:'control'은 cell 높이 상속 — control-group 선례 이식 */
   .rl-cell > .rl-control,
   .rl-cell :is(.rl-control) {
-    --cs: var(--cell-cs);
+    --cs-h: var(--cell-cs);
 
     min-height: unset;
     align-self: stretch;

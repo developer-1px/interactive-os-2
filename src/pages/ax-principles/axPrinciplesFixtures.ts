@@ -29,8 +29,8 @@ export const principles: Principle[] = [
     falsifier:
       'role과 무관하게 개별 속성(padding·radius·font-size)을 따로 지정해도 compo 전체에서 일관성이 유지된다면 거짓.',
     examples: {
-      good: ["ax({role: 'button', cs: 'md'}) — padding/radius 자동"],
-      bad: ["ax({role: 'button', cs: 'md', pd: 'xl', radius: 'full'}) — 원리 위반"],
+      good: ["ax({role: 'control', textStyle: 'body'}) — font-size·keyline·padding 자동"],
+      bad: ["ax({role: 'control', textStyle: 'body', pd: 'xl', radius: 'full'}) — 원리 위반"],
     },
     tags: ['locked'],
     status: 'Locked',
@@ -283,7 +283,7 @@ export const principles: Principle[] = [
     falsifier:
       'font-size만 조정하고 line-height/weight/tracking은 기본값 → 단계 혼란. display와 body가 같은 weight+letter-spacing → 위계 실패.',
     examples: {
-      good: ["ax({role: 'heading', cs: 'lg'}) — line-height/weight 자동"],
+      good: ["ax({textStyle: 'section'}) — font-size/cs-h/padding 자동"],
       bad: ["style={{ fontSize: '24px' }} 만 조정, line-height 기본"],
     },
     tags: ['locked'],
@@ -308,7 +308,7 @@ export const principles: Principle[] = [
     falsifier:
       'Button에 임의 radius(border-radius: 3.7px) 적용 → 계단 위반. Card와 Button이 무관한 radius → shape family 불일치.',
     examples: {
-      good: ["ax({role: 'button', cs: 'md'}) → radius 8px"],
+      good: ["ax({role: 'control', textStyle: 'body'}) → cs-h 28px"],
       bad: ['border-radius: 11px 인라인'],
     },
     tags: ['locked'],

@@ -229,69 +229,85 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 /* ════════════════════════════════════════════
- * Text Style — 타이포그래피 번들
+ * Text Style — 타이포그래피 번들 + 크기 SSOT 4-tuple
  * 번들: font-size + weight + family + line-height + letter-spacing
+ *       + --cs-h / --cs-py / --cs-px (role 구독자가 min-height/padding 상속)
  * claude.ai 실측: Anthropic Serif(body) / Anthropic Sans(ui)
+ * ② ax-textstyle-ssot-prd (W1): textStyle 4-tuple 변수 세팅 — 모든 .ts-*가
+ *    --font-size를 seed로 --cs-h = font-size×2, --cs-py = ×0.25, --cs-px = ×0.5를
+ *    공급한다. role 부품(.rl-control/.rl-item/…)은 var(--cs-h)를 구독하여
+ *    키라인을 textStyle에 맞춰 자동 정렬한다 (feedback_cs_padding_content "text 2:1").
  * ════════════════════════════════════════════ */
 
+/* 4-tuple 공식은 모든 .ts-*가 공유 — --font-size seed에서 파생.
+ * 각 블록은 --font-size와 weight/family/line-height/letter-spacing만 선언. */
+.ts-hero, .ts-display, .ts-page, .ts-section,
+.ts-label, .ts-body, .ts-caption, .ts-code, .ts-overline {
+  --cs-h:  calc(var(--font-size) * 2);
+  --cs-py: calc(var(--font-size) * 0.25);
+  --cs-px: calc(var(--font-size) * 0.5);
+
+  font-size: var(--font-size);
+}
+
 .ts-hero {
-  font-size: var(--type-hero-size);
+  --font-size: var(--type-hero-size);
   font-weight: var(--type-hero-weight);
   font-family: var(--type-hero-family);
   line-height: var(--type-hero-line-height);
   letter-spacing: var(--type-hero-letter-spacing);
 }
 .ts-display {
-  font-size: var(--type-display-size);
+  --font-size: var(--type-display-size);
   font-weight: var(--type-display-weight);
   font-family: var(--type-display-family);
   line-height: var(--type-display-line-height);
   letter-spacing: var(--type-display-letter-spacing);
 }
 .ts-page {
-  font-size: var(--type-page-size);
+  --font-size: var(--type-page-size);
   font-weight: var(--type-page-weight);
   font-family: var(--type-page-family);
   line-height: var(--type-page-line-height);
   letter-spacing: var(--type-page-letter-spacing);
 }
 .ts-section {
-  font-size: var(--type-section-size);
+  --font-size: var(--type-section-size);
   font-weight: var(--type-section-weight);
   font-family: var(--type-section-family);
   line-height: var(--type-section-line-height);
   letter-spacing: var(--type-section-letter-spacing);
 }
 .ts-label {
-  font-size: var(--type-body-size);
+  --font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   font-family: var(--sans);
   line-height: var(--type-body-line-height);
   letter-spacing: var(--type-body-letter-spacing);
 }
 .ts-body {
-  font-size: var(--type-body-size);
+  --font-size: var(--type-body-size);
   font-weight: var(--type-body-weight);
   font-family: var(--type-body-family);
   line-height: var(--type-body-line-height);
   letter-spacing: var(--type-body-letter-spacing);
 }
 .ts-caption {
-  font-size: var(--type-caption-size);
+  --font-size: var(--type-caption-size);
   font-weight: var(--type-caption-weight);
   font-family: var(--type-caption-family);
   line-height: var(--type-caption-line-height);
   letter-spacing: var(--type-caption-letter-spacing);
 }
 .ts-code {
-  font-size: var(--type-code-size);
+  --font-size: var(--type-code-size);
   font-weight: var(--type-code-weight);
   font-family: var(--type-code-family);
   line-height: var(--type-code-line-height);
   letter-spacing: var(--type-code-letter-spacing);
 }
 .ts-overline {
-  font-size: var(--type-caption-size);
+  --font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   font-family: var(--sans);
   line-height: var(--type-caption-line-height);
@@ -305,14 +321,17 @@ dialog.sf-overlay[open] {
  * surface는 색칠만, tone은 의미 색상만.
  * ════════════════════════════════════════════ */
 
+/* ② ax-textstyle-ssot-prd (W2): role --cs-h 구독 — min-height/font-size/padding은
+ *    부모가 세팅한 textStyle 4-tuple CSS 변수를 상속받아 계산. 픽셀 하드코딩 0.
+ *    fallback은 textStyle 미지정 레거시 보호용(28/14/4/8 = body 대응). */
 .rl-control {
-  min-height: var(--control-height);
-  min-width: var(--control-height);
-  font-size: var(--type-control-size);
+  min-height: var(--cs-h, 28px);
+  min-width:  var(--cs-h, 28px);
+  font-size:  var(--font-size, 14px);
   font-weight: var(--type-control-weight);
   line-height: var(--type-control-line-height);
-  padding-inline: var(--space-md);
-  padding-block: 6px;
+  padding-inline: var(--cs-px, 8px);
+  padding-block:  var(--cs-py, 4px);
   gap: var(--space-sm);
   border-radius: var(--shape-sm-radius);
   display: inline-flex;
@@ -349,9 +368,10 @@ dialog.sf-overlay[open] {
  * 크기 SSOT: 내부 part는 role 없이 stretch로 높이를 채움.
  * ════════════════════════════════════════════ */
 
+/* ② ax-textstyle-ssot-prd (W2): role --cs-h 구독 */
 .rl-control-group {
-  min-height: var(--control-height);
-  font-size: var(--type-control-size);
+  min-height: var(--cs-h, 28px);
+  font-size:  var(--font-size, 14px);
   font-weight: var(--type-control-weight);
   gap: 0;
   border-radius: var(--shape-sm-radius);
@@ -378,13 +398,15 @@ dialog.sf-overlay[open] {
  * width, layout, interactive는 미소유 — 컴포넌트가 명시.
  * ════════════════════════════════════════════ */
 
+/* ② ax-textstyle-ssot-prd (W2): role --cs-h 구독. padding은 --cs-py×pd-ratio로
+ *    content 축(2:1)과 합성. fallback 4px = body band cs-py 기본값. */
 .rl-item {
-  min-height: var(--item-height);
-  font-size: var(--type-body-size);
+  min-height: var(--cs-h, 28px);
+  font-size:  var(--font-size, 14px);
   font-weight: var(--type-body-weight);
   line-height: var(--type-item-line-height);
-  padding-block: var(--space-xs);
-  padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
+  padding-block:  var(--cs-py, 4px);
+  padding-inline: calc(var(--cs-py, 4px) * var(--pd-ratio, 1));
   gap: var(--space-sm);
   border-radius: var(--shape-2xs-radius);
   display: flex;
@@ -398,11 +420,14 @@ dialog.sf-overlay[open] {
  * 작고 둥글고 한 줄. content:'text'와 조합하여 inline padding 2배.
  * ════════════════════════════════════════════ */
 
+/* ② ax-textstyle-ssot-prd (W2): role --cs-h 구독. badge는 caption band 가정 →
+ *    fallback 24/12/3/6. min-height 신설(이전엔 부재). */
 .rl-badge {
-  font-size: var(--type-caption-size);
+  min-height: var(--cs-h, 24px);
+  font-size:  var(--font-size, 12px);
   font-weight: var(--weight-medium);
-  padding-block: var(--space-xs);
-  padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
+  padding-block:  var(--cs-py, 3px);
+  padding-inline: calc(var(--cs-py, 3px) * var(--pd-ratio, 1));
   gap: var(--space-xs);
   border-radius: var(--shape-pill-radius);
   display: inline-flex;
@@ -415,6 +440,11 @@ dialog.sf-overlay[open] {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1;
+}
+
+/* ② ax-textstyle-ssot-prd (W2): [role="tab"] --cs-h 구독 */
+[role="tab"] {
+  min-height: var(--cs-h, 28px);
 }
 
 /* SVG auto-size inside badges */
@@ -514,8 +544,8 @@ dialog.sf-overlay[open] {
 :where(.tn-neutral-dim) { color: var(--text-secondary); }
 
 /* ── Role: Control — interactive 상태 ── */
-/* role 프리셋 padding은 pd-* 클래스보다 우선 (specificity 2) */
-.rl-control.rl-control { padding-block: 6px; }
+/* ② ax-textstyle-ssot-prd (W2): .rl-control.rl-control padding-block 특수 규칙 제거
+ *    — var(--cs-py)로 단일화. textStyle 4-tuple이 공급. */
 
 .rl-control:hover { background: var(--_bg-hover, var(--bg-hover)); }
 .rl-control:active { background: var(--_bg-active, var(--bg-active)); }

@@ -17,7 +17,7 @@ import { useBook } from './bookContext'
 
 function BookChapterHeader() {
   return (
-    <div className={`book-panel-header ${ax({ textStyle: 'overline', cs: 'sm' })}`}>CHAPTERS</div>
+    <div className={`book-panel-header ${ax({ textStyle: 'overline' })}`}>CHAPTERS</div>
   )
 }
 
@@ -39,7 +39,7 @@ function BookPageHeader() {
   const { currentChapterLabel } = useBook()
 
   return (
-    <div className={`book-panel-header ${ax({ textStyle: 'caption', cs: 'sm' })}`}>{currentChapterLabel}</div>
+    <div className={`book-panel-header ${ax({ textStyle: 'caption' })}`}>{currentChapterLabel}</div>
   )
 }
 

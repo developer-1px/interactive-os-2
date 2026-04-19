@@ -92,6 +92,11 @@ export type AxPublic =
       content?: AxContent
       tone?: AxTone
       textStyle?: AxTextStyle
+      /**
+       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
+       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
+       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
+       */
       cs?: CsScale
       layout?: AxLayout
       placement?: AxPlacement
@@ -104,6 +109,11 @@ export type AxPublic =
   | {
       role: 'control-group'
       surface?: SurfacePanel | 'ghost'
+      /**
+       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
+       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
+       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
+       */
       cs?: CsScale
       layout?: AxLayout
       width?: AxWidth
@@ -118,6 +128,11 @@ export type AxPublic =
       surface?: SurfaceRow
       tone?: AxTone
       textStyle?: AxTextStyle
+      /**
+       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
+       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
+       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
+       */
       cs?: CsScale
       layout?: AxLayout
       width?: AxWidth
@@ -133,6 +148,11 @@ export type AxPublic =
       content?: AxContent
       interactive?: 'button'                 // dismiss 가능 뱃지 한정
       textStyle?: AxTextStyle
+      /**
+       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
+       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
+       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
+       */
       cs?: CsScale
       clamp?: AxClamp
     }
@@ -149,6 +169,11 @@ export type AxPublic =
       content?: AxContent
       tone?: AxTone
       textStyle?: AxTextStyle
+      /**
+       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
+       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
+       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
+       */
       cs?: CsScale
       layout?: AxLayout
       width?: AxWidth
@@ -161,6 +186,11 @@ export type AxPublic =
       surface: SurfaceTip                    // 'inverted' | 'overlay' (필수)
       textStyle?: 'caption' | 'label' | 'body'
       placement: AxPlacement                 // D3 결정: 필수화 (Tooltip.tsx positionAnchor 의존 + 의미적 정합)
+      /**
+       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
+       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
+       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
+       */
       cs?: CsScale
       width?: AxWidth
     }
@@ -169,6 +199,11 @@ export type AxPublic =
       role?: 'utility'
       // surface/interactive/content/tone 키 자체 부재 (타입 수준 거부)
       textStyle?: AxTextStyle
+      /**
+       * @deprecated cs 축은 textStyle에 흡수되었다 (2026-04-19 ax-textstyle-ssot-prd).
+       *             textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT.
+       *             특수 override는 ax.raw()를 사용. 후속 bundle에서 타입 제거 예정.
+       */
       cs?: CsScale
       layout?: AxLayout
       placement?: AxPlacement

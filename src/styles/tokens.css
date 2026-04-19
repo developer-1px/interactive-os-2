@@ -254,11 +254,12 @@
 
 
   /* ── Component specs (claude.ai + Linear 실측) ── */
-  --control-height: 32px;
+  /* @removed 2026-04-19 ax-textstyle-ssot-prd (W3):
+   *   --control-height: 32px  → var(--cs-h) 구독으로 대체 (textStyle이 공급)
+   *   --item-height:    28px  → var(--cs-h) 구독으로 대체 (ts-body가 공급) */
   --toolbar-height: 32px;
   --input-padding-x: 12px;
   --sidebar-item-height: 28px;
-  --item-height: 28px;
   --storymap-col-width: 220px;
   --overlay-width:  360px;
   --content-sm:     560px;

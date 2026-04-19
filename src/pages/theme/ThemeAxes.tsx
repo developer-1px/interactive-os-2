@@ -55,7 +55,7 @@ function ZoneCompositionAxis() {
               {buttonTones.map(t => (
                 <button
                   key={t}
-                  className={ax({ role: 'control', surface: 'action', content: 'text', tone: t, cs: 'xs' })}
+                  className={ax({ role: 'control', surface: 'action', content: 'text', tone: t })}
                 >
                   {t}
                 </button>
@@ -65,7 +65,7 @@ function ZoneCompositionAxis() {
               {buttonTones.map(t => (
                 <button
                   key={t}
-                  className={ax({ role: 'control', surface: 'ghost', content: 'text', tone: t, cs: 'xs' })}
+                  className={ax({ role: 'control', surface: 'ghost', content: 'text', tone: t })}
                 >
                   {t}
                 </button>

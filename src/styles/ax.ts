@@ -55,6 +55,9 @@ const PRIVATE_KEY_SET = new Set<string>(AX_PRIVATE_KEYS as readonly string[])
 // Phase 1-a G-5 임시: Bundle D/E 마이그레이션 중 throw → warn 완화용 dedup set.
 // Bundle E 완료 후 이 Set과 아래 warn 로직 제거, throw 재승격 (§1 #9).
 const warnedPrivateKeys = new Set<string>()
+// 2026-04-19 ax-textstyle-ssot-prd (W4b): cs 축 deprecate warn dedup set.
+// textStyle이 font-size/cs-h/cs-py/cs-px 4-tuple SSOT. 후속 bundle에서 타입 제거 시 이 set도 제거.
+const warnedCsCallsites = new Set<string>()
 
 /**
  * 축 값을 className 문자열로 변환한다.
@@ -74,7 +77,7 @@ const warnedPrivateKeys = new Set<string>()
  * ax({ role: 'control', surface: 'ghost', layout: 'center', content: 'icon' })
  *
  * // 툴바 (utility default — role 생략)
- * ax({ layout: 'bar', cs: 'sm' })
+ * ax({ layout: 'bar', textStyle: 'body' })
  *
  * // 툴팁
  * ax({ role: 'tip', surface: 'inverted', placement: 'above', textStyle: 'caption' })
@@ -97,6 +100,21 @@ export function ax(axes: Axes): string {
       console.warn(
         `ax() received private key: "${key}". TEMP warn (Phase 1-a G-5). ` +
         `Will re-promote to throw after Bundle E migration completes.`,
+      )
+    }
+  }
+
+  // 1b) cs 축 deprecate warn — 2026-04-19 ax-textstyle-ssot-prd (W4b).
+  //     textStyle이 font-size·cs-h·cs-py·cs-px 4-tuple SSOT. cs 축 흡수됨.
+  //     dedup 키는 value 단위 — 같은 값 callsite는 1회만 warn.
+  if ('cs' in input && input.cs != null) {
+    const callsite = `cs=${input.cs}`
+    if (!warnedCsCallsites.has(callsite)) {
+      warnedCsCallsites.add(callsite)
+      console.warn(
+        `ax() received deprecated 'cs' axis (value: "${input.cs}"). ` +
+        `Use 'textStyle' instead — textStyle supplies font-size, cs-h, cs-py, cs-px as 4-tuple. ` +
+        `Migration: docs/2026/2026-04/2026-04-19/ax-textstyle-ssot-prd.md`,
       )
     }
   }

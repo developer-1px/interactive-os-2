@@ -14,7 +14,7 @@ export interface TitleBlockProps {
 export function TitleBlock({ data, editable, onEdit }: TitleBlockProps): React.ReactElement {
   return (
     <h1
-      className={ax({ cs: 'xl', textStyle: 'display', width: 'full', clamp: '2' })}
+      className={ax({ textStyle: 'display', width: 'full', clamp: '2' })}
       contentEditable={editable || undefined}
       suppressContentEditableWarning
       onBlur={editable && onEdit ? (e) => onEdit({ text: e.currentTarget.textContent ?? '' }) : undefined}

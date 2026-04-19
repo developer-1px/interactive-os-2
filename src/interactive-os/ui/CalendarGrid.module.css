@@ -1,8 +1,9 @@
 /* CalendarGrid — last-mile: CSS grid 7열 + subgrid rows (Grid.module.css 패턴) */
 
+/* ② ax-textstyle-ssot-prd (W3): --control-height 제거 → --cs-h 구독. fallback 32px. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(7, var(--control-height));
+  grid-template-columns: repeat(7, var(--cs-h, 32px));
 }
 
 /* row — subgrid span */

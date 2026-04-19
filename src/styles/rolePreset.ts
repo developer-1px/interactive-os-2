@@ -35,76 +35,79 @@ export type RolePresetKey =
  * 현 엔트리는 1761 ax() 호출 스캔(2026-04-18) 결과 기반.
  * (role, surface) 버킷 빈도순 seed.
  */
+/* ② ax-textstyle-ssot-prd (W5): padding 엔트리 textStyle 흡수 — 모든 엔트리에서
+ *    padding 필드 제거. cs-py/cs-px는 .ts-* 4-tuple 공급으로 role CSS가 자동 파생.
+ *    shape/border/motion/gap은 textStyle로 파생 불가능한 고유 의도 → 잔존. */
 export const rolePresetTable: Partial<Record<RolePresetKey, Partial<AxPrivate>>> = {
   // ── control.action — 기본 액션 버튼 (빈도 12) ─────────────────
-  'control.action': { padding: 'sm', shape: 'md', gap: 'xs' },
+  'control.action': { shape: 'md', gap: 'xs' },
   // control.action.text — 텍스트 라벨 2:1 inline (빈도 10)
-  'control.action.text': { padding: 'sm' },
-  // control.action.icon — 아이콘 1:1 square (빈도 1)
-  'control.action.icon': { padding: 'xs' },
+  'control.action.text': {},
+  // control.action.icon — 아이콘 1:1 square (빈도 1) — ct-icon이 padding:0 강제
+  'control.action.icon': {},
   // control.action.button — 버튼 역할 (빈도 1)
   'control.action.button': { gap: 'sm' },
 
   // ── control.ghost — 투명 버튼 (빈도 20) ──────────────────────
-  'control.ghost': { padding: 'sm', shape: 'md' },
+  'control.ghost': { shape: 'md' },
   // control.ghost.icon — 아이콘 ghost 버튼 (빈도 12)
-  'control.ghost.icon': { padding: 'xs' },
+  'control.ghost.icon': {},
   // control.ghost.text — 텍스트 ghost (빈도 2)
   'control.ghost.text': { shape: 'sm' },
   // control.ghost.tab — 탭 아이템 (빈도 1)
   'control.ghost.tab': { shape: 'sm' },
 
   // ── control.input — 폼 입력 (빈도 8) ─────────────────────────
-  'control.input': { padding: 'sm', shape: 'sm', border: 'default' },
+  'control.input': { shape: 'sm', border: 'default' },
   // control.input.text — 입력 텍스트 (빈도 8)
   'control.input.text': {},
   // control.input.input — input 인터랙티브 (빈도 1)
   'control.input.input': { shape: 'md' },
 
   // ── control.placeholder — 로딩 스피너 컨트롤 (spin) ──────────
-  'control.placeholder': { padding: 'xs', shape: 'md', motion: 'spin' },
+  'control.placeholder': { shape: 'md', motion: 'spin' },
 
   // ── item.base — 리스트 아이템 기본 preset (surface 미지정 path는 silent {}) ──
   // NOTE: 'item'은 silent role — 아래 entry는 명시 hit일 때만 주입된다.
 
   // ── badge.display — 표시형 뱃지 (빈도 4) ────────────────────
-  'badge.display': { padding: 'xs', shape: 'pill' },
+  'badge.display': { shape: 'pill' },
   // badge.ghost — 투명 뱃지 (빈도 2)
-  'badge.ghost': { padding: 'xs' },
+  'badge.ghost': {},
   // badge.overlay — 오버레이 뱃지 (빈도 1)
-  'badge.overlay': { padding: 'xs', shape: 'md' },
+  'badge.overlay': { shape: 'md' },
   // badge.placeholder — 로딩 상태 칩 (pulse)
-  'badge.placeholder': { padding: 'xs', shape: 'pill', motion: 'pulse' },
+  'badge.placeholder': { shape: 'pill', motion: 'pulse' },
 
   // ── item.placeholder — 스트리밍/스켈레톤 행 (shimmer) ───────
-  'item.placeholder': { padding: 'sm', gap: 'sm', motion: 'shimmer' },
+  'item.placeholder': { gap: 'sm', motion: 'shimmer' },
 
   // ── control-group.overlay — CMS 플로팅 툴바/픽커 (★신규, ax Liquid Glass B1) ──
   // CMS 3곳(CmsFloatingToolbar/CmsViewportBar/CmsTemplatePicker) last-mile 흡수 seed.
   // 'control-group'은 silent role (strictRoles 미포함) — throw 유발하지 않지만
   // primary target (§1 #1) 이므로 cascade hit을 명시 보장.
-  'control-group.overlay': { padding: 'xs', gap: 'xs', shape: 'xl' },
+  'control-group.overlay': { gap: 'xs', shape: 'xl' },
 
   // ── control-group.raised — Island (★신규) ──────────────────
   // sunken 컨테이너 속에서 떠오른 섬. shape:'island'가 "경계를 가진 독립체" 시멘틱.
   // 예: sidebar section (NavList group), form section card, floating panel group.
-  'control-group.raised': { padding: 'sm', gap: 'xs', shape: 'island' },
-  // control-group.sunken — 섬들을 담는 컨테이너. padding/gap만 번들, shape 없음(꽉 채움).
-  'control-group.sunken': { padding: 'sm', gap: 'sm' },
+  'control-group.raised': { gap: 'xs', shape: 'island' },
+  // control-group.sunken — 섬들을 담는 컨테이너. gap만 번들, shape 없음(꽉 채움).
+  'control-group.sunken': { gap: 'sm' },
 
   // ── cell.* — grid 칸 preset (신규, cs 기본 sm: 28/13, 내부 부품 수용) ──
   // cell은 "컨테이너 + 내부 control 묶음" role. 내부 control은 --cell-cs 상속.
-  'cell.display': { padding: 'sm', gap: 'xs' },       // 기본 읽기 셀 (TextCell, BadgeCell 등)
-  'cell.ghost':   { padding: 'sm' },                   // 구분선 없는 투명 셀 (ToggleCell)
-  'cell.input':   { padding: 'sm', shape: 'sm', border: 'default' },  // 편집 셀 (EditableCell, SearchableCell)
+  'cell.display': { gap: 'xs' },                    // 기본 읽기 셀 (TextCell, BadgeCell 등)
+  'cell.ghost':   {},                                // 구분선 없는 투명 셀 (ToggleCell)
+  'cell.input':   { shape: 'sm', border: 'default' },  // 편집 셀 (EditableCell, SearchableCell)
 
   // ── tip.* — 툴팁 preset (신규, Bundle D Tooltip unblock) ──
   // tip.inverted — 기본 Tooltip 표면 (어두운 배경 + 밝은 텍스트, CSS layer가 색 주입)
-  'tip.inverted': { padding: 'xs', shape: 'sm', motion: 'fade-slide-in' },
+  'tip.inverted': { shape: 'sm', motion: 'fade-slide-in' },
   // tip.inverted.caption — caption 타이포 조합 (Tooltip 기본 textStyle)
   // content 슬롯 대응: AxContent에 'caption' 없으므로 interactive slot 사용하지 않음 — base만 상속.
   // tip.overlay — overlay Tooltip (투명 배경 + 블러)
-  'tip.overlay': { padding: 'xs', shape: 'sm', motion: 'fade-slide-in' },
+  'tip.overlay': { shape: 'sm', motion: 'fade-slide-in' },
 }
 
 /**

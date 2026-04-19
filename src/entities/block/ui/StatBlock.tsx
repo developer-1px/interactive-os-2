@@ -17,7 +17,7 @@ export function StatBlock({ data, editable, onEdit }: StatBlockProps): React.Rea
       className={`${ax({ layout: 'stack', width: 'full' })} ${ax.raw({ gap: 'xs', padding: 'md' })}`}
     >
       <strong
-        className={ax({ cs: 'xl', textStyle: 'hero' })}
+        className={ax({ textStyle: 'hero' })}
         contentEditable={editable || undefined}
         suppressContentEditableWarning
         onBlur={editable && onEdit ? (e) => onEdit({ value: e.currentTarget.textContent ?? '' }) : undefined}
