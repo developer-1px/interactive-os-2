@@ -193,15 +193,16 @@ export function SplitPane({
     onResize(applyDelta(dragStartSizes.current, sepIndex, sepIndex + 1, cumulativeDelta, minRatio))
   }, [onResize, minRatio])
 
-  if (childArray.length <= 1) {
-    return <>{childArray[0] ?? null}</>
-  }
+  if (childArray.length === 0) return null
 
   const isHorizontal = direction === 'horizontal'
   const fi = flexIndex(sizes)
 
   const elements: React.ReactNode[] = []
 
+  // 1개만 보이더라도 동일한 wrapper 구조를 유지한다. Fragment shortcut을 쓰면
+  // sibling이 hidden→visible로 바뀌는 순간 DOM 구조(Fragment→div)가 달라져
+  // 첫 번째 pane의 React subtree 전체가 리마운트되며 내부 상태(예: tree expand)가 소실된다.
   childArray.forEach((child, i) => {
     const isFlex = i === fi
     const sizeStyle = isFlex
