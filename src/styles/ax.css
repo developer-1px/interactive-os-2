@@ -664,10 +664,10 @@ dialog.sf-overlay[open] {
  * claude.ai 실측: control=81% row+center+center
  * ════════════════════════════════════════════ */
 
-.ly-row    { display: flex; flex-direction: row; }
+.ly-row    { display: flex; flex-direction: row; gap: var(--space-sm); }
 .ly-center { display: flex; align-items: center; justify-content: center; }
-.ly-bar    { display: flex; flex-direction: row; align-items: center; }
-.ly-spread { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
+.ly-bar    { display: flex; flex-direction: row; align-items: center; gap: var(--space-sm); }
+.ly-spread { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-sm); }
 .ly-stack  { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .ly-scroll   { display: flex; flex-direction: column; overflow-y: auto; block-size: 100%; min-width: 0; min-height: 0; scrollbar-gutter: stable; }
 .ly-scroll-x { display: flex; flex-direction: row;    overflow-x: auto; block-size: 100%; min-width: 0; min-height: 0; }
