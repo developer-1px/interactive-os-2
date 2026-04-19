@@ -80,7 +80,7 @@ export function ReplaySidebarWidget({ ctx, sessionEntries, currentSessionId }: R
   const canReplay = !isRunning && messages.length > 0 && !!startReplay
 
   return (
-    <div className={`replay-sidebar ${ax({ layout: 'fill' })}`}>
+    <div className={`replay-sidebar ${ax({ layout: 'stack', width: 'sm', flex: 'none' })}`}>
       <SessionSelector
         data={sessionComboData}
         placeholder={placeholder}
@@ -178,6 +178,17 @@ function appendFileGroup(
 
 // ── Stage: ShortCard wrapper driven by toBeats(messages) ──
 
+function deriveAgent(seed: string): { name: string; avatar: string; hue: number } {
+  let hash = 0
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+  const safe = seed || 'agent'
+  return {
+    name: safe.length > 16 ? safe.slice(0, 8) : safe,
+    avatar: safe.charAt(0).toUpperCase(),
+    hue: hash % 360,
+  }
+}
+
 export function ReplayStageWidget() {
   const {
     mode,
@@ -185,18 +196,20 @@ export function ReplayStageWidget() {
     viewerTabs,
     fileViewerRef,
     liveSessionId,
+    selectedId,
   } = useReplay()
 
   const liveMessages = useLiveMessages(mode, viewerTabs, fileViewerRef, liveSessionId)
   const displayMessages = mode === 'live' ? liveMessages : messages
+  const agent = useMemo(() => deriveAgent(selectedId ?? 'agent'), [selectedId])
 
   const session = useMemo(() => toBeats({
-    sessionId: 'current',
-    agent: { name: 'agent', avatar: '◆', hue: 290 },
+    sessionId: selectedId ?? 'current',
+    agent,
     title: extractTitle(displayMessages) ?? 'session',
     repo: 'aria',
     messages: displayMessages,
-  }), [displayMessages])
+  }), [selectedId, agent, displayMessages])
 
   return (
     <div className={`replay-stage-frame ${ax({ layout: 'center', width: 'full' })}`}>

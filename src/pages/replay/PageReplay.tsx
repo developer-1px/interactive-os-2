@@ -272,7 +272,7 @@ export default function PageReplay() {
   const totalSlots = liveCount + sessionEntries.length
 
   return (
-    <div className={ax({ layout: 'fill' })}>
+    <div className={ax({ layout: 'bar' })}>
       {/* Sidebar — fixed, always rendered (ctx may be null between slot transitions) */}
       <ReplaySidebarWidget
         ctx={activeCtx}

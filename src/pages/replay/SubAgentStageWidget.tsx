@@ -57,7 +57,7 @@ export function SubAgentStageWidget(props: SubAgentStageWidgetProps): ReactEleme
   const noop = useCallback(() => {}, [])
 
   const replayCtx = useMemo<ReplayContextValue>(() => ({
-    selectedId: session.sessionId,
+    selectedId: session.agentHash || `${session.agentType}-${session.description}`,
     setSelectedId: noop,
     sessionEntries: [],
     messages,
@@ -65,8 +65,8 @@ export function SubAgentStageWidget(props: SubAgentStageWidgetProps): ReactEleme
     isRunning: false,
     startReplay: noop,
     editingLine: null,
-    mode: 'live',
-    liveSessionId: session.sessionId,
+    mode: 'replay',
+    liveSessionId: null,
     tabs, activeTab, activeTabId, setActiveTab,
     viewerTabData, fileViewerRef, viewerTabs,
   }), [session.sessionId, noop, messages, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])

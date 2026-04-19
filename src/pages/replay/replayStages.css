@@ -2,6 +2,11 @@
 
 /* ── Snap scroll feed ── */
 
+.replay-sidebar {
+  flex-shrink: 0;
+  height: 100%;
+}
+
 .replay-feed {
   height: 100%;
   scroll-snap-type: y mandatory;
