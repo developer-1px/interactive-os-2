@@ -15,6 +15,7 @@ import { defineLayout } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { serializeToDefineLayout } from './serializeToDefineLayout'
+import { DefineLayoutPreview } from './DefineLayoutPreview'
 import { ax } from '@styles/ax'
 
 function useRegistrySnapshot(): Map<string, FlatLayoutActions> {
@@ -43,7 +44,7 @@ interface InspectorPageCtx {
 
 const InspectorPageContext = React.createContext<InspectorPageCtx | null>(null)
 
-function useInspectorPage(): InspectorPageCtx {
+export function useInspectorPage(): InspectorPageCtx {
   const ctx = useContext(InspectorPageContext)
   if (!ctx) throw new Error('InspectorPageContext missing')
   return ctx
@@ -94,10 +95,11 @@ function CopyBar() {
 const inspectorPageLayout = defineLayout({
   entities: {
     root: {
-      data: { type: 'split', direction: 'vertical', sizes: ['auto', 'flex', 'auto'], resizable: false },
-      children: ['selector', 'code', 'bar'],
+      data: { type: 'split', direction: 'vertical', sizes: ['auto', 'auto', 'flex', 'auto'], resizable: false },
+      children: ['selector', 'preview', 'code', 'bar'],
     },
     selector: { data: { type: 'widget', widget: 'InstanceSelector' } },
+    preview: { data: { type: 'widget', widget: 'DefineLayoutPreview' } },
     code: { data: { type: 'widget', widget: 'DefineLayoutSource', scroll: 'y' } },
     bar: { data: { type: 'widget', widget: 'CopyBar' } },
   },
@@ -105,6 +107,7 @@ const inspectorPageLayout = defineLayout({
 
 const inspectorPageRegistry = createWidgetRegistry({
   InstanceSelector,
+  DefineLayoutPreview,
   DefineLayoutSource,
   CopyBar,
 })
