@@ -102,17 +102,16 @@ export function Demo() {
   const scenarios: Scenario[] = ['code', 'terminal', 'search', 'live']
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm' })}>
-      <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs' })}>
+    <div className={ax({ layout: 'stack' })}>
+      <div className={ax({ layout: 'bar' })}>
         {scenarios.map(s => (
           <button
             key={s}
             type="button"
             onClick={() => setScenario(s)}
             className={ax({
-              interactive: 'button', padding: 'xs', shape: 'sm',
-              surface: scenario === s ? 'raised' : 'ghost',
-              weight: scenario === s ? 'semi' : undefined,
+              interactive: 'button',
+              surface: scenario === s ? 'raised' : 'ghost'
             })}
           >{s}</button>
         ))}

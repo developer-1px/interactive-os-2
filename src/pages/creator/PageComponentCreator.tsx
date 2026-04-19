@@ -8,9 +8,9 @@ import { creatorWidgets } from './creatorWidgets'
 const creatorLayout = definePage({
   entities: {
     root:     { data: { type: 'split', direction: 'horizontal', sizes: [0.15, 'flex', 0.35] }, children: ['sidebar', 'preview', 'source'] },
-    sidebar:  { data: { type: 'widget', widget: 'CreatorSidebar', surface: 'raised' } },
+    sidebar:  { data: { type: 'widget', widget: 'CreatorSidebar' } },
     preview:  { data: { type: 'widget', widget: 'CreatorPreview' } },
-    source:   { data: { type: 'widget', widget: 'CreatorSource', surface: 'raised' } },
+    source:   { data: { type: 'widget', widget: 'CreatorSource' } },
   },
 })
 

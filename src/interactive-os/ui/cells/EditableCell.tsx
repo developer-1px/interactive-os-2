@@ -18,7 +18,7 @@ export function EditableCell({ field, children, empty, allowEmpty, enterContinue
       allowEmpty={allowEmpty}
       enterContinue={enterContinue}
       tabContinue={tabContinue}
-      className={ax({ role: 'cell', surface: 'input' })}
+      className={ax({ role: 'item', surface: 'input' })}
     >
       <span className={empty ? ax({  }) : undefined}>
         {empty ? '—' : children}

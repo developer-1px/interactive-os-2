@@ -21,10 +21,10 @@ import { IncidentProvider } from './incidentContext'
 
 function BlockLog() {
   return (
-    <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-      <div className={ax({ layout: 'stack', textStyle: 'code', gap: 'xs' })}>
-        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:12</span><span className={ax({ weight: 'semi', tone: 'danger' })}>ERROR</span><span>pool exhausted</span></div>
-        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:14</span><span className={ax({ weight: 'semi', tone: 'warning' })}>WARN</span><span>active: 50/50, pending: 23</span></div>
+    <div className={ax({ surface: 'display' })}>
+      <div className={ax({ layout: 'stack', textStyle: 'code' })}>
+        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:12</span><span className={ax({ tone: 'danger' })}>ERROR</span><span>pool exhausted</span></div>
+        <div className={ax({ layout: 'bar' })}><span className={ax({ })}>14:35:14</span><span className={ax({ tone: 'warning' })}>WARN</span><span>active: 50/50, pending: 23</span></div>
       </div>
     </div>
   )
@@ -32,11 +32,11 @@ function BlockLog() {
 
 function BlockCause() {
   return (
-    <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+    <div className={ax({ surface: 'display' })}>
+      <div className={ax({ layout: 'bar' })}>
         <span className={ax({ tone: 'danger' })}><GitCommit size={12} /></span>
-        <span className={ax({ textStyle: 'caption', weight: 'medium', flex: '1' })}>PR #3421 — pool_size: 100 → 50</span>
-        <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'danger' })}>연관 87%</span>
+        <span className={ax({ textStyle: 'caption', flex: '1' })}>PR #3421 — pool_size: 100 → 50</span>
+        <span className={ax({ textStyle: 'caption', tone: 'danger' })}>연관 87%</span>
       </div>
     </div>
   )

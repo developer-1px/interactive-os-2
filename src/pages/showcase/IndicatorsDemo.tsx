@@ -15,8 +15,8 @@ import './IndicatorsDemo.css'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ layout: 'stack', gap: 'xs' })}>
-      <h3 className={`${ax({ textStyle: 'overline', text: 'primary', border: 'bottom' })} indicators-section-title`}>{title}</h3>
+    <div className={ax({ layout: 'stack' })}>
+      <h3 className={`${ax({ textStyle: 'overline' })} indicators-section-title`}>{title}</h3>
       {children}
     </div>
   )
@@ -24,9 +24,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className={`${ax({ gap: 'md' })} indicators-row`}>
-      <span className={ax({ textStyle: 'code', text: 'muted', clamp: '1' })}>{label}</span>
-      <div className={ax({ layout: 'bar', gap: 'md' })}>{children}</div>
+    <div className={`${ax({ })} indicators-row`}>
+      <span className={ax({ textStyle: 'code', clamp: '1' })}>{label}</span>
+      <div className={ax({ layout: 'bar' })}>{children}</div>
     </div>
   )
 }
@@ -50,9 +50,9 @@ function ExpandSection() {
           <ExpandIndicator expanded={true} variant="tree" />
         </Row>
         <Row label="interactive">
-          <div className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`} onClick={() => setExpanded(!expanded)}>
+          <div className={`${ax({ surface: 'ghost', layout: 'bar' })}`} onClick={() => setExpanded(!expanded)}>
             <ExpandIndicator expanded={expanded} />
-            <span className={ax({ textStyle: 'code', text: 'secondary' })}>{expanded ? 'expanded' : 'collapsed'}</span>
+            <span className={ax({ textStyle: 'code' })}>{expanded ? 'expanded' : 'collapsed'}</span>
           </div>
         </Row>
       </div>
@@ -93,12 +93,12 @@ function SeparatorSection() {
         </div>
       </Row>
       <Row label="vertical">
-        <div className={`${ax({ layout: 'bar', gap: 'md' })}`}>
-          <span className={ax({ textStyle: 'code', text: 'secondary' })}>A</span>
+        <div className={`${ax({ layout: 'bar' })}`}>
+          <span className={ax({ textStyle: 'code' })}>A</span>
           <SeparatorIndicator orientation="vertical" />
-          <span className={ax({ textStyle: 'code', text: 'secondary' })}>B</span>
+          <span className={ax({ textStyle: 'code' })}>B</span>
           <SeparatorIndicator orientation="vertical" />
-          <span className={ax({ textStyle: 'code', text: 'secondary' })}>C</span>
+          <span className={ax({ textStyle: 'code' })}>C</span>
         </div>
       </Row>
     </Section>
@@ -137,11 +137,11 @@ function SortSection() {
         </Row>
         <Row label="interactive">
           <div
-            className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`}
+            className={`${ax({ surface: 'ghost', layout: 'bar' })}`}
             onClick={() => setDir(d => d === undefined ? 'ascending' : d === 'ascending' ? 'descending' : undefined)}
           >
             <SortIndicator direction={dir} />
-            <span className={ax({ textStyle: 'code', text: 'secondary' })}>{dir ?? 'none'}</span>
+            <span className={ax({ textStyle: 'code' })}>{dir ?? 'none'}</span>
           </div>
         </Row>
       </div>
@@ -167,8 +167,8 @@ function ProgressSection() {
       <Row label="60%"><ProgressIndicator value={60} /></Row>
       <Row label="100%"><ProgressIndicator value={100} /></Row>
       <Row label="interactive">
-        <div className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`} onClick={() => setValue(v => v >= 100 ? 0 : v + 20)}>
-          <span className={ax({ textStyle: 'code', text: 'secondary' })}>{value}%</span>
+        <div className={`${ax({ surface: 'ghost', layout: 'bar' })}`} onClick={() => setValue(v => v >= 100 ? 0 : v + 20)}>
+          <span className={ax({ textStyle: 'code' })}>{value}%</span>
         </div>
         <ProgressIndicator value={value} />
       </Row>
@@ -204,9 +204,9 @@ function PageSection() {
       <Row label="5 dots, #2"><PageIndicator total={5} current={2} /></Row>
       <Row label="3 dots, #0"><PageIndicator total={3} current={0} /></Row>
       <Row label="interactive">
-        <div className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`} onClick={() => setCurrent(c => (c + 1) % 5)}>
+        <div className={`${ax({ surface: 'ghost', layout: 'bar' })}`} onClick={() => setCurrent(c => (c + 1) % 5)}>
           <PageIndicator total={5} current={current} />
-          <span className={ax({ textStyle: 'code', text: 'secondary' })}>page {current + 1}</span>
+          <span className={ax({ textStyle: 'code' })}>page {current + 1}</span>
         </div>
       </Row>
     </Section>
@@ -243,7 +243,7 @@ function BadgeSection() {
       <Row label="count=3"><BadgeIndicator count={3} /></Row>
       <Row label="count=42"><BadgeIndicator count={42} /></Row>
       <Row label="count=100"><BadgeIndicator count={100} /></Row>
-      <Row label="count=0"><BadgeIndicator count={0} /><span className={ax({ textStyle: 'code', text: 'secondary' })}>(hidden)</span></Row>
+      <Row label="count=0"><BadgeIndicator count={0} /><span className={ax({ textStyle: 'code' })}>(hidden)</span></Row>
     </Section>
   )
 }
@@ -253,7 +253,7 @@ function OverflowSection() {
     <Section title="Overflow">
       <Row label="count=3"><OverflowIndicator count={3} /></Row>
       <Row label="count=12"><OverflowIndicator count={12} /></Row>
-      <Row label="count=0"><OverflowIndicator count={0} /><span className={ax({ textStyle: 'code', text: 'secondary' })}>(hidden)</span></Row>
+      <Row label="count=0"><OverflowIndicator count={0} /><span className={ax({ textStyle: 'code' })}>(hidden)</span></Row>
     </Section>
   )
 }
@@ -272,14 +272,14 @@ function TreeConnectorSection() {
     <Section title="Tree Connector">
       <Row label="level=1"><TreeConnector level={1} /></Row>
       <Row label="isLast"><TreeConnector level={1} isLast /></Row>
-      <Row label="level=0"><TreeConnector level={0} /><span className={ax({ textStyle: 'code', text: 'secondary' })}>(hidden)</span></Row>
+      <Row label="level=0"><TreeConnector level={0} /><span className={ax({ textStyle: 'code' })}>(hidden)</span></Row>
     </Section>
   )
 }
 
 export default function IndicatorsDemo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'xl' })}>
+    <div className={ax({ layout: 'stack' })}>
       <ExpandSection />
       <CheckSection />
       <IndeterminateSection />

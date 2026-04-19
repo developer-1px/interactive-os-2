@@ -84,7 +84,9 @@ const renderItem = (
   return (
     <div
       {...props}
-      className={isHeader ? ax({ textStyle: 'body', text: 'primary', weight: 'semi', padding: 'xs', content: 'text', surface: 'sunken', border: 'bottom' }) : ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', border: 'bottom' })}
+      className={isHeader ? ax({
+          role: 'control-group',
+        textStyle: 'body', content: 'text', surface: 'sunken' }) : ax({ textStyle: 'body', content: 'text' })}
     >
       {label}
     </div>

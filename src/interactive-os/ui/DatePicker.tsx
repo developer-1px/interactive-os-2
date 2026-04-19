@@ -231,7 +231,7 @@ export function DatePicker({
 
   return (
     <div className={`${ax({ placement: 'relative' })} inline-block`}>
-      <div className={ax({ role: 'control-group', border: 'strong' })} style={{ anchorName } as React.CSSProperties}>
+      <div className={ax({ role: 'control-group' })} style={{ anchorName } as React.CSSProperties}>
         <input
           ref={inputRef}
           role="combobox"
@@ -239,7 +239,9 @@ export function DatePicker({
           aria-expanded={isOpen}
           aria-label={ariaLabel}
           aria-autocomplete="none"
-          className={`cursor-default ${ax({ surface: 'input', content: 'text', flex: '1' })} dp-input`}
+          className={`cursor-default ${ax({
+              role: 'control',
+            surface: 'input', content: 'text', flex: '1' })} dp-input`}
           type="text"
           readOnly
           value={value ? formatDate(value) : ''}
@@ -264,11 +266,11 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`${ax({ surface: 'trap', padding: 'sm', border: 'default', shape: 'sm', placement: 'anchor-below-start' })} dp-dialog`}
+          className={`${ax({ surface: 'trap', placement: 'anchor-below-start' })} dp-dialog`}
           style={{ positionAnchor: anchorName } as React.CSSProperties}
           onKeyDown={handleDialogKeyDown}
         >
-          <div className={`${ax({ layout: 'bar', gap: 'xs' })} dp-nav-bar`}>
+          <div className={`${ax({ layout: 'bar' })} dp-nav-bar`}>
             <button className={`${ax({ role: 'control', surface: 'ghost', content: 'icon',  })} dp-nav-btn`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
               <DirectionIndicator direction="prev" double />
             </button>
@@ -294,7 +296,7 @@ export function DatePicker({
             />
           </div>
 
-          <div className={`${ax({ layout: 'row', gap: 'sm' })} justify-end dp-actions`}>
+          <div className={`${ax({ layout: 'row' })} justify-end dp-actions`}>
             <button className={`${ax({ role: 'control', surface: 'ghost',  })} dp-action-btn font-inherit`} onClick={() => closeDialog()}>Cancel</button>
             <button className={`${ax({ role: 'control', surface: 'ghost',  })} dp-action-btn font-inherit`} onClick={confirmFocused}>OK</button>
           </div>

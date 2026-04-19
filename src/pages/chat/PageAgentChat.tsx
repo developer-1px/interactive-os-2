@@ -23,7 +23,7 @@ import './PageAgentChat.css'
 const chatBaseLayout = definePage({
   entities: {
     root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
-    sidebar:   { data: { type: 'widget', widget: 'WorkspaceSidebar', surface: 'sunken' } },
+    sidebar:   { data: { type: 'widget', widget: 'WorkspaceSidebar' } },
     main:      { data: { type: 'tabgroup', activeTabId: 't1' }, children: ['t1'] },
     t1:        { data: { type: 'tab', label: 'Chat', contentType: 'chat', contentRef: 'session-1' }, children: ['t1-body'] },
     't1-body': { data: { type: 'widget', widget: 'SurfaceLeaf' } },

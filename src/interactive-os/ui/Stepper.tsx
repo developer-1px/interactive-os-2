@@ -56,8 +56,7 @@ export function Stepper({
       {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)}
       aria-orientation={orientation}
       className={`${(tl.rootProps as Record<string, string>).className || ''} ${ax({
-        layout: isVertical ? 'stack' : 'bar',
-        gap: 'md',
+        layout: isVertical ? 'stack' : 'bar'
       })} ${className ?? ''}`}
     >
       {childIds.map((id) => {

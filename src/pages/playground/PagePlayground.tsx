@@ -1,59 +1,70 @@
-// /playground — definePage live preview 샌드박스.
-// @useState-hatch — playground: code editor text and split sizes are local view state
-import { useState, useMemo } from 'react'
+// /playground — 화면 작성 도구.
+// cmux 컨셉(tabgroup + 분할 단축키)을 빌려 각 빈 공간에 컴포넌트를 꽂아 화면을 조립한다.
+// 단축키: Mod+D 가로 분할 · Mod+Shift+D 세로 분할 · Mod+T 새 탭 · Mod+W 닫기 · Mod+Alt+Arrow focus 이동
+// Layout persistence: 변경이 있을 때마다 debounced localStorage save.
+//   mount 시 저장본이 있으면 그걸로 부팅하여 "마지막에 만든 모양"을 복원한다.
+// @useState-hatch — 초기 데이터는 localStorage 로드 1회 — 이후 FlatLayout 내부 store가 SSOT.
+import { useEffect, useState } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { SplitPane } from '@os/ui/SplitPane'
-import type { NormalizedData, PaneSize } from '@os/store/types'
-import { definePage } from '@os/layout/flatLayout'
-import { ax } from '@styles/ax'
-import { playgroundWidgets } from './playgroundWidgets'
-import { DEFAULT_CODE } from './playgroundDefaults'
+import type { NormalizedData } from '@os/schema'
+import { getFlatLayoutActions, subscribeFlatLayoutRegistry } from '@os/primitives/flatLayoutRegistry'
+import { PLAYGROUND_INITIAL, PLAYGROUND_CANVAS_ID } from './playgroundDefaults'
+import { playgroundWidgets, PickerRootWidget } from './playgroundWidgets'
+import { PlaygroundKeybindingsWidget } from './playgroundKeybindings'
 
-interface ParseResult {
-  store: NormalizedData | null
-  error: string | null
-}
+const PLAYGROUND_LAYOUT_KEY = 'playground-layout'
 
-function tryParse(code: string): ParseResult {
+function loadPersistedLayout(): NormalizedData {
   try {
-    const fn = new Function('return (' + code + ')')
-    const config = fn() as Parameters<typeof definePage>[0]
-    if (!config?.entities) {
-      return { store: null, error: 'config.entities is required' }
+    const raw = localStorage.getItem(PLAYGROUND_LAYOUT_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as NormalizedData
+      if (parsed?.entities && parsed?.relationships) return parsed
     }
-    return { store: definePage(config), error: null }
-  } catch (e) {
-    return { store: null, error: e instanceof Error ? e.message : String(e) }
-  }
+  } catch { /* ignore corrupt */ }
+  return PLAYGROUND_INITIAL
 }
 
 export default function PagePlayground() {
-  const [code, setCode] = useState(DEFAULT_CODE)
-  const [sizes, setSizes] = useState<PaneSize[]>([0.4, 'flex'])
+  // mount 1회 로드 — 이후 store가 SSOT, localStorage는 write-only.
+  const [initialData] = useState(loadPersistedLayout)
 
-  const { store, error } = useMemo(() => tryParse(code), [code])
+  useEffect(() => {
+    let innerUnsub: (() => void) | null = null
+    let timer: ReturnType<typeof setTimeout> | null = null
+    const persist = () => {
+      const actions = getFlatLayoutActions(PLAYGROUND_CANVAS_ID)
+      if (!actions) return
+      try { localStorage.setItem(PLAYGROUND_LAYOUT_KEY, JSON.stringify(actions.getStore())) }
+      catch { /* quota / JSON cycle — skip */ }
+    }
+    const attach = () => {
+      if (innerUnsub) return
+      const actions = getFlatLayoutActions(PLAYGROUND_CANVAS_ID)
+      if (!actions) return
+      innerUnsub = actions.subscribe(() => {
+        if (timer) return
+        timer = setTimeout(() => { timer = null; persist() }, 500)
+      })
+    }
+    const unsubRegistry = subscribeFlatLayoutRegistry(attach)
+    attach()
+    return () => {
+      unsubRegistry()
+      innerUnsub?.()
+      if (timer) clearTimeout(timer)
+    }
+  }, [])
 
   return (
-    <div className={ax({ layout: 'stack', flex: '1' })}>
-      {error && (
-        <div className={ax({ role: 'badge', surface: 'display', tone: 'danger', textStyle: 'caption' })}>
-          Error: {error}
-        </div>
-      )}
-      <div className={ax({ flex: '1', layout: 'fill' })}>
-        <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes}>
-          <textarea
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            className={ax({ role: 'control', surface: 'input', content: 'text', flex: '1', width: 'full' })}
-            spellCheck={false}
-            aria-label="definePage config"
-          />
-          <div className={ax({ flex: '1', layout: 'fill' })}>
-            {store && <FlatLayout data={store} registry={playgroundWidgets} aria-label="Preview" />}
-          </div>
-        </SplitPane>
-      </div>
-    </div>
+    <FlatLayout
+      id={PLAYGROUND_CANVAS_ID}
+      data={initialData}
+      registry={playgroundWidgets}
+      aria-label="Playground"
+    >
+      <PlaygroundKeybindingsWidget />
+      <PickerRootWidget />
+    </FlatLayout>
   )
 }

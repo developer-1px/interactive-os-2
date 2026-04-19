@@ -34,7 +34,7 @@ function rowRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
   const layout = (justify ? layoutMap[justify] : undefined) ?? 'row'
   return (
     <div
-      className={ax({ layout, gap: 'md' })}
+      className={ax({ layout })}
       {...(weight != null ? { 'data-weight': weight } : {})}
       {...(align === 'center' ? { 'data-align': 'center' } : {})}
     >
@@ -48,7 +48,7 @@ function columnRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
   const weight = d.weight as number | undefined
   return (
     <div
-      className={ax({ layout: 'stack', gap: 'md' })}
+      className={ax({ layout: 'stack' })}
       {...(weight != null ? { 'data-weight': weight } : {})}
     >
       {renderChildren(entity.id, depth)}
@@ -57,7 +57,7 @@ function columnRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
 }
 
 function cardRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
-  return <div className={ax({ surface: 'display', padding: 'md', shape: 'md' })}>{renderChildren(entity.id, depth)}</div>
+  return <div className={ax({ surface: 'display' })}>{renderChildren(entity.id, depth)}</div>
 }
 
 function buttonRenderer({ entity, renderNode, depth, onAction }: A2UIRenderContext) {
@@ -86,11 +86,13 @@ function textFieldRenderer({ entity }: A2UIRenderContext) {
   const value = (d.value as string) ?? ''
   const variant = d.variant as string | undefined
   return (
-    <div className={ax({ layout: 'stack', gap: 'xs' })}>
+    <div className={ax({ layout: 'stack' })}>
       {label && <label className={ax({ textStyle: 'label',  })}>{label}</label>}
       {variant === 'longText' ? (
         <textarea
-          className={ax({ surface: 'input', padding: 'sm', shape: 'sm', textStyle: 'body' })}
+          className={ax({
+              role: 'control',
+            surface: 'input', textStyle: 'body' })}
           defaultValue={value}
           placeholder={label}
           aria-label={label}
@@ -160,7 +162,7 @@ function TabsRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) {
   })
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <TabList
         data={tabStore}
         plugins={[]}
@@ -170,7 +172,7 @@ function TabsRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) {
           if (!isNaN(idx)) setActiveIndex(idx)
         }}
       />
-      <div className={ax({ padding: 'md' })}>
+      <div className={ax({ })}>
         {tabItems[activeIndex]?.child && store.entities[tabItems[activeIndex].child]
           ? renderNode(tabItems[activeIndex].child, depth + 1)
           : null}
@@ -192,7 +194,7 @@ function choicePickerRenderer({ entity }: A2UIRenderContext) {
 
   if (variant === 'multiSelect') {
     return (
-      <div className={ax({ layout: 'stack', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack' })}>
         {options.map((opt) => {
           const checkStore = createStore({
             entities: { [opt.id]: { id: opt.id, data: { label: opt.label, checked: false } } },
@@ -217,21 +219,21 @@ function choicePickerRenderer({ entity }: A2UIRenderContext) {
 function dividerRenderer({ entity }: A2UIRenderContext) {
   const axis = (entity.data as Record<string, unknown>).axis as string | undefined
   if (axis === 'vertical') {
-    return <div className={ax({ layout: 'stack', border: 'end' })} role="separator" aria-orientation="vertical" />
+    return <div className={ax({ layout: 'stack' })} role="separator" aria-orientation="vertical" />
   }
   return <hr className={ax({ width: 'full' })} />
 }
 
 function imageRenderer({ entity }: A2UIRenderContext) {
   const d = entity.data as Record<string, unknown>
-  return <img src={(d.url as string) ?? ''} alt={(d.alt as string) ?? ''} className={ax({ width: 'full', shape: 'md' })} />
+  return <img src={(d.url as string) ?? ''} alt={(d.alt as string) ?? ''} className={ax({ width: 'full' })} />
 }
 
 function modalRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) {
   const contentChildId = (entity.data as Record<string, unknown>).contentChild as string | undefined
   if (contentChildId && store.entities[contentChildId]) {
     return (
-      <div className={ax({ surface: 'overlay', padding: 'md', shape: 'md' })}>
+      <div className={ax({ surface: 'overlay' })}>
         {renderNode(contentChildId, depth + 1)}
       </div>
     )
@@ -242,7 +244,7 @@ function modalRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) 
 function dateTimeInputRenderer({ entity }: A2UIRenderContext) {
   const label = ((entity.data as Record<string, unknown>).label as string) ?? 'Date'
   return (
-    <div className={ax({ layout: 'stack', gap: 'xs' })}>
+    <div className={ax({ layout: 'stack' })}>
       {label && <label className={ax({ textStyle: 'label',  })}>{label}</label>}
       <TextInput aria-label={label} placeholder="YYYY-MM-DD" />
     </div>
@@ -253,7 +255,9 @@ export function fallbackRenderer({ entity }: A2UIRenderContext) {
   const d = entity.data as Record<string, unknown>
   const component = (d.component as string) ?? 'Unknown'
   return (
-    <div className={ax({ surface: 'sunken', padding: 'sm', shape: 'sm', textStyle: 'code' })}>
+    <div className={ax({
+        role: 'control-group',
+        surface: 'sunken', textStyle: 'code' })}>
       <div className={ax({ textStyle: 'caption' })}>Unknown: {component}</div>
       <pre className={ax({ textStyle: 'code',  })}>{JSON.stringify(d, null, 2)}</pre>
     </div>
@@ -266,7 +270,7 @@ function iconRenderer({ entity }: A2UIRenderContext) {
 }
 
 function videoRenderer({ entity }: A2UIRenderContext) {
-  return <video src={((entity.data as Record<string, unknown>).url as string) ?? ''} controls className={ax({ width: 'full', shape: 'md' })} />
+  return <video src={((entity.data as Record<string, unknown>).url as string) ?? ''} controls className={ax({ width: 'full' })} />
 }
 
 function audioPlayerRenderer({ entity }: A2UIRenderContext) {

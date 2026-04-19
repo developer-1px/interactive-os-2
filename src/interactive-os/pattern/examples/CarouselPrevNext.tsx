@@ -58,24 +58,24 @@ export function CarouselPrevNext() {
       ref={containerRef}
       aria-roledescription="carousel"
       aria-label="Highlighted features"
-      className={ax({ shape: 'sm', border: 'default', scroll: 'hidden' })}
+      className={ax({ })}
       onFocus={onFocusIn}
       onBlur={onFocusOut}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className={`${ax({ layout: 'row', surface: 'display', padding: 'xs' })} justify-end`}>
+      <div className={`${ax({ layout: 'row', surface: 'display' })} justify-end`}>
         <button
-          className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })}
+          className={ax({ interactive: 'button', layout: 'center' })}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
           {isRotating ? <Pause size="1em" /> : <Play size="1em" />}
         </button>
-        <button className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })} aria-label="Previous Slide" onClick={prev}>
+        <button className={ax({ interactive: 'button', layout: 'center' })} aria-label="Previous Slide" onClick={prev}>
           <ChevronLeft size="1em" />
         </button>
-        <button className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })} aria-label="Next Slide" onClick={next}>
+        <button className={ax({ interactive: 'button', layout: 'center' })} aria-label="Next Slide" onClick={next}>
           <ChevronRight size="1em" />
         </button>
       </div>
@@ -85,14 +85,14 @@ export function CarouselPrevNext() {
           role="group"
           aria-roledescription="slide"
           aria-label={`${currentIndex + 1} of ${slides.length}`}
-          className={ax({ surface: 'display', padding: 'md' })}
+          className={ax({ surface: 'display' })}
         >
-          <h3 className={ax({ text: 'bright', textStyle: 'section', weight: 'semi' })}>{slide.label}</h3>
-          <p className={ax({ text: 'secondary', textStyle: 'body' })}>{slide.desc}</p>
+          <h3 className={ax({ textStyle: 'section' })}>{slide.label}</h3>
+          <p className={ax({ textStyle: 'body' })}>{slide.desc}</p>
         </div>
       </div>
 
-      <div className={`${ax({ textStyle: 'caption', text: 'muted', surface: 'display', padding: 'xs' })} text-center`} aria-hidden="true">
+      <div className={`${ax({ textStyle: 'caption', surface: 'display' })} text-center`} aria-hidden="true">
         {currentIndex + 1} / {slides.length}
       </div>
     </section>

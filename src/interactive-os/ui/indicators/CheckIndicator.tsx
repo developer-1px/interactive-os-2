@@ -9,7 +9,7 @@ const checkIcon = (
 
 export function CheckIndicator({ className }: { className?: string }) {
   const classes = [
-    ax({ flex: 'none', layout: 'center', border: 'strong', shape: 'sm' }),
+    ax({ flex: 'none', layout: 'center' }),
     'bg-transparent',
     'item-indicator--checkbox',
     className,

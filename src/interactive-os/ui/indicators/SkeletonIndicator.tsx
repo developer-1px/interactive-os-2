@@ -8,6 +8,6 @@ interface SkeletonIndicatorProps {
 }
 
 export function SkeletonIndicator({ width, height, className }: SkeletonIndicatorProps) {
-  const classes = [ax({ shape: 'sm' }), 'item-indicator--skeleton', className].filter(Boolean).join(' ')
+  const classes = [ax({ }), 'item-indicator--skeleton', className].filter(Boolean).join(' ')
   return <div className={classes} style={{ width, height }} />
 }

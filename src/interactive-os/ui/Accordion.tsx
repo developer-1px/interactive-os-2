@@ -19,7 +19,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   if (isGroup) {
     return (
       <div>
-        <button type="button" {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'spread', width: 'full', border: 'bottom' })}>
+        <button type="button" {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'spread', width: 'full' })}>
           <span className={ax({})}>{label}</span>
           <span className={`accordion-chevron ${ax({ flex: 'none' })}`} data-expanded={state.expanded || undefined}>
             <ExpandIndicator />
@@ -35,7 +35,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   }
 
   return (
-    <div {...props} className={ax({ textStyle: 'body', padding: 'md' })}>
+    <div {...props} className={ax({ textStyle: 'body' })}>
       <span>{label}</span>
     </div>
   )

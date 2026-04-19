@@ -50,7 +50,9 @@ export function TabList({
   return (
     <div
       {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)}
-      className={`${(tl.rootProps as Record<string, string>).className || ''} ${ax({ layout: 'bar', gap: 'xs', padding: 'xs', surface: 'sunken', shape: 'md',  })}`}
+      className={`${(tl.rootProps as Record<string, string>).className || ''} ${ax({
+          role: 'control-group',
+        layout: 'bar', surface: 'sunken'  })}`}
     >
       {childIds.map((id) => {
         const entity = store.entities[id]

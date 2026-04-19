@@ -70,10 +70,10 @@ const renderTreeitem = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', textStyle: 'body', text: 'primary', gap: 'xs', interactive: 'item', shape: 'md' })} whitespace-nowrap outline-none cursor-default`}
+      className={`${ax({ layout: 'bar', textStyle: 'body', interactive: 'item' })} whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
     >
-      <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">
+      <span className={ax({ textStyle: 'caption' })} aria-hidden="true">
         {isFolder ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
       </span>
       <span>{label}</span>

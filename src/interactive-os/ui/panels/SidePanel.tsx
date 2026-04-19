@@ -28,7 +28,7 @@ export function SidePanel({
   if (collapsed) {
     return (
       <div
-        className={`${ax({ layout: 'stack', surface, flex: 'none', padding: 'sm' })}${className ? ` ${className}` : ''}`}
+        className={`${ax({ role: 'control-group', layout: 'stack', surface, flex: 'none' })}${className ? ` ${className}` : ''}`}
         role="region"
       >
         {header && (
@@ -45,7 +45,7 @@ export function SidePanel({
   }
 
   return (
-    <div className={`${ax({ layout: 'fill', surface })}${className ? ` ${className}` : ''}`} role="region">
+    <div className={`${ax({ role: 'control-group', layout: 'fill', surface })}${className ? ` ${className}` : ''}`} role="region">
       {header && (
         <PanelHeader>
           {header}

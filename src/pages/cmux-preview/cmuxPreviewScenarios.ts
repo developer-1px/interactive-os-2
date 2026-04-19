@@ -35,7 +35,7 @@ const baseContext: CmuxPreviewContextValue = {
 const chatBody = (prefix: string) => ({
   [`${prefix}-body`]:  { data: { type: 'split' as const, direction: 'vertical' as const, sizes: ['flex' as const, 0.18], resizable: true }, children: [`${prefix}-feed`, `${prefix}-comp`] },
   [`${prefix}-feed`]:  { data: { type: 'widget' as const, widget: 'Transcript' } },
-  [`${prefix}-comp`]:  { data: { type: 'widget' as const, widget: 'ComposerMock', surface: 'sunken' as const, padding: 'sm' as const } },
+  [`${prefix}-comp`]:  { data: { type: 'widget' as const, widget: 'ComposerMock', padding: 'sm' as const } },
 })
 
 // ── S1. default — 3 tabs (현재 MVP와 동일) ────────────────────
@@ -45,7 +45,7 @@ export const scenarioDefault: CmuxScenario = {
   page: definePage({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
-      sidebar: { data: { type: 'widget', widget: 'WorkspaceList', surface: 'sunken' } },
+      sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
       main:    { data: { type: 'tabgroup', activeTabId: 't-chat' }, children: ['t-chat', 't-files', 't-entities'] },
       't-chat':     { data: { type: 'tab', label: 'Chat — session-1' }, children: ['chat-body'] },
       ...chatBody('chat'),
@@ -66,7 +66,7 @@ export const scenarioSingle: CmuxScenario = {
   page: definePage({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
-      sidebar: { data: { type: 'widget', widget: 'WorkspaceList', surface: 'sunken' } },
+      sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
       main:    { data: { type: 'tabgroup', activeTabId: 't-chat' }, children: ['t-chat'] },
       't-chat': { data: { type: 'tab', label: 'Chat — session-1' }, children: ['chat-body'] },
       ...chatBody('chat'),
@@ -83,7 +83,7 @@ export const scenarioSplit: CmuxScenario = {
   page: definePage({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'work'] },
-      sidebar: { data: { type: 'widget', widget: 'WorkspaceList', surface: 'sunken' } },
+      sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
       work:    { data: { type: 'split', direction: 'horizontal', sizes: ['flex', 'flex'], resizable: true }, children: ['tg-left', 'tg-right'] },
       'tg-left':  { data: { type: 'tabgroup', activeTabId: 'tL-chat' }, children: ['tL-chat'] },
       'tL-chat':  { data: { type: 'tab', label: 'Chat — session-1' }, children: ['tL-body'] },
@@ -106,7 +106,7 @@ export const scenarioMulti: CmuxScenario = {
   page: definePage({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
-      sidebar: { data: { type: 'widget', widget: 'WorkspaceList', surface: 'sunken' } },
+      sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
       main:    { data: { type: 'tabgroup', activeTabId: 't2' }, children: ['t1', 't2', 't3', 't4', 't5', 't6'] },
       t1: { data: { type: 'tab', label: 'Chat — session-1' }, children: ['t1-b'] },
       t2: { data: { type: 'tab', label: 'Chat — CMS flat refactor' }, children: ['t2-b'] },
@@ -133,7 +133,7 @@ export const scenarioEmpty: CmuxScenario = {
   page: definePage({
     entities: {
       root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
-      sidebar: { data: { type: 'widget', widget: 'WorkspaceList', surface: 'sunken' } },
+      sidebar: { data: { type: 'widget', widget: 'WorkspaceList' } },
       main:    { data: { type: 'widget', widget: 'EmptyEntities' } },
     },
   }),

@@ -47,7 +47,7 @@ const showcaseWidgets = createWidgetRegistry({
 const showcaseLayout = definePage({
   entities: {
     root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex'], resizable: false }, children: ['sidebar', 'content'] },
-    sidebar: { data: { type: 'widget', widget: 'ShowcaseSidebar', surface: 'sunken' } },
+    sidebar: { data: { type: 'widget', widget: 'ShowcaseSidebar' } },
     content: { data: { type: 'widget', widget: 'ShowcaseContent' } },
   },
 })

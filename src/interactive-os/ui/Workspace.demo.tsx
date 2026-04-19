@@ -28,7 +28,7 @@ const initialData: NormalizedData = createStore({
 
 function renderPanel(tab: Entity) {
   const label = (tab.data as Record<string, unknown>)?.label as string ?? tab.id
-  return <div className={ax({ padding: 'md' })}>Content of {label}</div>
+  return <div className={ax({ })}>Content of {label}</div>
 }
 
 export function Demo() {

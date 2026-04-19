@@ -141,7 +141,9 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDel
       aria-valuemin={Math.round(minRatio * 100)}
       aria-valuemax={100 - Math.round(minRatio * 100)}
       aria-label={`Resize pane ${index + 1}`}
-      className={`${ax({ surface: 'action', placement: 'relative', flex: 'none' })} bg-transparent ${isHorizontal ? 'cursor-col-resize split-sep-h' : 'cursor-row-resize split-sep-v'}`}
+      className={`${ax({
+          role: 'control',
+        surface: 'action', placement: 'relative', flex: 'none' })} bg-transparent ${isHorizontal ? 'cursor-col-resize split-sep-h' : 'cursor-row-resize split-sep-v'}`}
       data-focused={nodeState.focused || undefined}
       onKeyDown={(e) => {
         if (e.currentTarget !== document.activeElement) return
@@ -207,7 +209,9 @@ export function SplitPane({
       : { flex: `0 0 ${(sizes[i] as number) * 100}%` }
 
     elements.push(
-      <div key={`pane-${i}`} className={ax({ layout: 'fill', scroll: 'hidden' })} style={sizeStyle}>
+      // pane은 overflow:visible (layout:'stack' 기본) — island shadow가 pane 경계 밖으로 펴질 수 있게.
+      // 내부 widget은 스스로 scroll을 관리한다.
+      <div key={`pane-${i}`} className={ax({ layout: 'stack' })} style={sizeStyle}>
         {child}
       </div>,
     )
@@ -233,7 +237,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={isHorizontal ? ax({ layout: 'row-fill', scroll: 'hidden' }) : ax({ layout: 'fill', scroll: 'hidden' })}
+      className={isHorizontal ? ax({ layout: 'row-fill' }) : ax({ layout: 'fill' })}
     >
       {elements}
     </div>

@@ -12,7 +12,7 @@ export default function InternalsLayout() {
   const layer = rest.split('/')[0]
 
   return (
-    <div className={`sidebar-layout ${ax({ layout: 'row', flex: '1', scroll: 'hidden' })}`}>
+    <div className={`sidebar-layout ${ax({ layout: 'row', flex: '1' })}`}>
       <AreaSidebar layer={layer} />
       <main className={`content ${ax({ flex: '1', layout: 'scroll' })}`}>
         <PageAreaViewer />

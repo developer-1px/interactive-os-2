@@ -54,7 +54,7 @@ export function AxPrinciplesFilterBar({ engine, store }: AxPrinciplesFilterBarPr
   const hasAny = chips.length > 0 || !!filter.query
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'sm', width: 'full' })}>
+    <div className={ax({ layout: 'stack', width: 'full' })}>
       {/* Query input */}
       <TextInput
         aria-label="Search principles"
@@ -64,7 +64,7 @@ export function AxPrinciplesFilterBar({ engine, store }: AxPrinciplesFilterBarPr
       />
 
       {/* Status / Tag / Priority segmented selectors */}
-      <div className={ax({ layout: 'stack', gap: 'xs' })}>
+      <div className={ax({ layout: 'stack' })}>
         <FilterGroup
           label="Status"
           options={STATUS_OPTIONS}
@@ -98,7 +98,6 @@ export function AxPrinciplesFilterBar({ engine, store }: AxPrinciplesFilterBarPr
             surface: 'ghost',
             interactive: 'button',
             content: 'text',
-            text: 'muted',
             textStyle: 'caption',
           })}
         >
@@ -120,9 +119,9 @@ function FilterGroup<T extends string>({
   onChange: (next: T | undefined) => void
 }) {
   return (
-    <div className={ax({ layout: 'stack', gap: 'xs' })}>
-      <span className={ax({ textStyle: 'overline', text: 'muted' })}>{label}</span>
-      <div className={ax({ layout: 'bar', gap: 'xs', clamp: 'scroll' })}>
+    <div className={ax({ layout: 'stack' })}>
+      <span className={ax({ textStyle: 'overline' })}>{label}</span>
+      <div className={ax({ layout: 'bar', clamp: 'scroll' })}>
         {options.map((opt) => {
           const active = value === opt
           return (
@@ -137,8 +136,6 @@ function FilterGroup<T extends string>({
                 tone: active ? 'accent' : 'neutral',
                 interactive: 'button',
                 content: 'text',
-                text: active ? 'bright' : 'muted',
-                border: active ? undefined : 'default',
                 textStyle: 'caption',
                 clamp: '1',
               })}

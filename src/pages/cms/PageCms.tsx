@@ -63,13 +63,13 @@ const cmsLayout = definePage({
       children: ['sidebar', 'preview', 'detail'],
     },
     sidebar: {
-      data: { type: 'widget', widget: 'CmsSidebar', surface: 'sunken' },
+      data: { type: 'widget', widget: 'CmsSidebar' },
     },
     preview: {
       data: { type: 'widget', widget: 'CmsPreview' },
     },
     detail: {
-      data: { type: 'widget', widget: 'CmsDetail', surface: 'sunken' },
+      data: { type: 'widget', widget: 'CmsDetail' },
     },
   },
 })

@@ -20,12 +20,12 @@ export function Demo() {
   const feedRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <StreamFeed
         items={items}
         feedRef={feedRef}
         renderItem={(item, _index, { isLatest }) => (
-          <div key={item.id} className={ax({ padding: 'sm' })}>
+          <div key={item.id} className={ax({ })}>
             {item.text}
           </div>
         )}

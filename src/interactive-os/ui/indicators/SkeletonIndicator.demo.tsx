@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <SkeletonIndicator width="200px" height="16px" />
       <SkeletonIndicator width="150px" height="16px" />
       <SkeletonIndicator width="100%" height="32px" />

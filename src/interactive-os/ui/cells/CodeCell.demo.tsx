@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm' })}>
+    <div className={ax({ layout: 'stack' })}>
       <CodeCell>const x = 42</CodeCell>
       <CodeCell>export function Demo() {'{}'}</CodeCell>
     </div>

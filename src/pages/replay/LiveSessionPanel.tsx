@@ -39,7 +39,7 @@ export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanel
   return (
     <div className={ax({ layout: 'fill' })}>
       {activeSessions.length > 0 ? (
-        <div className={ax({ scroll: 'x', flex: 'none' })}>
+        <div className={ax({ flex: 'none' })}>
           <TabList
             data={tabData}
             initialFocus={selectedId ?? undefined}
@@ -48,8 +48,8 @@ export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanel
           />
         </div>
       ) : (
-        <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })}>
-          <span className={ax({ textStyle: 'caption', text: 'muted' })}>활성 세션 없음</span>
+        <div className={ax({ layout: 'bar', flex: 'none' })}>
+          <span className={ax({ textStyle: 'caption' })}>활성 세션 없음</span>
         </div>
       )}
 
@@ -97,15 +97,15 @@ function LiveFeed({ sessionId, viewerTabs, fileViewerRef }: {
   return (
     <>
       {fetchError ? (
-        <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ layout: 'center', flex: '1', textStyle: 'caption' })}>
           Failed to load: {fetchError}
         </div>
       ) : initialLoading ? (
-        <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ layout: 'center', flex: '1', textStyle: 'caption' })}>
           Loading...
         </div>
       ) : messages.length === 0 ? (
-        <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ layout: 'center', flex: '1', textStyle: 'caption' })}>
           에이전트 활동 대기중...
         </div>
       ) : (
@@ -114,7 +114,7 @@ function LiveFeed({ sessionId, viewerTabs, fileViewerRef }: {
           blockRenderers={chatRenderers}
           isStreaming={agentStatus === 'running'}
           streamingLabel="Thinking"
-          className={ax({ flex: '1', padding: 'sm' })}
+          className={ax({ flex: '1' })}
         />
       )}
     </>

@@ -5,6 +5,7 @@ import { selected } from '../../axis/select'
 import { expanded } from '../../axis/expand'
 import { activateHandler } from '../../axis/activate'
 import { key } from '../../axis/types'
+import { createBatchCommand } from '../../engine/types'
 
 // APG Treegrid — "Hierarchical data grid."
 // Row ↔ Cell mode handlers (composite — uses exp + grid closures)
@@ -16,12 +17,21 @@ export function treegrid(columns: number): AriaPattern {
   const g = gridAxis(columns, { initialColIndex: -1 })
 
   // APG Treegrid ArrowRight:
-  //   cell mode → next col
+  //   cell mode, not last col → next col
+  //   cell mode, last col, expandable & collapsed → expand current row
+  //   cell mode, last col, otherwise → next row, last col
   //   row mode, expandable & collapsed → expand
   //   row mode, expandable & expanded → focus first child
   //   row mode, leaf (not expandable) → enter cell mode (col 0)
   const arrowRight = key(['core:set-col-index', 'core:focus', 'core:expand'], (ctx) => {
-    if (ctx.grid && ctx.grid.colIndex >= 0) return ctx.grid.focusNextCol()
+    if (ctx.grid && ctx.grid.colIndex >= 0) {
+      const atLastCol = ctx.grid.colIndex >= ctx.grid.colCount - 1
+      if (!atLastCol) return ctx.grid.focusNextCol()
+      if (ctx.expanded?.isExpandable && !ctx.expanded.is) return ctx.expanded.set(true)
+      const nextRowCmd = ctx.focusNext()
+      if ((nextRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
+      return createBatchCommand([nextRowCmd, ctx.grid.focusLastCol()])
+    }
     if (ctx.expanded?.isExpandable) {
       if (!ctx.expanded.is) return ctx.expanded.set(true)
       return ctx.focusChild()

@@ -34,11 +34,11 @@ const renderLink = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'body', padding: 'xs', content: 'text', tone: 'accent', interactive: 'item', shape: 'md' })} cursor-pointer outline-none`}
+      className={`${ax({ layout: 'bar', textStyle: 'body', content: 'text', tone: 'accent', interactive: 'item' })} cursor-pointer outline-none`}
       data-focused={state.focused || undefined}
     >
       <span>{label}</span>
-      <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} no-underline`}>{href}</span>
+      <span className={`${ax({ textStyle: 'caption' })} no-underline`}>{href}</span>
     </div>
   )
 }

@@ -64,8 +64,10 @@ export function SlideView({ data, slideIndex, slideCount }: SlideViewProps) {
 
   if (slides.length === 0) {
     return (
-      <div className={ax({ placement: 'viewport', surface: 'base', layout: 'center' })}>
-        <p className={ax({ textStyle: 'section', text: 'muted' })}>No slides — add headings to your document</p>
+      <div className={ax({
+          role: 'control-group',
+        placement: 'viewport', surface: 'base', layout: 'center' })}>
+        <p className={ax({ textStyle: 'section' })}>No slides — add headings to your document</p>
       </div>
     )
   }
@@ -74,12 +76,14 @@ export function SlideView({ data, slideIndex, slideCount }: SlideViewProps) {
   const headingStyle: 'display' | 'page' | 'section' = slide.level <= 1 ? 'display' : slide.level <= 2 ? 'page' : 'section'
 
   return (
-    <div className={ax({ placement: 'viewport', surface: 'base' })}>
-      <div className={ax({ layout: 'stack', gap: 'lg', padding: 'xl', width: 'prose' })}>
-        <h1 className={ax({ textStyle: headingStyle, text: 'primary' })}>{slide.title}</h1>
+    <div className={ax({
+        role: 'control-group',
+        placement: 'viewport', surface: 'base' })}>
+      <div className={ax({ layout: 'stack', width: 'prose' })}>
+        <h1 className={ax({ textStyle: headingStyle })}>{slide.title}</h1>
         <MarkdownViewer content={slide.content.join('\n\n')} config={showcaseMdConfig} />
       </div>
-      <div className={`${styles.counter} ${ax({ textStyle: 'caption', text: 'muted', placement: 'bottom' })}`}>
+      <div className={`${styles.counter} ${ax({ textStyle: 'caption', placement: 'bottom' })}`}>
         {slideIndex + 1} / {slideCount}
       </div>
     </div>

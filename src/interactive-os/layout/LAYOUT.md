@@ -27,7 +27,6 @@ const registry = createWidgetRegistry({ MyWidget, OtherWidget })
 | direction | `'horizontal' \| 'vertical'` | 필수 | 분할 방향 |
 | sizes | `(number \| 'flex')[]` | 필수 | 자식별 크기. number=비율(0~1), `'flex'`=나머지 |
 | resizable | `boolean` | `true` | `false`면 고정 비율, 리사이저 없음 |
-| surface | `LayoutSurface` | — | 깊이 레이어 |
 
 ```ts
 { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex', 0.3] }
@@ -175,7 +174,7 @@ registry에 등록된 React 컴포넌트를 배치한다.
 | source | `string` | — |
 
 ```ts
-{ type: 'widget', widget: 'MySidebar', surface: 'sunken' }
+{ type: 'widget', widget: 'MySidebar' }
 ```
 
 ### state — 데이터 전용 노드
@@ -193,7 +192,7 @@ registry에 등록된 React 컴포넌트를 배치한다.
 
 ## 공통 속성
 
-모든 LayoutNode는 `surface`와 `hidden`을 가진다:
+definePage는 **배치**만 소유한다. surface/재질/색상은 ax()·테마가 소유한다 — 위젯 컴포넌트 자신이 `ax({ surface: ... })`로 그린다.
 
 ### hidden — 조건부 노출
 
@@ -204,14 +203,13 @@ registry에 등록된 React 컴포넌트를 배치한다.
 `hidden: true`인 노드는 렌더링되지 않는다 (트리에서 제거).
 토글: `updateEntityData(data, nodeId, { hidden: false })` 또는 `layoutCommands.setHidden(nodeId, true/false)`.
 
-### surface — 깊이 레이어
+### padding — 래퍼 내부 여백
 
-| surface | 용도 | 시각 |
-|---------|------|------|
-| `'sunken'` | 보조 패널 (사이드바, 디테일) | 움푹 |
-| `'base'` | 기본 콘텐츠 | 평평 |
-| `'raised'` | 도구바, 부유 패널 | 올라옴 + shape: lg |
-| `'overlay'` | 모달, 팝업 | 최상위 |
+```ts
+{ type: 'stack', padding: 'md' }
+```
+
+`'xs' | 'sm' | 'md' | 'lg'`. container preset 기본값을 override.
 
 ---
 
@@ -325,9 +323,9 @@ const registry = createWidgetRegistry({
 definePage({
   entities: {
     root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.1, 'flex', 0.2] }, children: ['sidebar', 'preview', 'detail'] },
-    sidebar: { data: { type: 'widget', widget: 'Sidebar', surface: 'sunken' } },
+    sidebar: { data: { type: 'widget', widget: 'Sidebar' } },
     preview: { data: { type: 'widget', widget: 'Preview' } },
-    detail:  { data: { type: 'widget', widget: 'Detail', surface: 'sunken' } },
+    detail:  { data: { type: 'widget', widget: 'Detail' } },
   },
 })
 ```
@@ -401,7 +399,7 @@ definePage({
 definePage({
   entities: {
     root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.18, 'flex'] }, children: ['sidebar', 'content'] },
-    sidebar:   { data: { type: 'widget', widget: 'Sidebar', surface: 'sunken' } },
+    sidebar:   { data: { type: 'widget', widget: 'Sidebar' } },
     content:   { data: { type: 'stack' }, children: ['toolbar', 'sort-bar', 'main', 'miller'] },
     toolbar:   { data: { type: 'widget', widget: 'Toolbar' } },
     'sort-bar':{ data: { type: 'widget', widget: 'SortBar', hidden: false } },

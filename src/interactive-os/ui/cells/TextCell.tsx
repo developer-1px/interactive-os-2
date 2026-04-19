@@ -11,7 +11,7 @@ interface TextCellProps {
 export function TextCell({ children, align, className }: TextCellProps) {
   const alignClass = align === 'center' ? ' text-center' : align === 'end' ? ' text-right' : ''
   return (
-    <span className={ax({ role: 'cell', surface: 'display', clamp: '1' }) + alignClass + (className ? ` ${className}` : '')}>
+    <span className={ax({ role: 'item', surface: 'display', clamp: '1' }) + alignClass + (className ? ` ${className}` : '')}>
       {children}
     </span>
   )

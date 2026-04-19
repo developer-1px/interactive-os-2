@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div className={ax({ layout: 'row' })}>
       <Avatar name="Alice Kim" size="sm" />
       <Avatar name="Bob Park" size="md" />
       <Avatar name="Charlie Lee" size="lg" />

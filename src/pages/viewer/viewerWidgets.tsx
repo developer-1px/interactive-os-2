@@ -14,8 +14,9 @@ import type { SortKey } from './viewerSort'
 
 export function ViewerSidebarWidget() {
   const { sidebarData, onSidebarActivate } = useViewer()
+  // 사이드바 전체가 하나의 island — control-group.raised preset이 shape:island + padding + gap 자동 주입
   return (
-    <div className={ax({ role: 'control-group', layout: 'stack' })}>
+    <div className={ax({ role: 'control-group', surface: 'raised', layout: 'stack', flex: '1' })}>
       <NavList data={sidebarData} onActivate={onSidebarActivate} aria-label="Sidebar" />
     </div>
   )

@@ -81,16 +81,16 @@ export function Demo() {
   const done = MOCK_CARDS.filter((c) => c.agentState === 'done').length
 
   return (
-    <div className={ax({ layout: 'stack', scroll: 'hidden' })}>
+    <div className={ax({ layout: 'stack' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
-        <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <span className={ax({ text: 'bright', weight: 'medium' })}>Agent Dashboard</span>
-          <span className={ax({ text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ layout: 'bar' })}>
+          <span className={ax({ })}>Agent Dashboard</span>
+          <span className={ax({ textStyle: 'caption' })}>
             {waiting} waiting · {active} active · {done} done
           </span>
         </div>
       </PanelHeader>
-      <div className={ax({ padding: 'md' })}>
+      <div className={ax({ })}>
         <Kanban
           data={data}
           onActivate={(id: string) => {

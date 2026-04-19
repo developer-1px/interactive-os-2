@@ -30,12 +30,14 @@ const renderMeter = (
   void state
 
   return (
-    <div {...props} className={ax({ layout: 'bar', gap: 'sm', textStyle: 'body', text: 'primary' })}>
-      <span className={`${ax({ weight: 'semi' })}`}>{label}</span>
-      <span className={`${ax({ shape: 'sm', surface: 'sunken', flex: '1', placement: 'relative' })}`}>
-        <span className={`${ax({ shape: 'sm', tone: 'accent' })} h-full`} style={{ width: `${pct}%` }} />
+    <div {...props} className={ax({ layout: 'bar', textStyle: 'body' })}>
+      <span className={`${ax({ })}`}>{label}</span>
+      <span className={`${ax({
+          role: 'control-group',
+        surface: 'sunken', flex: '1', placement: 'relative' })}`}>
+        <span className={`${ax({ tone: 'accent' })} h-full`} style={{ width: `${pct}%` }} />
       </span>
-      <span className={`${ax({ text: 'secondary' })} text-right tabular-nums`}>{value}%</span>
+      <span className={`${ax({ })} text-right tabular-nums`}>{value}%</span>
     </div>
   )
 }

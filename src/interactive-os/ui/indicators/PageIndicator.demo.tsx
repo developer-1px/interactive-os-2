@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <PageIndicator total={5} current={0} />
       <PageIndicator total={5} current={2} />
       <PageIndicator total={5} current={4} />

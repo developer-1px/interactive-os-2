@@ -39,27 +39,29 @@ export function MonitoringBar({ services, onActivate }: {
     return (
       <span
         {...props}
-        className={ax({ role: 'control', surface: 'ghost', content: 'text', layout: 'bar', state: state.focused ? 'focused' : undefined })}
+        className={ax({ role: 'control', surface: 'ghost', content: 'text', layout: 'bar' })}
       >
         <span className={`incident-indicator ${STATUS_CLS[svc.status]}`} />
-        <span className={ax({ weight: 'medium' })}>{svc.name}</span>
-        <span className={ax({ textStyle: 'code', text: 'muted' })}>{svc.latency}</span>
+        <span className={ax({ })}>{svc.name}</span>
+        <span className={ax({ textStyle: 'code' })}>{svc.latency}</span>
       </span>
     )
   }, [])
 
   return (
-    <div className={ax({ surface: 'base', layout: 'bar', gap: 'sm', padding: 'sm', flex: 'none' })}>
-      <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'overline' })}><Activity size={12} /><span>Monitor</span></div>
+    <div className={ax({
+        role: 'control-group',
+        surface: 'base', layout: 'bar', flex: 'none' })}>
+      <div className={ax({ layout: 'bar', textStyle: 'overline' })}><Activity size={12} /><span>Monitor</span></div>
       <Toolbar
         data={data}
         renderItem={renderItem}
         onActivate={onActivate}
         aria-label="Service monitoring"
       />
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
-        <span className={ax({ textStyle: 'code', text: 'muted' })}>INC-1284</span>
-        <span className={`${ax({ textStyle: 'code', tone: 'danger', weight: 'semi' })} incident-monitor-meta-live`}>REC</span>
+      <div className={ax({ layout: 'bar' })}>
+        <span className={ax({ textStyle: 'code' })}>INC-1284</span>
+        <span className={`${ax({ textStyle: 'code', tone: 'danger' })} incident-monitor-meta-live`}>REC</span>
       </div>
     </div>
   )

@@ -1,0 +1,50 @@
+title: "Quick Open (Cmd+P)"
+number: 5
+group: Viewer
+scope:
+  description: |
+    Cmd+P로 파일명 fuzzy 검색 오버레이를 열고 Enter로 선택한다.
+    VS Code / Finder의 Command-P 관례를 따른다.
+  design: /screenshots/viewer-light.png
+
+behaviors:
+  - given: Viewer 어느 상태든
+    when: Cmd+P
+    then: QuickOpen 오버레이 표시, 이전 쿼리 자동 복원
+    status: done
+
+  - given: QuickOpen 열림
+    when: 텍스트 입력
+    then: 실시간 fuzzy match 결과 리스트 갱신
+    status: done
+
+  - given: 결과 리스트
+    when: ↓ / ↑ + Enter
+    then: 해당 파일 경로로 navigate, URL·preview 갱신
+    status: done
+
+  - given: QuickOpen 열림
+    when: Escape
+    then: 오버레이 닫힘, 현재 쿼리 저장
+    status: done
+
+  - given: QuickOpen 열림
+    when: 외부 클릭
+    then: 오버레이 닫힘
+    status: done
+
+  - given: 결과 없음
+    when: 매칭되는 파일 0건
+    then: "No matches" 빈 상태 표시
+    status: wip
+
+  - given: 대규모 트리 (1000+ 파일)
+    when: 입력 타이핑
+    then: 60fps 유지 (debounce 또는 virtualization)
+    status: todo
+
+decisions:
+  - title: 쿼리 persist
+    why: Command-P 재호출 시 직전 검색을 이어가는 것이 VS Code 관례. 매번 초기화는 context 재구축 피로
+  - title: 단일 overlay (AriaRoute 밖)
+    why: 트리·preview와 무관한 전역 단축키. keyMap은 AriaRoute, 렌더는 Shell 수준

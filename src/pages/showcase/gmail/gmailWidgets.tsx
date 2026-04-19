@@ -27,10 +27,12 @@ const topBarToolbarData = makeTopBarToolbarData()
 
 export function TopBarWidget() {
   return (
-    <div className={ax({ surface: 'base', layout: 'spread', padding: 'sm', flex: 'none', border: 'bottom' })}>
-      <div className={ax({ layout: 'bar', gap: 'sm', flex: 'none' })}>
+    <div className={ax({
+        role: 'control-group',
+        surface: 'base', layout: 'spread', flex: 'none' })}>
+      <div className={ax({ layout: 'bar', flex: 'none' })}>
         <Mail size={20} />
-        <span className={ax({ weight: 'semi', textStyle: 'body' })}>Gmail</span>
+        <span className={ax({ textStyle: 'body' })}>Gmail</span>
       </div>
       <div className={ax({ flex: '1', width: 'lg' })}>
         <Combobox
@@ -57,8 +59,8 @@ const folderData = makeFolderData()
 
 export function SidebarWidget() {
   return (
-    <div className={ax({ layout: 'stack', flex: '1', padding: 'sm' })}>
-      <div className={ax({ interactive: 'button', surface: 'action', tone: 'accent', role: 'control', layout: 'bar', gap: 'sm', content: 'text', shape: 'xl' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
+      <div className={ax({ interactive: 'button', surface: 'action', tone: 'accent', role: 'control', layout: 'bar', content: 'text' })}>
         <Pencil size={14} />
         <span>Compose</span>
       </div>
@@ -87,13 +89,13 @@ const mailSlots: ItemSlots = {
   rightContent: (node) => {
     const data = node.data as Record<string, unknown> | undefined
     const date = (data?.date as string) ?? ''
-    return <span className={ax({ textStyle: 'caption', text: 'muted' })}>{date}</span>
+    return <span className={ax({ textStyle: 'caption' })}>{date}</span>
   },
 }
 
 export function MailListWidget() {
   return (
-    <div className={ax({ layout: 'stack', flex: '1', border: 'end' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <TabList
         data={tabData}
         aria-label="Mail categories"
@@ -121,24 +123,24 @@ export function MailDetailWidget() {
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
-        <span className={ax({ weight: 'semi' })}>{MAIL_DETAIL.subject}</span>
+        <span className={ax({ })}>{MAIL_DETAIL.subject}</span>
       </PanelHeader>
-      <div className={ax({ layout: 'stack', gap: 'md', padding: 'md', flex: '1', scroll: 'auto' })}>
-        <div className={ax({ layout: 'stack', gap: 'xs' })}>
+      <div className={ax({ layout: 'stack', flex: '1' })}>
+        <div className={ax({ layout: 'stack' })}>
           <div className={ax({ layout: 'spread' })}>
-            <span className={ax({ weight: 'semi' })}>{MAIL_DETAIL.from}</span>
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>{MAIL_DETAIL.date}</span>
+            <span className={ax({ })}>{MAIL_DETAIL.from}</span>
+            <span className={ax({ textStyle: 'caption' })}>{MAIL_DETAIL.date}</span>
           </div>
-          <div className={ax({ textStyle: 'caption', text: 'muted' })}>To: {MAIL_DETAIL.to}</div>
+          <div className={ax({ textStyle: 'caption' })}>To: {MAIL_DETAIL.to}</div>
         </div>
-        <div className={ax({ border: 'top' })} />
-        <div className={ax({ textStyle: 'body', text: 'primary' })}>
+        <div className={ax({ })} />
+        <div className={ax({ textStyle: 'body' })}>
           {paragraphs.map((line, i) => (
             <p key={i}>{line || '\u00A0'}</p>
           ))}
         </div>
       </div>
-      <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm', flex: 'none', border: 'top' })}>
+      <div className={ax({ layout: 'bar', flex: 'none' })}>
         <ButtonToolbar
           data={actionToolbarData}
           onActivate={() => {}}

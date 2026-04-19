@@ -33,10 +33,10 @@ function createTabData() {
 function ThemePanel() {
   const { theme, toggle } = useTheme()
   return (
-    <div className={ax({ surface: 'display', layout: 'stack', gap: 'sm', padding: 'md', shape: 'lg', flex: 'none' })}>
-      <span className={ax({ textStyle: 'overline', text: 'muted' })}>THEME</span>
+    <div className={ax({ surface: 'display', layout: 'stack', flex: 'none' })}>
+      <span className={ax({ textStyle: 'overline' })}>THEME</span>
       <div className={ax({ layout: 'spread' })}>
-        <span className={ax({ textStyle: 'body', text: 'secondary' })}>Appearance</span>
+        <span className={ax({ textStyle: 'body' })}>Appearance</span>
         <button
           className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'neutral' })}
           onClick={toggle}
@@ -62,12 +62,12 @@ export default function PageThemeCreator() {
   }, [tabs])
 
   return (
-    <div className={`${ax({ layout: 'stack', gap: 'lg', padding: 'xl' })} theme-root`}>
+    <div className={`${ax({ layout: 'stack' })} theme-root`}>
       {/* Header */}
       <div className={ax({ layout: 'spread' })}>
-        <div className={ax({ layout: 'stack', gap: 'xs' })}>
-          <h1 className={ax({ textStyle: 'page', text: 'primary' })}>Axis Styleguide</h1>
-          <span className={ax({ textStyle: 'caption', text: 'muted' })}>12-axis MECE design system</span>
+        <div className={ax({ layout: 'stack' })}>
+          <h1 className={ax({ textStyle: 'page' })}>Axis Styleguide</h1>
+          <span className={ax({ textStyle: 'caption' })}>12-axis MECE design system</span>
         </div>
         <ThemePanel />
       </div>

@@ -151,8 +151,10 @@ export function PyramidView({ data, slideIndex }: PyramidViewProps) {
 
   if (pyramids.length === 0) {
     return (
-      <div className={ax({ placement: 'viewport', surface: 'base', layout: 'center' })}>
-        <p className={ax({ textStyle: 'section', text: 'muted' })}>No pyramids — add headings to your document</p>
+      <div className={ax({
+          role: 'control-group',
+        placement: 'viewport', surface: 'base', layout: 'center' })}>
+        <p className={ax({ textStyle: 'section' })}>No pyramids — add headings to your document</p>
       </div>
     )
   }
@@ -160,7 +162,9 @@ export function PyramidView({ data, slideIndex }: PyramidViewProps) {
   const current = pyramids[Math.min(slideIndex, pyramids.length - 1)]!
 
   return (
-    <div className={ax({ placement: 'viewport', surface: 'base', layout: 'center' })}>
+    <div className={ax({
+        role: 'control-group',
+        placement: 'viewport', surface: 'base', layout: 'center' })}>
       <FullMermaid code={current.code} />
     </div>
   )

@@ -15,6 +15,7 @@ export interface Decision {
 export interface StoryDoc {
   title: string
   number?: number
+  group?: string
   scope: {
     description: string
     design?: string

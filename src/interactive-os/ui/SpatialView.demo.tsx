@@ -26,7 +26,7 @@ export function Demo() {
   return (
     <SpatialView data={data} aria-label="Spatial demo">
       {(ctx) => (
-        <div className={ax({ layout: 'grid-2', gap: 'sm' })}>
+        <div className={ax({ layout: 'grid-2' })}>
           {['a', 'b', 'c', 'd'].map((id) => (
             <div
               key={id}

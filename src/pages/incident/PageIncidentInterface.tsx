@@ -23,10 +23,10 @@ import { CapturePanel } from './CapturePanel'
 function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
-    <div className={ax({ layout: 'bar', gap: 'sm' })}>
+    <div className={ax({ layout: 'bar' })}>
       <div className={`${ax({ layout: 'center', tone: 'accent' })} incident-avatar`}><Bot size={14} /></div>
-      <div className={ax({ layout: 'stack', flex: '1', gap: 'sm' })}>
-        <div className={ax({ textStyle: 'caption', text: 'primary' })}>
+      <div className={ax({ layout: 'stack', flex: '1' })}>
+        <div className={ax({ textStyle: 'caption' })}>
           {displayed}
           {!done && <StreamCursor />}
         </div>
@@ -115,7 +115,7 @@ export default function PageIncidentInterface() {
   }, [])
 
   return (
-    <div className={`incident-page grid h-full ${ax({ scroll: 'hidden' })}`}>
+    <div className={`incident-page grid h-full ${ax({ })}`}>
       {/* Zone 1: Monitoring Bar */}
       <MonitoringBar
         services={SERVICES}
@@ -132,14 +132,16 @@ export default function PageIncidentInterface() {
         />
         <CapturePanel selectedEventId={selectedEvent} />
 
-        <div className={`${ax({ surface: 'sunken', layout: 'stack', flex: 'none' })} incident-chat-zone`}>
+        <div className={`${ax({
+            role: 'control-group',
+            surface: 'sunken', layout: 'stack', flex: 'none' })} incident-chat-zone`}>
           <PanelHeader axes={{ layout: 'spread' }}>
-            <span className={ax({ layout: 'bar', gap: 'xs' })}><Bot size={12} />AI Analysis</span>
-            <span className={ax({ layout: 'bar', gap: 'xs', textStyle: 'code' })}>
+            <span className={ax({ layout: 'bar' })}><Bot size={12} />AI Analysis</span>
+            <span className={ax({ layout: 'bar', textStyle: 'code' })}>
               {endTime
                 ? <><CheckCircle size={10} /><span>{((endTime - (startTime ?? 0)) / 1000).toFixed(1)}s</span></>
                 : startTime
-                  ? <><Loader size={10} className={ax({ motion: 'spin' })} /><Elapsed startTime={startTime} /></>
+                  ? <><Loader size={10} className={ax({ })} /><Elapsed startTime={startTime} /></>
                   : null
               }
             </span>
@@ -148,13 +150,13 @@ export default function PageIncidentInterface() {
             items={items}
             feedRef={feedRef}
             isStreaming={isStreaming}
-            className={ax({ flex: '1', gap: 'sm', padding: 'sm' })}
+            className={ax({ flex: '1' })}
             renderItem={(msg) => {
               if (msg.type === 'user') {
                 return (
-                  <div className={ax({ layout: 'bar', gap: 'sm' })}>
+                  <div className={ax({ layout: 'bar' })}>
                     <div className={ax({ flex: '1' })}>
-                      <div className={ax({ textStyle: 'caption', weight: 'medium' })}>{msg.text}</div>
+                      <div className={ax({ textStyle: 'caption' })}>{msg.text}</div>
                     </div>
                     <div className={`${ax({ layout: 'center' })} incident-user-avatar`}><User size={14} /></div>
                   </div>
@@ -162,17 +164,17 @@ export default function PageIncidentInterface() {
               }
               if (msg.type === 'system') {
                 return (
-                  <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-                    <div className={ax({ textStyle: 'caption', weight: 'semi', tone: 'danger' })}>{msg.text}</div>
+                  <div className={ax({ surface: 'display' })}>
+                    <div className={ax({ textStyle: 'caption', tone: 'danger' })}>{msg.text}</div>
                   </div>
                 )
               }
               if (msg.type === 'tool') {
                 return (
-                  <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'code' })}>
+                  <div className={ax({ layout: 'bar', textStyle: 'code' })}>
                     <Zap size={10} />
-                    <span className={ax({ weight: 'semi' })}>{msg.toolName}</span>
-                    <span className={ax({ text: 'muted', clamp: '2' })}>{msg.text}</span>
+                    <span className={ax({ })}>{msg.toolName}</span>
+                    <span className={ax({ clamp: '2' })}>{msg.text}</span>
                   </div>
                 )
               }

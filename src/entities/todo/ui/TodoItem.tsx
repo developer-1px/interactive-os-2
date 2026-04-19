@@ -36,7 +36,7 @@ export function TodoItem(
     >
       <CheckIndicator />
       <span
-        className={`${ax({ clamp: '1', flex: '1', text: done ? 'muted' : 'primary' })} ${done ? styles.doneText : ''}`}
+        className={`${ax({ clamp: '1', flex: '1' })} ${done ? styles.doneText : ''}`}
       >
         {label}
       </span>

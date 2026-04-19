@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'sm' })}>
+    <div className={ax({ layout: 'row' })}>
       <Kbd>Ctrl</Kbd>
       <Kbd>Shift</Kbd>
       <Kbd>Enter</Kbd>

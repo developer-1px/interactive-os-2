@@ -38,10 +38,10 @@ export function AxPrinciplesHeader() {
   const count = selectFilteredPrinciples(store).length
 
   return (
-    <div className={ax({ layout: 'spread', padding: 'sm', width: 'full', gap: 'sm' })}>
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
-        <span className={ax({ textStyle: 'page', text: 'primary' })}>ax Metaprinciples</span>
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+    <div className={ax({ layout: 'spread', width: 'full' })}>
+      <div className={ax({ layout: 'bar' })}>
+        <span className={ax({ textStyle: 'page' })}>ax Metaprinciples</span>
+        <span className={ax({ textStyle: 'caption' })}>
           {count} principles
         </span>
       </div>
@@ -121,21 +121,19 @@ export function AxPrinciplesMaster() {
             interactive: 'item',
             content: 'text',
             layout: 'row',
-            width: 'full',
-            padding: 'sm',
-            gap: 'sm',
+            width: 'full'
           })}
           data-focused={state.focused || undefined}
           data-selected={state.selected || undefined}
         >
           <StatusIndicator tone={statusIndicatorTone(principle.status)} />
-          <div className={ax({ layout: 'stack', gap: 'xs', flex: '1' })}>
+          <div className={ax({ layout: 'stack', flex: '1' })}>
             <span
               className={`${ax({ textStyle: 'label', clamp: '1' })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary' })}`}
             >
               {principle.id} · {principle.name}
             </span>
-            <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '2' })}>
+            <span className={ax({ textStyle: 'caption', clamp: '2' })}>
               {principle.summary}
             </span>
           </div>
@@ -144,12 +142,9 @@ export function AxPrinciplesMaster() {
               className={ax({
                 role: 'badge',
                 surface: 'ghost',
-                border: 'default',
-                text: 'muted',
                 textStyle: 'caption',
                 content: 'text',
                 clamp: '1',
-                shape: 'pill',
                 flex: 'none',
               })}
             >
@@ -196,7 +191,7 @@ export function AxPrinciplesDetail() {
 
   if (!principle) {
     return (
-      <div className={ax({ layout: 'fill', padding: 'lg' })}>
+      <div className={ax({ layout: 'fill' })}>
         <EmptyState
           title="원리를 선택하세요"
           description="왼쪽 목록에서 항목을 클릭하거나 방향키로 포커스하면 상세가 표시됩니다."

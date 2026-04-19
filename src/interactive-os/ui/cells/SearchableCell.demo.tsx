@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm' })}>
+    <div className={ax({ layout: 'stack' })}>
       <SearchableCell>Normal text</SearchableCell>
       <SearchableCell muted>Muted text</SearchableCell>
       <SearchableCell empty>empty</SearchableCell>

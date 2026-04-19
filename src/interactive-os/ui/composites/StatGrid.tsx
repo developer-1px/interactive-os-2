@@ -7,17 +7,17 @@ export function statGridRenderer({ entity }: A2UIRenderContext) {
   const items = (d.items as Array<{ id?: string; value: string; label: string }>) ?? []
 
   if (items.length === 0) {
-    return <div className={ax({ layout: 'row', gap: 'md' })} />
+    return <div className={ax({ layout: 'row' })} />
   }
 
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div className={ax({ layout: 'row' })}>
       {items.map((item, i) => (
         <div
           key={item.id ?? `stat-${i}`}
-          className={ax({ surface: 'display', padding: 'md', shape: 'md', flex: '1' })}
+          className={ax({ surface: 'display', flex: '1' })}
         >
-          <div className={ax({ layout: 'stack', gap: 'xs' })}>
+          <div className={ax({ layout: 'stack' })}>
             <div className={ax({ textStyle: 'display' })}>{item.value}</div>
             <div className={ax({ textStyle: 'caption',  })}>{item.label}</div>
           </div>

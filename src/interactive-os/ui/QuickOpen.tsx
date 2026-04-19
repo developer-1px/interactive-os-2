@@ -221,8 +221,8 @@ function QuickOpenManaged({
     })
 
   const content = (
-    <div className={`quick-open-dialog ${ax({ layout: 'stack', surface: 'overlay', shape: 'xl', border: 'default', motion: 'slide-in', scroll: 'hidden' })}`} aria-label={ariaLabel}>
-      <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
+    <div className={`quick-open-dialog ${ax({ layout: 'stack', surface: 'overlay' })}`} aria-label={ariaLabel}>
+      <div className={ax({ layout: 'bar' })}>
         <Search size={16} className={ax({ flex: 'none' })} />
         <input
           className={`quick-open-input border-none outline-none ${ax({ role: 'control', flex: '1', content: 'text', clamp: '1' })}`}
@@ -243,10 +243,12 @@ function QuickOpenManaged({
             else if (ariaRef && typeof ariaRef === 'object') (ariaRef as React.MutableRefObject<HTMLElement | null>).current = el
           }}
         />
-        <kbd className={ax({ surface: 'base', textStyle: 'code', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
+        <kbd className={ax({
+            role: 'control-group',
+            surface: 'base', textStyle: 'code', flex: 'none', content: 'text' })}>ESC</kbd>
       </div>
       {isOpen && rootChildren.length > 0 ? (
-        <div id={listboxId} role="listbox" className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
+        <div id={listboxId} role="listbox" className={ax({ layout: 'scroll', flex: '1', content: 'text' })} onMouseDown={e => e.preventDefault()}>
           {hasGroups ? rootChildren.map(id => {
             const entity = store.entities[id]
             if (!entity) return null
@@ -263,7 +265,7 @@ function QuickOpenManaged({
           }) : renderItems(rootChildren)}
         </div>
       ) : (
-        <div className={ax({ layout: 'center', textStyle: 'body', padding: 'xl' })}>No results</div>
+        <div className={ax({ layout: 'center', textStyle: 'body' })}>No results</div>
       )}
     </div>
   )

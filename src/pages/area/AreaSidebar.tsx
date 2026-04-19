@@ -126,7 +126,7 @@ export function AreaSidebar({ layer }: { layer: string }) {
   if (!sidebarData) {
     // No L3 items for this layer — no sidebar
     return (
-      <nav className={`sidebar ${ax({ flex: 'none', scroll: 'y' })}`}>
+      <nav className={`sidebar ${ax({ flex: 'none' })}`}>
         <div className="sidebar-header">
           <div className={`logo ${ax({ layout: 'bar' })}`}>
             <div className="logo-mark" />
@@ -139,7 +139,7 @@ export function AreaSidebar({ layer }: { layer: string }) {
   }
 
   return (
-    <nav className={`sidebar ${ax({ flex: 'none', scroll: 'y' })}`}>
+    <nav className={`sidebar ${ax({ flex: 'none' })}`}>
       <div className="sidebar-header">
         <div className={`logo ${ax({ layout: 'bar' })}`}>
           <div className="logo-mark" />

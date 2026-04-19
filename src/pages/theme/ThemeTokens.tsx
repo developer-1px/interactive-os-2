@@ -35,8 +35,8 @@ const layouts = ['row', 'column', 'center', 'bar', 'spread', 'stack', 'scroll'] 
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'display', layout: 'stack', gap: 'sm', padding: 'md', shape: 'lg' })}>
-      <h3 className={ax({ textStyle: 'overline', text: 'muted' })}>{title}</h3>
+    <div className={ax({ surface: 'display', layout: 'stack' })}>
+      <h3 className={ax({ textStyle: 'overline' })}>{title}</h3>
       {children}
     </div>
   )
@@ -46,14 +46,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export function ThemeTokens() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'xl' })}>
+    <div className={ax({ layout: 'stack' })}>
       {/* Palette full strip */}
       <Section title="STONE PALETTE">
-        <div className={ax({ layout: 'row', gap: 'xs' })}>
+        <div className={ax({ layout: 'row' })}>
           {stoneSteps.map(step => (
-            <div key={step} className={ax({ layout: 'stack', gap: 'xs', flex: '1' })}>
-              <div className={`${ax({ shape: 'sm', aspect: '1' })} theme-palette-swatch`} data-stone={step} />
-              <span className={ax({ textStyle: 'code', text: 'muted' })}>{step}</span>
+            <div key={step} className={ax({ layout: 'stack', flex: '1' })}>
+              <div className={`${ax({ aspect: '1' })} theme-palette-swatch`} data-stone={step} />
+              <span className={ax({ textStyle: 'code' })}>{step}</span>
             </div>
           ))}
         </div>
@@ -61,7 +61,7 @@ export function ThemeTokens() {
 
       {/* 2-column grid: color tokens + visual tokens */}
       <div className="theme-composed-grid">
-        <div className={ax({ layout: 'stack', gap: 'md' })}>
+        <div className={ax({ layout: 'stack' })}>
           <Section title="DEPTH (elevation -1 → +2)">
             <div className={ax({ layout: 'grid-4' })}>
               {depths.map(d => (
@@ -85,29 +85,29 @@ export function ThemeTokens() {
           </Section>
 
           <Section title="TONE">
-            <div className={ax({ layout: 'grid-5', gap: 'sm' })}>
+            <div className={ax({ layout: 'grid-5' })}>
               {tones.map(t => (
-                <div key={t} className={ax({ layout: 'stack', gap: 'xs' })}>
-                  <div className={`${ax({ shape: 'md', aspect: 'card' })} theme-tone-swatch`} data-tone={t} />
+                <div key={t} className={ax({ layout: 'stack' })}>
+                  <div className={`${ax({ aspect: 'card' })} theme-tone-swatch`} data-tone={t} />
                   <span className={ax({ textStyle: 'code' })}>{t}</span>
                 </div>
               ))}
             </div>
-            <div className={ax({ layout: 'grid-5', gap: 'sm' })}>
+            <div className={ax({ layout: 'grid-5' })}>
               {tones.map(t => (
-                <div key={t} className={ax({ layout: 'stack', gap: 'xs' })}>
-                  <div className={`${ax({ shape: 'md', aspect: 'card' })} theme-tone-dim-swatch`} data-tone={t} />
-                  <span className={ax({ textStyle: 'code', text: 'muted' })}>{t}-dim</span>
+                <div key={t} className={ax({ layout: 'stack' })}>
+                  <div className={`${ax({ aspect: 'card' })} theme-tone-dim-swatch`} data-tone={t} />
+                  <span className={ax({ textStyle: 'code' })}>{t}-dim</span>
                 </div>
               ))}
             </div>
           </Section>
 
           <Section title="TEXT COLOR">
-            <div className={ax({ layout: 'grid-4', gap: 'sm' })}>
+            <div className={ax({ layout: 'grid-4' })}>
               {textColors.map(c => (
-                <div key={c} className={ax({ layout: 'stack', gap: 'xs' })}>
-                  <span className={ax({ textStyle: 'page', text: c })}>Ag</span>
+                <div key={c} className={ax({ layout: 'stack' })}>
+                  <span className={ax({ textStyle: 'page' })}>Ag</span>
                   <span className={ax({ textStyle: 'code' })}>{c}</span>
                 </div>
               ))}
@@ -115,71 +115,71 @@ export function ThemeTokens() {
           </Section>
         </div>
 
-        <div className={ax({ layout: 'stack', gap: 'md' })}>
+        <div className={ax({ layout: 'stack' })}>
           <Section title="TYPOGRAPHY SCALE">
             <div className={ax({ layout: 'stack' })}>
               {textStyles.map(t => (
-                <div key={t.name} className={`${ax({ layout: 'spread', padding: 'sm', border: 'bottom' })} theme-type-row`}>
-                  <span className={ax({ textStyle: t.name as Axes['textStyle'], text: 'primary' })}>{t.name}</span>
-                  <span className={ax({ textStyle: 'code', text: 'muted' })}>{t.desc}</span>
+                <div key={t.name} className={`${ax({ layout: 'spread' })} theme-type-row`}>
+                  <span className={ax({ textStyle: t.name as Axes['textStyle'] })}>{t.name}</span>
+                  <span className={ax({ textStyle: 'code' })}>{t.desc}</span>
                 </div>
               ))}
             </div>
           </Section>
 
           <Section title="SPACING">
-            <div className={ax({ layout: 'stack', gap: 'xs' })}>
+            <div className={ax({ layout: 'stack' })}>
               {spacingScale.map(s => (
-                <div key={s.name} className={ax({ layout: 'bar', gap: 'sm' })}>
-                  <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-spacing-label`}>{s.px}</span>
-                  <div className={`${ax({ shape: 'sm' })} theme-spacing-bar`} data-size={s.name} />
-                  <span className={ax({ textStyle: 'code', text: 'secondary' })}>{s.name}</span>
+                <div key={s.name} className={ax({ layout: 'bar' })}>
+                  <span className={`${ax({ textStyle: 'code' })} theme-spacing-label`}>{s.px}</span>
+                  <div className={`${ax({ })} theme-spacing-bar`} data-size={s.name} />
+                  <span className={ax({ textStyle: 'code' })}>{s.name}</span>
                 </div>
               ))}
             </div>
           </Section>
 
           <Section title="SHADOW">
-            <div className={ax({ layout: 'row', gap: 'sm' })}>
+            <div className={ax({ layout: 'row' })}>
               {shadows.map(s => (
-                <div key={s} className={ax({ layout: 'stack', gap: 'xs', flex: '1' })}>
-                  <div className={`${ax({ shape: 'md', padding: 'lg', layout: 'center', aspect: '1', surface: 'display' })} theme-shadow-swatch`} data-shadow={s} />
-                  <span className={ax({ textStyle: 'code', text: 'muted' })}>{s}</span>
+                <div key={s} className={ax({ layout: 'stack', flex: '1' })}>
+                  <div className={`${ax({ layout: 'center', aspect: '1', surface: 'display' })} theme-shadow-swatch`} data-shadow={s} />
+                  <span className={ax({ textStyle: 'code' })}>{s}</span>
                 </div>
               ))}
             </div>
           </Section>
 
           <Section title="SHAPE">
-            <div className={ax({ layout: 'row', gap: 'sm' })}>
+            <div className={ax({ layout: 'row' })}>
               {shapes.map(s => (
-                <div key={s} className={ax({ layout: 'stack', gap: 'xs' })}>
-                  <div className={`${ax({ shape: s as Axes['shape'], square: '2xl', tone: 'accent' })} theme-shape-swatch`} />
-                  <span className={ax({ textStyle: 'code', text: 'muted' })}>{s}</span>
+                <div key={s} className={ax({ layout: 'stack' })}>
+                  <div className={`${ax({ tone: 'accent' })} theme-shape-swatch`} />
+                  <span className={ax({ textStyle: 'code' })}>{s}</span>
                 </div>
               ))}
             </div>
           </Section>
 
           <Section title="BORDER">
-            <div className={ax({ layout: 'row', gap: 'sm' })}>
+            <div className={ax({ layout: 'row' })}>
               {(['subtle', 'default', 'strong'] as const).map(b => (
-                <div key={b} className={ax({ layout: 'stack', gap: 'xs', flex: '1' })}>
-                  <div className={`${ax({ shape: 'md', padding: 'lg', aspect: 'card', surface: 'display' })} theme-border-swatch`} data-border={b} />
-                  <span className={ax({ textStyle: 'code', text: 'muted' })}>{b}</span>
+                <div key={b} className={ax({ layout: 'stack', flex: '1' })}>
+                  <div className={`${ax({ aspect: 'card', surface: 'display' })} theme-border-swatch`} data-border={b} />
+                  <span className={ax({ textStyle: 'code' })}>{b}</span>
                 </div>
               ))}
             </div>
           </Section>
 
           <Section title="LAYOUT">
-            <div className={ax({ layout: 'grid-4', gap: 'sm' })}>
+            <div className={ax({ layout: 'grid-4' })}>
               {layouts.map(l => (
-                <div key={l} className={ax({ layout: 'stack', gap: 'xs' })}>
-                  <div className={`${ax({ layout: l as Axes['layout'], gap: 'xs', padding: 'sm', shape: 'md' })} theme-layout-box`}>
-                    <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
-                    <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
-                    <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
+                <div key={l} className={ax({ layout: 'stack' })}>
+                  <div className={`${ax({ layout: l as Axes['layout'] })} theme-layout-box`}>
+                    <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
+                    <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
+                    <div className={`${ax({ flex: 'none' })} theme-layout-child`} />
                   </div>
                   <span className={ax({ textStyle: 'code' })}>{l}</span>
                 </div>

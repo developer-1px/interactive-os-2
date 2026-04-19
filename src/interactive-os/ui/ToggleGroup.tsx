@@ -19,7 +19,7 @@ export function ToggleGroup({
   orientation: _orientation = 'horizontal',
 }: ToggleGroupProps) {
   return (
-    <div className={ax({ layout: 'row', border: 'strong', shape: 'sm', scroll: 'hidden' })}>
+    <div className={ax({ layout: 'row' })}>
       <Aria
         pattern={toggleGroupPattern}
         data={data}

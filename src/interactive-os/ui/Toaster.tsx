@@ -30,7 +30,7 @@ export function Toaster({ toaster }: ToasterProps): ReactNode {
   )
 
   return (
-    <div aria-live="polite" aria-atomic="false" className={`pointer-none ${ax({ layout: 'stack', gap: 'sm' })}`}>
+    <div aria-live="polite" aria-atomic="false" className={`pointer-none ${ax({ layout: 'stack' })}`}>
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={toaster.dismiss} />
       ))}

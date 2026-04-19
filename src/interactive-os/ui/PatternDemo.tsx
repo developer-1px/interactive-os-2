@@ -104,7 +104,7 @@ function getStateLabel(state: NodeState): string | null {
 }
 
 function getItemClass(_state: NodeState): string {
-  return `pattern-demo-item ${ax({ layout: 'bar', textStyle: 'body', padding: 'xs', shape: 'sm', gap: 'sm' })}`
+  return `pattern-demo-item ${ax({ layout: 'bar', textStyle: 'body' })}`
 }
 
 const defaultRender = (
@@ -141,7 +141,9 @@ function PatternDemoInner({ entry }: { entry: PatternEntry }) {
   const pattern = useMemo(() => entry.pattern, [entry.pattern])
 
   return (
-    <div className={ax({ surface: 'sunken', shape: 'md', padding: 'sm', width: 'sm' })}>
+    <div className={ax({
+        role: 'control-group',
+        surface: 'sunken', width: 'sm' })}>
       <Aria
         pattern={pattern}
         data={data}

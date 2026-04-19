@@ -1,0 +1,5 @@
+/* ChatLog floating 높이 제한 — ax에 없는 max-height 제어용 last-mile CSS. */
+.chatlogContainer {
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+}

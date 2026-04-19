@@ -11,18 +11,20 @@ export function masterDetailRenderer({ entity, renderNode, depth }: A2UIRenderCo
 
   if (!detailId) {
     return (
-      <div className={ax({ layout: 'stack', gap: 'md' })}>
+      <div className={ax({ layout: 'stack' })}>
         {masterId && renderNode(masterId, depth + 1)}
       </div>
     )
   }
 
   return (
-    <div className={ax({ layout: 'row', gap: 'lg' })}>
+    <div className={ax({ layout: 'row' })}>
       <div className={ax({ flex: '1' })}>
         {masterId && renderNode(masterId, depth + 1)}
       </div>
-      <div className={ax({ surface: 'raised', border: 'ring', padding: 'md', shape: 'md', flex: '1' })}>
+      <div className={ax({
+          role: 'control-group',
+        surface: 'raised', flex: '1' })}>
         {renderNode(detailId, depth + 1)}
       </div>
     </div>

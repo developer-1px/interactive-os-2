@@ -14,7 +14,9 @@ export function Progress({ value, tone = 'accent', 'aria-label': ariaLabel }: Pr
 
   return (
     <div
-      className={ax({ surface: 'sunken', shape: 'pill', width: 'full', square: 'xs', scroll: 'hidden' })}
+      className={ax({
+          role: 'control-group',
+        surface: 'sunken', width: 'full' })}
       role="progressbar"
       aria-valuenow={clamped}
       aria-valuemin={0}
@@ -22,7 +24,9 @@ export function Progress({ value, tone = 'accent', 'aria-label': ariaLabel }: Pr
       aria-label={ariaLabel}
     >
       <div
-        className={`${ax({ surface: 'action', tone, square: 'xs' })} ${styles.fill}`}
+        className={`${ax({
+            role: 'control',
+            surface: 'action', tone })} ${styles.fill}`}
         style={{ width: `${clamped}%` }}
       />
     </div>

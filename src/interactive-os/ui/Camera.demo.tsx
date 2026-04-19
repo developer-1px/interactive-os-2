@@ -9,7 +9,7 @@ import { Button } from './Button'
 
 export function CameraInteractDemo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <h3>Camera — interact 모드 (휠/ctrl+휠/드래그)</h3>
       <div style={{ width: 480, height: 320, border: '1px solid var(--color-border-subtle)' }}>
         <Camera mode="interact">
@@ -44,9 +44,9 @@ const shots: Shot[] = [
 export function CameraSequenceDemo() {
   const ref = useRef<CameraHandle>(null)
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <h3>Camera — view 모드 시퀀스 (time → end + hold 조합)</h3>
-      <div className={ax({ layout: 'row', gap: 'sm' })}>
+      <div className={ax({ layout: 'row' })}>
         <Button onClick={() => ref.current?.play()}>Play</Button>
         <Button onClick={() => ref.current?.pause()}>Pause</Button>
         <Button onClick={() => ref.current?.stop()}>Stop</Button>
@@ -70,9 +70,9 @@ export function CameraSequenceDemo() {
 export function CameraImperativeDemo() {
   const ref = useRef<CameraHandle>(null)
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <h3>Camera — imperative focus</h3>
-      <div className={ax({ layout: 'row', gap: 'sm' })}>
+      <div className={ax({ layout: 'row' })}>
         <Button onClick={() => ref.current?.focus('[data-target="alpha"]', { scale: 2 })}>Focus Alpha</Button>
         <Button onClick={() => ref.current?.focus('[data-target="beta"]', { scale: 1.5 })}>Focus Beta</Button>
         <Button onClick={() => ref.current?.focus('[data-target="gamma"]', { scale: 3 })}>Focus Gamma</Button>
@@ -90,3 +90,5 @@ export function CameraImperativeDemo() {
     </div>
   )
 }
+
+export const Demo = CameraInteractDemo

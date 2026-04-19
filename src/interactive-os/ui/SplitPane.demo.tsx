@@ -16,8 +16,8 @@ export function Demo() {
   return (
     <div className={ax({ layout: 'fill' })} data-full-height>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes}>
-        <div className={ax({ padding: 'md' })}>Left pane</div>
-        <div className={ax({ padding: 'md' })}>Right pane</div>
+        <div className={ax({ })}>Left pane</div>
+        <div className={ax({ })}>Right pane</div>
       </SplitPane>
     </div>
   )

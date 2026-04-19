@@ -74,17 +74,19 @@ export function SubAgentStageWidget(props: SubAgentStageWidgetProps): ReactEleme
   const subCtx = useMemo(() => ({ session, matchKey, parentSessionId }), [session, matchKey, parentSessionId])
 
   return (
-    <div className={`replay-subagent-viewer ${ax({ layout: 'stack', flex: 'none', surface: 'base' })}`}>
+    <div className={`replay-subagent-viewer ${ax({
+        role: 'control-group',
+        layout: 'stack', flex: 'none', surface: 'base' })}`}>
       {/* Header — agentType + description + status badges */}
-      <div className={ax({ layout: 'row', gap: 'sm', padding: 'sm', border: 'bottom', flex: 'none' })}>
+      <div className={ax({ layout: 'row', flex: 'none' })}>
         <StatusIndicator tone={session.isActive ? 'success' : 'info'} />
-        <span className={ax({ textStyle: 'caption', weight: 'semi' })}>{session.agentType}</span>
-        <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1', flex: 'auto' })}>{session.description}</span>
+        <span className={ax({ textStyle: 'caption' })}>{session.agentType}</span>
+        <span className={ax({ textStyle: 'caption', clamp: '1', flex: 'auto' })}>{session.description}</span>
         {orphan && (
-          <span className={ax({ role: 'badge', surface: 'display', tone: 'warning', padding: 'xs', textStyle: 'caption' })}>orphan</span>
+          <span className={ax({ role: 'badge', surface: 'display', tone: 'warning', textStyle: 'caption' })}>orphan</span>
         )}
         {!session.isActive && (
-          <span className={ax({ role: 'badge', surface: 'display', tone: 'neutral', padding: 'xs', textStyle: 'caption' })}>완료</span>
+          <span className={ax({ role: 'badge', surface: 'display', tone: 'neutral', textStyle: 'caption' })}>완료</span>
         )}
       </div>
 

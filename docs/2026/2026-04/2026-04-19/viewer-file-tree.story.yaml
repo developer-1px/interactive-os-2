@@ -1,0 +1,45 @@
+title: "파일 트리 탐색"
+number: 3
+group: Viewer
+scope:
+  description: |
+    좌측 TreeGrid에서 폴더/파일을 키보드·마우스로 탐색한다.
+    focus가 파일에 머물면 우측 preview가 자동 전환된다 (follow-focus).
+  design: /screenshots/viewer.png
+
+behaviors:
+  - given: 트리 초기 로드 완료
+    when: ↓ / ↑ 키로 이동
+    then: 다음/이전 visible 노드로 focus 이동
+    status: done
+
+  - given: 폴더에 focus
+    when: → 또는 Enter
+    then: 폴더 확장, 자식 노드 visible
+    status: done
+
+  - given: 확장된 폴더에 focus
+    when: ←
+    then: 폴더 축소, 자식 숨김
+    status: done
+
+  - given: 파일에 focus
+    when: 아무 액션 없이 focus 유지
+    then: 우측 FilePanel이 해당 경로의 파일을 preview
+    status: done
+
+  - given: 파일 focus 상태
+    when: 브라우저 새로고침
+    then: URL 경로로 해당 파일 focus·preview 복원
+    status: done
+
+  - given: dev 서버에서 파일 추가/삭제
+    when: fs HMR 이벤트 수신
+    then: 트리 재페치 + focus/expanded 상태 유지
+    status: wip
+
+decisions:
+  - title: follow-focus 모델
+    why: Finder의 "선택=preview" 관계를 키보드에도 일관 적용. Enter로만 preview 열리면 키보드 사용자 피로
+  - title: URL=focus SSOT
+    why: 새로고침·공유·뒤로가기 모두 동일하게 복원되어야 함

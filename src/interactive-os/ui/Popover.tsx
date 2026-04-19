@@ -82,11 +82,7 @@ export function Popover({ content, placement = 'bottom', children }: PopoverProp
         className={ax({
           surface: 'overlay',
           placement: placementMap[placement],
-          padding: 'md',
-          shape: 'md',
-          textStyle: 'body',
-          motion: 'fade-slide-in',
-          border: 'subtle',
+          textStyle: 'body'
         })}
         style={{
           positionAnchor: anchorName,

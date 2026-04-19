@@ -199,6 +199,73 @@ export function buildBook(): { chapters: Chapter[]; pages: BookPage[] } {
   return { chapters, pages: allPages }
 }
 
+// ── Slide splitting: split markdown content by h2 headings ──
+
+export function splitIntoSlides(content: string): string[] {
+  const lines = content.split('\n')
+  const slides: string[] = []
+  let current: string[] = []
+
+  for (const line of lines) {
+    // Split on ## (h2) or # (h1) headings
+    if (/^#{1,2}\s/.test(line) && current.length > 0) {
+      const text = current.join('\n').trim()
+      if (text) slides.push(text)
+      current = [line]
+    } else {
+      current.push(line)
+    }
+  }
+
+  const last = current.join('\n').trim()
+  if (last) slides.push(last)
+
+  // If no headings found, treat entire content as one slide
+  return slides.length === 0 ? [content] : slides
+}
+
+// ── Chapter list store builder (left panel) ──
+
+export function buildChapterStore(chapters: Chapter[], currentChapterId: string): NormalizedData {
+  const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
+  const ids: string[] = []
+
+  for (const chapter of chapters) {
+    entities[chapter.id] = {
+      id: chapter.id,
+      data: { label: chapter.label, pageCount: chapter.pages.length },
+    }
+    ids.push(chapter.id)
+  }
+
+  entities[FOCUS_ID] = { id: FOCUS_ID, focusedId: currentChapterId } as never
+  entities[SELECTION_ID] = { id: SELECTION_ID, selectedIds: [currentChapterId] } as never
+
+  return createStore({ entities, relationships: { [ROOT_ID]: ids } })
+}
+
+// ── Page list store builder (middle panel — pages within a chapter) ──
+
+export function buildChapterPageStore(chapter: Chapter | undefined, currentPageId: string): NormalizedData {
+  if (!chapter) return createStore()
+
+  const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
+  const ids: string[] = []
+
+  for (const page of chapter.pages) {
+    entities[page.id] = {
+      id: page.id,
+      data: { label: page.title, depth: page.depth },
+    }
+    ids.push(page.id)
+  }
+
+  entities[FOCUS_ID] = { id: FOCUS_ID, focusedId: currentPageId } as never
+  entities[SELECTION_ID] = { id: SELECTION_ID, selectedIds: [currentPageId] } as never
+
+  return createStore({ entities, relationships: { [ROOT_ID]: ids } })
+}
+
 // ── TOC store builder ──
 
 export function buildTocStore(chapters: Chapter[], currentPageId: string): NormalizedData {

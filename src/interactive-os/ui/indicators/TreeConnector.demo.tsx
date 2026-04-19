@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <TreeConnector level={1} />
       <TreeConnector level={2} />
       <TreeConnector level={2} isLast />

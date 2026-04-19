@@ -61,7 +61,7 @@ export default function AppShell() {
 
   return (
     <AriaRoute keyMap={shellKeyMap} label="Shell">
-      <div className={`page ${ax({ layout: 'row', scroll: 'hidden' })}`}>
+      <div className={`page ${ax({ layout: 'row' })}`}>
         <ReproRecorderOverlay />
         <KeylineOverlay />
         {!isMobileRoute && <ActivityBar theme={theme} onThemeToggle={toggleTheme} />}

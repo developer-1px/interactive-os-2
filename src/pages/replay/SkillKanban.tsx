@@ -152,22 +152,22 @@ export default function SkillKanban() {
   const doneCount = sessionCards.filter(c => c.agentState === 'done').length
 
   return (
-    <div className={ax({ layout: 'fill', scroll: 'hidden' })}>
+    <div className={ax({ layout: 'fill' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
-        <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <span className={ax({ text: 'bright', weight: 'medium' })}>Agent Dashboard</span>
-          <span className={ax({ text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ layout: 'bar' })}>
+          <span className={ax({ })}>Agent Dashboard</span>
+          <span className={ax({ textStyle: 'caption' })}>
             {waiting} waiting · {active} active · {doneCount} done
           </span>
         </div>
       </PanelHeader>
       {sessionCards.length === 0 && (
-        <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ textStyle: 'caption' })}>
           세션이 없습니다 — 스킬을 실행하면 여기에 표시됩니다
         </div>
       )}
       {sessionCards.length > 0 && (
-        <div className={ax({ flex: '1', scroll: 'hidden', padding: 'md' })}>
+        <div className={ax({ flex: '1' })}>
           <Kanban data={kanbanData} onActivate={handleActivate} aria-label="Agent Dashboard" />
         </div>
       )}

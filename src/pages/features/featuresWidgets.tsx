@@ -51,7 +51,7 @@ function getFeature(store: NormalizedData, id: string) {
 
 export function FeatureBreadcrumb() {
   return (
-    <div className={ax({ layout: 'bar', padding: 'sm', width: 'full', gap: 'sm' })}>
+    <div className={ax({ layout: 'bar', width: 'full' })}>
       <Breadcrumb path="docs/1-projects/features" root="docs" />
     </div>
   )
@@ -86,7 +86,7 @@ export function FeatureToolbar() {
   }, [filter, setFilter])
 
   return (
-    <div className={ax({ layout: 'bar', padding: 'sm', width: 'full', gap: 'sm' })}>
+    <div className={ax({ layout: 'bar', width: 'full' })}>
       <FilterBar filters={chips} />
     </div>
   )
@@ -171,17 +171,17 @@ export function FeatureTreeGrid() {
       if (column.key === 'status') {
         const s = value as FeatureStatus
         return (
-          <span {...props} className={ax({ layout: 'bar', gap: 'xs' })}>
+          <span {...props} className={ax({ layout: 'bar' })}>
             <StatusIndicator tone={statusTone(s)} />
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>{s}</span>
+            <span className={ax({ textStyle: 'caption' })}>{s}</span>
           </span>
         )
       }
       if (column.key === 'maturity') {
-        return <span {...props} className={ax({ textStyle: 'caption', text: 'muted' })}>{`${String(value)}/5`}</span>
+        return <span {...props} className={ax({ textStyle: 'caption' })}>{`${String(value)}/5`}</span>
       }
       if (column.key === 'score') {
-        return <span {...props} className={ax({ textStyle: 'caption', text: 'primary' })}>{String(value ?? 0)}</span>
+        return <span {...props} className={ax({ textStyle: 'caption' })}>{String(value ?? 0)}</span>
       }
       return <span {...props}>{String(value ?? '')}</span>
     },
@@ -198,7 +198,7 @@ export function FeatureTreeGrid() {
   }
 
   return (
-    <div className={ax({ layout: 'fill', scroll: 'y' })}>
+    <div className={ax({ layout: 'fill' })}>
       <TreeGrid
         data={gridData}
         columns={columns}
@@ -229,9 +229,9 @@ export function FeatureDetailHeader() {
 
   return (
     <PanelHeader axes={{ layout: 'spread' }}>
-      <span className={ax({ layout: 'bar', gap: 'sm' })}>
+      <span className={ax({ layout: 'bar' })}>
         <StatusIndicator tone={statusTone(feature.status)} />
-        <span className={ax({ textStyle: 'section', text: 'primary' })}>{feature.name}</span>
+        <span className={ax({ textStyle: 'section' })}>{feature.name}</span>
       </span>
       <Badge tone={layerTone(feature.layer)} variant="outline">{feature.layer}</Badge>
     </PanelHeader>
@@ -270,7 +270,7 @@ export function FeatureDetailTabs() {
   if (!selectedFeatureId) return null
 
   return (
-    <div className={ax({ padding: 'sm' })}>
+    <div className={ax({ })}>
       <TabList
         data={tabsData}
         onActivate={handleActivate}
@@ -296,17 +296,17 @@ function InsightCard({ insight, source }: { insight: Insight; source: string }) 
     <Card variant="outlined" padding="md">
       <Card.Header>
         <Avatar name={source.charAt(0).toUpperCase() || '·'} size="sm" />
-        <span className={ax({ textStyle: 'caption', text: 'muted', flex: '1' })}>{insight.date ?? ''}</span>
+        <span className={ax({ textStyle: 'caption', flex: '1' })}>{insight.date ?? ''}</span>
         {insight.kind && (
           <BadgeCell tone={insightKindTone(insight.kind)}>{insight.kind}</BadgeCell>
         )}
       </Card.Header>
       <Card.Body>
-        <span className={ax({ textStyle: 'body', text: 'primary', clamp: '3' })}>{insight.text}</span>
+        <span className={ax({ textStyle: 'body', clamp: '3' })}>{insight.text}</span>
       </Card.Body>
       {insight.source && (
         <Card.Footer>
-          <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>출처: {insight.source}</span>
+          <span className={ax({ textStyle: 'caption', clamp: '1' })}>출처: {insight.source}</span>
         </Card.Footer>
       )}
     </Card>
@@ -342,7 +342,7 @@ export function InsightFeed() {
 
   if (!selectedFeatureId) {
     return (
-      <div className={ax({ flex: '1', padding: 'md' })}>
+      <div className={ax({ flex: '1' })}>
         <EmptyState title="feature를 선택하세요" description="왼쪽 TreeGrid에서 row를 선택하면 상세가 표시됩니다." />
       </div>
     )
@@ -354,7 +354,7 @@ export function InsightFeed() {
       : activeTab === 'health' ? 'Health 탭은 후속 단계입니다.'
       : 'Portal 탭은 후속 단계입니다.'
     return (
-      <div className={ax({ flex: '1', padding: 'md', text: 'muted', textStyle: 'caption' })}>
+      <div className={ax({ flex: '1', textStyle: 'caption' })}>
         {placeholderLabel}
       </div>
     )
@@ -362,7 +362,7 @@ export function InsightFeed() {
 
   if (insights.length === 0) {
     return (
-      <div className={ax({ flex: '1', padding: 'md' })}>
+      <div className={ax({ flex: '1' })}>
         <EmptyState title="인사이트 없음" description="이 feature의 ## Insights 블록이 비어 있습니다." />
       </div>
     )
@@ -375,14 +375,14 @@ export function InsightFeed() {
   ): React.ReactElement => {
     const ins = (node.data as { _insight?: Insight } | undefined)?._insight
     return (
-      <div {...props} data-focused={state.focused || undefined} className={ax({ padding: 'xs' })}>
+      <div {...props} data-focused={state.focused || undefined} className={ax({ })}>
         {ins && <InsightCard insight={ins} source={sourceName} />}
       </div>
     )
   }
 
   return (
-    <div className={ax({ flex: '1', scroll: 'y', padding: 'sm', gap: 'sm', layout: 'stack' })}>
+    <div className={ax({ flex: '1', layout: 'stack' })}>
       <Feed data={feedData} renderItem={renderItem} aria-label="Insights" />
     </div>
   )

@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <IndeterminateIndicator />
     </div>
   )

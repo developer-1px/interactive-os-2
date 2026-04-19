@@ -32,15 +32,17 @@ const data: NormalizedData = createStore({
 function Field({ label, id, type = 'text' }: { label: string; id: string; type?: string }) {
   return (
     <div className={ax({ layout: 'stack' })}>
-      <label htmlFor={id} className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'primary' })}`}>{label}</label>
-      <input id={id} type={type} className={ax({ text: 'primary', textStyle: 'body', surface: 'input', shape: 'sm', padding: 'xs', content: 'text', interactive: 'input', border: 'default' })} />
+      <label htmlFor={id} className={`${ax({ textStyle: 'caption' })}`}>{label}</label>
+      <input id={id} type={type} className={ax({
+          role: 'control',
+        textStyle: 'body', surface: 'input', content: 'text', interactive: 'input' })} />
     </div>
   )
 }
 
 const panels: Record<string, React.ReactNode> = {
   'personal-information': (
-    <fieldset className={`${ax({ gap: 'sm', layout: 'stack' })} border-none`}>
+    <fieldset className={`${ax({ layout: 'stack' })} border-none`}>
       <Field label="Name" id="cufc1" />
       <Field label="Email" id="cufc2" type="email" />
       <Field label="Phone" id="cufc3" type="tel" />
@@ -50,7 +52,7 @@ const panels: Record<string, React.ReactNode> = {
     </fieldset>
   ),
   'billing-address': (
-    <fieldset className={`${ax({ gap: 'sm', layout: 'stack' })} border-none`}>
+    <fieldset className={`${ax({ layout: 'stack' })} border-none`}>
       <Field label="Address 1" id="b-add1" />
       <Field label="Address 2" id="b-add2" />
       <Field label="City" id="b-city" />
@@ -59,7 +61,7 @@ const panels: Record<string, React.ReactNode> = {
     </fieldset>
   ),
   'shipping-address': (
-    <fieldset className={`${ax({ gap: 'sm', layout: 'stack' })} border-none`}>
+    <fieldset className={`${ax({ layout: 'stack' })} border-none`}>
       <Field label="Address 1" id="s-add1" />
       <Field label="Address 2" id="s-add2" />
       <Field label="City" id="s-city" />
@@ -86,7 +88,9 @@ const renderItem = (
         <button
           {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           id={node.id as string}
-          className={`${ax({ layout: 'spread', weight: 'semi', text: 'primary', surface: 'sunken', textStyle: 'body', padding: 'sm', content: 'text', interactive: 'item', shape: 'md', border: 'default' })} w-full`}
+          className={`${ax({
+              role: 'control-group',
+            layout: 'spread', surface: 'sunken', textStyle: 'body', content: 'text', interactive: 'item' })} w-full`}
           type="button"
           data-focused={state.focused || undefined}
         >
@@ -94,7 +98,7 @@ const renderItem = (
           <ExpandIndicator expanded={state.expanded === true} />
         </button>
       </h3>
-      <div {...state.slotProps} className={ax({ textStyle: 'body', text: 'secondary', padding: 'sm', content: 'text', border: 'default' })}>
+      <div {...state.slotProps} className={ax({ textStyle: 'body', content: 'text' })}>
         {panels[node.id as string]}
       </div>
     </div>

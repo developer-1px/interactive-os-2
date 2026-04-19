@@ -7,21 +7,21 @@ import css from './TestRunnerPanel.module.css'
 function StatusIcon({ status }: { status: 'pass' | 'fail' | 'pending' }) {
   if (status === 'pass') return <span className={ax({ tone: 'success' })}><CircleCheck size={14} /></span>
   if (status === 'fail') return <span className={ax({ tone: 'danger' })}><CircleX size={14} /></span>
-  return <span className={ax({ text: 'muted' })}><Circle size={14} /></span>
+  return <span className={ax({ })}><Circle size={14} /></span>
 }
 
 function ResultItem({ result }: { result: TestResult }) {
   const [expanded, setExpanded] = useState(false) // @useState-hatch
 
   return (
-    <div className={`${ax({ padding: 'md' })} ${css.resultItem}`}>
+    <div className={`${ax({ })} ${css.resultItem}`}>
       <div
-        className={ax({ layout: 'bar', gap: 'sm' })}
+        className={ax({ layout: 'bar' })}
         onClick={() => result.error && setExpanded(!expanded)}
       >
         <StatusIcon status={result.status} />
         <span>{result.name}</span>
-        <span className={ax({ text: 'muted', textStyle: 'caption' })}>{result.duration.toFixed(0)}ms</span>
+        <span className={ax({ textStyle: 'caption' })}>{result.duration.toFixed(0)}ms</span>
       </div>
       {expanded && result.error && (
         <pre className={`${ax({ tone: 'danger', textStyle: 'caption', clamp: 'pre' })} ${css.errorPre}`}>
@@ -36,7 +36,7 @@ function GroupResults({ groupName, results }: { groupName: string; results: Test
   const allPass = results.every((r) => r.status === 'pass')
   return (
     <div className={css.groupBlock}>
-      <div className={ax({ layout: 'bar', gap: 'sm', weight: 'semi' })}>
+      <div className={ax({ layout: 'bar' })}>
         <StatusIcon status={allPass ? 'pass' : 'fail'} />
         <span>{groupName}</span>
       </div>
@@ -125,16 +125,16 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
     <div>
       {headless
         ? <div ref={hiddenAreaRef} className={css.hidden} />
-        : <div className={`card ${ax({ scroll: 'hidden', padding: 'sm' })} ${css.renderArea} ${ready ? '' : css.hidden}`} ref={renderAreaRef} />
+        : <div className={`card ${ax({ })} ${css.renderArea} ${ready ? '' : css.hidden}`} ref={renderAreaRef} />
       }
-      <div className={`card ${ax({ scroll: 'hidden', padding: 'md' })} ${ready ? '' : css.hidden}`}>
+      <div className={`card ${ax({ })} ${ready ? '' : css.hidden}`}>
         <div className={`${ax({ layout: 'spread' })} ${ready ? css.summaryBar : ''}`}>
-          <div className={ax({ layout: 'bar', gap: 'md' })}>
-            <span className={ax({ textStyle: 'code', weight: 'bold' })}>
+          <div className={ax({ layout: 'bar' })}>
+            <span className={ax({ textStyle: 'code' })}>
               {label ?? 'Test Runner'}
             </span>
             {state === 'demo' && result && (
-              <span className={ax({ text: 'muted', textStyle: 'code' })}>
+              <span className={ax({ textStyle: 'code' })}>
                 {total} tests
               </span>
             )}
@@ -142,7 +142,7 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
               <span className={ax({ textStyle: 'code' })}>
                 <span className={css.passCount}>{passed} passed</span>
                 {failed > 0 && <span className={css.failCount}>{failed} failed</span>}
-                <span className={`${ax({ text: 'muted' })} ${css.totalCount}`}>{total} total</span>
+                <span className={`${ax({ })} ${css.totalCount}`}>{total} total</span>
               </span>
             )}
           </div>

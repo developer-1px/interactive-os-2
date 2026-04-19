@@ -71,7 +71,7 @@ export default function TypeaheadDemo() {
         <kbd>Home</kbd> <span className="key-hint">first</span>{' '}
         <kbd>End</kbd> <span className="key-hint">last</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <ListBox
           data={data}
           plugins={plugins}

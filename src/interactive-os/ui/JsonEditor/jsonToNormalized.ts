@@ -1,4 +1,3 @@
-// ② jsonEditorPrd.md
 import type { NormalizedData, Entity } from '../../store/types'
 import { ROOT_ID } from '../../store/types'
 
@@ -29,16 +28,10 @@ export interface JsonNodeCore {
 
 export interface JsonNodeData extends JsonNodeCore, Record<string, unknown> {
   /**
-   * TreeGrid column-mode가 읽는 보조 배열.
-   * [0] = key display ref, [1] = value display ref. renderCell은 value를 통해 ref를 받는다.
+   * TreeGrid column-mode + clipboard cell-copy 호환용 문자열 셀 배열.
+   * [0]=key 표시, [1]=type 라벨, [2]=value 표시. 실제 타입값은 data.value/data.type.
    */
-  cells: [JsonCellRef, JsonCellRef]
-}
-
-export interface JsonCellRef {
-  nodeId: string
-  column: 'key' | 'value'
-  data: JsonNodeCore
+  cells: [string, string, string]
 }
 
 function detectType(v: unknown): JsonType {
@@ -58,14 +51,27 @@ function pathId(path: readonly JsonPathSegment[]): string {
   )
 }
 
+export function cellsFor(core: JsonNodeCore): [string, string, string] {
+  return [keyCell(core), core.type, valueCell(core)]
+}
+
+function keyCell(core: JsonNodeCore): string {
+  if (core.key !== undefined) return core.key
+  const last = core.path[core.path.length - 1]
+  if (typeof last === 'number') return `[${last}]`
+  if (typeof last === 'string') return last
+  return ''
+}
+
+function valueCell(core: JsonNodeCore): string {
+  if (core.type === 'object' || core.type === 'array') return ''
+  if (core.type === 'null') return 'null'
+  if (core.type === 'string') return String(core.value ?? '')
+  return String(core.value ?? '')
+}
+
 function makeEntity(id: string, core: JsonNodeCore): Entity {
-  const data: JsonNodeData = {
-    ...core,
-    cells: [
-      { nodeId: id, column: 'key', data: core },
-      { nodeId: id, column: 'value', data: core },
-    ],
-  }
+  const data: JsonNodeData = { ...core, cells: cellsFor(core) }
   return { id, data }
 }
 

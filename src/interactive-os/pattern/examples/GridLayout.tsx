@@ -41,7 +41,9 @@ const renderTile = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={`${ax({ layout: 'center', textStyle: 'body', weight: 'semi', text: 'primary', shape: 'md', padding: 'md', content: 'text', surface: 'sunken', interactive: 'cell' })} outline-none`}>
+    <div {...props} className={`${ax({
+        role: 'control-group',
+        layout: 'center', textStyle: 'body', content: 'text', surface: 'sunken', interactive: 'cell' })} outline-none`}>
       {String(value ?? '')}
     </div>
   )

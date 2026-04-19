@@ -2,7 +2,7 @@
 // @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; currentRoot: sidebar selection; previewPath: follow-focus file preview
 import { useState, useEffect, useCallback, useRef, useMemo, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Folder, Code2, BookText, Image, Boxes, CalendarDays, CalendarClock, Hash, Tag, Activity } from 'lucide-react'
+import { Folder, Code2, BookText, Image, Boxes, CalendarDays, CalendarClock, Hash, Tag, Activity, Component } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { FlatLayout } from '@os/ui/FlatLayout'
@@ -65,6 +65,7 @@ const FAVORITES: FavoriteRoot[] = [
   { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} /> },
   { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} /> },
   { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs`,             icon: <BookText size={ICON_SIZE} /> },
+  { id: 'ui',          name: 'UI Showcase', path: `${DEFAULT_ROOT}/contents/ui`,      icon: <Component size={ICON_SIZE} /> },
   { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} /> },
 ]
 

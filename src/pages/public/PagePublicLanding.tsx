@@ -27,10 +27,10 @@ const CARDS = [
 export default function PagePublicLanding() {
   return (
     <div
-      className={ax({ layout: 'stack', gap: 'xl', padding: 'xl', width: 'xl' })}
+      className={ax({ layout: 'stack', width: 'xl' })}
       style={{ margin: '0 auto', flex: 1 }}
     >
-      <header className={ax({ layout: 'stack', gap: 'md' })} style={{ paddingBlock: 'var(--space-2xl)' }}>
+      <header className={ax({ layout: 'stack' })} style={{ paddingBlock: 'var(--space-2xl)' }}>
         <h1
           className={ax({ textStyle: 'hero' })}
           style={{
@@ -53,7 +53,7 @@ export default function PagePublicLanding() {
       </header>
 
       <section
-        className={ax({ layout: 'grid-3', gap: 'lg' })}
+        className={ax({ layout: 'grid-3' })}
         style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
       >
         {CARDS.map((c) => (
@@ -62,9 +62,7 @@ export default function PagePublicLanding() {
             to={c.to}
             className={ax({
               surface: 'display',
-              padding: 'lg',
               layout: 'stack',
-              gap: 'sm',
               interactive: 'item',
             })}
             style={{
@@ -87,7 +85,7 @@ export default function PagePublicLanding() {
       </section>
 
       <footer
-        className={ax({ layout: 'row', gap: 'md', padding: 'md' })}
+        className={ax({ layout: 'row' })}
         style={{
           marginTop: 'auto',
           borderTop: '1px solid var(--border-subtle)',

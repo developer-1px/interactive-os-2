@@ -38,8 +38,10 @@ const renderAlert = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <div {...props} className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'body', text: 'primary', surface: 'sunken', shape: 'sm', padding: 'sm', content: 'text', border: 'default' })}`}>
-      <span className={ax({ text: 'secondary', flex: 'none', textStyle: 'section' })} aria-hidden="true">
+    <div {...props} className={`${ax({
+        role: 'control-group',
+        layout: 'bar', textStyle: 'body', surface: 'sunken', content: 'text' })}`}>
+      <span className={ax({ flex: 'none', textStyle: 'section' })} aria-hidden="true">
         &#9432;
       </span>
       <span>{label}</span>

@@ -11,7 +11,11 @@ import { DirectionIndicator } from './indicators'
 import { FileIcon } from './FileIcon'
 import { EmptyState } from './EmptyState'
 import { ax } from '@styles/ax'
+import { resolveContainerPreset } from '../layout/containerPreset'
 import './MillerColumns.css'
+
+const millerRootPreset = resolveContainerPreset('miller.root')
+const millerColumnPreset = resolveContainerPreset('miller.column')
 
 interface MillerColumnsProps extends AriaComponentProps {
   renderPreview?: (nodeId: string) => React.ReactNode
@@ -89,7 +93,7 @@ export function MillerColumns({
   function renderColumn(col: typeof columns[number]) {
     return (
       <div
-        className={`${ax({ layout: 'scroll', flex: 'none' })} miller-column`}
+        className={`${ax({ layout: 'scroll', flex: 'none', ...(millerColumnPreset.padding ? { padding: millerColumnPreset.padding } : {}), ...(millerColumnPreset.gap ? { gap: millerColumnPreset.gap } : {}) })} miller-column`}
         style={{ minWidth: COLUMN_MIN_WIDTH }}
       >
         {col.items.map((itemId) => {
@@ -133,14 +137,16 @@ export function MillerColumns({
         className={`ax-interactive ${ax({ layout: 'row-fill' })}`}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
-        <div className={ax({ layout: 'scroll-x', flex: hasPreview ? 'none' : '1' })}>
+        <div className={ax({ layout: 'scroll-x', flex: hasPreview ? 'none' : '1', ...(millerRootPreset.gap ? { gap: millerRootPreset.gap } : {}) })}>
           {columns.map((col) => (
             <React.Fragment key={col.parentId}>
               {renderColumn(col)}
             </React.Fragment>
           ))}
           {!hasPreview && focusedId && !focusedIsFile && getChildren(store, focusedId).length === 0 && (
-            <div className={`${ax({ layout: 'center', surface: 'sunken', flex: 'none', textStyle: 'caption' })} miller-column`} style={{ minWidth: COLUMN_MIN_WIDTH }}>
+            <div className={`${ax({
+                role: 'control-group',
+                layout: 'center', surface: 'sunken', flex: 'none', textStyle: 'caption' })} miller-column`} style={{ minWidth: COLUMN_MIN_WIDTH }}>
               <EmptyState title="Empty" />
             </div>
           )}

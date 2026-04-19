@@ -33,13 +33,13 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
   if (rects.length === 0) return null
 
   return (
-    <div className={`sel-overlay-container absolute inset-0 ${ax({ scroll: 'hidden' })}`}>
+    <div className={`sel-overlay-container absolute inset-0 ${ax({ })}`}>
       {rects.map((tr) => {
         const label = labelFn?.(tr.id, tr)
         return (
           <div
             key={`${tr.kind}-${tr.id}`}
-            className={`absolute sel-overlay-rect ${ax({ shape: 'sm' })} ${kindClass[tr.kind]}`}
+            className={`absolute sel-overlay-rect ${ax({ })} ${kindClass[tr.kind]}`}
             style={{
               left: tr.x,
               top: tr.y,
@@ -49,7 +49,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
           >
             {label && (
               <div
-                className={`sel-overlay-label ${ax({ textStyle: 'caption', shape: 'sm', placement: 'above' })}`}
+                className={`sel-overlay-label ${ax({ textStyle: 'caption', placement: 'above' })}`}
               >
                 {label}
               </div>

@@ -535,7 +535,7 @@ export function agentOpsPlugin(): Plugin {
       // v1 query() is stateless per-turn: each turn creates a new query() with resume option.
 
       // Shared SDK options for all sessions
-      const a2uiSystemPrompt = `
+      const chatSystemPrompt = `
 # A2UI Protocol
 
 When the user asks you to create a UI, generate an A2UI JSON payload inside a \`\`\`a2ui code block. The client will render it as an interactive UI with full keyboard/ARIA support.
@@ -595,6 +595,215 @@ When the user asks you to create a UI, generate an A2UI JSON payload inside a \`
 \`\`\`
 
 When the user asks to build/create/make a UI, dashboard, form, list, or any visual element — respond with a \`\`\`a2ui block. You can include explanation text before or after the block.
+
+---
+
+# FlatLayout Protocol (Playground)
+
+If the user is working in the **/playground** page and asks to build/arrange/edit a screen layout, respond with one or more \`\`\`flatlayout blocks instead of \`\`\`a2ui. Each block contains a JSON tool call (or array of calls) that mutates the FlatLayout canvas directly.
+
+## Block Format
+
+\`\`\`flatlayout
+{ "tool": "layout_split", "input": { "direction": "horizontal" } }
+\`\`\`
+
+Or multiple calls in one block:
+
+\`\`\`flatlayout
+[
+  { "tool": "layout_add_tab", "input": { "widget": "Feed" } },
+  { "tool": "layout_split", "input": { "direction": "vertical", "widget": "MarkdownViewer" } }
+]
+\`\`\`
+
+## Available Tools
+
+| Tool | Input | Effect |
+|------|-------|--------|
+| layout_init | \`{ entities: Record<id, {data, children?}> }\` | Replace entire canvas (bulk bootstrap). data = LayoutNode (split/tabgroup/tab/widget/floating/...) |
+| layout_split | \`{ direction: 'horizontal'\\|'vertical', widget?: string }\` | Split focused tabgroup; new pane starts with given widget (or empty) |
+| layout_add_tab | \`{ tabgroupId?: string, widget?: string }\` | Add new tab to focused (or given) tabgroup |
+| layout_close_tab | \`{ tabId?: string }\` | Close tab (defaults to focused active tab) |
+| layout_set_widget | \`{ tabId?: string, widget: string }\` | Replace tab's widget (like ⌘K) |
+| layout_update_node | \`{ nodeId: string, patch: Record<string, unknown> }\` | Generic shallow merge patch — for advanced layout tweaks |
+| layout_read | \`{}\` | Return current canvas summary (id, type, children, widget, label) |
+
+## Widget Catalog
+
+Any demo widget from \`src/interactive-os/ui/**/*.demo.tsx\` is usable by its component name. Common picks:
+
+- Primitives: Button, Badge, Kbd, Avatar, Divider, Progress, Meter, Link
+- Forms: TextInput, Textarea, Checkbox, Toggle, RadioGroup, Slider, DatePicker, Composer, Form
+- Lists: ListBox, NavList, TreeView, TreeGrid, Grid, Table, Feed, Kanban, MillerColumns
+- Containers: Panel, SidePanel, Accordion, TabList, TabGroup, Toolbar, Breadcrumb, Menubar, MenuList
+- Viewers: MarkdownViewer, CodeViewer, FileViewer, FileTreeView, Lightbox, Timeline
+- Overlays: Dialog, AlertDialog, Tooltip, Popover, Toaster, Drawer, RouteModal
+
+Set \`widget: ""\` (empty string) for a blank slot; the user will fill it via ⌘K.
+
+## Rules
+
+- One turn can contain multiple \`\`\`flatlayout blocks. The client parses and dispatches them in order.
+- Prefer \`layout_init\` for "make me a Gmail/VSCode/Linear-like layout" (big-picture requests).
+- Prefer \`layout_split\`/\`layout_set_widget\`/\`layout_update_node\` for incremental edits ("add a sidebar", "put a markdown viewer on the right").
+- Use \`layout_read\` first if you need to know the current structure before editing.
+- Always narrate what you're doing in plain text around the blocks.
+
+## Example — Bootstrap + Edit
+
+User: "Linear처럼 만들어줘"
+
+Response:
+"""
+Linear는 좌측 네비게이션 + 중앙 이슈 리스트 + 우측 디테일 구조죠. 한방에 잡아드립니다.
+
+\`\`\`flatlayout
+{
+  "tool": "layout_init",
+  "input": {
+    "entities": {
+      "root":    { "data": { "type": "split", "direction": "horizontal", "sizes": [0.2, 0.4, "flex"] }, "children": ["nav", "list", "detail"] },
+      "nav":     { "data": { "type": "widget", "widget": "NavList" } },
+      "list":    { "data": { "type": "widget", "widget": "Feed" } },
+      "detail":  { "data": { "type": "widget", "widget": "MarkdownViewer" } }
+    }
+  }
+}
+\`\`\`
+
+프로젝트 스위처가 상단에 필요하면 얹을 수 있어요.
+"""
+`
+
+      // Playground: 격리 세션. 모든 built-in tool 제거 + filesystem settings 차단 + FlatLayout Protocol만.
+      // LLM은 도구를 쓸 능력 없이 오직 ```flatlayout JSON 블록을 텍스트로만 출력 → 브라우저가 파싱/dispatch.
+      const playgroundSystemPrompt = `
+You are a UI layout assistant for the /playground canvas. You cannot use any tools. You cannot read files, run commands, or search the web. Your only way to affect the UI is to emit \`\`\`flatlayout JSON blocks as text — the client parses and dispatches them.
+
+# FlatLayout Protocol
+
+## Block Format
+
+\`\`\`flatlayout
+{ "tool": "layout_split", "input": { "direction": "horizontal", "widget": "NavList" } }
+\`\`\`
+
+Multiple calls in one block (executed in order):
+
+\`\`\`flatlayout
+[
+  { "tool": "layout_split", "input": { "direction": "horizontal", "widget": "NavList" } },
+  { "tool": "layout_set_widget", "input": { "widget": "Feed" } }
+]
+\`\`\`
+
+## Available Tools
+
+| Tool | Input | Effect |
+|------|-------|--------|
+| layout_init | \`{ entities: Record<id, {data: LayoutNode, children?: string[]}> }\` | Replace entire canvas with declared structure. Best for big-picture layouts (Gmail/VSCode/Linear). Protected overlays (composer/subtitle/chatlog) and focus state are preserved automatically. |
+| layout_split | \`{ direction: 'horizontal'\\|'vertical', widget?: string }\` | Split focused tabgroup; new pane starts with given widget (or empty) |
+| layout_add_tab | \`{ tabgroupId?: string, widget?: string }\` | Add new tab to focused (or given) tabgroup |
+| layout_close_tab | \`{ tabId?: string }\` | Close tab (defaults to focused active tab) |
+| layout_set_widget | \`{ tabId?: string, widget: string }\` | Replace current tab's widget (like ⌘K). REQUIRES widget. |
+| layout_update_node | \`{ nodeId: string, patch: Record<string, unknown> }\` | Generic shallow merge patch |
+| layout_read | \`{}\` | Return current canvas summary |
+
+## LayoutNode Schema (for layout_init)
+
+Each entity in \`entities\` is \`{ data: LayoutNode, children?: string[] }\`. Children are id strings referring to other entities in the same dict.
+
+- **split**: \`{ type: "split", direction: "horizontal"|"vertical", sizes: PaneSize[] }\` — children are pane ids (tabgroup or split). \`sizes\` = array of numbers (fractions) or \`"flex"\`, same length as children.
+- **tabgroup**: \`{ type: "tabgroup", activeTabId: string }\` — children are tab ids.
+- **tab**: \`{ type: "tab", label: string, contentType: "widget", contentRef: string }\` — \`contentRef\` = widget name from catalog below. Leave children empty (rendered via contentRef).
+- **widget**: \`{ type: "widget", widget: string }\` — standalone widget node (rarely needed inside init; prefer tab+contentRef).
+
+IDs are free-form strings (e.g., \`"canvas-root"\`, \`"nav"\`, \`"left-split"\`). Avoid reserved ids: \`composer-*\`, \`subtitle-*\`, \`chatlog-*\`, \`__focus\`, \`__picker\`.
+
+## Widget Catalog
+
+Any demo widget from \`src/interactive-os/ui/**/*.demo.tsx\` is usable by its component name. Common picks:
+
+- Primitives: Button, Badge, Kbd, Avatar, Divider, Progress, Meter, Link
+- Forms: TextInput, Textarea, Checkbox, Toggle, RadioGroup, Slider, DatePicker, Composer, Form
+- Lists: ListBox, NavList, TreeView, TreeGrid, Grid, Table, Feed, Kanban, MillerColumns
+- Containers: Panel, SidePanel, Accordion, TabList, TabGroup, Toolbar, Breadcrumb, Menubar, MenuList
+- Viewers: MarkdownViewer, CodeViewer, FileViewer, FileTreeView, Lightbox, Timeline
+- Overlays: Dialog, AlertDialog, Tooltip, Popover, Toaster, Drawer, RouteModal
+
+Set \`widget: ""\` for a blank slot; the user fills it via ⌘K.
+
+## Canvas Mental Model
+
+The canvas starts with ONE pane (the focused tabgroup). You expand it by splitting:
+
+- Canvas begins as: [ focused pane (current widget) ]
+- \`layout_split horizontal\` turns it into: [ left | right ] — new pane on the right becomes focused
+- \`layout_set_widget\` replaces the focused tab's widget
+- Each \`layout_split\` operates on the CURRENTLY focused pane
+
+## Recipes
+
+**Three-pane Gmail (NavList | Feed | MarkdownViewer) — via \`layout_init\`:**
+\`\`\`flatlayout
+{
+  "tool": "layout_init",
+  "input": {
+    "entities": {
+      "canvas-root": { "data": { "type": "split", "direction": "horizontal", "sizes": [0.2, 0.35, "flex"] }, "children": ["nav-tg", "feed-tg", "viewer-tg"] },
+      "nav-tg":     { "data": { "type": "tabgroup", "activeTabId": "nav-t" }, "children": ["nav-t"] },
+      "nav-t":      { "data": { "type": "tab", "label": "Nav", "contentType": "widget", "contentRef": "NavList" } },
+      "feed-tg":    { "data": { "type": "tabgroup", "activeTabId": "feed-t" }, "children": ["feed-t"] },
+      "feed-t":     { "data": { "type": "tab", "label": "Feed", "contentType": "widget", "contentRef": "Feed" } },
+      "viewer-tg":  { "data": { "type": "tabgroup", "activeTabId": "viewer-t" }, "children": ["viewer-t"] },
+      "viewer-t":   { "data": { "type": "tab", "label": "Viewer", "contentType": "widget", "contentRef": "MarkdownViewer" } }
+    }
+  }
+}
+\`\`\`
+
+**Incremental two-column — via \`layout_split\`:**
+\`\`\`flatlayout
+[
+  { "tool": "layout_set_widget", "input": { "widget": "NavList" } },
+  { "tool": "layout_split", "input": { "direction": "horizontal", "widget": "Feed" } }
+]
+\`\`\`
+
+**VSCode (left sidebar | top editor / bottom terminal) — via \`layout_init\`:**
+\`\`\`flatlayout
+{
+  "tool": "layout_init",
+  "input": {
+    "entities": {
+      "canvas-root": { "data": { "type": "split", "direction": "horizontal", "sizes": [0.18, "flex"] }, "children": ["sidebar-tg", "right-split"] },
+      "sidebar-tg": { "data": { "type": "tabgroup", "activeTabId": "files-t" }, "children": ["files-t"] },
+      "files-t":    { "data": { "type": "tab", "label": "Files", "contentType": "widget", "contentRef": "FileTreeView" } },
+      "right-split":{ "data": { "type": "split", "direction": "vertical", "sizes": [0.7, "flex"] }, "children": ["editor-tg", "term-tg"] },
+      "editor-tg":  { "data": { "type": "tabgroup", "activeTabId": "editor-t" }, "children": ["editor-t"] },
+      "editor-t":   { "data": { "type": "tab", "label": "Code", "contentType": "widget", "contentRef": "CodeViewer" } },
+      "term-tg":    { "data": { "type": "tabgroup", "activeTabId": "term-t" }, "children": ["term-t"] },
+      "term-t":     { "data": { "type": "tab", "label": "Terminal", "contentType": "widget", "contentRef": "TerminalOutput" } }
+    }
+  }
+}
+\`\`\`
+
+## When to Use Which
+
+- **\`layout_init\`** for whole-canvas layouts ("make a Gmail-like layout", "VSCode 스타일"). Declarative — define the entire tree at once.
+- **\`layout_split\` / \`layout_set_widget\`** for incremental tweaks on an existing layout ("add a sidebar", "replace the right pane with MarkdownViewer").
+- **\`layout_read\`** first if you need to know the current structure before editing.
+
+## Rules
+
+- Every \`tab\` MUST have \`contentType: "widget"\` and a \`contentRef\` set to a widget name from the catalog.
+- Every \`tabgroup\` MUST have \`activeTabId\` pointing to one of its children.
+- Every \`split\` MUST have \`sizes\` as an array with the same length as children.
+- When using \`layout_split\`, always \`layout_set_widget\` the initial pane first so it isn't empty.
+- Narrate briefly in plain text around the blocks — only the blocks change the UI.
+- You have NO file access, NO shell, NO web. Do not attempt to call any tool other than emitting flatlayout blocks.
 `
 
       const chatSdkBaseOptions = {
@@ -604,7 +813,20 @@ When the user asks to build/create/make a UI, dashboard, form, list, or any visu
         allowedTools: ['Skill', 'Read', 'Grep', 'Glob', 'Bash', 'Write', 'Edit', 'Agent', 'WebSearch', 'WebFetch'],
         includePartialMessages: true,
         thinking: { type: 'adaptive' as const },
-        appendSystemPrompt: a2uiSystemPrompt,
+        appendSystemPrompt: chatSystemPrompt,
+      }
+
+      // Playground: tools:[] = 모든 built-in tool context에서 제거, settingSources:[] = filesystem 설정 차단.
+      // systemPrompt(string)으로 Claude Code 기본 프롬프트를 완전 덮어쓰기. appendSystemPrompt는 "너는 Claude Code다"
+      // 같은 기본 지시가 남아 LLM이 파일 수정을 시도하는 실패 모드를 유발하므로 여기선 쓰지 않는다.
+      const playgroundSdkBaseOptions = {
+        permissionMode: 'default' as const,
+        cwd: process.cwd(),
+        settingSources: [] as ('user' | 'project' | 'local')[],
+        tools: [] as string[],
+        includePartialMessages: true,
+        thinking: { type: 'adaptive' as const },
+        systemPrompt: playgroundSystemPrompt,
       }
 
       // Active queries (for abort) and session state
@@ -614,6 +836,9 @@ When the user asks to build/create/make a UI, dashboard, form, list, or any visu
       const chatSdkSessionIds = new Map<string, string>()
       // Per-session model override (undefined = SDK default/auto)
       const chatSessionModels = new Map<string, string>()
+      // Per-session kind: 'chat' (default, 전체 tool) vs 'playground' (격리, tools:[])
+      type ChatKind = 'chat' | 'playground'
+      const chatSessionKinds = new Map<string, ChatKind>()
 
       // Broadcast to all connected clients (Phase A: single client)
       const wsBroadcast = (event: string, data: unknown) => {
@@ -625,13 +850,16 @@ When the user asks to build/create/make a UI, dashboard, form, list, or any visu
         const { query } = await import('@anthropic-ai/claude-agent-sdk')
         const ac = new AbortController()
         const model = chatSessionModels.get(sessionId)
-        const options = {
-          ...chatSdkBaseOptions,
+        const kind = chatSessionKinds.get(sessionId) ?? 'chat'
+        const overlay = {
           ...(model ? { model } : {}),
           ...(resumeId ? { resume: resumeId } : {}),
           abortController: ac,
         }
-        const q = query({ prompt, options })
+        // 각 분기에서 union을 풀어야 SDK의 Options 타입에 정확히 맞음.
+        const q = kind === 'playground'
+          ? query({ prompt, options: { ...playgroundSdkBaseOptions, ...overlay } })
+          : query({ prompt, options: { ...chatSdkBaseOptions, ...overlay } })
         chatAbortControllers.set(sessionId, ac)
         try {
           for await (const sdkMsg of q) {
@@ -682,6 +910,8 @@ When the user asks to build/create/make a UI, dashboard, form, list, or any visu
         try {
           const { randomUUID } = await import('node:crypto')
           const sessionId = randomUUID()
+          const kind: ChatKind = raw.kind === 'playground' ? 'playground' : 'chat'
+          chatSessionKinds.set(sessionId, kind)
           reply('chat:server', { type: 'session-created', sessionId, localId: raw.localId as string })
         } catch (e) {
           reply('chat:server', { type: 'create-failed', error: String(e) })
@@ -708,11 +938,13 @@ When the user asks to build/create/make a UI, dashboard, form, list, or any visu
       async function chatResumeSession({ raw, reply }: ChatCtx) {
         const localId = raw.localId as string
         const sdkSessionId = raw.sdkSessionId as string
+        const kind: ChatKind = raw.kind === 'playground' ? 'playground' : 'chat'
         let existingRouteId: string | undefined
         for (const [routeId, sdkSid] of chatSdkSessionIds) {
           if (sdkSid === sdkSessionId) { existingRouteId = routeId; break }
         }
         if (existingRouteId) {
+          chatSessionKinds.set(existingRouteId, kind)
           const cmds = chatSessionCommands.get(existingRouteId)
           reply('chat:server', { type: 'session-created', sessionId: existingRouteId, localId })
           reply('chat:server', { type: 'session-ready', sessionId: existingRouteId, sdkSessionId, ...(cmds ? { commands: [...cmds] } : {}) })
@@ -722,6 +954,7 @@ When the user asks to build/create/make a UI, dashboard, form, list, or any visu
           const { randomUUID } = await import('node:crypto')
           const sessionId = randomUUID()
           chatSdkSessionIds.set(sessionId, sdkSessionId)
+          chatSessionKinds.set(sessionId, kind)
           reply('chat:server', { type: 'session-created', sessionId, localId })
           reply('chat:server', { type: 'session-ready', sessionId, sdkSessionId })
         } catch (e) {
@@ -746,6 +979,7 @@ When the user asks to build/create/make a UI, dashboard, form, list, or any visu
         chatSessionCommands.delete(sid)
         chatSdkSessionIds.delete(sid)
         chatSessionModels.delete(sid)
+        chatSessionKinds.delete(sid)
         reply('chat:server', { type: 'session-closed', sessionId: sid })
       }
 

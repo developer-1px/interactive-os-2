@@ -26,7 +26,7 @@ export function TabItem(
       type="button"
       {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       className={`${ax({
-        surface: 'ghost', role: 'control', layout: 'bar',
+        surface: 'ghost', role: 'item', layout: 'bar',
         interactive: 'tab', content: 'text', clamp: '1',
         textStyle: 'label', flex: '1',
       })}${preview ? ' tab-item-preview' : ''}`}
@@ -36,7 +36,7 @@ export function TabItem(
       <span>{label}</span>
       {closable && (
         <button
-          className={ax({ role: 'control', surface: 'ghost', interactive: 'button', layout: 'center', content: 'icon' })}
+          className={ax({ role: 'item', surface: 'ghost', interactive: 'button', layout: 'center', content: 'icon' })}
           aria-label={`Close ${label}`}
           tabIndex={-1}
           onClick={(e) => {

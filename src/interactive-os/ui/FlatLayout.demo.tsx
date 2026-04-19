@@ -14,11 +14,11 @@ export const meta = {
 }
 
 function PanelA() {
-  return <div className={ax({ surface: 'display', padding: 'md' })}>Panel A</div>
+  return <div className={ax({ surface: 'display' })}>Panel A</div>
 }
 
 function PanelB() {
-  return <div className={ax({ surface: 'display', padding: 'md' })}>Panel B</div>
+  return <div className={ax({ surface: 'display' })}>Panel B</div>
 }
 
 const registry = createWidgetRegistry({ PanelA, PanelB })

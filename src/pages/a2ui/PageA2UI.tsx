@@ -120,17 +120,17 @@ export default function PageA2UI() {
   }
 
   return (
-    <div className={ax({ layout: 'fill', padding: 'lg', gap: 'md' })}>
+    <div className={ax({ layout: 'fill' })}>
       {/* Header */}
-      <div className={ax({ layout: 'stack', gap: 'xs', flex: 'none' })}>
-        <h1 className={ax({ textStyle: 'page', text: 'bright' })}>A2UI Playground</h1>
-        <p className={ax({ textStyle: 'caption', text: 'secondary' })}>
+      <div className={ax({ layout: 'stack', flex: 'none' })}>
+        <h1 className={ax({ textStyle: 'page' })}>A2UI Playground</h1>
+        <p className={ax({ textStyle: 'caption' })}>
           Google A2UI v0.9 — 15 components, keyboard/ARIA accessible, streaming progressive render
         </p>
       </div>
 
       {/* Category tabs */}
-      <div className={ax({ layout: 'row', gap: 'xs', flex: 'none' })}>
+      <div className={ax({ layout: 'row', flex: 'none' })}>
         {categories.map((c, i) => (
           <Button
             key={c.label}
@@ -144,7 +144,7 @@ export default function PageA2UI() {
       </div>
 
       {/* Preset selector within category + stream button */}
-      <div className={ax({ layout: 'row', gap: 'sm', flex: 'none' })}>
+      <div className={ax({ layout: 'row', flex: 'none' })}>
         {presetNames.map((name) => (
           <Button
             key={name}
@@ -168,18 +168,18 @@ export default function PageA2UI() {
       </div>
 
       {/* Split pane: editor | preview */}
-      <div className={ax({ layout: 'row', gap: 'lg', flex: '1', scroll: 'hidden' })}>
+      <div className={ax({ layout: 'row', flex: '1' })}>
         {/* JSON Editor */}
-        <div className={ax({ flex: '1', layout: 'stack', gap: 'xs', scroll: 'hidden' })}>
-          <div className={ax({ layout: 'bar', gap: 'sm' })}>
-            <span className={ax({ textStyle: 'label', text: 'secondary' })}>A2UI v0.9 Envelope</span>
+        <div className={ax({ flex: '1', layout: 'stack' })}>
+          <div className={ax({ layout: 'bar' })}>
+            <span className={ax({ textStyle: 'label' })}>A2UI v0.9 Envelope</span>
             {streaming && (
-              <span className={ax({ textStyle: 'caption', tone: 'accent', text: 'primary' })}>
+              <span className={ax({ textStyle: 'caption', tone: 'accent' })}>
                 Streaming... {progress}%
               </span>
             )}
             {!streaming && error && (
-              <span className={ax({ textStyle: 'caption', tone: 'danger', text: 'primary' })}>
+              <span className={ax({ textStyle: 'caption', tone: 'danger' })}>
                 {error}
               </span>
             )}
@@ -189,25 +189,27 @@ export default function PageA2UI() {
             onChange={(e) => setJsonText(e.target.value)}
             readOnly={streaming}
             spellCheck={false}
-            className={`${ax({ surface: 'sunken', padding: 'md', shape: 'sm', textStyle: 'code', flex: '1', scroll: 'y' })} ${styles.editor}`}
+            className={`${ax({
+                role: 'control-group',
+                surface: 'sunken', textStyle: 'code', flex: '1' })} ${styles.editor}`}
           />
         </div>
 
         {/* Render Preview */}
-        <div className={ax({ flex: '1', layout: 'stack', gap: 'xs', scroll: 'hidden' })}>
-          <div className={ax({ layout: 'bar', gap: 'sm' })}>
-            <span className={ax({ textStyle: 'label', text: 'secondary' })}>Rendered UI</span>
+        <div className={ax({ flex: '1', layout: 'stack' })}>
+          <div className={ax({ layout: 'bar' })}>
+            <span className={ax({ textStyle: 'label' })}>Rendered UI</span>
             {streaming && (
-              <span className={ax({ textStyle: 'caption', tone: 'accent', text: 'primary' })}>
+              <span className={ax({ textStyle: 'caption', tone: 'accent' })}>
                 {partialPayload ? `${partialPayload.components.length} components` : 'Starting...'}
               </span>
             )}
           </div>
-          <div className={ax({ surface: 'display', padding: 'lg', shape: 'md', flex: '1', scroll: 'y' })}>
+          <div className={ax({ surface: 'display', flex: '1' })}>
             {payload ? (
               <A2UISurface payload={payload} />
             ) : (
-              <div className={ax({ textStyle: 'body', text: 'muted', layout: 'center', flex: '1' })}>
+              <div className={ax({ textStyle: 'body', layout: 'center', flex: '1' })}>
                 {error ? 'Fix JSON to see preview' : 'No components'}
               </div>
             )}

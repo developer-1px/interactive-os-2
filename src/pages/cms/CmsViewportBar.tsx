@@ -27,7 +27,7 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
           <Icon size={16} />
         </Button>
       ))}
-      <div className={`cms-floating-toolbar__sep ${ax({ border: 'start' })}`} />
+      <div className={`cms-floating-toolbar__sep ${ax({ })}`} />
       <Button icon className="cms-floating-toolbar__btn" onClick={onPresent} title="Present">
         <Play size={16} />
       </Button>

@@ -77,25 +77,14 @@ describe('CodeViewer', () => {
     expect(caption?.textContent).toContain('a.ts')
   })
 
-  // V12: code-viewer-prd.md — startLine offsets gutter counter
-  it('startLine=42 sets gutter offset via data attr and CSS var', () => {
-    render(<CodeViewer code="a\nb\nc" filename="a.ts" preset="doc" startLine={42} />)
-    const body = document.querySelector('.code-viewer-body')
-    expect(body?.getAttribute('data-gutter-offset')).toBe('41')
-    expect((body as HTMLElement)?.style.getPropertyValue('--_gutter-offset')).toBe('41')
+  // V12: code-viewer-prd.md — startLine offsets gutter display via data-display-line
+  it('startLine=42 offsets gutter display via data-display-line', async () => {
+    render(<CodeViewer code={'a\nb\nc'} filename="a.ts" preset="doc" startLine={42} />)
+    await new Promise(r => setTimeout(r, 50)) // wait for shiki codeToHtml
+    const firstLine = document.querySelector('.code-viewer-pre .line[data-line="1"]')
+    expect(firstLine?.getAttribute('data-display-line')).toBe('42')
+    const lastLine = document.querySelector('.code-viewer-pre .line[data-line="3"]')
+    expect(lastLine?.getAttribute('data-display-line')).toBe('44')
   })
 
-  // V10: code-viewer-prd.md — wrap + virtualized conflict → console.warn
-  it('wrap + virtualized conflict warns on console', () => {
-    const original = console.warn
-    const captured: unknown[][] = []
-    console.warn = (...args: unknown[]) => { captured.push(args) }
-    try {
-      render(<CodeViewer code="a\nb" preset="doc" wrap virtualized />)
-      const found = captured.some(args => String(args[0] ?? '').includes('[CodeViewer]'))
-      expect(found).toBe(true)
-    } finally {
-      console.warn = original
-    }
-  })
 })

@@ -1,11 +1,10 @@
 /** @catalog Shiki 구문 강조 코드 뷰어 */
 // ② code-viewer-prd.md
-import { useState, useEffect, useCallback, useRef, useMemo, useId } from 'react'
-import { codeToHtml, codeToTokens, type BundledLanguage } from 'shiki'
+import { useState, useEffect, useCallback, useRef, useId } from 'react'
+import { codeToHtml } from 'shiki'
 import { ax } from '@styles/ax'
-import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme, escapeHtml } from './shikiUtils'
+import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme } from './shikiUtils'
 import { CopyButton } from './CopyButton'
-import { useVirtualScrollState } from '../plugins/virtualScroll'
 import './CodeViewer.css'
 
 // ② code-viewer-prd.md — HighlightTone: replay/diff의 5 tone 라벨
@@ -22,7 +21,6 @@ export interface CodeViewerProps {
   startLine?: number
   showLineNumbers?: boolean
   wrap?: boolean
-  virtualized?: boolean | number
 }
 
 interface PresetRecipe {
@@ -39,19 +37,6 @@ const PRESET_RECIPES: Record<CodeViewerPreset, PresetRecipe> = {
   replay: { showLineNumbers: true, wrap: false, region: false, chrome: 'compact' },
 }
 
-const VIRTUAL_AUTO_THRESHOLD = 500
-
-function tokensToHtml(tokens: { content: string; color?: string }[]): string {
-  return tokens.map(t => {
-    const escaped = escapeHtml(t.content)
-    const isIdent = IDENTIFIER_RE.test(t.content)
-    if (isIdent) {
-      return `<span style="color:${t.color ?? 'inherit'}" class="code-token" data-token="${escaped}">${escaped}</span>`
-    }
-    return t.color ? `<span style="color:${t.color}">${escaped}</span>` : escaped
-  }).join('')
-}
-
 // ② code-viewer-prd.md
 export function CodeViewer({
   code,
@@ -61,7 +46,6 @@ export function CodeViewer({
   startLine,
   showLineNumbers,
   wrap,
-  virtualized,
 }: CodeViewerProps) {
   const recipe = PRESET_RECIPES[preset]
   const captionId = useId()
@@ -76,32 +60,15 @@ export function CodeViewer({
   const ext = (filename ?? '').split('.').pop() ?? ''
   const lang = EXT_TO_LANG[ext] ?? 'text'
 
-  const lines = useMemo(() => code.split('\n'), [code])
-
-  // virtualized 분기 결정 (wrap + virtualized 충돌 시 wrap 우선)
-  const wantsVirtualized = virtualized === true
-    ? true
-    : virtualized === false
-      ? false
-      : typeof virtualized === 'number'
-        ? lines.length >= virtualized
-        : lines.length >= VIRTUAL_AUTO_THRESHOLD
-
-  const useVirtualized = wantsVirtualized && !resolvedWrap
-
-  useEffect(() => {
-    if (wantsVirtualized && resolvedWrap) {
-      console.warn('[CodeViewer] wrap=true conflicts with virtualized. wrap takes priority; virtualized is disabled.')
-    }
-  }, [wantsVirtualized, resolvedWrap])
-
   const ariaLabel = filename ? undefined : `Code example, ${lang}`
   const ariaLabelledBy = filename ? captionId : undefined
 
   return (
     <div className={ax({ placement: 'relative' })}>
       <figure
-        className={`code-viewer code-viewer--${preset}${resolvedWrap ? ' code-viewer--wrap' : ''}${!resolvedShowLineNumbers ? ' code-viewer--no-gutter' : ''} ${ax({ layout: 'stack', textStyle: 'code', surface: 'raised', scroll: 'hidden' })}`}
+        className={`code-viewer code-viewer--${preset}${resolvedWrap ? ' code-viewer--wrap' : ''}${!resolvedShowLineNumbers ? ' code-viewer--no-gutter' : ''} ${ax({
+            role: 'control-group',
+            layout: 'stack', textStyle: 'code', surface: 'raised' })}`}
         role={recipe.region ? 'region' : undefined}
         aria-labelledby={ariaLabelledBy}
         aria-label={ariaLabel}
@@ -109,10 +76,10 @@ export function CodeViewer({
         {(filename || recipe.chrome === 'frame') && (
           <figcaption
             id={captionId}
-            className={`code-viewer-caption ${ax({ layout: 'bar', gap: 'sm', padding: 'sm', textStyle: 'caption', border: 'bottom' })}`}
+            className={`code-viewer-caption ${ax({ layout: 'bar', textStyle: 'caption' })}`}
           >
             {recipe.chrome === 'frame' && (
-              <span aria-hidden="true" className={`code-viewer-chrome-dots ${ax({ layout: 'bar', gap: 'xs' })}`}>
+              <span aria-hidden="true" className={`code-viewer-chrome-dots ${ax({ layout: 'bar' })}`}>
                 <span className="code-viewer-chrome-dot" />
                 <span className="code-viewer-chrome-dot" />
                 <span className="code-viewer-chrome-dot" />
@@ -121,40 +88,21 @@ export function CodeViewer({
             {filename && <span>{filename}</span>}
           </figcaption>
         )}
-        {useVirtualized
-          ? (
-            <VirtualizedBody
-              code={code}
-              lang={lang}
-              theme={currentTheme}
-              highlightLines={highlightLines}
-              startLine={resolvedStartLine}
-              showLineNumbers={resolvedShowLineNumbers}
-              containerRef={containerRef}
-              preRef={preRef}
-              lines={lines}
-            />
-          )
-          : (
-            <StandardBody
-              code={code}
-              lang={lang}
-              theme={currentTheme}
-              highlightLines={highlightLines}
-              startLine={resolvedStartLine}
-              showLineNumbers={resolvedShowLineNumbers}
-              containerRef={containerRef}
-              preRef={preRef}
-            />
-          )
-        }
+        <StandardBody
+          code={code}
+          lang={lang}
+          theme={currentTheme}
+          highlightLines={highlightLines}
+          startLine={resolvedStartLine}
+          showLineNumbers={resolvedShowLineNumbers}
+          containerRef={containerRef}
+          preRef={preRef}
+        />
       </figure>
       <CopyButton text={code} />
     </div>
   )
 }
-
-// ── Standard (non-virtualized) body ──
 
 interface BodyProps {
   code: string
@@ -181,6 +129,7 @@ function StandardBody({ code, lang, theme, highlightLines, startLine, showLineNu
       transformers: [{
         line(node, line) {
           node.properties['data-line'] = line
+          node.properties['data-display-line'] = line + startLine - 1
           if (highlightLines?.has(line)) {
             const tone = highlightLines instanceof Map ? highlightLines.get(line) ?? 'edited' : 'edited'
             const cls = `code-line--${tone}`
@@ -205,7 +154,7 @@ function StandardBody({ code, lang, theme, highlightLines, startLine, showLineNu
       if (!cancelled) setHtml(result)
     })
     return () => { cancelled = true }
-  }, [code, lang, theme, highlightLines, showLineNumbers])
+  }, [code, lang, theme, highlightLines, showLineNumbers, startLine])
 
   useEffect(() => {
     const container = containerRef.current
@@ -240,20 +189,16 @@ function StandardBody({ code, lang, theme, highlightLines, startLine, showLineNu
     }
   }, [])
 
-  const gutterOffset = startLine - 1
-
   if (html) {
     return (
       <div
         ref={containerRef}
         className="code-viewer-body select-text"
-        data-gutter-offset={gutterOffset}
-        style={{ '--_gutter-offset': gutterOffset } as React.CSSProperties}
         onClick={handleClick}
       >
         <pre
           ref={preRef}
-          className={`shiki code-viewer-pre ${ax({ scroll: 'x' })}`}
+          className={`shiki code-viewer-pre ${ax({ })}`}
           tabIndex={scrollable ? 0 : undefined}
           dangerouslySetInnerHTML={{ __html: extractShikiInner(html) }}
         />
@@ -264,8 +209,6 @@ function StandardBody({ code, lang, theme, highlightLines, startLine, showLineNu
     <div
       ref={containerRef}
       className="code-viewer-body select-text"
-      data-gutter-offset={gutterOffset}
-      style={{ '--_gutter-offset': gutterOffset } as React.CSSProperties}
     >
       <pre ref={preRef} className="shiki code-viewer-pre" tabIndex={scrollable ? 0 : undefined}>
         <code>{code}</code>
@@ -278,117 +221,4 @@ function StandardBody({ code, lang, theme, highlightLines, startLine, showLineNu
 function extractShikiInner(html: string): string {
   const match = /<pre[^>]*>([\s\S]*)<\/pre>/.exec(html)
   return match ? match[1] : html
-}
-
-// ── Virtualized body ──
-
-interface VirtualBodyProps extends BodyProps {
-  lines: string[]
-}
-
-function VirtualizedBody({ code, lang, theme, highlightLines, startLine, showLineNumbers, containerRef, preRef, lines }: VirtualBodyProps) {
-  const [cachedLines, setCachedLines] = useState<string[] | null>(null)
-  const [highlightToken, setHighlightToken] = useState<string | null>(null)
-  const spacerRef = useRef<HTMLDivElement>(null)
-  const codeRef = useRef<HTMLElement>(null)
-  const lineHeight = 20
-
-  useEffect(() => {
-    let cancelled = false
-    codeToTokens(code, { lang: lang as BundledLanguage, theme }).then(result => {
-      if (!cancelled) {
-        setCachedLines(result.tokens.map(line =>
-          tokensToHtml(line.map(t => ({ content: t.content, color: t.color }))),
-        ))
-      }
-    })
-    return () => { cancelled = true }
-  }, [code, lang, theme])
-
-  const { totalHeight, visibleRange, offsetTop } = useVirtualScrollState({
-    itemCount: lines.length,
-    estimatedItemHeight: lineHeight,
-    overscan: 10,
-    containerRef,
-  })
-
-  useEffect(() => {
-    if (codeRef.current) codeRef.current.style.height = `${totalHeight}px`
-  }, [totalHeight])
-
-  useEffect(() => {
-    if (spacerRef.current) spacerRef.current.style.height = `${offsetTop}px`
-  }, [offsetTop])
-
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    const prev = el.querySelectorAll('.code-token--highlighted')
-    for (const p of prev) p.classList.remove('code-token--highlighted')
-    if (highlightToken) {
-      const matches = el.querySelectorAll(`[data-token="${CSS.escape(highlightToken)}"]`)
-      for (const m of matches) m.classList.add('code-token--highlighted')
-    }
-  }, [highlightToken, visibleRange.start, visibleRange.end, containerRef])
-
-  const handleClick = useCallback((e: React.MouseEvent) => {
-    const target = e.target as HTMLElement
-    const token = target.getAttribute('data-token')
-    if (token) {
-      setHighlightToken(prev => prev === token ? null : token)
-    } else {
-      setHighlightToken(null)
-    }
-  }, [])
-
-  const visibleLineHtmls = useMemo(() => {
-    const result: { index: number; html: string | null; raw: string }[] = []
-    for (let i = visibleRange.start; i < visibleRange.end && i < lines.length; i++) {
-      result.push({
-        index: i,
-        html: cachedLines?.[i] ?? null,
-        raw: lines[i],
-      })
-    }
-    return result
-  }, [visibleRange.start, visibleRange.end, cachedLines, lines])
-
-  return (
-    <div
-      ref={containerRef}
-      className={`code-viewer-body select-text ${ax({ scroll: 'hidden' })}`}
-      onClick={handleClick}
-    >
-      <pre ref={preRef} className="shiki code-viewer-pre" tabIndex={0}>
-        <code ref={codeRef} className={ax({ layout: 'stack' })}>
-          <div ref={spacerRef} />
-          {visibleLineHtmls.map(({ index, html, raw }) => {
-            const dataLine = index + 1
-            const displayLine = index + startLine
-            const tone = highlightLines instanceof Map ? highlightLines.get(dataLine) : (highlightLines?.has(dataLine) ? 'edited' : undefined)
-            const lineCls = `line${tone ? ` code-line--${tone}` : ''}${showLineNumbers ? ' code-line--with-gutter' : ''}`
-            const gutter = showLineNumbers
-              ? `<span class="code-viewer-gutter" aria-hidden="true">${displayLine}</span>`
-              : ''
-
-            return html
-              ? (
-                <span
-                  key={index}
-                  className={lineCls}
-                  data-line={dataLine}
-                  dangerouslySetInnerHTML={{ __html: `${gutter}${html}` }}
-                />
-              )
-              : (
-                <span key={index} className={lineCls} data-line={dataLine}>
-                  {showLineNumbers && <span className="code-viewer-gutter" aria-hidden="true">{displayLine}</span>}
-                  {raw}
-                </span>
-              )
-          })}
-        </code>
-      </pre>
-    </div>
-  )
 }

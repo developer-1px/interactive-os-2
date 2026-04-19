@@ -13,7 +13,7 @@ export function Demo() {
   return (
     <ScrollArea>
       {Array.from({ length: 20 }, (_, i) => (
-        <div key={i} className={ax({ padding: 'sm', textStyle: 'body' })}>
+        <div key={i} className={ax({ textStyle: 'body' })}>
           Row {i + 1}
         </div>
       ))}

@@ -98,7 +98,7 @@ export default function FormDemo() {
   const errorCount = Object.keys(errors).length
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       {fieldIds.map((id) => {
         const entity = store.entities[id]
         const data = entity?.data as Record<string, unknown> | undefined
@@ -109,10 +109,10 @@ export default function FormDemo() {
         const showError = touched && fieldErrors?.value
 
         return (
-          <div key={id} className={ax({ layout: 'stack', gap: 'xs' })}>
+          <div key={id} className={ax({ layout: 'stack' })}>
             <label
               htmlFor={`field-${id}`}
-              className={ax({ textStyle: 'caption', text: 'muted' })}
+              className={ax({ textStyle: 'caption' })}
             >
               {label}
             </label>
@@ -136,7 +136,7 @@ export default function FormDemo() {
         )
       })}
 
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+      <div className={ax({ layout: 'bar' })}>
         <Button variant="accent" onClick={handleSubmit}>
           Submit
         </Button>

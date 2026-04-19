@@ -170,19 +170,21 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
         messages={messages}
         blockRenderers={chatRenderers}
         isStreaming={false}
-        className={ax({ flex: '1', padding: 'lg', scroll: 'y' })}
+        className={ax({ flex: '1' })}
       />
-      <div className={ax({ flex: 'none', padding: 'md', layout: 'stack', gap: 'sm' })}>
-        <div className={ax({ width: 'prose', layout: 'stack', gap: 'sm' }) + ' chat-bottom-content'}>
+      <div className={ax({ flex: 'none', layout: 'stack' })}>
+        <div className={ax({ width: 'prose', layout: 'stack' }) + ' chat-bottom-content'}>
           {isRunning && (
-            <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' tabular-nums chat-activity-bar'}>
-              <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} chat-dot`} />
+            <div className={ax({ layout: 'bar', textStyle: 'caption' }) + ' tabular-nums chat-activity-bar'}>
+              <span className={`${ax({
+                  role: 'control-group',
+                surface: 'base', tone: 'accent' })} chat-dot`} />
               <span>{label}</span>
               <span>{elapsed}s</span>
               {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}
             </div>
           )}
-          <div className={ax({ layout: 'bar', gap: 'sm' }) + ' chat-input-row'}>
+          <div className={ax({ layout: 'bar' }) + ' chat-input-row'}>
             <Composer
               ref={composerRef}
               onSubmit={handleSubmit}
@@ -203,8 +205,8 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
               </Button>
             )}
           </div>
-          <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' tabular-nums chat-status-bar'}>
-            <span className={ax({ text: 'secondary' })}>{session.model || 'connecting...'}</span>
+          <div className={ax({ layout: 'bar', textStyle: 'caption' }) + ' tabular-nums chat-status-bar'}>
+            <span className={ax({ })}>{session.model || 'connecting...'}</span>
             {usage && (
               <>
                 <span>{formatTokens(usage.input)} in · {formatTokens(usage.output)} out</span>

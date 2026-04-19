@@ -64,16 +64,12 @@ function EnforcementCell({ layer, state }: { layer: EnforcementLayer; state: Enf
         role: 'item',
         surface,
         tone,
-        border: state === 'absent' ? undefined : 'default',
-        padding: 'sm',
-        shape: 'sm',
         layout: 'stack',
-        gap: 'xs',
         content: 'text',
       })}
     >
-      <span className={ax({ textStyle: 'overline', text: 'muted' })}>{layer}</span>
-      <span className={ax({ textStyle: 'caption', text: state === 'absent' ? 'muted' : 'primary' })}>
+      <span className={ax({ textStyle: 'overline' })}>{layer}</span>
+      <span className={ax({ textStyle: 'caption' })}>
         {enforcementLabel(state)}
       </span>
     </div>
@@ -87,22 +83,18 @@ function DetailSection({ title, children }: { title: string; children: React.Rea
     <section
       className={ax({
         surface: 'display',
-        border: 'default',
-        shape: 'md',
-        padding: 'md',
-        layout: 'stack',
-        gap: 'sm',
+        layout: 'stack'
       })}
     >
-      <h3 className={ax({ textStyle: 'overline', text: 'muted' })}>{title}</h3>
-      <div className={ax({ layout: 'stack', gap: 'sm' })}>{children}</div>
+      <h3 className={ax({ textStyle: 'overline' })}>{title}</h3>
+      <div className={ax({ layout: 'stack' })}>{children}</div>
     </section>
   )
 }
 
 function Paragraph({ children }: { children: React.ReactNode }) {
   return (
-    <p className={ax({ textStyle: 'body', text: 'primary', width: 'prose' })}>{children}</p>
+    <p className={ax({ textStyle: 'body', width: 'prose' })}>{children}</p>
   )
 }
 
@@ -117,10 +109,8 @@ function ExternalLink({ href, children }: { href: string; children: React.ReactN
       className={ax({
         interactive: 'button',
         surface: 'ghost',
-        text: 'primary',
         content: 'text',
-        textStyle: 'body',
-        padding: 'none',
+        textStyle: 'body'
       })}
     >
       {children}
@@ -143,13 +133,13 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
     <div className={ax({ layout: 'fill' })}>
       {/* Header */}
       <PanelHeader axes={{ layout: 'spread' }}>
-        <span className={ax({ layout: 'bar', gap: 'sm' })}>
+        <span className={ax({ layout: 'bar' })}>
           <StatusIndicator tone={statusIndicatorTone(principle.status)} />
-          <span className={ax({ textStyle: 'section', text: 'primary' })}>
+          <span className={ax({ textStyle: 'section' })}>
             {principle.id} {principle.name}
           </span>
         </span>
-        <span className={ax({ layout: 'bar', gap: 'xs' })}>
+        <span className={ax({ layout: 'bar' })}>
           <Badge tone={statusTone(principle.status)} variant="outline">{principle.status}</Badge>
           {principle.priority && (
             <Badge tone="accent" variant="outline">{principle.priority}</Badge>
@@ -161,17 +151,15 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
       </PanelHeader>
 
       {/* Scrollable body */}
-      <div className={ax({ layout: 'scroll', padding: 'md', gap: 'md' })}>
+      <div className={ax({ layout: 'scroll' })}>
         {/* Summary + Definition */}
         <DetailSection title="원리 / 정의">
           <Paragraph>{principle.summary}</Paragraph>
           <pre
             className={ax({
-              textStyle: 'code',
-              text: 'secondary',
+                role: 'control-group',
+                textStyle: 'code',
               surface: 'sunken',
-              padding: 'sm',
-              shape: 'sm',
               clamp: 'pre',
             })}
           >
@@ -182,15 +170,15 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
         {/* Industry Evidence */}
         {principle.industryEvidence.length > 0 && (
           <DetailSection title="업계 증거">
-            <ul className={ax({ layout: 'stack', gap: 'sm' })}>
+            <ul className={ax({ layout: 'stack' })}>
               {principle.industryEvidence.map((ev, i) => (
                 <li
                   key={i}
-                  className={ax({ layout: 'stack', gap: 'xs' })}
+                  className={ax({ layout: 'stack' })}
                 >
                   <ExternalLink href={ev.url}>{ev.source}</ExternalLink>
                   {ev.quote && (
-                    <span className={ax({ textStyle: 'caption', text: 'muted', width: 'prose' })}>
+                    <span className={ax({ textStyle: 'caption', width: 'prose' })}>
                       “{ev.quote}”
                     </span>
                   )}
@@ -213,28 +201,26 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
         {/* ax Mapping */}
         <DetailSection title="ax 매핑">
           {mappings.length === 0 ? (
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>매핑 없음</span>
+            <span className={ax({ textStyle: 'caption' })}>매핑 없음</span>
           ) : (
-            <div className={ax({ layout: 'stack', gap: 'sm' })}>
+            <div className={ax({ layout: 'stack' })}>
               {mappings.map((m) => (
                 <div
                   key={m.id}
                   className={ax({
+                      role: 'control-group',
                     layout: 'stack',
-                    gap: 'xs',
-                    surface: 'sunken',
-                    padding: 'sm',
-                    shape: 'sm',
+                    surface: 'sunken'
                   })}
                 >
-                  <div className={ax({ layout: 'spread', gap: 'sm' })}>
-                    <span className={ax({ layout: 'bar', gap: 'xs' })}>
+                  <div className={ax({ layout: 'spread' })}>
+                    <span className={ax({ layout: 'bar' })}>
                       {axes.length > 0 ? (
                         axes.map((a) => (
                           <Badge key={a.id} tone="accent-dim" variant="outline">{a.name}</Badge>
                         ))
                       ) : (
-                        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+                        <span className={ax({ textStyle: 'caption' })}>
                           (축 매핑 없음)
                         </span>
                       )}
@@ -242,7 +228,7 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
                     <Badge tone={statusTone(m.state)} variant="outline">{m.state}</Badge>
                   </div>
                   {m.note && (
-                    <span className={ax({ textStyle: 'caption', text: 'secondary', width: 'prose' })}>
+                    <span className={ax({ textStyle: 'caption', width: 'prose' })}>
                       {m.note}
                     </span>
                   )}
@@ -254,7 +240,7 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
 
         {/* Enforcement 7 layer grid */}
         <DetailSection title="Enforcement Layers">
-          <div className={ax({ layout: 'grid-7', gap: 'sm' })}>
+          <div className={ax({ layout: 'grid-7' })}>
             {ENFORCEMENT_LAYERS.map((layer) => (
               <EnforcementCell
                 key={layer}
@@ -267,22 +253,18 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
 
         {/* Examples */}
         <DetailSection title="Examples">
-          <div className={ax({ layout: 'stack', gap: 'sm' })}>
+          <div className={ax({ layout: 'stack' })}>
             {principle.examples.good.length > 0 && (
-              <div className={ax({ layout: 'stack', gap: 'xs' })}>
-                <span className={ax({ textStyle: 'overline', text: 'muted' })}>Good</span>
-                <ul className={ax({ layout: 'stack', gap: 'xs' })}>
+              <div className={ax({ layout: 'stack' })}>
+                <span className={ax({ textStyle: 'overline' })}>Good</span>
+                <ul className={ax({ layout: 'stack' })}>
                   {principle.examples.good.map((g, i) => (
                     <li
                       key={i}
                       className={ax({
                         surface: 'display',
-                        border: 'default',
                         tone: 'success',
-                        padding: 'sm',
-                        shape: 'sm',
-                        textStyle: 'code',
-                        text: 'primary',
+                        textStyle: 'code'
                       })}
                     >
                       {g}
@@ -292,20 +274,16 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
               </div>
             )}
             {principle.examples.bad.length > 0 && (
-              <div className={ax({ layout: 'stack', gap: 'xs' })}>
-                <span className={ax({ textStyle: 'overline', text: 'muted' })}>Bad</span>
-                <ul className={ax({ layout: 'stack', gap: 'xs' })}>
+              <div className={ax({ layout: 'stack' })}>
+                <span className={ax({ textStyle: 'overline' })}>Bad</span>
+                <ul className={ax({ layout: 'stack' })}>
                   {principle.examples.bad.map((b, i) => (
                     <li
                       key={i}
                       className={ax({
                         surface: 'display',
-                        border: 'default',
                         tone: 'danger',
-                        padding: 'sm',
-                        shape: 'sm',
-                        textStyle: 'code',
-                        text: 'primary',
+                        textStyle: 'code'
                       })}
                     >
                       {b}

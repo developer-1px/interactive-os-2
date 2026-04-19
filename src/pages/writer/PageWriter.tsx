@@ -197,15 +197,15 @@ export default function PageWriter() {
         </Panel>
 
         <Panel scroll={false}>
-          <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm' })}>
+          <div className={ax({ layout: 'bar' })}>
             <Toolbar data={toolbarData} onActivate={handleToolbarActivate} aria-label="Writer toolbar" />
-            {urlFilePath && <span className={ax({ textStyle: 'caption', text: 'muted' })}>{urlFilePath}</span>}
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+            {urlFilePath && <span className={ax({ textStyle: 'caption' })}>{urlFilePath}</span>}
+            <span className={ax({ textStyle: 'caption' })}>
               {{ tree: 'Tree', prose: 'Prose', pyramid: 'Pyramid', slides: 'Slides' }[viewMode]}
             </span>
           </div>
 
-          <ScrollArea className={ax({ padding: 'md' })}>
+          <ScrollArea className={ax({ })}>
             {viewMode === 'prose' ? (
               <ProseView data={data} />
             ) : (

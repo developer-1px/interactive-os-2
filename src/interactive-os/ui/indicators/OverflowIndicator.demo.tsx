@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <OverflowIndicator count={0} />
       <OverflowIndicator count={3} />
       <OverflowIndicator count={12} />

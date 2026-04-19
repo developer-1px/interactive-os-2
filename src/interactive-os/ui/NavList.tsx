@@ -89,14 +89,14 @@ export function NavList({
   }
 
   return (
-    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${(nav.rootProps as React.HTMLAttributes<HTMLDivElement>).className ?? ''} ${ax({ layout: 'stack', gap: 'lg' })}`}>
+    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${(nav.rootProps as React.HTMLAttributes<HTMLDivElement>).className ?? ''} ${ax({ layout: 'stack' })}`}>
       {rootChildren.map((id) => {
         const entity = store.entities[id]
         if (!entity) return null
         if (isGroup(entity)) {
           const groupChildren = getChildren(store, id)
           return (
-            <div key={id} role="group" aria-label={getLabel(entity)} className={`navlist-group ${ax({ layout: 'stack', gap: 'sm' })}`}>
+            <div key={id} role="group" aria-label={getLabel(entity)} className={`navlist-group ${ax({ layout: 'stack' })}`}>
               {renderGroupLabel(getLabel(entity))}
               {renderItems(groupChildren)}
             </div>

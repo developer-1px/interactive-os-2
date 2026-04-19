@@ -16,7 +16,7 @@ const TONE_MAP = {
 export function PhaseCell({ status }: PhaseCellProps) {
   if (status === null) return <span />
   return (
-    <span className={ax({ role: 'cell', surface: 'display', layout: 'center' })}>
+    <span className={ax({ role: 'item', surface: 'display', layout: 'center' })}>
       <StatusIndicator tone={TONE_MAP[status]} />
     </span>
   )

@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <Breadcrumb path="src/interactive-os/ui/Breadcrumb.tsx" root="src" />
       <Breadcrumb path="docs/guides/getting-started.md" root="docs" />
     </div>

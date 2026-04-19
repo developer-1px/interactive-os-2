@@ -294,7 +294,7 @@ export function Combobox({
   return (
     <div>
       {mode === 'multiple' ? (
-        <div className={ax({ layout: 'bar', gap: 'xs' })} style={anchorStyle}>
+        <div className={ax({ layout: 'bar' })} style={anchorStyle}>
           <div role="list">
             {aria.selected.map((id) => (
               <span key={id} data-combobox-token role="listitem">
@@ -334,7 +334,7 @@ export function Combobox({
         />
       )}
       {isOpen && (
-        <div ref={dropdownRef} popover="manual" className={`${ax({ scroll: 'hidden', surface: 'overlay', shape: 'xl', placement: 'anchor-below' })} combo-dropdown`} style={{ positionAnchor: anchorName } as React.CSSProperties} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div ref={dropdownRef} popover="manual" className={`${ax({ surface: 'overlay', placement: 'anchor-below' })} combo-dropdown`} style={{ positionAnchor: anchorName } as React.CSSProperties} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? renderGroupedOptions() : visibleChildren.map(childId => renderOption(childId))}
           {showCreateOption && (
             <div

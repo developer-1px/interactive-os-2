@@ -11,7 +11,7 @@ interface SearchableCellProps {
 export function SearchableCell({ children, empty, muted: _muted }: SearchableCellProps) {
   return (
     <Aria.SearchHighlight>
-      <span className={ax({ role: 'cell', surface: 'input' })}>
+      <span className={ax({ role: 'item', surface: 'input' })}>
         {empty ? '' : children}
       </span>
     </Aria.SearchHighlight>

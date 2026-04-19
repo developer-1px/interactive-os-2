@@ -15,19 +15,19 @@ const TONE_MAP = {
 export function VisualCell({ thumbnail, status }: VisualCellProps) {
   if (thumbnail) {
     return (
-      <span className={ax({ role: 'cell', surface: 'display', layout: 'center' })}>
+      <span className={ax({ role: 'item', surface: 'display', layout: 'center' })}>
         <img
           src={thumbnail}
           alt=""
           width={48}
           height={32}
-          className={ax({ shape: 'sm' })}
+          className={ax({ })}
         />
       </span>
     )
   }
   return (
-    <span className={ax({ role: 'cell', surface: 'display', layout: 'center' })}>
+    <span className={ax({ role: 'item', surface: 'display', layout: 'center' })}>
       <StatusIndicator tone={TONE_MAP[status]} />
     </span>
   )

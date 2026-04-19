@@ -37,7 +37,7 @@ const renderCell = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={`${ax({ layout: 'row', textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', interactive: 'cell' })} outline-none cursor-default`}>
+    <div {...props} className={`${ax({ layout: 'row', textStyle: 'body', content: 'text', interactive: 'cell' })} outline-none cursor-default`}>
       {String(value ?? '')}
     </div>
   )

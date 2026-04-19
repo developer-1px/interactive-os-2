@@ -19,23 +19,23 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
   })
 
   return (
-    <div className={`${ax({ textStyle: 'caption', surface: settled ? undefined : 'sunken', shape: 'md' })} thinking-block${settled ? ' thinking-settled' : ''}`}>
+    <div className={`${ax({ textStyle: 'caption', surface: settled ? undefined : 'sunken' })} thinking-block${settled ? ' thinking-settled' : ''}`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ padding: 'sm' })}`}
+        className={`cursor-pointer select-none ${ax({ })}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
-        <div className={ax({ layout: 'bar', gap: 'xs' })}>
+        <div className={ax({ layout: 'bar' })}>
           <span className={ax({ })}>Thinking</span>
           <ExpandIndicator variant="expand" expanded={expanded} />
         </div>
         {isLatest && !expanded && <div className={ax({ clamp: '2' })}>{preview}…</div>}
       </div>
       {expanded && !isLatest && (
-        <div className={`break-word ${ax({ clamp: 'scroll', padding: 'sm' })} thinking-content`}>
+        <div className={`break-word ${ax({ clamp: 'scroll' })} thinking-content`}>
           <MarkdownViewer content={text} prose={false} codePreset="chat" />
         </div>
       )}

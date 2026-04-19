@@ -1090,13 +1090,15 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "placement",
+            "role",
             "surface",
-            "padding",
-            "border"
+            "layout",
+            "cs",
+            "textStyle",
+            "clamp",
+            "flex"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -1123,18 +1125,17 @@ export const catalog: CatalogGenerated = {
             "layout",
             "width",
             "padding",
-            "gap",
-            "surface",
-            "shape",
-            "interactive",
-            "role",
-            "content",
             "flex",
             "scroll",
             "placement",
-            "textStyle"
+            "gap",
+            "textStyle",
+            "surface"
           ],
-          "missing": []
+          "missing": [
+            "role",
+            "interactive"
+          ]
         },
         "aria": "ok",
         "docs": "missing"
@@ -1190,15 +1191,14 @@ export const catalog: CatalogGenerated = {
             "layout",
             "gap",
             "textStyle",
-            "surface",
-            "shape",
-            "padding",
-            "flex"
-          ],
-          "missing": [
             "role",
-            "interactive"
-          ]
+            "interactive",
+            "surface",
+            "flex",
+            "shape",
+            "padding"
+          ],
+          "missing": []
         },
         "aria": "missing",
         "docs": "missing"
@@ -1481,7 +1481,8 @@ export const catalog: CatalogGenerated = {
             "padding",
             "width",
             "layout",
-            "gap"
+            "gap",
+            "flex"
           ],
           "missing": [
             "role",
@@ -1490,9 +1491,9 @@ export const catalog: CatalogGenerated = {
           ]
         },
         "aria": "missing",
-        "docs": "missing"
+        "docs": "ok"
       },
-      "jsDoc": null
+      "jsDoc": "YAML frontmatter를 파싱하여 data와 body로 분리한다."
     },
     {
       "name": "MenuActivedescendant",
@@ -1676,16 +1677,16 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
-            "interactive",
             "role",
-            "content",
-            "layout",
-            "width",
+            "surface",
             "textStyle",
+            "tone",
+            "cs",
+            "layout",
             "gap"
           ],
           "missing": [
-            "surface"
+            "interactive"
           ]
         },
         "aria": "missing",
@@ -2984,6 +2985,10 @@ export const catalog: CatalogGenerated = {
       "demoPath": "src/interactive-os/ui/TreeGrid.demo.tsx",
       "category": "ui",
       "propsSignature": {
+        "sortDir": [
+          "asc",
+          "desc"
+        ],
         "keyMap": [
           "../axis/types"
         ]
@@ -2992,26 +2997,28 @@ export const catalog: CatalogGenerated = {
         "demoFile": "ok",
         "branchCoverage": {
           "covered": 0,
-          "total": 1,
+          "total": 3,
           "missing": [
+            "sortDir=asc",
+            "sortDir=desc",
             "keyMap=../axis/types"
           ]
         },
         "axAxes": {
           "declared": [
             "role",
+            "interactive",
             "layout",
             "gap",
             "icon",
             "flex",
             "placement",
-            "surface",
-            "border",
             "textStyle",
+            "tone",
             "content"
           ],
           "missing": [
-            "interactive"
+            "surface"
           ]
         },
         "aria": "ok",
@@ -3217,6 +3224,32 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     },
     {
+      "name": "JsonEditor",
+      "path": "src/interactive-os/ui/JsonEditor/JsonEditor.tsx",
+      "demoPath": "src/interactive-os/ui/JsonEditor/JsonEditor.demo.tsx",
+      "category": "JsonEditor",
+      "propsSignature": {},
+      "gaps": {
+        "demoFile": "ok",
+        "branchCoverage": {
+          "covered": 0,
+          "total": 0,
+          "missing": []
+        },
+        "axAxes": {
+          "declared": [],
+          "missing": [
+            "role",
+            "surface",
+            "interactive"
+          ]
+        },
+        "aria": "missing",
+        "docs": "missing"
+      },
+      "jsDoc": null
+    },
+    {
       "name": "BadgeCell",
       "path": "src/interactive-os/ui/cells/BadgeCell.tsx",
       "demoPath": "src/interactive-os/ui/cells/BadgeCell.demo.tsx",
@@ -3237,15 +3270,13 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "tone",
             "textStyle",
-            "shape",
-            "padding",
             "content"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -3269,12 +3300,12 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "textStyle",
             "clamp"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -3298,13 +3329,13 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "layout",
             "gap",
             "tone"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -3327,6 +3358,33 @@ export const catalog: CatalogGenerated = {
           "missing": []
         },
         "axAxes": {
+          "declared": [
+            "role",
+            "surface"
+          ],
+          "missing": [
+            "interactive"
+          ]
+        },
+        "aria": "missing",
+        "docs": "missing"
+      },
+      "jsDoc": null
+    },
+    {
+      "name": "EnumCell",
+      "path": "src/interactive-os/ui/cells/EnumCell.tsx",
+      "demoPath": null,
+      "category": "cells",
+      "propsSignature": {},
+      "gaps": {
+        "demoFile": "missing",
+        "branchCoverage": {
+          "covered": 0,
+          "total": 0,
+          "missing": []
+        },
+        "axAxes": {
           "declared": [],
           "missing": [
             "role",
@@ -3335,9 +3393,9 @@ export const catalog: CatalogGenerated = {
           ]
         },
         "aria": "missing",
-        "docs": "missing"
+        "docs": "ok"
       },
-      "jsDoc": null
+      "jsDoc": "Enumerated-value display cell (JSON type labels, schema enums).\nEditing = cycle through options via keyMap dispatcher (jsonEditor:setType/setValue)."
     },
     {
       "name": "PhaseCell",
@@ -3354,11 +3412,11 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "layout"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -3382,10 +3440,10 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "surface"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -3409,11 +3467,11 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "clamp"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -3445,11 +3503,11 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "clamp"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -3473,6 +3531,8 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "layout",
             "gap",
             "shape",
@@ -3480,8 +3540,6 @@ export const catalog: CatalogGenerated = {
             "clamp"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -3489,6 +3547,32 @@ export const catalog: CatalogGenerated = {
         "docs": "missing"
       },
       "jsDoc": null
+    },
+    {
+      "name": "ToggleCell",
+      "path": "src/interactive-os/ui/cells/ToggleCell.tsx",
+      "demoPath": null,
+      "category": "cells",
+      "propsSignature": {},
+      "gaps": {
+        "demoFile": "missing",
+        "branchCoverage": {
+          "covered": 0,
+          "total": 0,
+          "missing": []
+        },
+        "axAxes": {
+          "declared": [],
+          "missing": [
+            "role",
+            "surface",
+            "interactive"
+          ]
+        },
+        "aria": "missing",
+        "docs": "ok"
+      },
+      "jsDoc": "Boolean display cell. Editing handled by jsonEditor:toggleBoolean dispatched via keyMap."
     },
     {
       "name": "VisualCell",
@@ -3511,12 +3595,12 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
+            "surface",
             "layout",
             "shape"
           ],
           "missing": [
-            "role",
-            "surface",
             "interactive"
           ]
         },
@@ -5628,11 +5712,11 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "layout",
             "surface"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -5662,11 +5746,10 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "layout",
             "surface",
             "flex",
-            "padding",
-            "role",
             "content"
           ],
           "missing": [
@@ -5700,15 +5783,12 @@ export const catalog: CatalogGenerated = {
         },
         "axAxes": {
           "declared": [
+            "role",
             "placement",
             "surface",
-            "layout",
-            "padding",
-            "shape",
-            "gap"
+            "layout"
           ],
           "missing": [
-            "role",
             "interactive"
           ]
         },
@@ -5718,5 +5798,5 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     }
   ],
-  "generatedAt": "2026-04-18T13:18:42.395Z"
+  "generatedAt": "2026-04-19T04:34:26.036Z"
 } as const

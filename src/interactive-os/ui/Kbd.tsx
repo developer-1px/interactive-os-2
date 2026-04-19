@@ -10,11 +10,8 @@ export function Kbd({ children }: KbdProps) {
     <kbd
       className={ax({
         surface: 'overlay',
-        shape: 'sm',
         textStyle: 'code',
-        padding: 'xs',
-        content: 'text',
-        border: 'default',
+        content: 'text'
       })}
     >
       {children}

@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <PhaseCell status="done" />
       <PhaseCell status="wip" />
       <PhaseCell status="empty" />

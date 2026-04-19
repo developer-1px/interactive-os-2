@@ -30,7 +30,7 @@ export function ServiceItem(
     <span
       {...props}
       className={ax({
-        role: 'control',
+        role: 'item',
         interactive: 'button',
         surface: 'ghost',
         layout: 'bar',

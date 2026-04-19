@@ -44,6 +44,13 @@ export interface BookContextValue {
   spread: number
   totalSpreads: number
 
+  // ── 3-pane: Chapter / Page list ──
+  chapterStore: NormalizedData
+  chapterPageStore: NormalizedData
+  currentChapterLabel: string
+  onChapterActivate: (nodeId: string) => void
+  onPageListActivate: (nodeId: string) => void
+
   // ── TOC overlay ──
   tocOpen: boolean
   tocStore: NormalizedData
@@ -57,6 +64,16 @@ export interface BookContextValue {
   onQueryChange: (q: string) => void
   onQuickOpenActivate: (nodeId: string) => void
   onQuickOpenClose: () => void
+
+  // ── Slide mode ──
+  slideMode: boolean
+  slides: string[]
+  currentSlide: number
+  totalSlides: number
+  onSlideNext: () => void
+  onSlidePrev: () => void
+  onSlideGoTo: (index: number) => void
+  onToggleSlideMode: () => void
 
   // ── Layer overlay ──
   layerOverlayVisible: boolean

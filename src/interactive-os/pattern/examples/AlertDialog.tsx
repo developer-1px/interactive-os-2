@@ -43,16 +43,16 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${ax({ shape: 'md', padding: 'md', content: 'text', surface: 'display', border: 'default' })} outline-none`}
+        className={`${ax({ content: 'text', surface: 'display' })} outline-none`}
         data-focused={state.focused || undefined}
       >
-        <h2 className={ax({ weight: 'semi', text: 'primary', textStyle: 'section' })}>{label}</h2>
+        <h2 className={ax({ textStyle: 'section' })}>{label}</h2>
       </div>
     )
   }
 
   return (
-    <div {...props} className={ax({ textStyle: 'body', text: 'secondary', padding: 'sm' })}>
+    <div {...props} className={ax({ textStyle: 'body' })}>
       {label}
     </div>
   )

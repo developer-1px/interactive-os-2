@@ -11,7 +11,7 @@ interface BadgeCellProps {
 
 export function BadgeCell({ tone, children, className }: BadgeCellProps) {
   return (
-    <span className={ax({ role: 'badge', surface: 'display', tone, textStyle: 'caption', content: 'text' }) + (className ? ` ${className}` : '')}>
+    <span className={ax({ role: 'item', surface: 'display', tone, textStyle: 'caption', content: 'text' }) + (className ? ` ${className}` : '')}>
       {children}
     </span>
   )

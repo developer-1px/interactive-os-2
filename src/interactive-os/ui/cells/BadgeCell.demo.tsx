@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'sm' })}>
+    <div className={ax({ layout: 'bar' })}>
       <BadgeCell tone="accent">Feature</BadgeCell>
       <BadgeCell tone="success">Done</BadgeCell>
       <BadgeCell tone="warning">WIP</BadgeCell>

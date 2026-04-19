@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <VisualCell thumbnail={null} status="done" />
       <VisualCell thumbnail={null} status="wip" />
       <VisualCell thumbnail={null} status="empty" />

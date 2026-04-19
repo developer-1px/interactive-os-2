@@ -29,7 +29,7 @@ export function Demo() {
   const [data, setData] = useState(initial)
 
   return (
-    <div className={ax({ layout: 'row', gap: 'sm' })}>
+    <div className={ax({ layout: 'row' })}>
       <ButtonToggle data={data} onChange={setData} aria-label="Formatting toggles" />
     </div>
   )

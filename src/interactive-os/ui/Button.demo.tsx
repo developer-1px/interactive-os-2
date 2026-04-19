@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div className={ax({ layout: 'row' })}>
       <Button variant="accent">Accent</Button>
       <Button variant="ghost">Ghost</Button>
       <Button variant="dialog">Dialog</Button>

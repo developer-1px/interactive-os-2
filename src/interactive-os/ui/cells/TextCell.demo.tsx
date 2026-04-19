@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm' })}>
+    <div className={ax({ layout: 'stack' })}>
       <TextCell>Default aligned</TextCell>
       <TextCell align="center">Center aligned</TextCell>
       <TextCell align="end">End aligned</TextCell>

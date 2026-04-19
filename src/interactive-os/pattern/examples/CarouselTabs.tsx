@@ -49,16 +49,16 @@ const renderTab = (
     <div>
       <button
         {...props}
-        className={`${ax({ textStyle: 'caption', text: 'secondary', layout: 'row', interactive: 'tab' })} outline-none`}
+        className={`${ax({ textStyle: 'caption', layout: 'row', interactive: 'tab' })} outline-none`}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
       >
         {label}
       </button>
       {state.slotProps && (
-        <div {...state.slotProps} className={ax({ surface: 'display', padding: 'md' })} aria-roledescription="slide">
-          <h3 className={ax({ text: 'bright', textStyle: 'section', weight: 'semi' })}>{label}</h3>
-          <p className={ax({ text: 'secondary', textStyle: 'body' })}>{desc}</p>
+        <div {...state.slotProps} className={ax({ surface: 'display' })} aria-roledescription="slide">
+          <h3 className={ax({ textStyle: 'section' })}>{label}</h3>
+          <p className={ax({ textStyle: 'body' })}>{desc}</p>
         </div>
       )}
     </div>
@@ -119,15 +119,15 @@ export function CarouselTabs() {
       ref={containerRef}
       aria-roledescription="carousel"
       aria-label="Highlighted features"
-      className={ax({ shape: 'sm', border: 'default', scroll: 'hidden' })}
+      className={ax({ })}
       onFocus={onFocusIn}
       onBlur={onFocusOut}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className={`${ax({ layout: 'row', surface: 'display', padding: 'xs' })} justify-end`}>
+      <div className={`${ax({ layout: 'row', surface: 'display' })} justify-end`}>
         <button
-          className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })}
+          className={ax({ interactive: 'button', layout: 'center' })}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
@@ -150,7 +150,7 @@ export function CarouselTabs() {
         </Aria>
       </div>
 
-      <div className={`${ax({ textStyle: 'caption', text: 'muted', surface: 'display', padding: 'xs' })} text-center`} aria-hidden="true">
+      <div className={`${ax({ textStyle: 'caption', surface: 'display' })} text-center`} aria-hidden="true">
         {slideIndex} / {slides.length}
       </div>
     </section>

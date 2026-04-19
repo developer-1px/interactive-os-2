@@ -25,17 +25,19 @@ const renderSplitter = (
   void node
 
   return (
-    <div className={ax({ layout: 'row', shape: 'sm', border: 'default' })}>
-      <div className={ax({ layout: 'center', scroll: 'hidden' })} style={{ flexBasis: `${current}%` }}>
-        <p className={ax({ textStyle: 'body', text: 'secondary' })}>Panel 1</p>
+    <div className={ax({ layout: 'row' })}>
+      <div className={ax({ layout: 'center' })} style={{ flexBasis: `${current}%` }}>
+        <p className={ax({ textStyle: 'body' })}>Panel 1</p>
       </div>
       <div
         {...props}
-        className={`${ax({ surface: 'sunken', interactive: 'button', shape: 'md', flex: 'none' })} outline-none`}
+        className={`${ax({
+            role: 'control-group',
+            surface: 'sunken', interactive: 'button', flex: 'none' })} outline-none`}
         data-focused={state.focused || undefined}
       />
-      <div className={ax({ layout: 'center', scroll: 'hidden' })} style={{ flexBasis: `${100 - current}%` }}>
-        <p className={ax({ textStyle: 'body', text: 'secondary' })}>Panel 2</p>
+      <div className={ax({ layout: 'center' })} style={{ flexBasis: `${100 - current}%` }}>
+        <p className={ax({ textStyle: 'body' })}>Panel 2</p>
       </div>
     </div>
   )

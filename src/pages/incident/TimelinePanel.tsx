@@ -66,11 +66,11 @@ export function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
           <span className={`incident-dot ${SEVERITY_CLS[ev.severity]}`} />
           <span className={`incident-dot-line ${ax({ flex: '1' })}`} />
         </div>
-        <div className={ax({ layout: 'bar', gap: 'xs', flex: '1' })}>
+        <div className={ax({ layout: 'bar', flex: '1' })}>
           <div className="incident-timeline-icon">{EVENT_ICON[ev.type]}</div>
           <div className={ax({ flex: '1' })}>
-            <div className={ax({ textStyle: 'body', weight: 'medium' })}>{ev.title}</div>
-            <div className={ax({ textStyle: 'caption', text: 'muted' })}>{ev.detail}</div>
+            <div className={ax({ textStyle: 'body' })}>{ev.title}</div>
+            <div className={ax({ textStyle: 'caption' })}>{ev.detail}</div>
           </div>
         </div>
       </div>
@@ -78,9 +78,11 @@ export function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
   }, [selectedId, onSelect])
 
   return (
-    <div className={`${ax({ surface: 'base', layout: 'stack', flex: 'none', placement: 'relative' })} incident-timeline-panel`}>
+    <div className={`${ax({
+        role: 'control-group',
+        surface: 'base', layout: 'stack', flex: 'none', placement: 'relative' })} incident-timeline-panel`}>
       <PanelHeader axes={{ layout: 'spread' }}>
-        <span className={ax({ layout: 'bar', gap: 'xs' })}><Clock size={12} />Timeline</span>
+        <span className={ax({ layout: 'bar' })}><Clock size={12} />Timeline</span>
         <span className={ax({ textStyle: 'code' })}>{visibleCount}/{events.length}</span>
       </PanelHeader>
       {visibleCount > 0 ? (
@@ -92,7 +94,7 @@ export function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
           aria-label="Incident timeline"
         />
       ) : (
-        <div className={ax({ textStyle: 'caption', text: 'muted', layout: 'center', flex: '1' })}>이벤트 수집 중...</div>
+        <div className={ax({ textStyle: 'caption', layout: 'center', flex: '1' })}>이벤트 수집 중...</div>
       )}
     </div>
   )

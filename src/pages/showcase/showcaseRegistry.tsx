@@ -50,7 +50,7 @@ const toastVariants: Array<'default' | 'success' | 'error'> = ['default', 'succe
 
 function ToasterDemo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'sm' })}>
+    <div className={ax({ layout: 'row' })}>
       <button onClick={() => {
         const variant = toastVariants[toastCount % 3]
         toastCount++
@@ -86,9 +86,9 @@ function formRenderField(
   _state: NodeState,
 ): React.ReactElement {
   return (
-    <div className={ax({ layout: 'stack', gap: 'xs' })}>
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{entry.label}</span>
-      <span className={ax({ textStyle: 'body', text: 'primary' })}>{entry.field}</span>
+    <div className={ax({ layout: 'stack' })}>
+      <span className={ax({ textStyle: 'caption' })}>{entry.label}</span>
+      <span className={ax({ textStyle: 'body' })}>{entry.field}</span>
     </div>
   )
 }

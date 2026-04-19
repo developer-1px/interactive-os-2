@@ -20,7 +20,7 @@ const hookData = createStore({
 const itemSlots: ItemSlots = {
   rightContent: (node) => {
     const d = node.data as Record<string, unknown>
-    return <span className={ax({ text: 'muted', textStyle: 'caption' })}>{d?.desc as string}</span>
+    return <span className={ax({ textStyle: 'caption' })}>{d?.desc as string}</span>
   },
 }
 
@@ -33,7 +33,7 @@ export default function HooksListDemo() {
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <ListBox
           data={data}
           onChange={setData}

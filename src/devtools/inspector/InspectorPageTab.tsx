@@ -1,11 +1,10 @@
 // ② inspectorDefinePagePanelPrd.md
-// @useState-hatch — devtools: inspector UI owns local view state (selection, copy flag, split sizes)
+// @useState-hatch — devtools: inspector UI owns local view state (selection, copy flag)
 import { useState, useMemo, useCallback, useSyncExternalStore } from 'react'
 import { TreeView } from '@os/ui/TreeView'
 import { TreeGrid } from '@os/ui/TreeGrid'
-import { SplitPane } from '@os/ui/SplitPane'
 import { CopyIndicator } from '@os/ui/indicators/CopyIndicator'
-import type { NormalizedData, PaneSize } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
 import { getEntityData } from '@os/store/createStore'
 import {
   getAllFlatLayouts,
@@ -45,8 +44,6 @@ export function InspectorPageTab() {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   // @useState-hatch — clipboard feedback transient flag
   const [copied, setCopied] = useState(false)
-  // @useState-hatch — SplitPane sizes 외부 제어
-  const [sizes, setSizes] = useState<PaneSize[]>([0.5, 'flex'])
 
   // Derived: 유효한 preferredId면 그것을, 아니면 첫 번째 instance. setState in effect 회피.
   const activeId = useMemo(() => {
@@ -91,7 +88,7 @@ export function InspectorPageTab() {
   }
 
   return (
-    <div className={ax({ role: 'control-group', surface: 'base', layout: 'stack' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       {instanceIds.length > 1 && (
         <select
           value={activeId ?? ''}
@@ -101,43 +98,39 @@ export function InspectorPageTab() {
           {instanceIds.map(id => <option key={id} value={id}>{id}</option>)}
         </select>
       )}
-      <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes}>
-        <div className={ax({ layout: 'stack' })}>
-          {treeData && (
-            <TreeView
-              data={treeData}
-              plugins={[]}
-              renderItem={renderInspectorItem}
-              onFocusChange={(id) => setSelectedNodeId(id)}
-              aria-label="Layout tree"
-            />
-          )}
-        </div>
-        <div className={ax({ layout: 'stack' })}>
-          {gridData ? (
-            <TreeGrid
-              data={gridData}
-              columns={GRID_COLUMNS}
-              enableEditing
-              onChange={handleGridChange}
-              header
-              aria-label="Layout node props"
-            />
-          ) : (
-            <div className={ax({ textStyle: 'caption' })}>Select a node.</div>
-          )}
-          <button
-            className={ax({ role: 'control', surface: 'action', tone: 'accent', interactive: 'button', textStyle: 'caption' })}
-            onClick={handleCopy}
-            disabled={!store}
-          >
-            <span className={ax({ layout: 'bar' })}>
-              <CopyIndicator copied={copied} />
-              {copied ? 'Copied' : 'Copy as definePage'}
-            </span>
-          </button>
-        </div>
-      </SplitPane>
+      <div className={ax({ flex: '1', layout: 'scroll' })}>
+        {treeData && (
+          <TreeView
+            data={treeData}
+            plugins={[]}
+            renderItem={renderInspectorItem}
+            onFocusChange={(id) => setSelectedNodeId(id)}
+            aria-label="Layout tree"
+          />
+        )}
+      </div>
+      {gridData && (
+        <TreeGrid
+          data={gridData}
+          columns={GRID_COLUMNS}
+          enableEditing
+          onChange={handleGridChange}
+          header
+          aria-label="Layout node props"
+        />
+      )}
+      <div className={ax({ layout: 'bar' })}>
+        <button
+          className={ax({ role: 'control', interactive: 'button', surface: 'action', tone: 'accent', textStyle: 'caption' })}
+          onClick={handleCopy}
+          disabled={!store}
+        >
+          <span className={ax({ layout: 'bar' })}>
+            <CopyIndicator copied={copied} />
+            {copied ? 'Copied' : 'Copy as definePage'}
+          </span>
+        </button>
+      </div>
     </div>
   )
 }

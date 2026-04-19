@@ -4,6 +4,8 @@ import React from 'react'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps, ItemSlots } from './types'
 import { Aria } from '../primitives/aria'
+import { AriaInternalContext } from '../primitives/AriaInternalContext'
+import { GRID_COL_ID } from '../axis/navigate'
 import { treegrid } from '../pattern/roles/treegrid'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
@@ -26,6 +28,7 @@ type RenderCell = (
   value: unknown,
   column: ColumnDef,
   state: NodeState,
+  data?: Record<string, unknown>,
 ) => React.ReactElement
 
 interface TreeGridColumnProps extends Omit<AriaComponentProps, 'renderItem'> {
@@ -78,6 +81,36 @@ const defaultRenderCell: RenderCell = (props, value, _column, _state) => (
 // eslint-disable-next-line react-refresh/only-export-components
 export const Cell = Aria.Cell
 
+/** Row wrapper that surfaces `data-row-mode` when colIndex === -1 so CSS can paint
+ *  the whole row (not individual cells) as the active selection target. */
+function TreeGridRow({
+  ariaProps,
+  focused,
+  selected,
+  children,
+}: {
+  ariaProps: React.HTMLAttributes<HTMLElement>
+  focused: boolean
+  selected: boolean
+  children: React.ReactNode
+}) {
+  const aria = React.useContext(AriaInternalContext)
+  const store = aria?.getStore()
+  const colIndex = (store?.entities[GRID_COL_ID]?.colIndex as number | undefined) ?? -1
+  const rowMode = colIndex < 0
+  return (
+    <div
+      className={ax({ role: 'item', interactive: 'item' })}
+      data-focused={focused || undefined}
+      data-selected={selected || undefined}
+      data-row-mode={rowMode && focused ? '' : undefined}
+      {...ariaProps}
+    >
+      {children}
+    </div>
+  )
+}
+
 // ── Column mode component ──
 
 function TreeGridColumns({
@@ -126,32 +159,32 @@ function TreeGridColumns({
   )
 
   const renderRow = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
-    const cells = (node.data as Record<string, unknown>)?.cells as unknown[] | undefined
+    const data = node.data as Record<string, unknown> | undefined
+    const cells = data?.cells as unknown[] | undefined
     const hasChildren = state.expanded !== undefined
     const depth = (state.level ?? 1) - 1
 
     return (
-      <div
-        className={ax({ role: 'item' })}
-        data-focused={state.focused || undefined}
-        data-selected={state.selected || undefined}
-        {...props}
+      <TreeGridRow
+        ariaProps={props}
+        focused={state.focused}
+        selected={state.selected}
       >
         {columns.map((col, i) => (
           <Aria.Cell key={col.key} index={i}>
             {i === 0 ? (
-              <span className={ax({ layout: 'bar', gap: 'xs' })} style={{ paddingInlineStart: `${depth * 24}px` }}>
+              <span className={ax({ layout: 'bar' })} style={{ paddingInlineStart: `${depth * 24}px` }}>
                 {hasChildren
                   ? <ExpandIndicator expanded={state.expanded} hasChildren variant="tree" />
-                  : depth > 0 && <span className={ax({ icon: 'sm', flex: 'none' })} />}
-                {renderCell({} as React.HTMLAttributes<HTMLElement>, cells?.[i], col, state)}
+                  : depth > 0 && <span className={ax({ flex: 'none' })} />}
+                {renderCell({} as React.HTMLAttributes<HTMLElement>, cells?.[i], col, state, data)}
               </span>
             ) : (
-              renderCell({} as React.HTMLAttributes<HTMLElement>, cells?.[i], col, state)
+              renderCell({} as React.HTMLAttributes<HTMLElement>, cells?.[i], col, state, data)
             )}
           </Aria.Cell>
         ))}
-      </div>
+      </TreeGridRow>
     )
   }
 

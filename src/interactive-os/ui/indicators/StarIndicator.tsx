@@ -31,7 +31,7 @@ interface StarIndicatorProps {
 
 export function StarIndicator({ filled, half, className }: StarIndicatorProps) {
   const classes = [
-    ax({ flex: 'none', layout: 'center', square: 'md' }),
+    ax({ flex: 'none', layout: 'center' }),
     'item-indicator--star',
     filled ? 'item-indicator--star-filled' : undefined,
     className,

@@ -119,15 +119,15 @@ const MessageBubble = memo(function MessageBubble({
   renderers: BlockRendererMap
 }) {
   const roleClass = message.role === 'user'
-    ? `${ax({ textStyle: 'body', padding: 'sm', content: 'bubble', surface: 'display', tone: 'accent-dim' })} chat-user`
+    ? `${ax({ textStyle: 'body', content: 'bubble', surface: 'display', tone: 'accent-dim' })} chat-user`
     : message.role === 'system'
-      ? `${ax({ textStyle: 'caption', gap: 'sm', scroll: 'hidden' })} chat-system`
-      : `${ax({ textStyle: 'body', gap: 'sm' })} chat-assistant`
+      ? `${ax({ textStyle: 'caption' })} chat-system`
+      : `${ax({ textStyle: 'body' })} chat-assistant`
 
   if (message.role === 'system') {
     const groups = groupSystemBlocks(message.blocks)
     return (
-      <div className={`${ax({ layout: 'stack', gap: 'xs' })} ${roleClass}`}>
+      <div className={`${ax({ layout: 'stack' })} ${roleClass}`}>
         {groups.map((g, i) => {
           if (g.kind === 'tool_chain') return <ToolChainGroup key={i} pairs={g.pairs} />
           if (g.kind === 'output') return <ToolGroup key={i} toolUse={g.pair.toolUse} toolResult={g.pair.toolResult} />
@@ -138,7 +138,7 @@ const MessageBubble = memo(function MessageBubble({
   }
 
   return (
-    <div className={`${ax({ gap: 'xs' })} ${roleClass}`}>
+    <div className={`${ax({ })} ${roleClass}`}>
       {message.blocks.map((block, i) => (
         <BlockDispatch key={i} block={block} renderers={renderers} />
       ))}

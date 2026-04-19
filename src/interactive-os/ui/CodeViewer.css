@@ -32,13 +32,7 @@
   margin: 0;
   padding-block: var(--space-md);
   padding-inline: 0;
-  counter-reset: line;
   background-image: linear-gradient(var(--surface-base), var(--surface-base)) !important;
-}
-
-.code-viewer-body[data-gutter-offset="0"] :is(.shiki.code-viewer-pre) { counter-reset: line 0; }
-.code-viewer-body[data-gutter-offset] :is(.shiki.code-viewer-pre) {
-  counter-reset: line var(--_gutter-offset, 0);
 }
 
 .code-viewer--chat :is(.shiki.code-viewer-pre),
@@ -62,10 +56,12 @@
   padding-left: var(--_gutter-w, 3.5em);
   padding-right: var(--space-lg);
   text-indent: calc(-1 * var(--_gutter-w, 3.5em));
+  /* 네이티브 가상화: viewport 밖 라인은 브라우저가 layout/paint 스킵 */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1.4em;
 }
 
-.code-viewer :is(.shiki.code-viewer-pre .line.code-line--with-gutter)::before,
-.code-viewer-gutter {
+.code-viewer :is(.shiki.code-viewer-pre .line.code-line--with-gutter)::before {
   display: var(--_inline-block, inline-block);
   width: var(--_gutter-w, 3.5em);
 }
@@ -86,10 +82,9 @@
   overflow-wrap: break-word;
 }
 
-/* Gutter via counter (non-virtualized) */
+/* Gutter via data-display-line attribute (counter-free for content-visibility compat) */
 .code-viewer :is(.shiki.code-viewer-pre .line.code-line--with-gutter)::before {
-  counter-increment: line;
-  content: counter(line);
+  content: attr(data-display-line);
   padding-right: var(--_gutter-pr, 1em);
   text-align: right;
   text-indent: 0;
@@ -97,21 +92,6 @@
   font-size: var(--type-code-size);
   user-select: none;
   opacity: 0.65;
-}
-
-/* Virtualized body uses explicit <span class="code-viewer-gutter"> */
-.code-viewer-gutter {
-  padding-right: var(--_gutter-pr, 1em);
-  text-align: right;
-  text-indent: 0;
-  color: var(--text-muted);
-  font-size: var(--type-code-size);
-  user-select: none;
-  opacity: 0.65;
-}
-
-.code-viewer :is(.shiki.code-viewer-pre .line:has(> .code-viewer-gutter))::before {
-  content: none;
 }
 
 /* Token highlight */

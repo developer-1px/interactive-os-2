@@ -1,0 +1,52 @@
+title: "Knowledge 가상 폴더 (mddb 그룹핑)"
+number: 7
+group: Viewer
+scope:
+  description: |
+    docs/*.md의 frontmatter(type/tag/status)를 인덱싱하여 가상 폴더 트리로 노출한다.
+    물리 경로 대신 메타 축으로 재구성한 뷰 — "문서를 속성으로 보기".
+  design: /screenshots/viewer-zone-cascade-check.png
+
+behaviors:
+  - given: 사이드바에서 "By Type" 클릭
+    when: knowledge 인덱스 fetch 성공
+    then: type별(story/prd/memory…) 그룹 트리 렌더
+    status: done
+
+  - given: "By Tag" 선택
+    when: 트리 로드
+    then: frontmatter.tags 의 각 태그가 가상 폴더가 되고, 하위에 해당 문서들
+    status: done
+
+  - given: "By Status" 선택
+    when: 트리 로드
+    then: status(draft/wip/done) 그룹핑
+    status: done
+
+  - given: 가상 폴더의 문서에 focus
+    when: preview 열림
+    then: 실제 파일 경로로 FilePanel 렌더 (nodeId ≠ path 주의)
+    status: done
+
+  - given: 한 문서가 여러 tag를 가짐
+    when: "By Tag" 트리 렌더
+    then: 동일 문서가 각 tag 하위에 중복 등장 (멀티 parent 허용)
+    status: wip
+
+  - given: mddb-index.json 로드 실패
+    when: fetch 에러
+    then: 오류 토스트 + 빈 트리 표시, 다른 루트로 전환 가능
+    status: wip
+
+  - given: 문서 추가·frontmatter 수정
+    when: dev 서버에서 인덱스 재생성
+    then: 사이드바 재클릭 시 최신 인덱스 반영
+    status: todo
+
+decisions:
+  - title: nodeId = "{groupId}::{absPath}" 합성 키
+    why: 한 문서가 여러 그룹에 등장하려면 ID가 유일해야 함. preview는 entity.data.path를 역참조
+  - title: 인덱스 lazy load (클릭 시점)
+    why: 초기 viewer 로드 비용 최소화. mddb는 파일 많을수록 크지만, 사용자가 명시적으로 들어갈 때만 필요
+  - title: 가상 폴더는 "폴더 UI"로 위장
+    why: 사용자 멘탈 모델 = 폴더 탐색. 축별 뷰를 별도 인터페이스로 만들면 학습 비용 증가

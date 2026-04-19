@@ -32,7 +32,7 @@ export function Avatar({ src, name, size = 'md' }: AvatarProps) {
       <img
         src={src}
         alt={name}
-        className={ax({ square: sizeMap[size], shape: 'pill', surface: 'display' })}
+        className={ax({ surface: 'display' })}
       />
     )
   }
@@ -40,8 +40,7 @@ export function Avatar({ src, name, size = 'md' }: AvatarProps) {
   return (
     <div
       className={ax({
-        square: sizeMap[size],
-        shape: 'pill',
+          role: 'control-group',
         surface: 'sunken',
         layout: 'center',
         textStyle: size === 'lg' ? 'label' : 'caption'})}

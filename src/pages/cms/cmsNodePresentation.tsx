@@ -301,12 +301,12 @@ defineNodePresentation('hero-image', {
 })
 
 defineNodePresentation('image-card', {
-  className: `${s.cmsImageCard} ${ax({ scroll: 'hidden' })}`,
+  className: `${s.cmsImageCard} ${ax({ })}`,
   render: () => null,
 })
 
 defineNodePresentation('gallery-item', {
-  className: `${s.cmsGalleryItem} ${ax({ scroll: 'hidden' })}`,
+  className: `${s.cmsGalleryItem} ${ax({ })}`,
   render: (data, locale) => {
     const gSrc = data.image as string
     return (

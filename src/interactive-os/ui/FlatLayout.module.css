@@ -32,6 +32,17 @@
     flex: 1;
   }
 
+  /* focused tabgroup 외곽선 — __focus.focusedTabgroupId 가 가리키는 패널 시각적 강조 */
+  .tabgroupRoot {
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: outline-color 120ms ease-out;
+  }
+
+  .tabgroupRoot[data-tabgroup-focused="true"] {
+    outline-color: var(--tone-accent-base, var(--color-accent-500));
+  }
+
   /* ② cmux-layout-prd.md flashPane */
   [data-flash="true"] {
     animation: var(--flat-flash-anim, flat-flash 0.3s ease-out);

@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div className={ax({ layout: 'row' })}>
       <SpinnerIndicator size="sm" />
       <SpinnerIndicator size="md" />
       <SpinnerIndicator size="lg" />

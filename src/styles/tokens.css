@@ -100,7 +100,12 @@
   --focus-inverted: var(--blue-700);
   --focus-idle:     var(--bg-hover);
   --focus-ring:     1px;
-  --focus-ring-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.95);
+  /* focus-ring은 outline 기반 — 버튼의 box-외곽을 온전히 감싸는 하나의 경계.
+   * outline은 overflow:hidden/clip 무관하게 렌더되므로 island 내부 버튼에서도 외곽 ring이 잘리지 않는다.
+   * --focus-ring-outline은 outline shorthand용. --focus-ring-shadow는 legacy alias (deprecated). */
+  --focus-ring-outline: 2px solid var(--focus);
+  --focus-ring-offset:  2px;
+  --focus-ring-shadow:  0 0 0 0 transparent;  /* legacy no-op — 모든 focus-visible은 outline으로 이관 */
 
   /* ── Indicator ── */
   --indicator-width: 2px;
@@ -211,6 +216,12 @@
   --shape-lg-radius:  12px;                              /* = shadcn rounded-xl */
   --shape-xl-radius:  calc(var(--radius-seed) * 2);     /* 16px */
   --shape-pill-radius: 9999px;                           /* 시드 무관 */
+  --shape-island-radius: 10px;                           /* island: xl과 lg 사이, macOS Monterey 사이드바 톤 */
+  /* island ring — 같은 ground 위에 떠오른 독립체의 경계. 1px hairline ring만 (drop-shadow 없음).
+   * island는 pane 전체를 채우므로 외부 shadow는 의미 없음 — ring으로 subtle하게 경계만 표시.
+   * overflow:clip과 호환 (spread 0이라 clip 무관). */
+  --shape-island-shadow:
+    0 0 0 1px oklch(from var(--text-primary) l c h / 0.10);
 
   /* ── Shape bundle: padding-y + padding-x (claude.ai 실측)
      radius는 seed에서 파생. padding은 비례 관계. ── */
@@ -243,8 +254,8 @@
 
 
   /* ── Component specs (claude.ai + Linear 실측) ── */
-  --control-height: 36px;
-  --toolbar-height: 36px;
+  --control-height: 32px;
+  --toolbar-height: 32px;
   --input-padding-x: 12px;
   --sidebar-item-height: 28px;
   --item-height: 28px;

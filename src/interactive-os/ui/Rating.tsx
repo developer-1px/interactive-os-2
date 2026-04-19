@@ -17,7 +17,7 @@ export function Rating({
 }: RatingProps) {
   return (
     <Aria pattern={radiogroup} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
-      <div className={ax({ layout: 'row', gap: 'xs' })}>
+      <div className={ax({ layout: 'row' })}>
         <Aria.Item render={renderItem} />
       </div>
     </Aria>

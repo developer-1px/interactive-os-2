@@ -38,10 +38,10 @@ const initialTab = getInitialTabFromUrl() ?? ALL_PROJECTS[0] ?? 'cms'
 
 function ImagePreview({ src, caption }: { src: string; caption?: string }) {
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <FilePreview content="" filename="image.png" src={src} />
       {caption && (
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{caption}</span>
+        <span className={ax({ textStyle: 'caption' })}>{caption}</span>
       )}
     </div>
   )
@@ -49,8 +49,8 @@ function ImagePreview({ src, caption }: { src: string; caption?: string }) {
 
 function SummaryPreview({ title, body }: { title: string; body: string }) {
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
-      <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{title}</span>
+    <div className={ax({ layout: 'stack' })}>
+      <span className={ax({ textStyle: 'label' })}>{title}</span>
       <MarkdownViewer content={body} prose={false} codePreset="chat" config={showcaseMdConfig} />
     </div>
   )
@@ -68,8 +68,8 @@ function FileListPreview({ title, files }: { title: string; files: { label: stri
   }, [files])
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
-      <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{title}</span>
+    <div className={ax({ layout: 'stack' })}>
+      <span className={ax({ textStyle: 'label' })}>{title}</span>
       <NavList data={listData} aria-label={title} />
     </div>
   )
@@ -90,7 +90,7 @@ function MarkdownDocPreview({ path, fallback }: { path: string; fallback: string
   const filename = path.split('/').pop() ?? path
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <span className={ax({ textStyle: 'caption', tone: 'accent' })}>{path}</span>
       <FilePreview content={content ?? fallback} filename={filename} />
     </div>
@@ -99,7 +99,7 @@ function MarkdownDocPreview({ path, fallback }: { path: string; fallback: string
 
 function EmptyPreview({ message }: { message: string }) {
   return (
-    <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'body' })}>
+    <div className={ax({ textStyle: 'body' })}>
       {message}
     </div>
   )
@@ -157,7 +157,7 @@ export default function PagePipeline() {
           aria-label="Projects"
         />
         <span className={ax({ flex: '1' })} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        <span className={ax({ textStyle: 'caption' })}>
           {projectData.projectName}
         </span>
       </PanelHeader>

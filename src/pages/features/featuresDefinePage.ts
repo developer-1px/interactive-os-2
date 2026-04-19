@@ -8,7 +8,7 @@ export const featuresLayout = definePage({
       children: ['breadcrumb', 'body'],
     },
     breadcrumb: {
-      data: { type: 'widget', widget: 'FeatureBreadcrumb', surface: 'raised' },
+      data: { type: 'widget', widget: 'FeatureBreadcrumb' },
     },
     body: {
       data: { type: 'split', direction: 'horizontal', sizes: ['flex', 0.42], resizable: true },
@@ -18,7 +18,7 @@ export const featuresLayout = definePage({
       data: { type: 'widget', widget: 'FeatureTreeGrid' },
     },
     detail: {
-      data: { type: 'stack', surface: 'sunken', hidden: false },
+      data: { type: 'stack', hidden: false },
       children: ['detailHeader', 'detailTabs', 'insightFeed'],
     },
     detailHeader: {

@@ -26,7 +26,7 @@ export default function AriaListboxDemo() {
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <ListBox
           data={data}
           plugins={[]}

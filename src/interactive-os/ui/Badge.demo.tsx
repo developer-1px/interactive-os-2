@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'sm' })}>
+    <div className={ax({ layout: 'row' })}>
       <Badge>Default</Badge>
       <Badge tone="accent">Accent</Badge>
       <Badge tone="success">Success</Badge>

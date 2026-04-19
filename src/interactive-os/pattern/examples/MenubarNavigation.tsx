@@ -48,12 +48,12 @@ export function MenubarNavigation() {
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <div className={ax({ shape: 'sm', border: 'default' })}>
-      <header className={`${ax({ surface: 'display', padding: 'md' })} text-center`}>
-        <div className={ax({ text: 'bright', textStyle: 'section', weight: 'semi' })}>Mythical University</div>
-        <div className={ax({ text: 'secondary', textStyle: 'body' })}>Using a Menubar for navigation links</div>
+    <div className={ax({ })}>
+      <header className={`${ax({ surface: 'display' })} text-center`}>
+        <div className={ax({ textStyle: 'section' })}>Mythical University</div>
+        <div className={ax({ textStyle: 'body' })}>Using a Menubar for navigation links</div>
       </header>
-      <nav className={ax({ surface: 'display', padding: 'xs', border: 'bottom' })}>
+      <nav className={ax({ surface: 'display' })}>
         <Menubar
           data={store}
           onChange={onChange}

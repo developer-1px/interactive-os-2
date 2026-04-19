@@ -28,7 +28,7 @@ export default function PageDocs() {
 
   if (loading || !store) {
     return (
-      <div className={ax({ layout: 'center', gap: 'sm', textStyle: 'body', text: 'muted', flex: '1' })}>
+      <div className={ax({ layout: 'center', textStyle: 'body', flex: '1' })}>
         <SpinnerIndicator size="sm" />
         <span>Loading docs...</span>
       </div>

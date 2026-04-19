@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm' })}>
+    <div className={ax({ layout: 'stack' })}>
       <EditableCell field="title">Sample text</EditableCell>
       <EditableCell field="title" empty>empty</EditableCell>
     </div>

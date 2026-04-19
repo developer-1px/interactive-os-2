@@ -22,8 +22,8 @@ export function TodoHeaderWidget() {
   return (
     <PanelHeader>
       <div className={ax({ layout: 'spread', width: 'full' })}>
-        <span className={ax({ textStyle: 'page', text: 'primary' })}>Todo</span>
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        <span className={ax({ textStyle: 'page' })}>Todo</span>
+        <span className={ax({ textStyle: 'caption' })}>
           완료 {done} / {total}
         </span>
       </div>
@@ -57,7 +57,7 @@ export function TodoListWidget() {
 
   if (items.length === 0) {
     return (
-      <div className={ax({ layout: 'fill', padding: 'xl' })}>
+      <div className={ax({ layout: 'fill' })}>
         <EmptyState title="할 일이 없어요" description="아래 입력창에서 새 할 일을 추가하세요." />
       </div>
     )
@@ -88,7 +88,7 @@ export function TodoComposerWidget() {
   )
 
   return (
-    <div className={ax({ padding: 'sm', width: 'full' })}>
+    <div className={ax({ width: 'full' })}>
       <Composer placeholder="새 할 일..." onSubmit={handleSubmit} />
     </div>
   )

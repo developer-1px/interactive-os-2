@@ -32,11 +32,11 @@ const renderCheckbox = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'body', text: 'primary', interactive: 'check', shape: 'md' })} cursor-default`}
+      className={`${ax({ layout: 'bar', textStyle: 'body', interactive: 'check' })} cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${ax({ layout: 'center', textStyle: 'caption', shape: 'sm', square: 'md', border: 'default' })} inline-flex`}
+        className={`${ax({ layout: 'center', textStyle: 'caption' })} inline-flex`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >

@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <FileTypeIndicator name="src" isFolder />
       <FileTypeIndicator name="readme.md" isFolder={false} />
       <FileTypeIndicator name="index.tsx" isFolder={false} />

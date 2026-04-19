@@ -37,7 +37,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', textStyle: 'body', text: 'primary', interactive: 'item', shape: 'md' })} cursor-default`}
+      className={`${ax({ layout: 'bar', textStyle: 'body', interactive: 'item' })} cursor-default`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

@@ -3,7 +3,7 @@ import { ax } from '@styles/ax'
 
 export function RadioIndicator({ className }: { className?: string }) {
   const classes = [
-    ax({ flex: 'none', layout: 'center', border: 'strong', shape: 'pill' }),
+    ax({ flex: 'none', layout: 'center' }),
     'item-indicator--radio',
     className,
   ].filter(Boolean).join(' ')

@@ -35,7 +35,7 @@ export default function CellGridDemo() {
         <kbd>Home</kbd> <span className="key-hint">first cell</span>{' '}
         <kbd>End</kbd> <span className="key-hint">last cell</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <Grid
           data={data}
           columns={columns}

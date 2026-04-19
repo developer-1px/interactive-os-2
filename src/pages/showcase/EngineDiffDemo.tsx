@@ -88,7 +88,7 @@ export default function EngineDiffDemo() {
         <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
         <kbd>Del</kbd> <span className="key-hint">delete</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <ListBox
           data={data}
           onChange={handleChange}
@@ -109,7 +109,7 @@ export default function EngineDiffDemo() {
                 className={`debug-log-entry ${selection?.seq === e.seq ? 'st-selected' : ''}`}
               >
                 <span className="op-faint">#{e.seq}</span>{' '}
-                <span className={ax({ weight: 'semi' })}>{e.type}</span>{' '}
+                <span className={ax({ })}>{e.type}</span>{' '}
                 <span className="op-faint">{e.diffs.length} diff{e.diffs.length !== 1 ? 's' : ''}</span>
               </div>
             ))
@@ -130,7 +130,7 @@ export default function EngineDiffDemo() {
           </h3>
           <div className={ax({ textStyle: 'code' })}>
             {selectedEntry.diffs.map((d, i) => (
-              <div key={i} className={ax({ padding: 'xs' })}>
+              <div key={i} className={ax({ })}>
                 <span className="op-dim">{d.path}</span>{' '}
                 {d.kind === 'added' && (
                   <span className={ax({ tone: 'success' })}>+{summarizeValue(d.after)}</span>

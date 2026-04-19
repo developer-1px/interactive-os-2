@@ -7,6 +7,6 @@
   transition: transform 0.15s ease;
 }
 
-.toggle[data-expanded] .chevron {
+.header[data-expanded] .chevron {
   transform: rotate(180deg);
 }

@@ -19,7 +19,7 @@ export function StepWizardRenderer({ entity, store, renderNode, depth }: A2UIRen
   // Single step: no tab bar
   if (steps.length === 1) {
     return (
-      <div className={ax({ layout: 'stack', gap: 'md' })}>
+      <div className={ax({ layout: 'stack' })}>
         {title && <div className={ax({ textStyle: 'page' })}>{title}</div>}
         {subtitle && <div className={ax({ textStyle: 'caption',  })}>{subtitle}</div>}
         {store.entities[steps[0].content] && renderNode(steps[0].content, depth + 1)}
@@ -38,7 +38,7 @@ export function StepWizardRenderer({ entity, store, renderNode, depth }: A2UIRen
   })
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       {title && <div className={ax({ textStyle: 'page' })}>{title}</div>}
       {subtitle && <div className={ax({ textStyle: 'caption',  })}>{subtitle}</div>}
       <TabList
@@ -50,7 +50,7 @@ export function StepWizardRenderer({ entity, store, renderNode, depth }: A2UIRen
           if (!isNaN(idx)) setActiveIndex(idx)
         }}
       />
-      <div className={ax({ padding: 'md' })}>
+      <div className={ax({ })}>
         {steps[activeIndex]?.content && store.entities[steps[activeIndex].content]
           ? renderNode(steps[activeIndex].content, depth + 1)
           : null}

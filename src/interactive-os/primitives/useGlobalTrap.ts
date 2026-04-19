@@ -41,6 +41,18 @@ interface GlobalTrapOptions {
   trap?: boolean
 }
 
+/**
+ * target이 편집 중인 요소(input / textarea / contenteditable)인지 판별.
+ * modifier 없는 단독 키(Delete/Escape/Enter/문자 등)가 편집 중인 필드를 덮어쓰는 것을 막는 데 사용.
+ */
+function isEditableTarget(target: EventTarget | null): boolean {
+  const el = target as HTMLElement | null
+  if (!el) return false
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return true
+  if (el.isContentEditable) return true
+  return false
+}
+
 export function useGlobalTrap(active: boolean, keyMap: GlobalTrapKeyMap, options?: GlobalTrapOptions) {
   const keyMapRef = useRef(keyMap)
   // eslint-disable-next-line react-hooks/refs
@@ -58,6 +70,9 @@ export function useGlobalTrap(active: boolean, keyMap: GlobalTrapKeyMap, options
       const match = keyMapRef.current[key]
 
       if (match) {
+        // editable 타겟에서 modifier 없는 단독 키(Delete/Escape/문자 등)는 native 편집 동작을 보존.
+        // Mod+ 조합은 편집 중에도 앱 단축키로 동작해야 하므로 통과.
+        if (!key.includes('+') && isEditableTarget(e.target)) return
         e.preventDefault()
         e.stopPropagation()
         match(e)

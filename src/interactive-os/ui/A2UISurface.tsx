@@ -58,7 +58,7 @@ export function A2UISurface({ payload, componentMap, surfaceId, onAction, dataMo
   const rootIds = getChildren(store, ROOT_ID)
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       {rootIds.map((id) => (
         <React.Fragment key={id}>{renderNode(id, 0)}</React.Fragment>
       ))}

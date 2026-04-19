@@ -30,16 +30,20 @@ const renderSwitch = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'spread', gap: 'md', text: 'primary', padding: 'xs', content: 'text', interactive: 'check', shape: 'md' })} cursor-default`}
+      className={`${ax({ layout: 'spread', content: 'text', interactive: 'check' })} cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span className={ax({ flex: '1' })}>{label}</span>
       <span
-        className={`${ax({ shape: 'pill', surface: 'sunken', layout: 'bar' })} inline-flex`}
+        className={`${ax({
+            role: 'control-group',
+            surface: 'sunken', layout: 'bar' })} inline-flex`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >
-        <span className={`${ax({ shape: 'pill', square: 'sm', surface: 'action' })} block`} />
+        <span className={`${ax({
+            role: 'control',
+            surface: 'action' })} block`} />
       </span>
     </div>
   )

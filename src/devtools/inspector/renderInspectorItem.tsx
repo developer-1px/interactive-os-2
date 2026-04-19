@@ -33,30 +33,30 @@ export function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, no
   return (
     <div
       {...props}
-      className={`${props.className ?? ''} inspector-item ${ax({ layout: 'bar', gap: 'xs', textStyle: 'code', surface: changed ? 'action' : state.focused ? 'ghost' : undefined, state: state.focused ? 'focused' : undefined })}`}
+      className={`${props.className ?? ''} inspector-item ${ax({ layout: 'bar', textStyle: 'code', surface: changed ? 'action' : state.focused ? 'ghost' : undefined })}`}
       style={{ '--_indent': `${indent}px` } as React.CSSProperties}
       data-focused={state.focused || undefined}
       data-changed={changed || undefined}
     >
       {isGroup ? (
         <>
-          <span className={ax({ opacity: 'dim', textStyle: 'caption' })}>
+          <span className={ax({ textStyle: 'caption' })}>
             {state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
           </span>
-          <span className={ax({ weight: 'semi' })}>{label}</span>
+          <span className={ax({ })}>{label}</span>
           {count !== undefined && (
-            <span className={ax({ opacity: 'dim', textStyle: 'caption' })}>({count})</span>
+            <span className={ax({ textStyle: 'caption' })}>({count})</span>
           )}
         </>
       ) : (
         <>
-          <span className={ax({ opacity: 'faint', textStyle: 'caption' })}>·</span>
+          <span className={ax({ textStyle: 'caption' })}>·</span>
           <span className={`inspector-item-type ${ax({ textStyle: 'caption' })}`} style={{ '--_type-color': TYPE_COLORS[type] } as React.CSSProperties}>
             {type}
           </span>
           <span>{label}</span>
           {value && (
-            <span className={ax({ opacity: 'dim', textStyle: 'caption' })}>
+            <span className={ax({ textStyle: 'caption' })}>
               {truncate(value)}
             </span>
           )}

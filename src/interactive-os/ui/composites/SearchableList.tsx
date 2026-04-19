@@ -34,7 +34,7 @@ export function SearchableListRenderer({ entity }: A2UIRenderContext) {
   }), [filtered])
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <TextInput
         aria-label={searchLabel}
         placeholder={searchLabel}
@@ -49,7 +49,7 @@ export function SearchableListRenderer({ entity }: A2UIRenderContext) {
           aria-label={ariaLabel}
         />
       ) : (
-        <div className={ax({ textStyle: 'caption', padding: 'md' })}>
+        <div className={ax({ textStyle: 'caption' })}>
           No results
         </div>
       )}

@@ -45,8 +45,8 @@ function makeFormCtx(
       const f = entities[id]?.data
       if (!f) return null
       return (
-        <div key={id} className={ax({ layout: 'stack', gap: 'xs' })}>
-          <span className={ax({ textStyle: 'caption', text: 'secondary' })}>{f.label}</span>
+        <div key={id} className={ax({ layout: 'stack' })}>
+          <span className={ax({ textStyle: 'caption' })}>{f.label}</span>
           {f.kind === 'textarea' ? (
             <Textarea value="" onChange={() => {}} placeholder={f.placeholder} rows={3} />
           ) : (
@@ -63,8 +63,8 @@ function makeFormCtx(
 
 function Section({ title, children, className }: { title?: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={`${ax({ surface: 'display', layout: 'stack', gap: 'sm', padding: 'md', shape: 'lg' })}${className ? ` ${className}` : ''}`}>
-      {title && <h3 className={ax({ textStyle: 'overline', text: 'muted' })}>{title}</h3>}
+    <div className={`${ax({ surface: 'display', layout: 'stack' })}${className ? ` ${className}` : ''}`}>
+      {title && <h3 className={ax({ textStyle: 'overline' })}>{title}</h3>}
       {children}
     </div>
   )
@@ -101,11 +101,11 @@ function DashboardScenario() {
   ]
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'lg' })}>
+    <div className={ax({ layout: 'stack' })}>
       <div className={ax({ layout: 'spread' })}>
-        <div className={ax({ layout: 'stack', gap: 'xs' })}>
-          <h2 className={ax({ textStyle: 'page', text: 'primary' })}>Dashboard</h2>
-          <span className={ax({ textStyle: 'body', text: 'muted' })}>Your business at a glance.</span>
+        <div className={ax({ layout: 'stack' })}>
+          <h2 className={ax({ textStyle: 'page' })}>Dashboard</h2>
+          <span className={ax({ textStyle: 'body' })}>Your business at a glance.</span>
         </div>
         <Button variant="accent">Download Report</Button>
       </div>
@@ -115,12 +115,12 @@ function DashboardScenario() {
       <Section title="RECENT TRANSACTIONS">
         <div className={ax({ layout: 'stack' })}>
           {transactions.map((t, i) => (
-            <div key={i} className={`${ax({ layout: 'spread', padding: 'sm', border: 'bottom' })} theme-notif-row`}>
-              <div className={ax({ layout: 'stack', gap: 'xs' })}>
-                <span className={ax({ textStyle: 'body', text: 'primary' })}>{t.name}</span>
-                <span className={ax({ textStyle: 'caption', text: 'muted' })}>{t.email}</span>
+            <div key={i} className={`${ax({ layout: 'spread' })} theme-notif-row`}>
+              <div className={ax({ layout: 'stack' })}>
+                <span className={ax({ textStyle: 'body' })}>{t.name}</span>
+                <span className={ax({ textStyle: 'caption' })}>{t.email}</span>
               </div>
-              <span className={ax({ textStyle: 'body', text: 'primary', weight: 'semi' })}>{t.amount}</span>
+              <span className={ax({ textStyle: 'body' })}>{t.amount}</span>
             </div>
           ))}
         </div>
@@ -153,10 +153,10 @@ function SettingsScenario() {
   )
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'lg' })}>
-      <div className={ax({ layout: 'stack', gap: 'xs' })}>
-        <h2 className={ax({ textStyle: 'page', text: 'primary' })}>Settings</h2>
-        <span className={ax({ textStyle: 'body', text: 'muted' })}>Manage your account preferences.</span>
+    <div className={ax({ layout: 'stack' })}>
+      <div className={ax({ layout: 'stack' })}>
+        <h2 className={ax({ textStyle: 'page' })}>Settings</h2>
+        <span className={ax({ textStyle: 'body' })}>Manage your account preferences.</span>
       </div>
 
       <TabList data={settingsTabData} aria-label="Settings tabs" />
@@ -165,13 +165,13 @@ function SettingsScenario() {
         {formSectionRenderer(profileCtx)}
 
         {/* GAP: Switch/Radio 섹션은 formSectionRenderer의 field 렌더링 모델과 맞지 않음 — ax+ui 수동 조립 유지 */}
-        <div className={ax({ layout: 'stack', gap: 'lg' })}>
+        <div className={ax({ layout: 'stack' })}>
           <Section title="NOTIFICATIONS">
             <SwitchGroup data={notifState} onChange={setNotifState} aria-label="Notification settings" />
           </Section>
 
           <Section title="APPEARANCE">
-            <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Theme</span>
+            <span className={ax({ textStyle: 'caption' })}>Theme</span>
             <RadioGroup data={themeState} onChange={setThemeState} aria-label="Theme preference" />
           </Section>
         </div>
@@ -198,24 +198,24 @@ function CreateFormScenario() {
   )
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'lg' })}>
-      <div className={ax({ layout: 'stack', gap: 'xs' })}>
-        <h2 className={ax({ textStyle: 'page', text: 'primary' })}>New Component</h2>
-        <span className={ax({ textStyle: 'body', text: 'muted' })}>Add a new interactive component to the registry.</span>
+    <div className={ax({ layout: 'stack' })}>
+      <div className={ax({ layout: 'stack' })}>
+        <h2 className={ax({ textStyle: 'page' })}>New Component</h2>
+        <span className={ax({ textStyle: 'body' })}>Add a new interactive component to the registry.</span>
       </div>
 
       <div className="theme-composed-grid">
         {formSectionRenderer(detailsCtx)}
 
         {/* GAP: Preview 플레이스홀더 + 화면-외곽 action bar는 FormSection 범위 밖 */}
-        <div className={ax({ layout: 'stack', gap: 'lg' })}>
+        <div className={ax({ layout: 'stack' })}>
           <Section title="PREVIEW">
-            <div className={`${ax({ layout: 'center', shape: 'md', padding: 'xl' })} theme-preview-placeholder`}>
-              <span className={ax({ textStyle: 'body', text: 'muted' })}>Component preview will appear here</span>
+            <div className={`${ax({ layout: 'center' })} theme-preview-placeholder`}>
+              <span className={ax({ textStyle: 'body' })}>Component preview will appear here</span>
             </div>
           </Section>
 
-          <div className={ax({ layout: 'bar', gap: 'sm' })}>
+          <div className={ax({ layout: 'bar' })}>
             <Button variant="accent" className={ax({ flex: '1' })}>Create Component</Button>
             <Button variant="destructive">Discard</Button>
           </div>
@@ -229,7 +229,7 @@ function CreateFormScenario() {
 
 export function ThemeScenarios() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'xl' })}>
+    <div className={ax({ layout: 'stack' })}>
       <DashboardScenario />
       <Divider />
       <SettingsScenario />

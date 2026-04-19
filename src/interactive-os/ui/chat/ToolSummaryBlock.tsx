@@ -85,8 +85,8 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   const Icon = toolIcons[name] ?? Wrench
 
   return (
-    <div className={ax({ layout: 'bar', textStyle: 'caption', padding: 'sm', gap: 'xs' })}>
-      <span className={ax({ layout: 'center', icon: 'sm' })}><Icon size={12} /></span>
+    <div className={ax({ layout: 'bar', textStyle: 'caption' })}>
+      <span className={ax({ layout: 'center' })}><Icon size={12} /></span>
       <span><span className={ax({  })}>{name}</span>{detail ? ' ' : ''}<span className={ax({ clamp: '1' })}>{detail}</span></span>
     </div>
   )
@@ -110,14 +110,14 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
   const isLong = lines.length > 3 || text.length > 200
 
   if (!isLong) {
-    return <pre className={`${ax({ textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>
+    return <pre className={`${ax({ textStyle: 'code' })} tool-result`}>{text}</pre>
   }
 
   return (
     <div>
       <div
         {...toggleProps}
-        className={ax({ layout: 'bar', textStyle: 'code', padding: 'sm', gap: 'xs' })}
+        className={ax({ layout: 'bar', textStyle: 'code' })}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
@@ -126,7 +126,7 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
         <ExpandIndicator variant="expand" expanded={expanded} />
         <span className={`${ax({ clamp: '1' })} tool-result-preview`}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
       </div>
-      {expanded && <pre className={`${ax({ textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>}
+      {expanded && <pre className={`${ax({ textStyle: 'code' })} tool-result`}>{text}</pre>}
     </div>
   )
 }
@@ -180,13 +180,13 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   let content: React.ReactNode = null
   if (isRead && text) {
     content = (
-      <div className={`overflow-auto ${ax({ border: 'top' })} tool-group-code`}>
+      <div className={`overflow-auto ${ax({ })} tool-group-code`}>
         <CodeViewer code={codeText} filename={filename} preset="chat" />
       </div>
     )
   } else if (isWrite && typeof input.content === 'string') {
     content = (
-      <div className={`overflow-auto ${ax({ border: 'top' })} tool-group-code`}>
+      <div className={`overflow-auto ${ax({ })} tool-group-code`}>
         <CodeViewer code={input.content as string} filename={filename} preset="chat" />
       </div>
     )
@@ -195,15 +195,17 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`pre-wrap break-word ${ax({ textStyle: 'code', padding: 'sm', border: 'top', scroll: 'y' })} tool-group-result`}>{text}</pre>
+    content = <pre className={`pre-wrap break-word ${ax({ textStyle: 'code' })} tool-group-result`}>{text}</pre>
   }
 
   // No content → non-collapsible row
   if (!content) {
     return (
-      <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} tool-group`}>
-        <div className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}`}>
-          <span className={ax({ layout: 'center', icon: 'sm' })}><Icon size={12} /></span>
+      <div className={`${ax({
+          role: 'control-group',
+        surface: 'sunken' })} tool-group`}>
+        <div className={`cursor-pointer select-none ${ax({ layout: 'bar' })}`}>
+          <span className={ax({ layout: 'center' })}><Icon size={12} /></span>
           <span className={ax({  })}>{name}</span> {summaryLabel}
         </div>
       </div>
@@ -211,16 +213,18 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   }
 
   return (
-    <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken', scroll: 'hidden' })} tool-group`}>
+    <div className={`${ax({
+        role: 'control-group',
+        surface: 'sunken' })} tool-group`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar' })}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
-        <span className={ax({ layout: 'center', icon: 'sm' })}><ExpandIndicator variant="expand" expanded={expanded} /></span>
+        <span className={ax({ layout: 'center' })}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <Icon size={12} /> <span className={ax({  })}>{name}</span> {summaryLabel}
       </div>
       {expanded && content}
@@ -262,25 +266,27 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <div className={ax({ scroll: 'hidden', shape: 'md', border: 'subtle', surface: 'sunken' })}>
+    <div className={ax({
+        role: 'control-group',
+        surface: 'sunken' })}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar' })}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
-        <span className={ax({ layout: 'center', icon: 'sm' })}><ExpandIndicator variant="expand" expanded={expanded} /></span>
+        <span className={ax({ layout: 'center' })}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <Layers size={12} /> <span className={ax({ textStyle: 'code' })}>{summary}</span>
       </div>
       {expanded && (
-        <div className={ax({ layout: 'stack', border: 'top' })}>
+        <div className={ax({ layout: 'stack' })}>
           {typeGroups.map(g => {
             const Icon = toolIcons[g.name] ?? Wrench
             return (
-              <div key={g.name} className={ax({ layout: 'bar', gap: 'xs', padding: 'sm' })}>
-                <span className={ax({ layout: 'center', icon: 'sm' })}><Icon size={12} /></span>
+              <div key={g.name} className={ax({ layout: 'bar' })}>
+                <span className={ax({ layout: 'center' })}><Icon size={12} /></span>
                 <span className={ax({  })}>{g.name}</span>
                 <span className={ax({ textStyle: 'code', clamp: '1' })}>
                   {g.details.join(' · ')}

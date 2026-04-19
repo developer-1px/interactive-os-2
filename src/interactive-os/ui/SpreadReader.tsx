@@ -120,8 +120,8 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
 
   return (
     <div className={`${ax({ placement: 'relative', layout: 'fill', width: 'full' })} spread-root`}>
-      <div className={`spread-inset ${ax({ flex: '1', scroll: 'hidden' })}`}>
-        <div className={`spread-viewport outline-none ${ax({ width: 'full', scroll: 'hidden', flex: '1' })}`} {...aria.containerProps}>
+      <div className={`spread-inset ${ax({ flex: '1' })}`}>
+        <div className={`spread-viewport outline-none ${ax({ width: 'full', flex: '1' })}`} {...aria.containerProps}>
           <div className="spread-columns" ref={columnsRef}>
             {children}
           </div>

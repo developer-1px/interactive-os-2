@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md', placement: 'relative' })}>
+    <div className={ax({ layout: 'stack', placement: 'relative' })}>
       <SubmenuPanel label="File" expanded placement="root" anchorName="--demo-anchor">
         <div className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}>New File</div>
         <div className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}>Open</div>

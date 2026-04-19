@@ -48,7 +48,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={ax({ layout: 'bar', textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })}
+      className={ax({ layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
@@ -76,7 +76,7 @@ function ListboxZone({
 
   return (
     <div className={ax({ flex: '1' })}>
-      <span className={`${ax({ textStyle: 'label', text: 'primary' })} block`} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
+      <span className={`${ax({ textStyle: 'label' })} block`} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
         {label}
       </span>
       <ListBox
@@ -115,16 +115,16 @@ export function ListboxRearrangeable() {
   }, [chosenSelected])
 
   return (
-    <div className={`${ax({ layout: 'row', gap: 'md' })} items-start`}>
+    <div className={`${ax({ layout: 'row' })} items-start`}>
       <ListboxZone
         label="Available upgrades"
         ids={availableIds}
         onSelectionChange={setAvailableSelected}
       />
 
-      <div role="toolbar" aria-label="Actions" className={ax({ layout: 'stack', gap: 'xs', padding: 'md' })}>
+      <div role="toolbar" aria-label="Actions" className={ax({ layout: 'stack' })}>
         <button
-          className={`${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button' })} whitespace-nowrap`}
+          className={`${ax({ textStyle: 'caption', surface: 'display', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Enter"
           disabled={availableSelected.length === 0}
           onClick={addToChosen}
@@ -132,7 +132,7 @@ export function ListboxRearrangeable() {
           Add →
         </button>
         <button
-          className={`${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button' })} whitespace-nowrap`}
+          className={`${ax({ textStyle: 'caption', surface: 'display', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Delete"
           disabled={chosenSelected.length === 0}
           onClick={removeFromChosen}

@@ -108,7 +108,9 @@ export function Kanban({
       <FocusDiv
         key={cardId}
         focused={cardState.focused}
-        className={ax({ surface: 'raised', border: 'ring', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'stack', padding: compact ? 'md' : 'lg', gap: compact ? 'md' : 'lg', shape: compact ? 'md' : 'lg' })}
+        className={ax({
+            role: 'control-group',
+            surface: 'raised', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'stack' })}
         style={cardStyle}
         title={cardTooltip ?? cardTitle}
         data-weight={cardWeight || undefined}
@@ -138,7 +140,7 @@ export function Kanban({
         role={kanbanBehavior.role}
         aria-label={ariaLabel}
         data-aria-container=""
-        className={`ax-interactive ${ax({ layout: 'scroll-x', gap: compact ? 'sm' : 'md', padding: compact ? 'sm' : 'xs' })}`}
+        className={`ax-interactive ${ax({ layout: 'scroll-x' })}`}
         style={compact ? { height: '100%', alignItems: 'flex-start', overflow: 'auto hidden' } as CSSProperties : undefined}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
@@ -157,13 +159,15 @@ export function Kanban({
           return (
             <div
               key={colId}
-              className={ax({ layout: 'stack', gap: 'xs', flex: compact ? 'none' : '1', surface: 'sunken', shape: compact ? 'sm' : 'xl', padding: compact ? undefined : 'xl' })}
+              className={ax({
+                  role: 'control-group',
+                layout: 'stack', flex: compact ? 'none' : '1', surface: 'sunken' })}
               style={compact ? { minWidth: 'var(--space-3xl)', maxWidth: 'none', width: 'var(--storymap-col-width)', padding: 'var(--space-xs) var(--space-sm)', overflowY: 'auto', maxHeight: '100%' } as CSSProperties : undefined}
             >
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={ax({ layout: 'bar', gap: 'sm', textStyle: compact ? 'caption' : 'overline', padding: 'xs', shape: 'sm', clamp: compact ? '1' : undefined, placement: 'relative' })}
+                className={ax({ layout: 'bar', textStyle: compact ? 'caption' : 'overline', clamp: compact ? '1' : undefined, placement: 'relative' })}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 style={compact ? { textTransform: 'none', letterSpacing: 0, paddingBlock: 'var(--space-xs)', paddingInline: 0 } as CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}

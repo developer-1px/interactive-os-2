@@ -1,5 +1,6 @@
 title: "슬라이드 CRUD"
 number: 1
+group: CMS
 scope:
   description: |
     캔버스에 슬라이드를 추가·삭제·이동·복제한다.

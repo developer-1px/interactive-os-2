@@ -26,30 +26,30 @@ function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
   const clickEntries = Object.entries(inspectResult.clickMap ?? {})
 
   if (keyEntries.length === 0 && clickEntries.length === 0) {
-    return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No bindings</div>
+    return <div className={ax({ textStyle: 'caption' })}>No bindings</div>
   }
   return (
     <table className={`${ax({ textStyle: 'caption', width: 'full' })} inspector-table`}>
       <thead>
         <tr>
-          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Input</th>
-          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Command</th>
-          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Owner</th>
+          <th className={`text-left ${ax({ })} inspector-th`}>Input</th>
+          <th className={`text-left ${ax({ })} inspector-th`}>Command</th>
+          <th className={`text-left ${ax({ })} inspector-th`}>Owner</th>
         </tr>
       </thead>
       <tbody>
         {keyEntries.map(([k, entry]) => (
           <tr key={k}>
-            <td className={`${ax({ padding: 'xs', tone: 'success' })} inspector-td-key`}>{k}</td>
-            <td className={`${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{entry.command ?? '—'}</td>
-            <td className={`${ax({ padding: 'xs', opacity: 'dim' })} inspector-td-owner`}>{entry.owner}</td>
+            <td className={`${ax({ tone: 'success' })} inspector-td-key`}>{k}</td>
+            <td className={`${ax({ tone: 'accent' })} inspector-td-command`}>{entry.command ?? '—'}</td>
+            <td className={`${ax({ })} inspector-td-owner`}>{entry.owner}</td>
           </tr>
         ))}
         {clickEntries.map(([input, commands]) => (
           <tr key={`click:${input}`}>
-            <td className={`${ax({ padding: 'xs', tone: 'success' })} inspector-td-key`}>{input}</td>
-            <td className={`${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{commands.join(', ')}</td>
-            <td className={`${ax({ padding: 'xs', opacity: 'dim' })} inspector-td-owner`}>pattern</td>
+            <td className={`${ax({ tone: 'success' })} inspector-td-key`}>{input}</td>
+            <td className={`${ax({ tone: 'accent' })} inspector-td-command`}>{commands.join(', ')}</td>
+            <td className={`${ax({ })} inspector-td-owner`}>pattern</td>
           </tr>
         ))}
       </tbody>
@@ -68,7 +68,7 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
 
   return (
     <button
-      className={`cursor-pointer ${ax({ textStyle: 'caption', border: 'default', text: 'muted', padding: 'xs', shape: 'sm' })} inspector-copy-button`}
+      className={`cursor-pointer ${ax({ textStyle: 'caption' })} inspector-copy-button`}
       onClick={handleCopy}
     >
       {copied ? '✓ Copied' : 'Copy ASCII'}
@@ -91,15 +91,15 @@ function readDomAriaProps(element: HTMLElement): Record<string, string> {
 function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>; domProps: Record<string, string> | null }) {
   const allKeys = [...new Set([...Object.keys(osProps), ...Object.keys(domProps ?? {})])].filter(k => k !== 'role').sort()
   if (allKeys.length === 0) {
-    return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No ARIA props</div>
+    return <div className={ax({ textStyle: 'caption' })}>No ARIA props</div>
   }
   return (
     <table className={`${ax({ textStyle: 'caption', width: 'full' })} inspector-table`}>
       <thead>
         <tr>
-          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Attribute</th>
-          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>OS Intent</th>
-          {domProps && <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>DOM Actual</th>}
+          <th className={`text-left ${ax({ })} inspector-th`}>Attribute</th>
+          <th className={`text-left ${ax({ })} inspector-th`}>OS Intent</th>
+          {domProps && <th className={`text-left ${ax({ })} inspector-th`}>DOM Actual</th>}
         </tr>
       </thead>
       <tbody>
@@ -109,10 +109,10 @@ function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>;
           const mismatch = domProps && os !== dom
           return (
             <tr key={k}>
-              <td className={`${ax({ padding: 'xs', tone: 'success' })} inspector-td-key`}>{k}</td>
-              <td className={`${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{os ?? '—'}</td>
+              <td className={`${ax({ tone: 'success' })} inspector-td-key`}>{k}</td>
+              <td className={`${ax({ tone: 'accent' })} inspector-td-command`}>{os ?? '—'}</td>
               {domProps && (
-                <td className={mismatch ? `${ax({ padding: 'xs', tone: 'danger-dim' })} inspector-td-mismatch` : `${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{dom ?? '—'}</td>
+                <td className={mismatch ? `${ax({ tone: 'danger-dim' })} inspector-td-mismatch` : `${ax({ tone: 'accent' })} inspector-td-command`}>{dom ?? '—'}</td>
               )}
             </tr>
           )
@@ -146,14 +146,14 @@ function AriaTabContent({ selectedId, inspectResult, actionsMap, metas }: AriaTa
   const domProps = domElement ? readDomAriaProps(domElement) : null
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md', padding: 'sm' })}>
-      <div className={ax({ textStyle: 'caption', text: 'bright' })}>
+    <div className={ax({ layout: 'stack' })}>
+      <div className={ax({ textStyle: 'caption' })}>
         {nodeId ? `Node: ${nodeId}` : 'Instance root'} — role: {role}
       </div>
       {np ? (
         <AriaDiffTable osProps={np} domProps={domProps} />
       ) : (
-        <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>
+        <div className={ax({ textStyle: 'caption' })}>
           {nodeId ? 'No ARIA props' : 'Select a node for ARIA details'}
         </div>
       )}
@@ -171,11 +171,11 @@ const TAB_LIST: { id: DetailTab; label: string }[] = [
 
 function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: DetailTab) => void }) {
   return (
-    <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} inspector-tab-bar`}>
+    <div className={`${ax({ layout: 'row', surface: 'overlay' })} inspector-tab-bar`}>
       {TAB_LIST.map(t => (
         <button
           key={t.id}
-          className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === t.id ? 'bright' : 'muted' })} inspector-tab ${active === t.id ? 'inspector-tab-active' : ''}`}
+          className={`border-none ${ax({ textStyle: 'caption' })} inspector-tab ${active === t.id ? 'inspector-tab-active' : ''}`}
           onClick={() => onChange(t.id)}
         >
           {t.label}
@@ -300,25 +300,25 @@ export function InspectorWindow() {
   }, [metas, actionsMap])
 
   return (
-    <div className={`${ax({ scroll: 'hidden', layout: 'stack' })} inspector-root`}>
-      <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption', surface: 'overlay' })}>
-        <div className={ax({ layout: 'row', gap: 'sm' })}>
-          <span className={ax({ text: 'bright' })}>Aria Inspector</span>
+    <div className={`${ax({ layout: 'stack' })} inspector-root`}>
+      <div className={ax({ layout: 'spread', textStyle: 'caption', surface: 'overlay' })}>
+        <div className={ax({ layout: 'row' })}>
+          <span className={ax({ })}>Aria Inspector</span>
           <button
-            className={`border-none cursor-pointer ${ax({ textStyle: 'caption', padding: 'xs', text: picking ? 'bright' : 'muted' })} inspector-tab ${picking ? 'inspector-tab-active' : ''}`}
+            className={`border-none cursor-pointer ${ax({ textStyle: 'caption' })} inspector-tab ${picking ? 'inspector-tab-active' : ''}`}
             onClick={() => setPicking(p => !p)}
           >
             {picking ? '⊙ Picking…' : '⊙ Pick'}
           </button>
         </div>
-        <span className={ax({ text: 'muted' })}>{actionsMap.size} instances</span>
+        <span className={ax({ })}>{actionsMap.size} instances</span>
       </div>
 
-      <div className={ax({ scroll: 'hidden', flex: '1' })}>
+      <div className={ax({ flex: '1' })}>
         <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
           <div className={ax({ layout: 'stack' })}>
             {actionsMap.size === 0 ? (
-              <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>등록된 인스턴스 없음</div>
+              <div className={ax({ textStyle: 'caption' })}>등록된 인스턴스 없음</div>
             ) : (
               <TreeView
                 data={tree}
@@ -330,7 +330,7 @@ export function InspectorWindow() {
             )}
           </div>
 
-          <div className={`${ax({ scroll: 'auto' })} inspector-detail`}>
+          <div className={`${ax({ })} inspector-detail`}>
             <div className={ax({ layout: 'stack' })}>
               <TabBar active={activeTab} onChange={setActiveTab} />
 
@@ -341,8 +341,8 @@ export function InspectorWindow() {
               ) : inspectResult ? (
                 <>
                   {activeTab === 'interaction' && (
-                    <div className={ax({ layout: 'stack', gap: 'md', padding: 'sm' })}>
-                      <div className={ax({ layout: 'spread', textStyle: 'caption', text: 'bright' })}>
+                    <div className={ax({ layout: 'stack' })}>
+                      <div className={ax({ layout: 'spread', textStyle: 'caption' })}>
                         <span>Bindings ({Object.keys(inspectResult.keyMap).length + Object.keys(inspectResult.clickMap ?? {}).length})</span>
                         <CopyButton inspectResult={inspectResult} />
                       </div>
@@ -355,8 +355,8 @@ export function InspectorWindow() {
                   )}
 
                   {activeTab === 'state' && (
-                    <div className={ax({ layout: 'stack', gap: 'md', padding: 'sm' })}>
-                      <div className={ax({ textStyle: 'caption', text: 'bright' })}>
+                    <div className={ax({ layout: 'stack' })}>
+                      <div className={ax({ textStyle: 'caption' })}>
                         State ({Object.keys(inspectResult.state.entities).length} entities)
                       </div>
                       <AppInspector inspectResult={inspectResult} prevState={prevState} />
@@ -364,7 +364,7 @@ export function InspectorWindow() {
                   )}
                 </>
               ) : (
-                <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
+                <div className={ax({ textStyle: 'caption' })}>
                   선택된 인스턴스 없음
                 </div>
               )}

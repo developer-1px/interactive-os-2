@@ -16,7 +16,7 @@ const variants: Array<'default' | 'success' | 'error'> = ['default', 'success', 
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'sm' })}>
+    <div className={ax({ layout: 'row' })}>
       <button
         className={ax({ role: 'control', surface: 'action', content: 'text', clamp: '1' })}
         onClick={() => {

@@ -8,13 +8,13 @@ export const todoLayout = definePage({
       children: ['header', 'list', 'composer'],
     },
     header: {
-      data: { type: 'widget', widget: 'TodoHeaderWidget', surface: 'raised' },
+      data: { type: 'widget', widget: 'TodoHeaderWidget' },
     },
     list: {
-      data: { type: 'widget', widget: 'TodoListWidget', surface: 'base' },
+      data: { type: 'widget', widget: 'TodoListWidget' },
     },
     composer: {
-      data: { type: 'widget', widget: 'TodoComposerWidget', surface: 'raised' },
+      data: { type: 'widget', widget: 'TodoComposerWidget' },
     },
   },
 })

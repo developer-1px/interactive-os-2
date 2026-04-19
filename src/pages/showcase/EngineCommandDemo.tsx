@@ -99,7 +99,7 @@ export default function EngineCommandDemo() {
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <ListBox
           data={data}
           onChange={setData}
@@ -116,7 +116,7 @@ export default function EngineCommandDemo() {
             entries.map((e) => (
               <div key={e.seq} className="debug-log-entry">
                 <span className="op-faint">#{e.seq}</span>{' '}
-                <span className={ax({ tone: 'accent', weight: 'semi' })}>{e.type}</span>{' '}
+                <span className={ax({ tone: 'accent' })}>{e.type}</span>{' '}
                 <span className="op-dim">{e.payload}</span>
                 {e.middlewares.length > 0 && (
                   <span className="op-faint">

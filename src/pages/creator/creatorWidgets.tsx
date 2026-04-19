@@ -57,12 +57,12 @@ function CreatorSidebar() {
   )
 
   return (
-    <div className={ax({ layout: 'stack', scroll: 'hidden' })}>
+    <div className={ax({ layout: 'stack' })}>
       <PanelHeader axes={{ textStyle: 'caption' }}>
-        <span className={ax({ weight: 'semi' })}>Components</span>
-        <span className={ax({ text: 'muted' })}>{demoRegistry.length}</span>
+        <span className={ax({ })}>Components</span>
+        <span className={ax({ })}>{demoRegistry.length}</span>
       </PanelHeader>
-      <div className={ax({ padding: 'sm' })}>
+      <div className={ax({ })}>
         <TextInput
           placeholder="Filter..."
           value={filter}
@@ -70,7 +70,7 @@ function CreatorSidebar() {
           aria-label="Filter components"
         />
       </div>
-      <div className={ax({ flex: '1', scroll: 'y' })}>
+      <div className={ax({ flex: '1' })}>
         <NavList
           data={navData}
           plugins={[]}
@@ -90,16 +90,16 @@ function CreatorPreview() {
   const LazyDemo = selectedName ? getLazyDemo(selectedName) : null
 
   return (
-    <div className={ax({ scroll: 'y', padding: 'lg' })}>
+    <div className={ax({ })}>
       <PanelHeader axes={{ textStyle: 'caption' }}>
-        <span className={ax({ weight: 'semi' })}>{selectedName || 'Select a component'}</span>
+        <span className={ax({ })}>{selectedName || 'Select a component'}</span>
       </PanelHeader>
       {LazyDemo ? (
-        <Suspense fallback={<div className={ax({ padding: 'md', text: 'muted' })}>Loading...</div>}>
+        <Suspense fallback={<div className={ax({ })}>Loading...</div>}>
           <LazyDemoRenderer Demo={LazyDemo} />
         </Suspense>
       ) : (
-        <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>
+        <div className={ax({ layout: 'center' })}>
           컴포넌트를 선택하세요
         </div>
       )}
@@ -118,15 +118,15 @@ function CreatorSource() {
   const demoSource = selectedName ? (demoSources[selectedName] ?? '') : ''
 
   return (
-    <div className={ax({ scroll: 'y' })}>
+    <div className={ax({ })}>
       <PanelHeader axes={{ textStyle: 'caption' }}>
-        <span className={ax({ weight: 'semi' })}>Source</span>
-        <span className={ax({ text: 'muted' })}>{selectedName}.demo.tsx</span>
+        <span className={ax({ })}>Source</span>
+        <span className={ax({ })}>{selectedName}.demo.tsx</span>
       </PanelHeader>
       {demoSource ? (
         <CodeViewer code={demoSource} filename={`${selectedName}.demo.tsx`} preset="doc" />
       ) : (
-        <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>No source</div>
+        <div className={ax({ layout: 'center' })}>No source</div>
       )}
     </div>
   )

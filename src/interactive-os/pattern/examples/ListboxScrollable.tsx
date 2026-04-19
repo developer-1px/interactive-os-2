@@ -34,7 +34,9 @@ export function ListboxScrollable() {
       plugins={[]}
       onChange={onChange}
       aria-label="Choose your favorite transuranic element"
-      className={`${ax({ shape: 'md', surface: 'sunken', border: 'default', scroll: 'y' })} outline-none`}
+      className={`${ax({
+          role: 'control-group',
+        surface: 'sunken' })} outline-none`}
     />
   )
 }

@@ -82,12 +82,12 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
 
   return (
     <dialog ref={dialogRef} className="border-none bg-transparent fvm-dialog" onClick={handleBackdropClick}>
-      <div className={`fvm-modal ${ax({ surface: 'trap', layout: 'stack', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
+      <div className={`fvm-modal ${ax({ surface: 'trap', layout: 'stack' })}`} onClick={e => e.stopPropagation()}>
         <PanelHeader axes={{ layout: 'spread' }}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
-          <div className={ax({ layout: 'bar', gap: 'sm' })}>
+          <div className={ax({ layout: 'bar' })}>
             {filePath && (
-              <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption',  })}>
+              <div className={ax({ layout: 'bar', textStyle: 'caption',  })}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
                 {!isUrl && lineCount > 0 && (
@@ -109,7 +109,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
         </PanelHeader>
         <div className={ax({ flex: '1', layout: 'scroll' })}>
           {error ? (
-            <div className={ax({ tone: 'danger', padding: 'md' })}>File not found</div>
+            <div className={ax({ tone: 'danger' })}>File not found</div>
           ) : (
             <FilePreview
               content={fileContent}

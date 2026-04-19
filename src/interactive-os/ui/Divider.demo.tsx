@@ -11,11 +11,11 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md', width: 'md' })}>
+    <div className={ax({ layout: 'stack', width: 'md' })}>
       <span>Above</span>
       <Divider />
       <span>Below</span>
-      <div className={ax({ layout: 'row', gap: 'md', square: 'lg' })}>
+      <div className={ax({ layout: 'row' })}>
         <span>Left</span>
         <Divider direction="vertical" />
         <span>Right</span>

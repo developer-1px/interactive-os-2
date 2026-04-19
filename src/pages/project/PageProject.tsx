@@ -48,16 +48,14 @@ const renderCell = (
     case 'name': {
       const v = value as { text: string; hasP0: boolean; openBacklogs: number }
       return (
-        <span className={ax({ layout: 'bar', gap: 'sm' })}>
+        <span className={ax({ layout: 'bar' })}>
           {v.hasP0
             ? <StatusIndicator tone="error" />
             : <StatusIndicator tone={v.openBacklogs > 0 ? 'warning' : 'success'} />
           }
           <span className={ax({
             textStyle: 'body',
-            tone: v.hasP0 ? 'danger' : undefined,
-            text: v.hasP0 ? undefined : state.focused ? 'bright' : 'primary',
-            weight: 'semi',
+            tone: v.hasP0 ? 'danger' : undefined
           })}>
             {v.text}
           </span>
@@ -71,8 +69,7 @@ const renderCell = (
       return (
         <span className={ax({
           textStyle: 'caption',
-          tone: MATURITY_TONE[maturity],
-          text: MATURITY_TEXT[maturity] ?? 'muted',
+          tone: MATURITY_TONE[maturity]
         })}>
           {maturity}
         </span>
@@ -81,7 +78,7 @@ const renderCell = (
 
     case 'kind':
       return (
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        <span className={ax({ textStyle: 'caption' })}>
           {KIND_LABEL[String(value)] ?? String(value ?? '')}
         </span>
       )
@@ -90,7 +87,7 @@ const renderCell = (
       if (!value) return <span />
       const p = value as { done: number; total: number; open: number }
       return (
-        <span className={ax({ layout: 'bar', gap: 'sm' })}>
+        <span className={ax({ layout: 'bar' })}>
           <ProgressIndicator value={p.done} max={p.total} />
           <span className={ax({
             textStyle: 'caption',
@@ -105,7 +102,7 @@ const renderCell = (
     case 'files':
       if (!value) return <span />
       return (
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        <span className={ax({ textStyle: 'caption' })}>
           {String(value)}
         </span>
       )
@@ -127,9 +124,9 @@ export default function PageProject() {
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader>
-        <span className={ax({ textStyle: 'label', weight: 'semi' })}>Projects</span>
+        <span className={ax({ textStyle: 'label' })}>Projects</span>
         <span className={ax({ flex: '1' })} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        <span className={ax({ textStyle: 'caption' })}>
           {projects.length} projects · {totalFiles} files · {totalDone}/{totalDone + totalOpen} done
         </span>
       </PanelHeader>

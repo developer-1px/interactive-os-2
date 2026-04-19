@@ -65,7 +65,9 @@ export function Drawer({
         tabIndex={-1}
         data-placement={placement}
         data-size={size}
-        className={ax({ surface: 'raised', placement: 'viewport' }) + ' drawer-panel'}
+        className={ax({
+            role: 'control-group',
+            surface: 'raised', placement: 'viewport' }) + ' drawer-panel'}
       >
         {children}
       </div>

@@ -121,7 +121,7 @@ export function Spinbutton({
     return (
       <div className={ax({ role: 'item', layout: 'bar' })} data-focused={state.focused || undefined}>
         {itemLabel && <span className={ax({})}>{itemLabel}</span>}
-        <div className={`spinbutton-group outline-none ${ax({ role: 'control-group', border: 'strong' })}`} data-invalid={invalid || undefined}>
+        <div className={`spinbutton-group outline-none ${ax({ role: 'control-group' })}`} data-invalid={invalid || undefined}>
           <button
             type="button"
             className={`spinbutton-btn spinbutton-btn-dec select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon' })}`}

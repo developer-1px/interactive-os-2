@@ -82,17 +82,17 @@ const totalCount = Object.values(categories).reduce((sum, entries) => sum + entr
 
 export function ThemeComponents() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'lg' })}>
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{totalCount} components</span>
+    <div className={ax({ layout: 'stack' })}>
+      <div className={ax({ layout: 'bar' })}>
+        <span className={ax({ textStyle: 'caption' })}>{totalCount} components</span>
       </div>
 
       {sortedCategoryNames.map(catName => (
-        <div key={catName} className={ax({ layout: 'stack', gap: 'md' })}>
+        <div key={catName} className={ax({ layout: 'stack' })}>
           {/* Category header */}
-          <div className={ax({ layout: 'bar', gap: 'sm', border: 'bottom', padding: 'xs' })}>
-            <h2 className={ax({ textStyle: 'overline', text: 'muted' })}>{catName}</h2>
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>({categories[catName].length})</span>
+          <div className={ax({ layout: 'bar' })}>
+            <h2 className={ax({ textStyle: 'overline' })}>{catName}</h2>
+            <span className={ax({ textStyle: 'caption' })}>({categories[catName].length})</span>
           </div>
 
           {/* Demo grid */}
@@ -100,9 +100,9 @@ export function ThemeComponents() {
             {categories[catName].map(entry => (
               <div
                 key={entry.slug}
-                className={ax({ surface: 'display', layout: 'stack', gap: 'sm', padding: 'md', shape: 'lg', scroll: 'hidden' })}
+                className={ax({ surface: 'display', layout: 'stack' })}
               >
-                <span className={ax({ textStyle: 'label', text: 'secondary' })}>{entry.label}</span>
+                <span className={ax({ textStyle: 'label' })}>{entry.label}</span>
                 <entry.Demo />
               </div>
             ))}

@@ -33,7 +33,7 @@ function StreamingTimer() {
 // --- StreamCursor (export for renderItem use) ---
 
 export function StreamCursor() {
-  return <span className={`${ax({ motion: 'blink' })} stream-cursor`} />
+  return <span className={`${ax({ })} stream-cursor`} />
 }
 
 // --- ScrollToBottom FAB ---
@@ -63,7 +63,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`${ax({ role: 'control', surface: 'action', border: 'default', content: 'icon', placement: 'bottom-center', motion: 'fade-slide-in' })} stream-fab`} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ role: 'control', surface: 'action', content: 'icon', placement: 'bottom-center' })} stream-fab`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <DirectionIndicator direction="next" orientation="vertical" />
     </button>
   )
@@ -76,17 +76,17 @@ export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streami
     <div className={`${ax({ layout: 'fill', placement: 'relative' })}`}>
       <div
         ref={feedRef}
-        className={`${ax({ layout: 'scroll', flex: '1', gap: 'xl' })} stream-feed${className ? ` ${className}` : ''}`}
+        className={`${ax({ layout: 'scroll', flex: '1' })} stream-feed${className ? ` ${className}` : ''}`}
         role="feed"
       >
         {items.map((item, i) => (
-          <div key={i} data-feed-entry="" className={`${ax({ width: 'full', motion: 'fade-slide-in' })} stream-entry`}>
+          <div key={i} data-feed-entry="" className={`${ax({ width: 'full' })} stream-entry`}>
             {renderItem(item, i, { isLatest: i === items.length - 1 })}
           </div>
         ))}
         {isStreaming && (
-          <div className={`${ax({ layout: 'bar', gap: 'sm', width: 'full', motion: 'fade-slide-in' })} stream-indicator`}>
-            <span className={`${ax({ shape: 'pill', motion: 'pulse' })} stream-dot`} />
+          <div className={`${ax({ layout: 'bar', width: 'full' })} stream-indicator`}>
+            <span className={`${ax({ })} stream-dot`} />
             <span className={ax({ textStyle: 'caption',  })}>{streamingLabel ?? 'Thinking'}</span>
             <StreamingTimer />
           </div>

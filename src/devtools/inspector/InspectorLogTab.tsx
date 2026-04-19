@@ -127,20 +127,20 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
       {/* Filter bar */}
-      <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} inspector-log-filter`}>
+      <div className={`${ax({ layout: 'row', surface: 'overlay' })} inspector-log-filter`}>
         <input
-          className={`${ax({ textStyle: 'caption', padding: 'xs', border: 'default', shape: 'sm', flex: '1' })} inspector-log-input`}
+          className={`${ax({ textStyle: 'caption', flex: '1' })} inspector-log-input`}
           placeholder="command type..."
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
         <input
-          className={`${ax({ textStyle: 'caption', padding: 'xs', border: 'default', shape: 'sm', flex: '1' })} inspector-log-input`}
+          className={`${ax({ textStyle: 'caption', flex: '1' })} inspector-log-input`}
           placeholder="instance..."
           value={instanceFilter}
           onChange={e => setInstanceFilter(e.target.value)}
         />
-        <label className={ax({ textStyle: 'caption', text: 'muted', layout: 'row', gap: 'xs' })}>
+        <label className={ax({ textStyle: 'caption', layout: 'row' })}>
           <input
             type="checkbox"
             checked={hideMeta}
@@ -149,13 +149,13 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
           Hide meta
         </label>
         <button
-          className={`border-none cursor-pointer ${ax({ textStyle: 'caption', padding: 'xs', text: 'muted' })}`}
+          className={`border-none cursor-pointer ${ax({ textStyle: 'caption' })}`}
           onClick={exportLogs}
         >
           Copy JSON
         </button>
         <button
-          className={`border-none cursor-pointer ${ax({ textStyle: 'caption', padding: 'xs', text: 'muted' })}`}
+          className={`border-none cursor-pointer ${ax({ textStyle: 'caption' })}`}
           onClick={() => setLogs([])}
         >
           Clear
@@ -165,31 +165,31 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
       {/* Log entries */}
       <div
         ref={logRef}
-        className={`${ax({ textStyle: 'caption', flex: '1', scroll: 'y' })} inspector-log-scroll`}
+        className={`${ax({ textStyle: 'caption', flex: '1' })} inspector-log-scroll`}
       >
         {filteredLogs.length === 0 ? (
-          <div className={ax({ padding: 'sm', text: 'muted' })}>No events captured yet.</div>
+          <div className={ax({ })}>No events captured yet.</div>
         ) : (
           filteredLogs.map(log => {
             const isExpanded = expandedSet.has(log.seq)
             return (
               <div key={`${log.instanceName}-${log.seq}`}>
                 <div
-                  className={`cursor-pointer ${ax({ padding: 'xs', clamp: '1', opacity: 'dim' })} inspector-log-entry ${log.error ? ax({ tone: 'danger' }) : ''}`}
+                  className={`cursor-pointer ${ax({ clamp: '1' })} inspector-log-entry ${log.error ? ax({ tone: 'danger' }) : ''}`}
                   onClick={() => toggleExpand(log.seq)}
                 >
-                  <span className={ax({ text: 'muted' })}>{new Date(log.timestamp).toLocaleTimeString('en', { hour12: false, fractionalSecondDigits: 3 })}</span>
+                  <span className={ax({ })}>{new Date(log.timestamp).toLocaleTimeString('en', { hour12: false, fractionalSecondDigits: 3 })}</span>
                   {' '}
-                  <span className={`${ax({ opacity: 'faint' })} inspector-log-seq`}>#{log.seq}</span>
+                  <span className={`${ax({ })} inspector-log-seq`}>#{log.seq}</span>
                   {' '}
                   <span className={`${ax({ tone: 'success' })} inspector-log-instance`}>[{log.instanceName}]</span>
                   {' '}
-                  <span className={ax({ text: 'bright' })}>{log.commandType}</span>
+                  <span className={ax({ })}>{log.commandType}</span>
                   {' '}
-                  <span className={ax({ text: 'muted' })}>| {formatDiffSummary(log.diff)}</span>
+                  <span className={ax({ })}>| {formatDiffSummary(log.diff)}</span>
                 </div>
                 {isExpanded && (
-                  <div className={`${ax({ textStyle: 'caption', text: 'muted', padding: 'sm', clamp: 'pre' })} inspector-log-detail`}>
+                  <div className={`${ax({ textStyle: 'caption', clamp: 'pre' })} inspector-log-detail`}>
                     <div>payload: {JSON.stringify(log.payload, null, 2)}</div>
                     {log.diff.length > 0 && (
                       <div>

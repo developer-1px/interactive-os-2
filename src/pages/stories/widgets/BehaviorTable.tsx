@@ -10,7 +10,9 @@ interface BehaviorTableProps {
 
 function HeaderCell({ children }: { children: React.ReactNode }) {
   return (
-    <th className={ax({ textStyle: 'label', weight: 'semi', text: 'secondary', padding: 'sm', content: 'text', surface: 'sunken' })}>
+    <th className={ax({
+        role: 'control-group',
+        textStyle: 'label', content: 'text', surface: 'sunken' })}>
       {children}
     </th>
   )
@@ -18,8 +20,10 @@ function HeaderCell({ children }: { children: React.ReactNode }) {
 
 function BubbleCell({ children }: { children: React.ReactNode }) {
   return (
-    <td className={ax({ padding: 'xs' })}>
-      <span className={ax({ surface: 'sunken', shape: 'md', padding: 'sm', textStyle: 'caption', content: 'text' })}>
+    <td className={ax({ })}>
+      <span className={ax({
+          role: 'control-group',
+        surface: 'sunken', textStyle: 'caption', content: 'text' })}>
         {children}
       </span>
     </td>
@@ -42,13 +46,15 @@ export function BehaviorTable({ behaviors }: BehaviorTableProps) {
           <tr key={i}>
             <BubbleCell>{b.given}</BubbleCell>
             <BubbleCell>{b.when}</BubbleCell>
-            <td className={ax({ padding: 'xs' })}>
-              <span className={ax({ surface: 'sunken', shape: 'md', padding: 'sm', textStyle: 'caption', content: 'text', layout: 'row', gap: 'xs' })}>
-                <ArrowRight className={ax({ icon: 'xs', text: 'muted', flex: 'none' })} />
+            <td className={ax({ })}>
+              <span className={ax({
+                  role: 'control-group',
+                surface: 'sunken', textStyle: 'caption', content: 'text', layout: 'row' })}>
+                <ArrowRight className={ax({ flex: 'none' })} />
                 {b.then}
               </span>
             </td>
-            <td className={ax({ padding: 'xs' })}>
+            <td className={ax({ })}>
               <StatusDot status={b.status} />
             </td>
           </tr>

@@ -10,7 +10,7 @@ interface SpinnerIndicatorProps {
 export function SpinnerIndicator({ size = 'md', className }: SpinnerIndicatorProps) {
   const sizeClass = `item-indicator--spinner-${size}`
   const classes = [
-    `inline-flex ${ax({ layout: 'center', motion: 'spin' })}`,
+    `inline-flex ${ax({ layout: 'center' })}`,
     'item-indicator--spinner',
     sizeClass,
     className,

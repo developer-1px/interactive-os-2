@@ -12,7 +12,7 @@ interface PropertyRowProps {
 export function PropertyRow({ label, description, children }: PropertyRowProps) {
   return (
     <div className={ax({ role: 'item', content: 'text', layout: 'spread', width: 'full' })}>
-      <div className={ax({ layout: 'stack', gap: 'xs' })}>
+      <div className={ax({ layout: 'stack' })}>
         <span className={ax({  })}>{label}</span>
         {description && (
           <span className={ax({  })}>{description}</span>

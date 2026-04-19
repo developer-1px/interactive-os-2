@@ -94,7 +94,7 @@ export default function CrudDemo() {
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
         <Button onClick={handleCreate}>+ Add item</Button>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <TreeGrid
           id="crud"
           data={data}

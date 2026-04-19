@@ -30,7 +30,9 @@ class DemoErrorBoundary extends React.Component<
   render() {
     if (this.state.error) {
       return (
-        <div className={ax({ surface: 'sunken', padding: 'md', text: 'secondary', textStyle: 'caption' })}>
+        <div className={ax({
+            role: 'control-group',
+            surface: 'sunken', textStyle: 'caption' })}>
           {this.props.name}: {this.state.error.message}
         </div>
       )
@@ -65,7 +67,9 @@ function CatalogNavWidget({ navData, nodeIdToIndex }: Record<string, unknown>) {
 
 function EmptyStateWidget({ componentName }: Record<string, unknown>) {
   return (
-    <div className={ax({ surface: 'sunken', padding: 'sm', text: 'muted', textStyle: 'caption', shape: 'sm' })}>
+    <div className={ax({
+        role: 'control-group',
+        surface: 'sunken', textStyle: 'caption' })}>
       {String(componentName ?? 'unknown')}
     </div>
   )
@@ -81,15 +85,17 @@ function createDemoWidget(entry: CatalogEntry) {
       default: function DemoWidget() {
         return (
           <DemoErrorBoundary name={entry.slug}>
-            <div className={ax({ surface: 'display', padding: 'md', shape: 'md', layout: 'stack', gap: 'sm', border: 'default', scroll: 'hidden' })}>
-              <div className={ax({ layout: 'spread', gap: 'sm' })}>
-                <div className={ax({ textStyle: 'caption', text: 'secondary', content: 'text' })}>
+            <div className={ax({ surface: 'display', layout: 'stack' })}>
+              <div className={ax({ layout: 'spread' })}>
+                <div className={ax({ textStyle: 'caption', content: 'text' })}>
                   {entry.label}
                 </div>
                 {entry.axes && entry.axes.length > 0 && (
-                  <div className={ax({ layout: 'row', gap: 'xs' })}>
+                  <div className={ax({ layout: 'row' })}>
                     {entry.axes.map((axis) => (
-                      <span key={axis} className={ax({ surface: 'sunken', padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'muted' })}>
+                      <span key={axis} className={ax({
+                          role: 'control-group',
+                        surface: 'sunken', textStyle: 'caption' })}>
                         {axis}
                       </span>
                     ))}
@@ -108,7 +114,7 @@ function createDemoWidget(entry: CatalogEntry) {
     return (
       <React.Suspense
         fallback={
-          <div className={ax({ surface: 'display', padding: 'md', shape: 'md', text: 'muted', textStyle: 'caption', border: 'default' })}>
+          <div className={ax({ surface: 'display', textStyle: 'caption' })}>
             Loading {entry.slug}...
           </div>
         }
@@ -152,7 +158,7 @@ export default function PageCatalog() {
 
   if (!layoutData) {
     return (
-      <div className={ax({ layout: 'center', padding: 'lg', text: 'muted' })}>
+      <div className={ax({ layout: 'center' })}>
         Loading catalog...
       </div>
     )

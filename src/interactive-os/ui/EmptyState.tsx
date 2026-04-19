@@ -12,8 +12,8 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className={`${ax({ layout: 'stack', gap: 'md', padding: 'xl' })} text-center`}>
-      {icon && <div className={ax({ icon: 'lg', layout: 'center', flex: 'none' })}>{icon}</div>}
+    <div className={`${ax({ layout: 'stack' })} text-center`}>
+      {icon && <div className={ax({ layout: 'center', flex: 'none' })}>{icon}</div>}
       <div className={ax({ textStyle: 'section', layout: 'self-center' })}>{title}</div>
       {description && <div className={ax({ textStyle: 'body', layout: 'self-center' })}>{description}</div>}
       {action && (

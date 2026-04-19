@@ -258,13 +258,13 @@ export function SessionDetailModal({ card, onClose }: { card: SessionCard | null
   return (
     <dialog
       ref={contentRef as React.RefObject<HTMLDialogElement>}
-      className={`kanban-detail-dialog ${ax({ surface: 'overlay', width: 'full', shape: 'xl', layout: 'stack', scroll: 'hidden' })}`}
+      className={`kanban-detail-dialog ${ax({ surface: 'overlay', width: 'full', layout: 'stack' })}`}
       aria-label="Session replay"
     >
       <PanelHeader axes={{ layout: 'spread' }}>
         {card && (
-          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}>
-            <span className={ax({ text: 'bright', weight: 'medium' })}>{card.label}</span>
+          <div className={ax({ layout: 'bar', textStyle: 'caption' })}>
+            <span className={ax({ })}>{card.label}</span>
             <span>{card.allMessages.length} messages</span>
             <span>{card.toolCount} tools</span>
             {card.lastSkill && <span>/{card.lastSkill}</span>}

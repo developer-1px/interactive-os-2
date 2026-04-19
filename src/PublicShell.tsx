@@ -29,7 +29,9 @@ export default function PublicShell() {
   return (
     <div className={ax({ layout: 'stack', width: 'full' })} style={{ minHeight: '100vh' }}>
       <header
-        className={ax({ layout: 'row', surface: 'base', padding: 'md', gap: 'md' })}
+        className={ax({
+            role: 'control-group',
+            layout: 'row', surface: 'base' })}
         style={{
           alignItems: 'center',
           borderBottom: '1px solid var(--border-subtle)',
@@ -45,14 +47,14 @@ export default function PublicShell() {
         >
           aria
         </Link>
-        <nav className={ax({ layout: 'row', gap: 'sm' })} style={{ marginLeft: 'auto' }}>
+        <nav className={ax({ layout: 'row' })} style={{ marginLeft: 'auto' }}>
           {NAV.map((item) => {
             const active = item.to === '/' ? pathname === '/' : pathname.startsWith(item.to)
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={ax({ surface: 'ghost', padding: 'sm', textStyle: 'body', interactive: 'item' })}
+                className={ax({ surface: 'ghost', textStyle: 'body', interactive: 'item' })}
                 style={{
                   textDecoration: 'none',
                   color: active ? 'var(--text-bright)' : 'var(--text-secondary)',
@@ -66,7 +68,7 @@ export default function PublicShell() {
           })}
           <button
             onClick={toggle}
-            className={ax({ surface: 'ghost', role: 'control', padding: 'sm', textStyle: 'body', interactive: 'button' })}
+            className={ax({ surface: 'ghost', role: 'control', textStyle: 'body', interactive: 'button' })}
             style={{
               borderRadius: 'var(--shape-sm-radius)',
               border: '1px solid var(--border-default)',

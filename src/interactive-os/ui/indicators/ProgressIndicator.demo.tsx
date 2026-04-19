@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <ProgressIndicator value={0} />
       <ProgressIndicator value={33} />
       <ProgressIndicator value={75} />

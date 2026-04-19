@@ -3,7 +3,7 @@ import { ax } from '@styles/ax'
 
 export function SwitchIndicator({ className }: { className?: string }) {
   const classes = [
-    ax({ flex: 'none', placement: 'relative', border: 'strong', shape: 'pill' }),
+    ax({ flex: 'none', placement: 'relative' }),
     'item-indicator--switch',
     className,
   ].filter(Boolean).join(' ')

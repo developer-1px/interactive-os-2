@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent Shorts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<template id="__bundler_thumbnail" data-bg-color="#f5f4f0">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <!-- phone frame -->
+    <rect x="460" y="120" width="280" height="560" rx="44" fill="#0b0b0d"/>
+    <rect x="476" y="136" width="248" height="528" rx="32" fill="#000"/>
+    <!-- notch -->
+    <rect x="560" y="148" width="80" height="22" rx="11" fill="#0b0b0d"/>
+    <!-- code bars -->
+    <rect x="500" y="280" width="160" height="8" rx="2" fill="#8b7fd8" opacity="0.9"/>
+    <rect x="500" y="300" width="120" height="8" rx="2" fill="#6a6a70" opacity="0.6"/>
+    <rect x="500" y="320" width="180" height="8" rx="2" fill="#6a6a70" opacity="0.6"/>
+    <rect x="500" y="360" width="200" height="8" rx="2" fill="#7cc18a"/>
+    <rect x="500" y="380" width="140" height="8" rx="2" fill="#7cc18a" opacity="0.7"/>
+    <rect x="500" y="420" width="100" height="8" rx="2" fill="#e07878"/>
+    <!-- play dots -->
+    <circle cx="600" cy="560" r="6" fill="#fff"/>
+    <circle cx="620" cy="560" r="6" fill="#fff" opacity="0.5"/>
+    <circle cx="640" cy="560" r="6" fill="#fff" opacity="0.25"/>
+  </svg>
+</template>
+
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --ink: #0f0f10;
+    --ink-2: #6a6a70;
+    --ink-3: #9a9aa0;
+    --line: rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Tiny header — just a wordmark */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.02em;
+  }
+  .brand {
+    display: flex; align-items: baseline; gap: 8px;
+    font-weight: 600; color: var(--ink);
+  }
+  .brand .slash {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-3); font-weight: 400;
+  }
+  .live {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--ink-2); font-size: 11px;
+  }
+  .live .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: oklch(0.75 0.18 150);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  /* Stage: phone centered, nothing else */
+  .stage {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    padding: 32px 20px 64px;
+    gap: 18px;
+  }
+
+  /* Phone frame */
+  .phone-frame {
+    width: 408px; height: 836px; border-radius: 52px;
+    background: #0b0b0d; padding: 14px;
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.18),
+      0 0 0 1.5px rgba(0,0,0,0.35),
+      inset 0 0 0 2px #222;
+    position: relative;
+  }
+  .phone-frame::before {
+    content: ''; position: absolute; top: 16px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 34px; border-radius: 22px;
+    background: #000; z-index: 100;
+  }
+  .phone-screen {
+    width: 100%; height: 100%; border-radius: 40px;
+    background: #000; overflow: hidden;
+    position: relative;
+  }
+  .status-bar {
+    position: absolute; top: 18px; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 32px;
+    color: #fff; font-size: 14px; font-weight: 600;
+    font-family: -apple-system, 'SF Pro', system-ui;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .status-bar .time { padding-left: 8px; }
+  .status-icons { display: flex; gap: 5px; align-items: center; padding-right: 8px; }
+
+  /* Hint under the phone — the only UI outside of it */
+  .hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3);
+    display: flex; gap: 10px; align-items: center;
+  }
+  kbd {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 2px 5px; border-radius: 4px;
+    border: 1px solid var(--line); background: #fff;
+    color: var(--ink-2);
+  }
+
+  /* Tweaks panel (hidden until toolbar toggle) */
+  .tweaks {
+    position: fixed; right: 24px; bottom: 24px;
+    width: 260px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+    z-index: 50;
+    font-size: 13px;
+  }
+  .tweaks-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-2); letter-spacing: 0.12em;
+    margin-bottom: 12px; text-transform: uppercase;
+  }
+  .tweak-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; border-top: 1px solid var(--line);
+  }
+  .tweak-row:first-of-type { border-top: none; }
+  .tweak-sub { font-size: 11px; color: var(--ink-3); }
+  .switch {
+    width: 36px; height: 20px; border-radius: 99px;
+    background: rgba(0,0,0,0.12); position: relative;
+    cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+  }
+  .switch.on { background: var(--ink); }
+  .switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; transition: left 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .switch.on::after { left: 18px; }
+  .seg {
+    display: inline-flex; background: rgba(0,0,0,0.06);
+    border-radius: 7px; padding: 2px; font-size: 11px;
+  }
+  .seg button {
+    border: none; background: transparent;
+    padding: 4px 9px; border-radius: 5px;
+    cursor: pointer; color: var(--ink-2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .seg button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+  /* animations */
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes pulse { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+  @keyframes thinkingPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  /* View-mode toggle in header */
+  .view-toggle {
+    display: inline-flex; background: rgba(0,0,0,0.05);
+    border-radius: 7px; padding: 2px; gap: 2px;
+  }
+  .view-toggle button {
+    border: none; background: transparent;
+    padding: 4px 10px; border-radius: 5px;
+    cursor: pointer; color: var(--ink-2);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .view-toggle button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+  .wide-stage { width: 100%; max-width: 1280px; padding: 0 24px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    /slashfeed
+    <span class="slash">— agent shorts</span>
+  </div>
+  <div class="view-toggle" id="view-toggle">
+    <button data-v="feed" class="on">feed</button>
+    <button data-v="grid">grid</button>
+    <button data-v="split">split</button>
+  </div>
+  <div class="live"><span class="dot"></span>2,431 live</div>
+</header>
+
+<main class="stage" id="stage">
+  <div id="phone-wrap">
+  <div class="phone-frame">
+    <div class="phone-screen">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <span class="status-icons">
+          <svg width="16" height="11" viewBox="0 0 16 11"><rect x="0" y="7" width="3" height="4" fill="#fff"/><rect x="4" y="5" width="3" height="6" fill="#fff"/><rect x="8" y="2.5" width="3" height="8.5" fill="#fff"/><rect x="12" y="0" width="3" height="11" fill="#fff"/></svg>
+          <svg width="22" height="11" viewBox="0 0 22 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" fill="none" stroke="#fff" stroke-opacity="0.4"/><rect x="2" y="2" width="16" height="7" rx="1.5" fill="#fff"/><rect x="20" y="3" width="1.5" height="5" rx="0.5" fill="#fff" fill-opacity="0.4"/></svg>
+        </span>
+      </div>
+      <div id="mobile-feed"></div>
+    </div>
+  </div>
+  <div class="hint" id="phone-hint">
+    <span>swipe</span>
+    <kbd>↑</kbd><kbd>↓</kbd>
+    <span>· tap to pause</span>
+  </div>
+  </div>
+  <div id="wide-viewport" class="wide-stage" style="display:none;"></div>
+</main>
+
+<!-- Tweaks panel (hidden until toolbar toggle) -->
+<div class="tweaks" id="tweaks-panel" style="display:none;">
+  <div class="tweaks-title">Tweaks</div>
+  <div class="tweak-row">
+    <div>
+      <div>Autoplay</div>
+      <div class="tweak-sub">Advance beats on a timer</div>
+    </div>
+    <div id="tweak-autoplay" class="switch on"></div>
+  </div>
+  <div class="tweak-row">
+    <div>
+      <div>Meta density</div>
+      <div class="tweak-sub">Overlay on each short</div>
+    </div>
+    <div class="seg" id="tweak-density">
+      <button data-v="minimal">min</button>
+      <button data-v="default" class="on">default</button>
+      <button data-v="rich">rich</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.__TWEAKS = /*EDITMODE-BEGIN*/{
+    "autoplay": true,
+    "metaDensity": "minimal"
+  }/*EDITMODE-END*/;
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="data/sessions.jsx"></script>
+<script type="text/babel" src="components/beats.jsx"></script>
+<script type="text/babel" src="components/short-card.jsx"></script>
+<script type="text/babel" src="components/feed.jsx"></script>
+<script type="text/babel" src="components/view-modes.jsx"></script>
+
+<script type="text/babel">
+  const { useState, useEffect } = React;
+
+  function App() {
+    const [autoplay, setAutoplay] = useState(window.__TWEAKS.autoplay);
+    const [metaDensity, setMetaDensity] = useState(window.__TWEAKS.metaDensity);
+    const [selectedIds, setSelectedIds] = useState([window.SESSIONS[0].id]);
+    const wideRootRef = React.useRef(null);
+
+    useEffect(() => {
+      const phoneWrap = document.getElementById('phone-wrap');
+      const wide = document.getElementById('wide-viewport');
+      // v1: always use UnifiedView in the wide viewport, phone is retired.
+      phoneWrap.style.display = 'none';
+      wide.style.display = 'block';
+      if (!wideRootRef.current) wideRootRef.current = ReactDOM.createRoot(wide);
+      wideRootRef.current.render(
+        <UnifiedView
+          sessions={window.SESSIONS}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          autoplay={autoplay}
+          metaDensity={metaDensity}
+        />
+      );
+      // Hide the old view-toggle (UnifiedView decides mode from selection count).
+      const tog = document.getElementById('view-toggle');
+      if (tog) tog.style.display = 'none';
+    }, [selectedIds, autoplay, metaDensity]);
+
+    useEffect(() => {
+      const panel = document.getElementById('tweaks-panel');
+      const handler = (e) => {
+        if (!e.data || !e.data.type) return;
+        if (e.data.type === '__activate_edit_mode') panel.style.display = 'block';
+        if (e.data.type === '__deactivate_edit_mode') panel.style.display = 'none';
+      };
+      window.addEventListener('message', handler);
+      window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+      const aEl = document.getElementById('tweak-autoplay');
+      aEl.classList.toggle('on', autoplay);
+      aEl.onclick = () => setAutoplay(v => {
+        const nv = !v; aEl.classList.toggle('on', nv);
+        window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { autoplay: nv } }, '*');
+        return nv;
+      });
+
+      const dEl = document.getElementById('tweak-density');
+      dEl.querySelectorAll('button').forEach(b => {
+        b.classList.toggle('on', b.dataset.v === metaDensity);
+        b.onclick = () => {
+          setMetaDensity(b.dataset.v);
+          dEl.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+          window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { metaDensity: b.dataset.v } }, '*');
+        };
+      });
+
+      return () => window.removeEventListener('message', handler);
+    }, []);
+
+    return null;
+  }
+
+  ReactDOM.createRoot(document.getElementById('mobile-feed')).render(<App />);
+</script>
+
+</body>
+</html>

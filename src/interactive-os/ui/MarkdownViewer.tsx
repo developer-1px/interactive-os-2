@@ -32,7 +32,7 @@ class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: st
   static getDerivedStateFromError(err: Error) { return { error: err.message } }
   render() {
     if (this.state.error) {
-      return <div className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>Render error: {this.state.error}</div>
+      return <div className={ax({ tone: 'danger', textStyle: 'caption' })}>Render error: {this.state.error}</div>
     }
     return this.props.children
   }
@@ -41,7 +41,7 @@ class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: st
 function RenderBlock({ children, config }: { children: string; config?: MarkdownRendererConfig }) {
   if (!config?.parseComponent || !config?.componentRegistry) {
     return (
-      <div className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
+      <div className={ax({ tone: 'danger', textStyle: 'caption' })}>
         No config provided for render block
       </div>
     )
@@ -56,7 +56,7 @@ function RenderBlock({ children, config }: { children: string; config?: Markdown
     const parsed = config.parseComponent(line)
     if (!parsed) {
       elements.push(
-        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
+        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption' })}>
           Parse error: {line}
         </div>
       )
@@ -65,7 +65,7 @@ function RenderBlock({ children, config }: { children: string; config?: Markdown
     const Comp = config.componentRegistry[parsed.name]
     if (!Comp) {
       elements.push(
-        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
+        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption' })}>
           Unknown component: {parsed.name}
         </div>
       )
@@ -165,7 +165,7 @@ function MarkdownContent({ content, className, codePreset, prose, linkTransform,
   )
 
   return (
-    <div className={`break-word select-text ${ax({ width: 'prose', layout: 'stack', gap: 'md', flex: 'none' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
+    <div className={`break-word select-text ${ax({ width: 'prose', layout: 'stack', flex: 'none' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
       {showFrontmatter && Object.keys(frontmatter).length > 0 && <FrontmatterCard data={frontmatter} />}
       <Markdown
         remarkPlugins={remarkPlugins}

@@ -38,7 +38,9 @@ const ctx: A2UIRenderContext = {
     const e = store.entities[nodeId]
     if (!e) return null
     const d = e.data as Record<string, unknown>
-    return <div className={ax({ padding: 'md', surface: 'sunken', shape: 'sm' })}>{String(d.label ?? nodeId)}</div>
+    return <div className={ax({
+        role: 'control-group',
+        surface: 'sunken' })}>{String(d.label ?? nodeId)}</div>
   },
   renderChildren: () => null,
   depth: 0,

@@ -103,7 +103,9 @@ export function Grid({
   return (
     <div className={ax({ layout: 'table', width: 'full', flex: '1' })} style={gridStyle}>
       {header && (
-        <div role="row" className={ax({ placement: 'sticky', surface: 'sunken', border: 'bottom' })}>
+        <div role="row" className={ax({
+            role: 'control-group',
+            placement: 'sticky', surface: 'sunken' })}>
           {columns.map((col, i) => (
             <div key={col.key} className={ax({ role: 'item', textStyle: 'overline', content: 'text', ...(i < columns.length - 1 ? { border: 'end' } : {}) })}>{col.header}</div>
           ))}

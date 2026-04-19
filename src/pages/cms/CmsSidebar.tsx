@@ -220,23 +220,25 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
   }, [aria.focused])
 
   return (
-    <aside className={`cms-sidebar ${ax({ flex: 'none', layout: 'stack', scroll: 'hidden', surface: 'sunken', border: 'end' })}`} aria-label="Sections" style={style}>
+    <aside className={`cms-sidebar ${ax({
+        role: 'control-group',
+        flex: 'none', layout: 'stack', surface: 'sunken' })}`} aria-label="Sections" style={style}>
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
-      <div className={`ax-interactive cms-sidebar__list ${ax({ flex: '1', layout: 'stack', scroll: 'y', padding: 'none', gap: 'xs' })}`} role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
+      <div className={`ax-interactive cms-sidebar__list ${ax({ flex: '1', layout: 'stack' })}`} role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText, ariaLabel }) => {
             const elements: React.ReactNode[] = []
 
             if (showSepStart) {
-              elements.push(<div key={`sep-start-${rootAncestor}`} className={`cms-sidebar__group-sep pointer-events-none ${ax({ border: 'bottom' })}`} />)
+              elements.push(<div key={`sep-start-${rootAncestor}`} className={`cms-sidebar__group-sep pointer-events-none ${ax({ })}`} />)
             }
             if (showSepEnd && prevRootAncestorForSepEnd) {
-              elements.push(<div key={`sep-end-${prevRootAncestorForSepEnd}`} className={`cms-sidebar__group-sep pointer-events-none ${ax({ border: 'bottom' })}`} />)
+              elements.push(<div key={`sep-end-${prevRootAncestorForSepEnd}`} className={`cms-sidebar__group-sep pointer-events-none ${ax({ })}`} />)
             }
 
             if (showLabel && tabItemId) {
               elements.push(
-                <div key={`label-${tabItemId}`} className={`cms-sidebar__group-label pointer-events-none ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted', padding: 'xs' })}${tabItemId === activeTabItemId ? ' cms-sidebar__group-label--active' : ''}`}>
+                <div key={`label-${tabItemId}`} className={`cms-sidebar__group-label pointer-events-none ${ax({ textStyle: 'caption' })}${tabItemId === activeTabItemId ? ' cms-sidebar__group-label--active' : ''}`}>
                   {labelText}
                 </div>
               )
@@ -248,7 +250,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
               <div
                 key={sectionId}
                 {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                className={`cms-sidebar__thumb w-full cursor-pointer ${ax({ flex: 'none', placement: 'relative', shape: 'md', surface: 'display', padding: 'none' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+                className={`cms-sidebar__thumb w-full cursor-pointer ${ax({ flex: 'none', placement: 'relative', surface: 'display' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
                 aria-label={ariaLabel}
                 onClick={() => {
                   aria.dispatch(focusCommands.setFocus(sectionId))
@@ -258,7 +260,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
                 <div className="cms-sidebar__thumb-inner cms-landing" inert>
                   <SectionThumbnail data={store} sectionId={sectionId} locale={locale} />
                 </div>
-                <span className={`absolute ${ax({ textStyle: 'caption', text: 'muted' })} cms-sidebar__thumb-index`}>{index + 1}</span>
+                <span className={`absolute ${ax({ textStyle: 'caption' })} cms-sidebar__thumb-index`}>{index + 1}</span>
               </div>
             )
 
@@ -269,7 +271,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
         <button
           ref={addBtnRef}
           type="button"
-          className={`cms-sidebar__add-btn ${ax({ surface: 'placeholder', layout: 'center', padding: 'xs', shape: 'md', textStyle: 'body', weight: 'semi' })}`}
+          className={`cms-sidebar__add-btn ${ax({ surface: 'placeholder', layout: 'center', textStyle: 'body' })}`}
           aria-label="Add section"
           onClick={() => setPickerOpen(o => !o)}
         >

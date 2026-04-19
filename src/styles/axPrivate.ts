@@ -9,7 +9,10 @@
 
 export type AxPadding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type AxGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
-export type AxShape = 'none' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
+// 'island' — 떠있는 섬 시멘틱. 큰 radius + overflow clip 번들.
+// surface: 'raised'와 페어링하여 "sunken 컨테이너 속 떠오른 섬" 패턴을 만든다.
+// 단순 radius 번들이 아니라 "경계를 가진 독립체"라는 특별 의도 (cf. sm/md/lg는 radius 스케일).
+export type AxShape = 'none' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'pill' | 'island'
 
 type BorderFull = 'subtle' | 'default' | 'strong' | 'dashed' | 'ring'
 type BorderSide = 'bottom' | 'top' | 'start' | 'end'

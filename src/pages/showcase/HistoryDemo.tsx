@@ -40,7 +40,7 @@ export default function HistoryDemo() {
         <kbd>F2</kbd> <span className="key-hint">rename</span>{' '}
         <kbd>Alt+<Up /><Down /></kbd> <span className="key-hint">reorder</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <ListBox
           data={data}
           onChange={setData}

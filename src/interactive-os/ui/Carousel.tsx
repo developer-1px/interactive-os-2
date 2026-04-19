@@ -109,14 +109,14 @@ export function Carousel({
       role="region"
       aria-roledescription="carousel"
       aria-label={ariaLabel}
-      className={`${ax({ layout: 'stack', gap: 'sm' })}${className ? ` ${className}` : ''}`}
+      className={`${ax({ layout: 'stack' })}${className ? ` ${className}` : ''}`}
       onMouseEnter={autoPlay ? () => setPaused(true) : undefined}
       onMouseLeave={autoPlay ? () => setPaused(false) : undefined}
       onFocus={autoPlay ? () => setPaused(true) : undefined}
       onBlur={autoPlay ? () => setPaused(false) : undefined}
     >
       {/* Slide viewport */}
-      <div aria-live={autoPlay && !paused ? 'off' : 'polite'} aria-atomic="true" className={ax({ layout: 'fill', scroll: 'hidden' })}>
+      <div aria-live={autoPlay && !paused ? 'off' : 'polite'} aria-atomic="true" className={ax({ layout: 'fill' })}>
         <div className={`carousel-track ${ax({ layout: 'row' })}`}>
           {slideIds.map((id, i) => {
             const entity = data.entities[id]
@@ -135,7 +135,7 @@ export function Carousel({
       </div>
 
       {/* Tab-based navigation */}
-      <div className={ax({ layout: 'bar', gap: 'sm', padding: 'xs' })}>
+      <div className={ax({ layout: 'bar' })}>
         <Button
           icon
           aria-label="Previous slide"
@@ -148,7 +148,7 @@ export function Carousel({
 
         <div
           {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)}
-          className={ax({ layout: 'bar', gap: 'xs' })}
+          className={ax({ layout: 'bar' })}
         >
           {showDots && total > 1 && childIds.map((id, i) => {
             const itemProps = tl.getItemProps(id) as React.HTMLAttributes<HTMLElement>
@@ -156,7 +156,7 @@ export function Carousel({
               <span
                 key={id}
                 {...itemProps}
-                className={`${ax({ square: 'sm', shape: 'pill', role: 'control', interactive: 'tab' })} item-indicator--page-dot${i === activeIndex ? ' item-indicator--page-dot-active' : ''}`}
+                className={`${ax({ role: 'control', interactive: 'tab' })} item-indicator--page-dot${i === activeIndex ? ' item-indicator--page-dot-active' : ''}`}
                 aria-label={`Slide ${i + 1}`}
               />
             )

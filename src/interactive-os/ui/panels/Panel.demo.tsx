@@ -11,9 +11,9 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ square: 'xl', width: 'md' })}>
+    <div className={ax({ width: 'md' })}>
       <Panel header="Panel Title" surface="display">
-        <div className={ax({ padding: 'md', textStyle: 'body' })}>
+        <div className={ax({ textStyle: 'body' })}>
           Panel content goes here.
         </div>
       </Panel>

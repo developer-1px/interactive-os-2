@@ -16,7 +16,7 @@ import { ROOT_ID } from '@os/schema'
 
 export function I18nTitleWidget() {
   return (
-    <span className={ax({ textStyle: 'label', text: 'primary' })}>i18n Editor</span>
+    <span className={ax({ textStyle: 'label' })}>i18n Editor</span>
   )
 }
 
@@ -35,24 +35,24 @@ export function I18nStatsWidget() {
   const overallPct = stats.total === 0 ? 0 : Math.round((stats.filled / stats.total) * 100)
 
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
-        <span className={ax({ textStyle: 'label', text: 'primary', weight: 'semi' })}>
+    <div className={ax({ layout: 'bar' })}>
+      <div className={ax({ layout: 'bar' })}>
+        <span className={ax({ textStyle: 'label' })}>
           {overallPct}%
         </span>
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        <span className={ax({ textStyle: 'caption' })}>
           {stats.filled}/{stats.total}
         </span>
         <div className={ax({ width: 'md' })}>
           <ProgressIndicator value={overallPct} />
         </div>
       </div>
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+      <div className={ax({ layout: 'bar' })}>
         {stats.perLocale.map((s, i) => {
           const pct = s.total === 0 ? 0 : Math.round((s.filled / s.total) * 100)
           const locale = LOCALES[i]
           return (
-            <span key={locale} className={ax({ textStyle: 'caption', text: pct === 100 ? 'muted' : 'primary' })}>
+            <span key={locale} className={ax({ textStyle: 'caption' })}>
               {locale?.toUpperCase()} {pct}%
             </span>
           )
@@ -91,10 +91,10 @@ export function I18nHelpWidget() {
   // @useState-hatch — help popover visibility
   const [open, setOpen] = useState(false)
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       {PRIMARY_HINTS.map(([keys, label]) => (
-        <span key={keys} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
-          <kbd className={ax({ textStyle: 'code', text: 'secondary' })}>{keys}</kbd>
+        <span key={keys} className={ax({ layout: 'bar', textStyle: 'caption' })}>
+          <kbd className={ax({ textStyle: 'code' })}>{keys}</kbd>
           <span>{label}</span>
         </span>
       ))}
@@ -102,8 +102,8 @@ export function I18nHelpWidget() {
         <HelpCircle size={14} />
       </Button>
       {open && (
-        <div className={ax({ surface: 'overlay', padding: 'md', shape: 'md', width: 'xl' })}>
-          <ul className={ax({ layout: 'stack', gap: 'xs', textStyle: 'caption' })}>
+        <div className={ax({ surface: 'overlay', width: 'xl' })}>
+          <ul className={ax({ layout: 'stack', textStyle: 'caption' })}>
             <li><kbd>Enter</kbd> edit cell</li>
             <li><kbd>F2</kbd> edit cell</li>
             <li><kbd>Tab</kbd> next cell edit</li>

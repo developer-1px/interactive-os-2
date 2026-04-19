@@ -65,36 +65,36 @@ export const layoutCommands = defineCommands({
   },
 
   /**
-   * splitHere — focused tabgroup을 direction 방향으로 split 하고, 현재 active tab을 새 pane에 복제한다.
+   * splitHere — focused tabgroup을 direction 방향으로 split 하고 새 pane에 탭을 추가한다.
+   * seed 미지정: cmux 규약대로 active tab 복제 (contentType/contentRef 동일).
+   * seed 지정: 새 pane을 해당 payload로 초기화 (예: playground의 빈 슬롯 분할).
    * FOCUS_STATE_ID에 focus가 없으면 no-op.
-   * cmux 규약: 분할 직후 양쪽 모두 컨텐츠를 보이게 해서 두 번째 tablist가 즉시 DOM에 나타난다.
    */
   splitHere: {
     type: 'layout:splitHere' as const,
-    create: (direction: 'horizontal' | 'vertical') => ({ direction }),
-    handler: (store, { direction }) => {
+    create: (direction: 'horizontal' | 'vertical', seed?: Partial<Pick<TabData, 'label' | 'contentType' | 'contentRef'>>) => ({ direction, seed }),
+    handler: (store, { direction, seed }) => {
       const focus = getEntityData<FocusStateData>(store, FOCUS_STATE_ID)
       if (!focus?.focusedTabgroupId) return store
       const tgId = focus.focusedTabgroupId
       const tg = getEntityData<TabGroupData>(store, tgId)
       const srcTabId = tg?.activeTabId
       const srcTabData = srcTabId ? getEntityData<TabData>(store, srcTabId) : undefined
-      // active tab이 없으면 (빈 tg) 그냥 빈 split만 생성
-      if (!srcTabData) {
+      // active tab도 없고 seed도 없으면 (빈 tg) 그냥 빈 split만 생성
+      if (!srcTabData && !seed) {
         return workspaceCommands.splitPane.handler(store, { paneId: tgId, direction })
       }
-      // active tab을 복제 — 새 tab id, 같은 content ref
-      const cloneId = `${srcTabId}-clone-${Date.now().toString(36)}`
-      const cloneTab: Entity = {
-        id: cloneId,
+      const newId = `t-${Date.now().toString(36)}`
+      const newTab: Entity = {
+        id: newId,
         data: {
           type: 'tab',
-          label: srcTabData.label,
-          contentType: srcTabData.contentType,
-          contentRef: srcTabData.contentRef,
+          label:       seed?.label       ?? srcTabData?.label       ?? 'Untitled',
+          contentType: seed?.contentType ?? srcTabData?.contentType ?? '',
+          contentRef:  seed?.contentRef  ?? srcTabData?.contentRef  ?? '',
         } as TabData,
       }
-      return splitAndAddTab(store, tgId, direction, cloneTab)
+      return splitAndAddTab(store, tgId, direction, newTab)
     },
   },
 
@@ -135,6 +135,16 @@ export const layoutCommands = defineCommands({
     type: 'layout:flashPane' as const,
     create: () => ({}),
     handler: (store) => store,
+  },
+
+  /**
+   * replaceStore — store 전체 교체. playground `layout_init`처럼 캔버스를 통째로 새 구조로
+   * 대체할 때 사용. 호출자가 보호 노드(composer/subtitle/__focus 등) 보존 책임을 짐.
+   */
+  replaceStore: {
+    type: 'layout:replaceStore' as const,
+    create: (next: NormalizedData) => ({ next }),
+    handler: (_store, { next }) => next,
   },
 })
 

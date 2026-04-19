@@ -15,7 +15,7 @@ export function RatingItem(
   return (
     <div
       {...props}
-      className={ax({ role: 'control', surface: 'ghost', interactive: 'check', layout: 'center' })}
+      className={ax({ role: 'item', surface: 'ghost', interactive: 'check', layout: 'center' })}
       data-focused={state.focused || undefined}
       aria-label={`${value}`}
     >

@@ -17,7 +17,7 @@ export function DatePickerCombobox() {
         onChange={setDate}
         aria-label="Date"
       />
-      {date && <p className={ax({ textStyle: 'caption', text: 'muted' })}>Selected: {date.toDateString()}</p>}
+      {date && <p className={ax({ textStyle: 'caption' })}>Selected: {date.toDateString()}</p>}
     </div>
   )
 }

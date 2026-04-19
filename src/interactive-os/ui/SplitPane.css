@@ -1,8 +1,9 @@
 @layer component {
-/* SplitPane — separator hit areas */
+/* SplitPane — separator는 "투명 gap". island 디자인에 따라 경계선 대신 여백이 분리 언어.
+ * hover/focus 시각 피드백은 sf-action 기본 규칙(ax hover 토큰)이 이미 소유. */
 .split-sep-h {
-  width: var(--border-width);
-  border-left: var(--border-width) solid var(--border-default);
+  width: var(--space-sm);
+  border: none;
 }
 
 .split-sep-h::before {
@@ -12,8 +13,8 @@
 }
 
 .split-sep-v {
-  height: var(--border-width);
-  border-top: var(--border-width) solid var(--border-default);
+  height: var(--space-sm);
+  border: none;
 }
 
 .split-sep-v::before {

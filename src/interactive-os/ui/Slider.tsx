@@ -52,7 +52,7 @@ export function Slider({
         {label && <span className={`slider-label ${ax({})}`}>{label}</span>}
         <div className={`slider-track ${ax({ flex: '1', placement: 'relative' })}`} ref={trackRef} onClick={handleTrackClick}>
           <div className={`slider-fill ${ax({ placement: 'top-start' })}`} style={{ width: `${pct}%`, height: '100%' }} />
-          <div className={`slider-thumb outline-none ${ax({ placement: 'top-start', shape: 'pill', border: 'strong' })}`} style={{ left: `${pct}%` }} />
+          <div className={`slider-thumb outline-none ${ax({ placement: 'top-start' })}`} style={{ left: `${pct}%` }} />
         </div>
         <span className={`slider-value tabular-nums ${ax({})}`}>{current}</span>
       </div>

@@ -22,7 +22,7 @@ export function PaginationItem(
   if (kind === 'ellipsis') {
     return (
       <span
-        className={ax({ role: 'control', surface: 'ghost' })}
+        className={ax({ role: 'item', surface: 'ghost' })}
         aria-hidden="true"
       >
         ...
@@ -34,7 +34,7 @@ export function PaginationItem(
     return (
       <button
         {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-        className={ax({ role: 'control', interactive: 'button', surface: 'ghost', content: 'icon' })}
+        className={ax({ role: 'item', interactive: 'button', surface: 'ghost', content: 'icon' })}
         disabled={isDisabled}
         aria-label={label}
       >
@@ -46,7 +46,7 @@ export function PaginationItem(
   return (
     <button
       {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-      className={ax({ role: 'control', interactive: 'button', surface: isCurrent ? 'action' : 'ghost', tone: isCurrent ? 'accent' : undefined })}
+      className={ax({ role: 'item', interactive: 'button', surface: isCurrent ? 'action' : 'ghost', tone: isCurrent ? 'accent' : undefined })}
       aria-current={isCurrent ? 'page' : undefined}
       disabled={isDisabled}
     >

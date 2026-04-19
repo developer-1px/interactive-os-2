@@ -14,6 +14,8 @@ interface TurnUsage {
   durationMs: number
 }
 
+export type ChatSessionKind = 'chat' | 'playground'
+
 interface ChatSession {
   id: string
   messages: ChatMessage[]
@@ -25,6 +27,7 @@ interface ChatSession {
   sdkSessionId: string
   model: string
   commands: string[]
+  kind: ChatSessionKind
 }
 
 // --- Session helpers (SSOT for defaults + patch) ---
@@ -33,6 +36,7 @@ function defaultSession(id: string, overrides?: Partial<ChatSession>): ChatSessi
   return {
     id, messages: [], state: 'idle', activity: 'idle',
     streamingText: '', thinkingText: '', usage: null, sdkSessionId: '', model: '', commands: [],
+    kind: 'chat',
     ...overrides,
   }
 }
@@ -120,13 +124,13 @@ interface ChatStoreState {
 
 const STORAGE_KEY = 'chat-sessions'
 
-interface PersistedSession { id: string; messages: ChatMessage[]; sdkSessionId: string; model: string }
+interface PersistedSession { id: string; messages: ChatMessage[]; sdkSessionId: string; model: string; kind: ChatSessionKind }
 
 function persist() {
   const data: PersistedSession[] = []
   for (const session of S.sessions.values()) {
     if (!session.sdkSessionId) continue
-    data.push({ id: session.id, messages: session.messages, sdkSessionId: session.sdkSessionId, model: session.model })
+    data.push({ id: session.id, messages: session.messages, sdkSessionId: session.sdkSessionId, model: session.model, kind: session.kind })
   }
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ activeSessionId: S.activeSessionId, sessions: data }))
@@ -218,8 +222,9 @@ function restoreSessions() {
   if (!persisted || persisted.sessions.length === 0) return
 
   for (const ps of persisted.sessions) {
-    S.sessions.set(ps.id, defaultSession(ps.id, { messages: ps.messages, sdkSessionId: ps.sdkSessionId, model: ps.model || '' }))
-    wsSend({ type: 'resume-session', localId: ps.id, sdkSessionId: ps.sdkSessionId })
+    const kind: ChatSessionKind = ps.kind ?? 'chat'
+    S.sessions.set(ps.id, defaultSession(ps.id, { messages: ps.messages, sdkSessionId: ps.sdkSessionId, model: ps.model || '', kind }))
+    wsSend({ type: 'resume-session', localId: ps.id, sdkSessionId: ps.sdkSessionId, kind })
   }
   S.activeSessionId = persisted.activeSessionId && S.sessions.has(persisted.activeSessionId)
     ? persisted.activeSessionId
@@ -243,13 +248,23 @@ export function hasSession(id: string): boolean {
   return S.sessions.has(id)
 }
 
-export function createSession(): string {
+export function createSession(opts?: { kind?: ChatSessionKind; setActive?: boolean }): string {
+  const kind: ChatSessionKind = opts?.kind ?? 'chat'
+  const setActive = opts?.setActive ?? true
   const localId = `session-${++sessionCounter}-${Date.now().toString(36)}`
-  S.sessions.set(localId, defaultSession(localId))
-  S.activeSessionId = localId
+  S.sessions.set(localId, defaultSession(localId, { kind }))
+  if (setActive) S.activeSessionId = localId
   notify()
-  wsSend({ type: 'create-session', localId })
+  wsSend({ type: 'create-session', localId, kind })
   return localId
+}
+
+/** kind 싱글톤 ensure — 같은 kind 세션이 있으면 재사용, 없으면 새로 생성. playground 라우트용. */
+export function ensureSession(kind: ChatSessionKind): string {
+  for (const s of S.sessions.values()) {
+    if (s.kind === kind) return s.id
+  }
+  return createSession({ kind, setActive: false })
 }
 
 export function sendMessage(sessionId: string, text: string) {

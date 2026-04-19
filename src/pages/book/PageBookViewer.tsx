@@ -8,7 +8,7 @@ import { ax } from '@styles/ax'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { definePage } from '@os/layout'
 import { updateEntityData } from '@os/store/createStore'
-import { buildBook, buildTocStore, type BookPage, type Chapter } from './bookContent'
+import { buildBook, buildTocStore, buildChapterStore, buildChapterPageStore, splitIntoSlides, type BookPage, type Chapter } from './bookContent'
 import { BookProvider, type BookContextValue } from './bookContext'
 import {
   addRecent,
@@ -37,7 +37,20 @@ export function loader() {
 
 const baseLayout = definePage({
   entities: {
-    root:             { data: { type: 'stack' as const, gap: 'md' as const }, children: ['reader', 'pill-float', 'nav-float', 'progress'] },
+    root:             { data: { type: 'split' as const, direction: 'horizontal' as const, sizes: ['200px', '240px', '1fr'], resizable: true }, children: ['chapter-panel', 'page-panel', 'reader-area'] },
+
+    // ── Left: Chapter list ──
+    'chapter-panel':  { data: { type: 'stack' as const }, children: ['chapter-header', 'chapter-list'] },
+    'chapter-header': { data: { type: 'widget' as const, widget: 'BookChapterHeader' } },
+    'chapter-list':   { data: { type: 'widget' as const, widget: 'BookChapterList' } },
+
+    // ── Middle: Page list within chapter ──
+    'page-panel':     { data: { type: 'stack' as const }, children: ['page-header', 'page-list'] },
+    'page-header':    { data: { type: 'widget' as const, widget: 'BookPageHeader' } },
+    'page-list':      { data: { type: 'widget' as const, widget: 'BookPageList' } },
+
+    // ── Right: Reader area ──
+    'reader-area':    { data: { type: 'stack' as const, gap: 'md' as const }, children: ['reader', 'pill-float', 'nav-float', 'progress'] },
     reader:           { data: { type: 'widget' as const, widget: 'BookReader' } },
     'pill-float':     { data: { type: 'floating' as const, anchor: 'float-top-start' as const }, children: ['pill'] },
     pill:             { data: { type: 'widget' as const, widget: 'BookPill' } },
@@ -56,6 +69,21 @@ const baseLayout = definePage({
   },
 })
 
+const slideLayout = definePage({
+  entities: {
+    root:             { data: { type: 'stack' as const }, children: ['slide-content', 'slide-footer-float', 'slide-progress'] },
+    'slide-content':  { data: { type: 'widget' as const, widget: 'SlideContent' } },
+    'slide-footer-float': { data: { type: 'floating' as const, anchor: 'float-bottom' as const }, children: ['slide-footer'] },
+    'slide-footer':   { data: { type: 'bar' as const, justify: 'between' as const, padding: 'lg' as const }, children: ['slide-prev', 'slide-info', 'slide-next'] },
+    'slide-prev':     { data: { type: 'widget' as const, widget: 'SlidePrevButton' } },
+    'slide-info':     { data: { type: 'widget' as const, widget: 'SlideInfo' } },
+    'slide-next':     { data: { type: 'widget' as const, widget: 'SlideNextButton' } },
+    'slide-progress': { data: { type: 'widget' as const, widget: 'SlideProgressBar' } },
+    'quick-open':     { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['qo-content'] },
+    'qo-content':     { data: { type: 'widget' as const, widget: 'BookQuickOpen' } },
+  },
+})
+
 // ── Main component ──
 
 export default function PageBookViewer() {
@@ -68,6 +96,8 @@ export default function PageBookViewer() {
   const [arrivedFromNext, setArrivedFromNext] = useState(false)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
   const [quickOpenFilter, setQuickOpenFilter] = useState('') // @useState-hatch
+  const [slideMode, setSlideMode] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0)
   const areaRef = useRef<HTMLDivElement>(null)
   const chromeVisible = true
 
@@ -102,6 +132,19 @@ export default function PageBookViewer() {
     if (page) addRecent(page.id)
   }, [page?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Chapter store (left panel) ──
+  const currentChapter = page ? chapters[page.chapterIndex] : undefined
+  const chapterStore = useMemo(
+    () => buildChapterStore(chapters, currentChapter?.id ?? ''),
+    [chapters, currentChapter?.id],
+  )
+
+  // ── Page list store (middle panel) ──
+  const chapterPageStore = useMemo(
+    () => buildChapterPageStore(currentChapter, page?.id ?? ''),
+    [currentChapter, page?.id],
+  )
+
   // ── TOC store ──
   const tocStore = useMemo(
     () => buildTocStore(chapters, page?.id ?? ''),
@@ -133,10 +176,63 @@ export default function PageBookViewer() {
     setArrivedFromNext, setSpread, setTotalSpreads,
   })
 
+  // ── 3-pane handlers (after goTo is available) ──
+  const handleChapterActivate = useCallback((chapterId: string) => {
+    const chapter = chapters.find(c => c.id === chapterId)
+    if (chapter && chapter.pages.length > 0) {
+      goTo(chapter.pages[0].pageIndex)
+    }
+  }, [chapters, goTo])
+
+  const handlePageListActivate = useCallback((nodeId: string) => {
+    const idx = pageIndexById.get(nodeId)
+    if (idx !== undefined) goTo(idx)
+  }, [pageIndexById, goTo])
+
+  // ── Slide computation ──
+  const slides = useMemo(() => page ? splitIntoSlides(page.content) : [], [page])
+  const totalSlides = slides.length
+
+  // Reset slide index on page change
+  useEffect(() => { setCurrentSlide(0) }, [currentPage])
+
+  const handleSlideNext = useCallback(() => {
+    if (currentSlide < totalSlides - 1) {
+      setCurrentSlide(s => s + 1)
+    } else if (currentPage < pages.length - 1) {
+      goTo(currentPage + 1)
+    }
+  }, [currentSlide, totalSlides, currentPage, pages.length, goTo])
+
+  const handleSlidePrev = useCallback(() => {
+    if (currentSlide > 0) {
+      setCurrentSlide(s => s - 1)
+    } else if (currentPage > 0) {
+      goTo(currentPage - 1)
+    }
+  }, [currentSlide, currentPage, goTo])
+
+  const handleSlideGoTo = useCallback((index: number) => {
+    if (index >= 0 && index < totalSlides) setCurrentSlide(index)
+  }, [totalSlides])
+
+  const handleToggleSlideMode = useCallback(() => {
+    setSlideMode(m => !m)
+    setCurrentSlide(0)
+  }, [])
+
   // ── Page-level keyMap ──
   const modalOpen = quickOpenVisible || tocOpen || layerOverlayVisible
   const keyMap = useMemo(() => ({
-    ...(modalOpen ? {} : {
+    ...(modalOpen ? {} : slideMode ? {
+      ArrowRight: defineRouteKey('slide:next', handleSlideNext, 'Slide'),
+      ArrowLeft: defineRouteKey('slide:prev', handleSlidePrev, 'Slide'),
+      ArrowDown: defineRouteKey('slide:next-alt', handleSlideNext, 'Slide'),
+      ArrowUp: defineRouteKey('slide:prev-alt', handleSlidePrev, 'Slide'),
+      Space: defineRouteKey('slide:next-space', handleSlideNext, 'Slide'),
+      Home: defineRouteKey('slide:first', () => setCurrentSlide(0), 'Slide'),
+      End: defineRouteKey('slide:last', () => setCurrentSlide(totalSlides - 1), 'Slide'),
+    } : {
       ArrowDown: defineRouteKey('book:next-page', () => {
         if (currentPage < pages.length - 1) goTo(currentPage + 1)
       }, 'Book'),
@@ -150,6 +246,7 @@ export default function PageBookViewer() {
         goTo(pages.length - 1)
       }, 'Book'),
     }),
+    'Mod+Shift+S': defineRouteKey('book:toggle-slide-mode', handleToggleSlideMode, 'Book'),
     'Mod+P': defineRouteKey('book:quick-open', () => {
       if (quickOpenVisible) closeQuickOpen()
       else openQuickOpen()
@@ -166,7 +263,7 @@ export default function PageBookViewer() {
       else if (quickOpenVisible) closeQuickOpen()
       else if (tocOpen) setTocOpen(false)
     }, 'Book'),
-  }), [currentPage, pages.length, goTo, openQuickOpen, handleToggleFavorite, quickOpenVisible, closeQuickOpen, tocOpen, modalOpen, layerOverlayVisible, closeLayerOverlay, openLayerOverlay, handleQuickOpenActivate])
+  }), [currentPage, pages.length, goTo, openQuickOpen, handleToggleFavorite, quickOpenVisible, closeQuickOpen, tocOpen, modalOpen, slideMode, handleSlideNext, handleSlidePrev, totalSlides, handleToggleSlideMode, layerOverlayVisible, closeLayerOverlay, openLayerOverlay, handleQuickOpenActivate])
 
   const prevPage = pages[currentPage - 1]
   const nextPage = pages[currentPage + 1]
@@ -175,7 +272,6 @@ export default function PageBookViewer() {
   const progressPercent = ((currentPage + 1) / pages.length) * 100
 
   // ── Chapter position ──
-  const currentChapter = page ? chapters[page.chapterIndex] : undefined
   const chapterName = currentChapter?.label ?? ''
   const chapterPageIndex = currentChapter ? currentPage - (pageIndexById.get(currentChapter.pages[0].id) ?? 0) : 0
   const chapterPageCount = currentChapter?.pages.length ?? 1
@@ -221,6 +317,19 @@ export default function PageBookViewer() {
     nextPage,
     spread,
     totalSpreads,
+    chapterStore,
+    chapterPageStore,
+    currentChapterLabel: currentChapter?.label ?? '',
+    onChapterActivate: handleChapterActivate,
+    onPageListActivate: handlePageListActivate,
+    slideMode,
+    slides,
+    currentSlide,
+    totalSlides,
+    onSlideNext: handleSlideNext,
+    onSlidePrev: handleSlidePrev,
+    onSlideGoTo: handleSlideGoTo,
+    onToggleSlideMode: handleToggleSlideMode,
     tocOpen,
     tocStore,
     onTocActivate: handleTocActivate,
@@ -239,13 +348,15 @@ export default function PageBookViewer() {
     layerNameInput,
     onLayerNameChange: setLayerNameInput,
     onLayerNameSubmit: handleLayerNameSubmit,
-  }), [page, currentPage, pages.length, linkTransform, arrivedFromNext, handleNextBoundary, handlePrevBoundary, handleSpreadChange, chromeVisible, currentIsFavorite, handleToggleFavorite, openToc, openLayerOverlay, openQuickOpen, layerCount, progressPercent, isFirstSpread, isLastSpread, prevPage, nextPage, spread, totalSpreads, tocOpen, tocStore, handleTocActivate, closeToc, quickOpenVisible, quickOpenStore, quickOpenFilter, handleQuickOpenActivate, closeQuickOpen, layerOverlayVisible, addToLayerStoreData, handleLayerActivate, closeLayerOverlay, layerNameMode, layerNameInput, handleLayerNameSubmit]) // eslint-disable-line react-hooks/exhaustive-deps
+  }), [page, currentPage, pages.length, linkTransform, arrivedFromNext, handleNextBoundary, handlePrevBoundary, handleSpreadChange, chromeVisible, currentIsFavorite, handleToggleFavorite, openToc, openLayerOverlay, openQuickOpen, layerCount, progressPercent, chapterName, isFirstSpread, isLastSpread, prevPage, nextPage, spread, totalSpreads, chapterStore, chapterPageStore, handleChapterActivate, handlePageListActivate, slideMode, slides, currentSlide, totalSlides, handleSlideNext, handleSlidePrev, handleSlideGoTo, handleToggleSlideMode, tocOpen, tocStore, handleTocActivate, closeToc, quickOpenVisible, quickOpenStore, quickOpenFilter, handleQuickOpenActivate, closeQuickOpen, layerOverlayVisible, addToLayerStoreData, handleLayerActivate, closeLayerOverlay, layerNameMode, layerNameInput, handleLayerNameSubmit]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (pages.length === 0) {
     return (
-      <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
-        <div className={`${ax({ layout: 'center', gap: 'lg', text: 'muted' })} h-full book-empty`}>
-          <BookOpen size={48} className={ax({ opacity: 'dim' })} />
+      <div className={`${ax({
+          role: 'control-group',
+        surface: 'base', width: 'full' })} h-full book`}>
+        <div className={`${ax({ layout: 'center' })} h-full book-empty`}>
+          <BookOpen size={48} className={ax({ })} />
           <span>No content found</span>
         </div>
       </div>
@@ -256,8 +367,10 @@ export default function PageBookViewer() {
     <AriaRoute keyMap={keyMap} label="Book">
       {/* ② flatlayout-pull-transition-prd.md — widget은 useBook()으로 pull */}
       <BookProvider value={bookCtx}>
-        <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
-          <div className={`${ax({ placement: 'relative', layout: 'stack', width: 'full', scroll: 'hidden' })} h-full book-page-area`} ref={areaRef}>
+        <div className={`${ax({
+            role: 'control-group',
+            surface: 'base', width: 'full' })} h-full book`}>
+          <div className={`${ax({ placement: 'relative', layout: 'stack', width: 'full' })} h-full book-page-area`} ref={areaRef}>
             <FlatLayout data={layoutData} registry={bookWidgets} aria-label="Book" />
           </div>
         </div>

@@ -15,10 +15,8 @@ export function Badge({ tone = 'neutral', variant = 'solid', children }: BadgePr
         role: 'badge',
         surface: variant === 'solid' ? 'action' : 'ghost',
         tone,
-        border: variant === 'outline' ? 'default' : undefined,
         content: 'text',
-        clamp: '1',
-        shape: 'pill',
+        clamp: '1'
       })}
     >
       {children}

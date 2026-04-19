@@ -37,6 +37,12 @@
   transition: width var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
+/* ── 3-pane panel headers ── */
+
+.book-panel-header {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
 /* ── TOC item indent ── */
 
 .book-toc-panel [data-indent] {

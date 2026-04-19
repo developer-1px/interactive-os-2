@@ -17,11 +17,9 @@ export function Skeleton({ width = 'full', height = 'sm', shape = 'rect' }: Skel
   return (
     <div
       className={ax({
+          role: 'control-group',
         surface: 'sunken',
-        motion: 'pulse',
-        shape: resolvedShape,
-        width: shape === 'circle' ? undefined : width,
-        square: height,
+        width: shape === 'circle' ? undefined : width
       })}
       aria-hidden="true"
     />

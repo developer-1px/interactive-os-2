@@ -86,6 +86,6 @@ BadgeCell, CodeCell, DocLinkCell, EditableCell, PhaseCell, SearchableCell, Summa
 
 ## plugins
 
-autoscroll, cellDragSelect, cellEdit, clipboard, combobox, crud, dnd, dragResize, edit, focusHistory, focusRecovery, form, history, rename, scope, scroll, search, spatial, typeahead, urlSync, useUrlSync, useSpatialNav, useVirtualScroll, virtualScroll, workspaceStore, zodSchema
+autoscroll, cellDragSelect, cellEdit, clipboard, combobox, crud, dnd, dragResize, edit, focusHistory, focusRecovery, form, history, rename, scope, scroll, search, spatial, typeahead, urlSync, useUrlSync, useSpatialNav, workspaceStore, zodSchema
 
 `plugins/{name}.ts`

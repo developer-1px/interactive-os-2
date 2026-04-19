@@ -34,11 +34,11 @@ const renderArticle = (
   return (
     <div
       {...props}
-      className={`${ax({ shape: 'sm', border: 'default', interactive: 'item' })} outline-none`}
+      className={`${ax({ interactive: 'item' })} outline-none`}
       data-focused={state.focused || undefined}
     >
-      <h3 className={`${ax({ textStyle: 'body', text: 'primary', weight: 'semi' })}`}>{label}</h3>
-      <p className={`${ax({ textStyle: 'body', text: 'secondary' })}`}>{body}</p>
+      <h3 className={`${ax({ textStyle: 'body' })}`}>{label}</h3>
+      <p className={`${ax({ textStyle: 'body' })}`}>{body}</p>
     </div>
   )
 }

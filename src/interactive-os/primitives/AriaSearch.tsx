@@ -34,17 +34,19 @@ function AriaSearch({ placeholder = 'Search...', className }: { placeholder?: st
     inputRef.current?.focus()
   }
 
-  const wrapperClass = `${ax({ layout: 'bar', gap: 'sm', padding: 'sm', surface: 'raised', border: 'default', shape: 'md' })}${className ? ` ${className}` : ''}`
+  const wrapperClass = `${ax({
+      role: 'control-group',
+    layout: 'bar', surface: 'raised' })}${className ? ` ${className}` : ''}`
 
   return (
     <div className={wrapperClass}>
-      <Search size={14} className={ax({ text: 'muted', flex: 'none' })} aria-hidden />
+      <Search size={14} className={ax({ flex: 'none' })} aria-hidden />
       <input
         ref={inputRef}
         type="text"
         placeholder={placeholder}
         aria-label={placeholder}
-        className={`${ax({ flex: '1', text: 'primary' })} bg-transparent border-none outline-none`}
+        className={`${ax({ flex: '1' })} bg-transparent border-none outline-none`}
         value={filterText}
         onChange={(e) => {
           ariaCtx.dispatch(searchCommands.setFilter(e.target.value))
@@ -66,12 +68,14 @@ function AriaSearch({ placeholder = 'Search...', className }: { placeholder?: st
           type="button"
           onClick={handleClear}
           aria-label="Clear search"
-          className={ax({ surface: 'ghost', shape: 'sm', padding: 'xs', layout: 'center', flex: 'none', text: 'muted' })}
+          className={ax({ surface: 'ghost', layout: 'center', flex: 'none' })}
         >
           <X size={14} aria-hidden />
         </button>
       )}
-      <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>
+      <kbd className={ax({
+          role: 'control-group',
+        surface: 'base', textStyle: 'code', flex: 'none', content: 'text' })}>
         {filterText ? 'ESC' : '⌘F'}
       </kbd>
     </div>

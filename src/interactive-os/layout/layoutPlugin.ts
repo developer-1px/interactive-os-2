@@ -13,11 +13,13 @@ export function layout() {
       setVisibility: layoutCommands.setVisibility,
       setHidden: layoutCommands.setHidden,
       setGap: layoutCommands.setGap,
+      updateNode: layoutCommands.updateNode,
       setFocus: layoutCommands.setFocus,
       splitHere: layoutCommands.splitHere,
       closeHere: layoutCommands.closeHere,
       focusDir: layoutCommands.focusDir,
       flashPane: layoutCommands.flashPane,
+      replaceStore: layoutCommands.replaceStore,
       // cmux-layout-prd — workspace 커맨드 re-export.
       // definePlugin의 `requires`는 middleware만 병합하고 commands는 병합하지 않으므로
       // chatKeybindings가 dispatch하는 addTab/nextTab/prevTab/gotoTab/removeTab/setActiveTab가

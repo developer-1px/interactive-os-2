@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <StepIndicator step={1} />
       <StepIndicator step={2} />
       <StepIndicator step={3} completed />

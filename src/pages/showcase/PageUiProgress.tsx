@@ -26,7 +26,7 @@ const STAGE_TONE = {
 function DetailPanel({ data, rowId, colKey }: { data: Parameters<typeof getProgressStats>[0]; rowId: string | null; colKey: string | null }) {
   if (!rowId) {
     return (
-      <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'body' })}>
+      <div className={ax({ textStyle: 'body' })}>
         Select a cell to see details
       </div>
     )
@@ -42,19 +42,19 @@ function DetailPanel({ data, rowId, colKey }: { data: Parameters<typeof getProgr
   const tier = nodeData.tier as string
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md', padding: 'md' })}>
-      <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{label}</span>
-      {catalog && <span className={ax({ textStyle: 'body', text: 'secondary' })}>{catalog}</span>}
+    <div className={ax({ layout: 'stack' })}>
+      <span className={ax({ textStyle: 'label' })}>{label}</span>
+      {catalog && <span className={ax({ textStyle: 'body' })}>{catalog}</span>}
       {tier === 'component' && stages && (
-        <div className={ax({ layout: 'stack', gap: 'sm' })}>
+        <div className={ax({ layout: 'stack' })}>
           {colKey && colKey !== 'feature' && (
             <span className={ax({ textStyle: 'caption', tone: stages[colKey]?.status === 'done' ? 'success' : 'neutral' })}>
               {colKey}: {stages[colKey]?.status ?? 'unknown'}
             </span>
           )}
-          <div className={ax({ layout: 'stack', gap: 'xs' })}>
+          <div className={ax({ layout: 'stack' })}>
             {(['recipe', 'demo', 'test', 'doc'] as const).map(key => (
-              <span key={key} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: stages[key]?.status === 'done' ? 'primary' : 'muted' })}>
+              <span key={key} className={ax({ layout: 'bar', textStyle: 'caption' })}>
                 <StatusIndicator tone={STAGE_TONE[stages[key]?.status ?? 'missing']} />
                 {key}
               </span>
@@ -73,14 +73,14 @@ function SummaryBar({ data }: { data: Parameters<typeof getProgressStats>[0] }) 
   const pct = stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0
 
   return (
-    <span className={ax({ layout: 'bar', gap: 'md' })}>
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+    <span className={ax({ layout: 'bar' })}>
+      <span className={ax({ textStyle: 'caption' })}>
         {stats.done}/{stats.total} ({pct}%)
       </span>
       {(['recipe', 'demo', 'test', 'doc'] as const).map(key => {
         const s = stats.byStage[key]
         return (
-          <span key={key} className={ax({ textStyle: 'caption', text: 'muted' })}>
+          <span key={key} className={ax({ textStyle: 'caption' })}>
             {key}: {s.done}/{s.total}
           </span>
         )
@@ -108,7 +108,7 @@ export default function PageUiProgress() {
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
-        <span className={ax({ textStyle: 'label', weight: 'semi' })}>UI Component Progress</span>
+        <span className={ax({ textStyle: 'label' })}>UI Component Progress</span>
         <SummaryBar data={data} />
       </PanelHeader>
 

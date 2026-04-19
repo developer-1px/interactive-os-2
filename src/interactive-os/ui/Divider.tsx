@@ -3,6 +3,6 @@ import { ax } from '@styles/ax'
 
 export function Divider({ direction = 'horizontal' }: { direction?: 'horizontal' | 'vertical' }) {
   return direction === 'horizontal'
-    ? <div className={ax({ border: 'bottom', width: 'full' })} role="separator" />
-    : <div className={ax({ border: 'end' })} role="separator" style={{ alignSelf: 'stretch' }} />
+    ? <div className={ax({ width: 'full' })} role="separator" />
+    : <div className={ax({ })} role="separator" style={{ alignSelf: 'stretch' }} />
 }

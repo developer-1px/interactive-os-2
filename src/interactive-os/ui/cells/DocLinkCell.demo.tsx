@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'sm' })}>
+    <div className={ax({ layout: 'stack' })}>
       <DocLinkCell docs={[
         { label: 'PRD', path: '/docs/prd.md' },
         { label: 'Design', path: '/docs/design.md' },

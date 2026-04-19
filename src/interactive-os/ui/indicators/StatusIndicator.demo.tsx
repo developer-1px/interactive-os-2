@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div className={ax({ layout: 'row' })}>
       <StatusIndicator tone="info" />
       <StatusIndicator tone="success" />
       <StatusIndicator tone="warning" />

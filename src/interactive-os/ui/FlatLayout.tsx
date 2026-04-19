@@ -1,15 +1,17 @@
-// ② flat-layout-engine-prd.md  ② flatlayout-resizable-split-prd.md  ② cmux-layout-prd.md
-import React, { useMemo, useRef, useCallback } from 'react'
+// ② flat-layout-engine-prd.md  ② flatlayout-resizable-split-prd.md  ② cmux-layout-prd.md  ② inspectorDefinePagePanelPrd.md
+import React, { useId, useEffect, useMemo, useRef, useCallback } from 'react'
 import type { NormalizedData, PaneSize } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { getChildren, getEntityData } from '@os/store/createStore'
 import type { Plugin, Command } from '@os/engine/types'
 import { useAria } from '@os/primitives/useAria'
+import { registerFlatLayout, unregisterFlatLayout } from '@os/primitives/flatLayoutRegistry'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
 import { layout } from '@os/layout/layoutPlugin'
 import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode, FloatingNode, TabgroupNode, TabNode } from '@os/layout/flatLayout'
-import { layoutCommands } from '@os/layout/layoutCommands'
+import { resolveContainerPreset } from '@os/layout/containerPreset'
+import { layoutCommands, FOCUS_STATE_ID, type FocusStateData } from '@os/layout/layoutCommands'
 import { ax, type Axes } from '@styles/ax'
 import styles from './FlatLayout.module.css'
 import { NavLayoutContext } from './NavLayoutContext'
@@ -34,13 +36,10 @@ export const useFlatLayoutSurface = (): FlatLayoutSurfaceCtx | null =>
 
 // ── Types ─────────────────────────────────────────────
 
-type LayoutSurface = 'sunken' | 'base' | 'raised' | 'overlay'
-
 interface LayoutRenderContext {
   nodeId: string
   store: NormalizedData
   registry: WidgetRegistry
-  surface?: LayoutSurface
   parentType?: string
   renderNode: (nodeId: string, parentType?: string) => React.ReactNode
   refCallback: (nodeId: string) => (el: HTMLElement | null) => void
@@ -70,7 +69,7 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
           {renderNode(navId, 'nav')}
         </div>
         <div
-          className={`${styles.splitPane} ${styles.navContent} ${ax({ padding: 'md' })}`}
+          className={`${styles.splitPane} ${styles.navContent} ${ax({ })}`}
           style={{ '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties}
         >
           {contentIds[activeIndex] ? renderNode(contentIds[activeIndex], 'nav') : null}
@@ -83,16 +82,20 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
 // ── OCP renderer map ──────────────────────────────────
 
 const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactNode> = {
-  split: ({ nodeId, store, surface, renderNode, refCallback, dispatch }) => {
+  split: ({ nodeId, store, parentType, renderNode, refCallback, dispatch }) => {
     const node = getEntityData<SplitNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
     const isHorizontal = node.direction === 'horizontal'
 
+    // Container preset — root split만 바깥 padding 소유
+    const preset = resolveContainerPreset('split', parentType ? 'nested' : 'root')
+    const padding = node.padding ?? preset.padding
+
     // ② flatlayout-resizable-split-prd.md — resizable: false → 고정 비율
     if (node.resizable === false) {
       return (
-        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'stack', width: 'full', flex: '1', scroll: 'hidden', surface })}>
+        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'stack', width: 'full', flex: '1', ...(padding ? { padding } : {}) })}>
           {childIds.map((childId, i) => {
             const size = node.sizes[i]
             const isFlex = size === 'flex' || size === undefined
@@ -104,7 +107,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
                 : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
 
             return (
-              <div key={childId} className={`${ax({ scroll: 'hidden' })} ${isAuto ? '' : styles.splitPane}`} style={style}>
+              <div key={childId} className={`${ax({ })} ${isAuto ? '' : styles.splitPane}`} style={style}>
                 {renderNode(childId, 'split')}
               </div>
             )
@@ -119,7 +122,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     }
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ flex: '1', layout: 'fill', scroll: 'hidden', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ flex: '1', layout: 'fill', ...(padding ? { padding } : {}) })}>
         <SplitPane direction={node.direction} sizes={node.sizes} onResize={handleResize}>
           {childIds.map((childId) => renderNode(childId, 'split'))}
         </SplitPane>
@@ -127,13 +130,16 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  stack: ({ nodeId, store, surface, renderNode, refCallback }) => {
+  stack: ({ nodeId, store, renderNode, refCallback }) => {
     const node = getEntityData<StackNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
+    const preset = resolveContainerPreset('stack')
+    const gap = node.gap ?? preset.gap
+    const padding = node.padding ?? preset.padding
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', gap: node.gap ?? 'md', width: 'full', flex: '1', scroll: 'hidden', surface, ...(node.padding ? { padding: node.padding } : {}) })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', width: 'full', flex: '1', ...(gap ? { gap } : {}), ...(padding ? { padding } : {}) })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'stack')}</React.Fragment>
         ))}
@@ -141,14 +147,16 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  grid: ({ nodeId, store, surface, renderNode, refCallback }) => {
+  grid: ({ nodeId, store, renderNode, refCallback }) => {
     const node = getEntityData<GridNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
     const layoutValue = `grid-${node.columns}` as 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'
+    const preset = resolveContainerPreset('grid')
+    const gap = node.gap ?? preset.gap
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: layoutValue, gap: node.gap ?? 'md', width: 'full', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: layoutValue, width: 'full', ...(gap ? { gap } : {}) })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'grid')}</React.Fragment>
         ))}
@@ -156,14 +164,17 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  bar: ({ nodeId, store, surface, renderNode, refCallback }) => {
+  bar: ({ nodeId, store, renderNode, refCallback }) => {
     const node = getEntityData<BarNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
     const layout = node.justify === 'between' ? 'spread' as const : 'bar' as const
+    const preset = resolveContainerPreset('bar')
+    const gap = node.gap ?? preset.gap
+    const padding = node.padding ?? preset.padding
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', surface, ...(node.gap ? { gap: node.gap } : {}), ...(node.padding ? { padding: node.padding } : {}) })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', ...(gap ? { gap } : {}), ...(padding ? { padding } : {}) })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'bar')}</React.Fragment>
         ))}
@@ -171,7 +182,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  overlay: ({ nodeId, store, surface, renderNode, refCallback }) => {
+  overlay: ({ nodeId, store, renderNode, refCallback }) => {
     const node = getEntityData<OverlayNode>(store, nodeId)
     if (!node || !node.visible) return null
     const childIds = getChildren(store, nodeId)
@@ -184,7 +195,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const pl = (node.placement ?? defaultPlacement[node.overlayType] ?? 'center') as Axes['placement']
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ placement: pl, surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ placement: pl })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'overlay')}</React.Fragment>
         ))}
@@ -214,7 +225,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  tabgroup: ({ nodeId, store, surface, renderNode, refCallback, dispatch }) => {
+  tabgroup: ({ nodeId, store, renderNode, refCallback, dispatch }) => {
     const node = getEntityData<TabgroupNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
@@ -222,6 +233,10 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const activeTabId = node.activeTabId && childIds.includes(node.activeTabId)
       ? node.activeTabId
       : childIds[0]!
+
+    // 현재 __focus된 tabgroup인지 판별 — CSS가 outline 표시에 사용.
+    const focusState = getEntityData<FocusStateData>(store, FOCUS_STATE_ID)
+    const isFocused = focusState?.focusedTabgroupId === nodeId
 
     // ② cmux-layout-prd — external focus sync.
     // useAria는 data.entities[FOCUS_ID]가 있을 때만 external focus 변경을 전파한다.
@@ -240,7 +255,8 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div
         ref={refCallback(nodeId)}
-        className={ax({ layout: 'stack', width: 'full', flex: '1', surface })}
+        className={`${ax({ layout: 'stack', width: 'full', flex: '1' })} ${styles.tabgroupRoot}`}
+        data-tabgroup-focused={isFocused || undefined}
         onPointerDownCapture={() => dispatch(layoutCommands.setFocus(nodeId, activeTabId))}
       >
         <div className={ax({ layout: 'bar', width: 'full' })}>
@@ -295,14 +311,14 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  section: ({ nodeId, store, surface, renderNode, refCallback }) => {
+  section: ({ nodeId, store, renderNode, refCallback }) => {
     const node = getEntityData<SectionNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', gap: 'md', width: 'full', surface })}>
-        <div className={ax({ layout: 'spread', width: 'full', padding: 'sm' })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', width: 'full' })}>
+        <div className={ax({ layout: 'spread', width: 'full' })}>
           <span className={ax({ textStyle: 'section',  })}>{node.title}</span>
           {node.count != null && (
             <span className={ax({ textStyle: 'caption',  })}>{node.count}</span>
@@ -329,14 +345,16 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  widget: ({ nodeId, store, surface, parentType, registry, refCallback, renderNode }) => {
+  widget: ({ nodeId, store, parentType, registry, refCallback, renderNode }) => {
     const node = getEntityData<WidgetNode>(store, nodeId)
     if (!node) return null
     const Component = resolveWidget(registry, node.widget)
 
     if (!Component) {
       return (
-        <div className={ax({ surface: 'sunken', padding: 'sm', textStyle: 'caption',  })}>
+        <div className={ax({
+            role: 'control-group',
+            surface: 'sunken', textStyle: 'caption',  })}>
           Unknown widget: {node.widget}
         </div>
       )
@@ -350,8 +368,11 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const isSplitChild = parentType === 'split' || parentType === 'nav'
     const fillSlot = isSplitChild || parentType === 'tab' || (node as Record<string, unknown>).fill
 
+    const widgetPreset = resolveContainerPreset('widget')
+    const padding = node.padding ?? widgetPreset.padding
+
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', surface, ...(fillSlot ? { layout: 'fill' } : { scroll: 'hidden' }) })} ${isSplitChild ? styles.splitChild : ''}`}>
+      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', ...(fillSlot ? { layout: 'fill' } : { scroll: 'hidden' }), ...(padding ? { padding } : {}) })} ${isSplitChild ? styles.splitChild : ''}`}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )
@@ -361,6 +382,8 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
 // ── FlatLayout component ──────────────────────────────
 
 interface FlatLayoutProps {
+  /** ② inspectorDefinePagePanelPrd.md — 레지스트리 key. 미지정 시 useId()로 자동 생성 */
+  id?: string
   data: NormalizedData
   registry: WidgetRegistry
   plugins?: Plugin[]
@@ -370,7 +393,11 @@ interface FlatLayoutProps {
   children?: React.ReactNode
 }
 
-export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'aria-label': ariaLabel, children }: FlatLayoutProps) {
+export function FlatLayout({ id: propId, data, registry, plugins: extraPlugins, onChange, 'aria-label': ariaLabel, children }: FlatLayoutProps) {
+  const fallbackId = useId()
+  const instanceId = propId ?? fallbackId
+  const listenersRef = useRef(new Set<() => void>())
+
   const allPlugins = useMemo(
     () => [layout(), ...(extraPlugins ?? [])],
     [extraPlugins],
@@ -395,6 +422,23 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
   const store = aria.getStore()
   const layoutCtx = useMemo(() => ({ store, dispatch: aria.dispatch, getNodeElement }), [store, aria.dispatch, getNodeElement])
 
+  // ② inspectorDefinePagePanelPrd.md — store 변경 시 레지스트리 구독자에게 전파
+  useEffect(() => { listenersRef.current.forEach(fn => fn()) }, [store])
+
+  // ② inspectorDefinePagePanelPrd.md — FlatLayout 인스턴스 레지스트리 등록
+  useEffect(() => {
+    registerFlatLayout(instanceId, {
+      getStore: () => store,
+      dispatch: aria.dispatch,
+      getNodeElement,
+      subscribe: (fn) => {
+        listenersRef.current.add(fn)
+        return () => { listenersRef.current.delete(fn) }
+      },
+    })
+    return () => unregisterFlatLayout(instanceId)
+  }, [instanceId, store, aria.dispatch, getNodeElement])
+
   const renderNode = (nodeId: string, parentType?: string): React.ReactNode => {
     const entity = store.entities[nodeId]
     if (!entity) return null
@@ -407,8 +451,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
     const renderer = layoutRenderers[type]
     if (!renderer) return null
 
-    const surface = nodeData?.surface as LayoutSurface | undefined
-    const ctx: LayoutRenderContext = { nodeId, store, registry, surface, parentType, renderNode, refCallback, dispatch: aria.dispatch }
+    const ctx: LayoutRenderContext = { nodeId, store, registry, parentType, renderNode, refCallback, dispatch: aria.dispatch }
     return renderer(ctx)
   }
 

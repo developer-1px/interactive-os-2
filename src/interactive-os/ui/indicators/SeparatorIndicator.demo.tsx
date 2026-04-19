@@ -11,9 +11,9 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div className={ax({ layout: 'stack' })}>
       <SeparatorIndicator orientation="horizontal" />
-      <div className={ax({ layout: 'bar', gap: 'md' })}>
+      <div className={ax({ layout: 'bar' })}>
         <span>Left</span>
         <SeparatorIndicator orientation="vertical" />
         <span>Right</span>

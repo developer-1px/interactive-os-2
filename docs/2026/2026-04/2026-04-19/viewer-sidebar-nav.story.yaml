@@ -1,0 +1,45 @@
+title: "사이드바 네비게이션 (Recent / Favorites)"
+number: 6
+group: Viewer
+scope:
+  description: |
+    좌측 사이드바에서 Recent(Today/Yesterday) · Favorites(/·src·docs·UI·screenshots) ·
+    Knowledge 그룹을 전환한다. 활성화 시 트리 루트 교체 + URL 갱신.
+  design: /screenshots/viewer-after-ghost-fix.png
+
+behaviors:
+  - given: 초기 진입 (URL 세그먼트 없음)
+    when: Viewer 마운트
+    then: Favorites.src가 기본 활성 루트로 선택
+    status: done
+
+  - given: 사이드바의 Favorites 항목
+    when: 클릭 또는 Enter
+    then: 해당 루트의 트리를 fetch · 교체, URL /viewer/{id} 갱신
+    status: done
+
+  - given: Recent.Today 선택
+    when: 트리 로드
+    then: docs/YYYY/YYYY-MM/YYYY-MM-DD/ 폴더 트리 표시
+    status: done
+
+  - given: 사이드바 항목 간 이동
+    when: ↓ / ↑ 방향키
+    then: 그룹 경계 넘나들며 focus 이동 (group aware)
+    status: done
+
+  - given: 현재 루트가 사이드바 항목과 매칭
+    when: 트리 렌더
+    then: 해당 사이드바 항목이 selected 표시 (active 상태)
+    status: wip
+
+  - given: Favorites 커스터마이징
+    when: 사용자 루트 추가/삭제 요청
+    then: 사용자 정의 Favorites 영속
+    status: todo
+
+decisions:
+  - title: Recent = 날짜 계산으로 파생
+    why: Today/Yesterday는 진입 시점의 날짜로 동적 계산되어야 자정 지난 뒤에도 올바름
+  - title: Knowledge를 별도 그룹으로 분리
+    why: 물리 폴더(Favorites)와 논리 그룹(Knowledge)은 IA 층위가 다름. 한 리스트에 섞으면 멘탈 모델 혼탁

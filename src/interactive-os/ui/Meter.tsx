@@ -15,12 +15,12 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const max = (data?.max as number) ?? 100
   const pct = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0
   return (
-    <div {...props} className={ax({ layout: 'stack', gap: 'xs' })}>
+    <div {...props} className={ax({ layout: 'stack' })}>
       <div className={ax({ layout: 'spread' })}>
         <span className={ax({ textStyle: 'caption',  })}>{label}</span>
         <span className={ax({ textStyle: 'caption',  })}>{Math.round(pct)}%</span>
       </div>
-      <div className={`${ax({ width: 'full', scroll: 'hidden' })} item-indicator--progress`}>
+      <div className={`${ax({ width: 'full' })} item-indicator--progress`}>
         <div className="h-full item-indicator--progress-fill" style={{ width: `${pct}%` }} />
       </div>
     </div>

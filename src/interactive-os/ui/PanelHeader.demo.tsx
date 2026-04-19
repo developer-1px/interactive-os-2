@@ -11,12 +11,14 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ surface: 'raised', layout: 'stack', width: 'md', shape: 'md', scroll: 'hidden' })}>
+    <div className={ax({
+        role: 'control-group',
+        surface: 'raised', layout: 'stack', width: 'md' })}>
       <PanelHeader>
         <span>Explorer</span>
         <span className={ax({})}>3 files</span>
       </PanelHeader>
-      <div className={ax({ padding: 'md', textStyle: 'body' })}>
+      <div className={ax({ textStyle: 'body' })}>
         Panel content area
       </div>
     </div>

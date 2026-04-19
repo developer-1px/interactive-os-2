@@ -50,7 +50,7 @@ const consecutiveDeleted = new Map<number, HighlightTone>([
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'stack', gap: 'lg' })}>
+    <div className={ax({ layout: 'stack' })}>
       <Section label="preset=doc (default) — filename + region landmark">
         <CodeViewer code={code} filename="example.ts" preset="doc" />
       </Section>

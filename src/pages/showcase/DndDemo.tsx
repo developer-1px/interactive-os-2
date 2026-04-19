@@ -43,7 +43,7 @@ export default function DndDemo() {
         <kbd>Alt+<Right /></kbd> <span className="key-hint">move in</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <TreeGrid
           data={data}
           onChange={setData}

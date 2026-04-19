@@ -67,10 +67,12 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${ax({ layout: 'bar', gap: 'sm', weight: 'semi', text: 'primary', padding: 'sm', content: 'text', surface: 'sunken', interactive: 'item', shape: 'md', border: 'default' })} cursor-default`}
+        className={`${ax({
+            role: 'control-group',
+            layout: 'bar', content: 'text', surface: 'sunken', interactive: 'item' })} cursor-default`}
         data-focused={state.focused || undefined}
       >
-        <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">
+        <span className={ax({ textStyle: 'caption' })} aria-hidden="true">
           {state.expanded ? '\u25BC' : '\u25B6'}
         </span>
         <span>{label}</span>
@@ -79,7 +81,7 @@ const renderItem = (
   }
 
   return (
-    <div {...props} className={ax({ textStyle: 'body', text: 'secondary', padding: 'sm', content: 'text', border: 'default' })}>
+    <div {...props} className={ax({ textStyle: 'body', content: 'text' })}>
       {label}
     </div>
   )

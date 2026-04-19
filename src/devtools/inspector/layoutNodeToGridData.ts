@@ -2,8 +2,8 @@
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 
-/** MVP 편집 대상 — LayoutBase 4축 (discuss 질문 3 C 선택) */
-export const EDITABLE_KEYS = ['surface', 'padding', 'hidden', 'gap'] as const
+/** MVP 편집 대상 — definePage가 소유하는 배치/가시성 축만. surface는 ax()·테마 소유 */
+export const EDITABLE_KEYS = ['padding', 'hidden', 'gap'] as const
 export type EditableKey = typeof EDITABLE_KEYS[number]
 
 /**
@@ -30,7 +30,7 @@ export function layoutNodeToGridData(nodeData: Record<string, unknown>): Normali
 
 /**
  * TreeGrid onChange에서 받은 갱신 store → LayoutNode patch (부분).
- * 값 파싱: surface/padding/gap은 enum 문자열 그대로, hidden은 'true'→true/'false'→false.
+ * 값 파싱: padding/gap은 enum 문자열 그대로, hidden은 'true'→true/'false'→false.
  * 빈 문자열은 해당 키를 제거(undefined)로 해석.
  *
  * @invariant EDITABLE_KEYS에 없는 키는 patch에 포함하지 않는다

@@ -43,7 +43,7 @@ export default function ClipboardDemo() {
         <kbd>⌘V</kbd> <span className="key-hint">paste</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <TreeGrid
           data={data}
           onChange={setData}

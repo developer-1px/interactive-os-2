@@ -60,7 +60,7 @@ function TagList({ value }: { value: unknown }) {
   const tags = toTagArray(value)
   if (tags.length === 0) return null
   return (
-    <div className={ax({ layout: 'wrap', gap: 'xs' })}>
+    <div className={ax({ layout: 'wrap' })}>
       {tags.map((v, i) => <Badge key={i} variant="outline">{v}</Badge>)}
     </div>
   )
@@ -102,7 +102,7 @@ function renderValue(_key: string, value: unknown, cat: Category) {
 
   if (Array.isArray(value)) {
     return (
-      <div className={ax({ layout: 'wrap', gap: 'xs' })}>
+      <div className={ax({ layout: 'wrap' })}>
         {value.map((v, i) => <Badge key={i} variant="outline">{String(v)}</Badge>)}
       </div>
     )
@@ -115,7 +115,7 @@ function renderValue(_key: string, value: unknown, cat: Category) {
 
 function Row({ keyName, value, cat }: { keyName: string; value: unknown; cat: Category }) {
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div className={ax({ layout: 'row' })}>
       <span className={`${styles.label} ${ax({ textStyle: 'caption', flex: 'none' })}`}>{keyName}</span>
       <div className={ax({ flex: '1' })}>{renderValue(keyName, value, cat)}</div>
     </div>
@@ -145,7 +145,9 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
   const headerLabel = typeof title === 'string' ? title : 'Properties'
 
   return (
-    <section className={ax({ surface: 'sunken', shape: 'md', layout: 'stack', gap: 'sm', padding: 'md' })}>
+    <section className={ax({
+        role: 'control-group',
+        surface: 'sunken', layout: 'stack' })}>
       <button
         type="button"
         onClick={handleToggle}
@@ -165,7 +167,7 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
             </div>
           )}
           {(byline.length > 0 || others.length > 0) && (
-            <div className={ax({ layout: 'stack', gap: 'xs' })}>
+            <div className={ax({ layout: 'stack' })}>
               {[...byline, ...others].map(({ key, value, cat }) => (
                 <Row key={key} keyName={key} value={value} cat={cat} />
               ))}

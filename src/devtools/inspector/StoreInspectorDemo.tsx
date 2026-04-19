@@ -60,14 +60,14 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
   return (
     <div
       {...props}
-      className={`${props.className ?? ''} inspector-item ${ax({ layout: 'bar', gap: 'xs', textStyle: 'code', state: state.focused ? 'focused' : undefined })}`}
+      className={`${props.className ?? ''} inspector-item ${ax({ layout: 'bar', textStyle: 'code' })}`}
       style={{ '--_indent': `${indent}px` } as React.CSSProperties}
       data-focused={state.focused || undefined}
     >
-      <span className={ax({ opacity: 'dim', layout: 'center' })}>
+      <span className={ax({ layout: 'center' })}>
         {hasChildren ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
       </span>
-      <span className={ax({ opacity: 'faint', textStyle: 'caption' })}>{type === 'folder' ? <Folder size={12} /> : <File size={12} />}</span>
+      <span className={ax({ textStyle: 'caption' })}>{type === 'folder' ? <Folder size={12} /> : <File size={12} />}</span>
       <span>{name}</span>
     </div>
   )
@@ -124,12 +124,12 @@ export default function StoreInspectorDemo() {
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
 
-      <div className={`card ${ax({ scroll: 'hidden' })}`}>
+      <div className={`card ${ax({ })}`}>
         <div className={`store-inspector-split grid`}>
 
           {/* Editor panel */}
-          <div className={ax({ scroll: 'auto' })}>
-            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Editor</div>
+          <div className={ax({ })}>
+            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Editor</div>
             <Aria
               pattern={tree}
               data={data}
@@ -144,8 +144,8 @@ export default function StoreInspectorDemo() {
           </div>
 
           {/* Inspector panel */}
-          <div className={ax({ scroll: 'auto' })}>
-            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Inspector — NormalizedData</div>
+          <div className={ax({ })}>
+            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}
               plugins={inspectorPlugins}
@@ -156,21 +156,21 @@ export default function StoreInspectorDemo() {
 
           {/* Log panel */}
           <div
-            className={`${ax({ scroll: 'y' })} store-inspector-log`}
+            className={`${ax({ })} store-inspector-log`}
             ref={logRef}
             aria-label="Operation Log"
           >
-            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Operation Log</div>
+            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Operation Log</div>
             {log.length === 0 ? (
-              <div className={ax({ opacity: 'faint' })}>Interact with the editor to see operations here.</div>
+              <div className={ax({ })}>Interact with the editor to see operations here.</div>
             ) : (
               log.map((entry) => (
                 <div
                   key={entry.seq}
-                  className={`${ax({ opacity: 'dim', clamp: '1' })} store-inspector-log-entry${entry.kind !== 'unhandled-key' && entry.parent != null ? ` ${ax({ padding: 'md' })}` : ''}`}
+                  className={`${ax({ clamp: '1' })} store-inspector-log-entry${entry.kind !== 'unhandled-key' && entry.parent != null ? ` ${ax({ })}` : ''}`}
                   {...(entry.kind !== 'unhandled-key' && entry.parent != null ? { 'data-batch-child': '' } : {})}
                 >
-                  <span className={ax({ text: 'muted' })}>#{entry.seq}</span>{' '}
+                  <span className={ax({ })}>#{entry.seq}</span>{' '}
                   {entry.kind === 'unhandled-key' ? (
                     <>
                       <span className={ax({ tone: 'warning-dim' })}>unhandled</span>{' '}

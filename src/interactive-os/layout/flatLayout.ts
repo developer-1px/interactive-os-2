@@ -6,9 +6,8 @@ import { createStore } from '../store/createStore'
 
 // ── Layout node types ─────────────────────────────────
 
-/** 모든 레이아웃 노드의 공통 속성 — XY 배치 + Z 깊이 */
+/** 모든 레이아웃 노드의 공통 속성 — 배치 + 가시성만. surface/재질은 ax()·테마의 책임 */
 export interface LayoutBase extends Record<string, unknown> {
-  surface?: 'sunken' | 'base' | 'raised' | 'overlay'
   hidden?: boolean
   padding?: 'xs' | 'sm' | 'md' | 'lg'
 }

@@ -31,7 +31,7 @@ const renderMenuItem = (
   return (
     <div
       {...props}
-      className={`${ax({ layout: 'bar', textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })} cursor-default`}
+      className={`${ax({ layout: 'bar', textStyle: 'body', content: 'text', interactive: 'item' })} cursor-default`}
       data-focused={state.focused || undefined}
     >
       {label}

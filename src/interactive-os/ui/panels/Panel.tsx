@@ -14,7 +14,7 @@ interface PanelProps {
 
 export function Panel({ header, surface, children, className, scroll = true }: PanelProps) {
   return (
-    <div className={`${ax({ layout: 'fill', surface })}${className ? ` ${className}` : ''}`}>
+    <div className={`${ax({ role: 'control-group', layout: 'fill', surface })}${className ? ` ${className}` : ''}`}>
       {header && <PanelHeader>{header}</PanelHeader>}
       <div className={ax({ layout: scroll ? 'scroll' : 'fill' })}>
         {children}

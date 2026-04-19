@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'bar', gap: 'md' })}>
+    <div className={ax({ layout: 'bar' })}>
       <BadgeIndicator count={3} />
       <BadgeIndicator count={42} />
       <BadgeIndicator count={100} />

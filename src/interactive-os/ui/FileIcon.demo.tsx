@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div className={ax({ layout: 'row' })}>
       <FileIcon name="src" type="directory" />
       <FileIcon name="src" type="directory" expanded />
       <FileIcon name="app.tsx" type="file" />

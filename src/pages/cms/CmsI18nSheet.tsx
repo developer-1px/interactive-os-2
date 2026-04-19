@@ -32,14 +32,16 @@ export default function CmsI18nSheet({ engine, store, open }: CmsI18nSheetProps)
   if (!open) return null
 
   return (
-    <div className={`cms-i18n-sheet absolute ${ax({ layout: 'stack', surface: 'display', border: 'top' })}`}>
-      <div className={`cms-i18n-sheet__header ${ax({ layout: 'bar', flex: 'none', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'muted', border: 'bottom' })}`}>
+    <div className={`cms-i18n-sheet absolute ${ax({ layout: 'stack', surface: 'display' })}`}>
+      <div className={`cms-i18n-sheet__header ${ax({ layout: 'bar', flex: 'none', textStyle: 'caption' })}`}>
         i18n — Translation Sheet
       </div>
-      <div className={`cms-i18n-sheet__grid ${ax({ flex: '1', scroll: 'auto', textStyle: 'body' })}`}>
-        <div className={`cms-i18n-sheet__col-headers sticky ${ax({ layout: 'row', surface: 'sunken', border: 'bottom' })}`}>
+      <div className={`cms-i18n-sheet__grid ${ax({ flex: '1', textStyle: 'body' })}`}>
+        <div className={`cms-i18n-sheet__col-headers sticky ${ax({
+            role: 'control-group',
+            layout: 'row', surface: 'sunken' })}`}>
           {I18N_COLUMNS.map(col => (
-            <div key={col.key} className={`cms-i18n-sheet__col-header ${ax({ flex: '1', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'secondary' })}`}>{col.header}</div>
+            <div key={col.key} className={`cms-i18n-sheet__col-header ${ax({ flex: '1', textStyle: 'caption' })}`}>{col.header}</div>
           ))}
         </div>
         <Grid

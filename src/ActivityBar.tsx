@@ -1,9 +1,10 @@
 import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  Sun, Moon, Layers, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
+  Sun, Moon, Layers, Presentation, Component, FolderCode, Palette, ShieldAlert, Languages,
   MessageSquare, BookText, Play, Cable, PenLine, Kanban, SquareKanban, GitBranch,
-  Mail, ListTree, Boxes, Braces,
+  Mail, ListTree, Boxes, Braces, FileStack, TerminalSquare, BookMarked, Ruler, Compass,
+  ListChecks, FlaskConical,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -63,19 +64,25 @@ interface NavItem {
 const appNavItems: NavItem[] = [
   // --- 완성도 높음 / 자주 사용 ---
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
+  { id: 'slides', label: 'Slides', icon: FileStack, path: '/slides' },
   { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
-  { id: 'ui-showcase', label: 'UI Showcase', icon: Eye, path: '/ui' },
   { id: 'catalog', label: 'Catalog', icon: Boxes, path: '/catalog' },
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },
   { id: 'features', label: 'Features', icon: ListTree, path: '/features' },
+  { id: 'ax-principles', label: 'AX Principles', icon: Compass, path: '/ax-principles' },
   // --- 보조 / 진행중 ---
   { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
   { id: 'json-editor', label: 'JSON', icon: Braces, path: '/json-editor' },
   { id: 'i18n', label: 'i18n', icon: Languages, path: '/i18n' },
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
+  { id: 'stories', label: 'Stories', icon: BookMarked, path: '/stories' },
+  { id: 'playground', label: 'Playground', icon: FlaskConical, path: '/playground' },
+  { id: 'todo', label: 'Todo', icon: ListChecks, path: '/todo' },
+  { id: 'cmux-preview', label: 'cmux Preview', icon: TerminalSquare, path: '/cmux/preview' },
+  { id: 'keyline-test', label: 'Keyline Test', icon: Ruler, path: '/test/keyline' },
   // --- 미완성 / 데모 미생성 ---
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
   { id: 'kanban', label: 'Kanban', icon: SquareKanban, path: '/kanban' },
@@ -110,9 +117,9 @@ const renderNavItem = (props: HTMLAttributes<HTMLElement>, node: Record<string, 
   const Icon = nav.icon
   return (
     <Tooltip content={nav.label} placement="right">
-      <div {...props} className={ax({ role: 'control', surface: state.focused ? 'display' : 'ghost', layout: 'center', content: 'icon', text: state.focused ? 'bright' : 'muted' })}>
+      <div {...props} className={ax({ role: 'control', surface: state.focused ? 'action' : 'ghost', layout: 'center', content: 'icon' })}>
         {state.focused && <span className="item-indicator--active-rail" />}
-        <Icon className={ax({ icon: 'sm' })} />
+        <Icon className={ax.raw({ icon: 'sm' })} />
       </div>
     </Tooltip>
   )
@@ -177,8 +184,8 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
   }, [navigate, onThemeToggle])
 
   return (
-    <nav className={ax({ layout: 'scroll', padding: 'xs' })}>
-      <div className={ax({ role: 'control', layout: 'center' })}>
+    <nav className={ax({ layout: 'scroll' }) + ' ' + ax.raw({ padding: 'xs' })}>
+      <div className={ax({ role: 'control', surface: 'ghost', layout: 'center' })}>
         <div className="logo-mark" />
       </div>
       <Aria
@@ -193,7 +200,7 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
         <div role="group" aria-label="Apps">
           <Aria.Item asChild ids={APP_IDS} render={renderNavItem} />
         </div>
-        <div role="separator" className={ax({ border: 'top' })} />
+        <div role="separator" className={ax.raw({ border: 'top' })} />
         <div role="group" aria-label="Showcase">
           <Aria.Item asChild ids={SHOWCASE_IDS} render={renderNavItem} />
         </div>
@@ -203,9 +210,9 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
             const ThemeIcon = THEME_ICON[theme]
             return (
               <Tooltip content={`Switch to ${THEME_NEXT_LABEL[theme]} theme`} placement="right">
-                <div {...props} className={ax({ role: 'control', surface: state.focused ? 'display' : 'ghost', layout: 'center', content: 'icon', text: state.focused ? 'bright' : 'muted' })}>
+                <div {...props} className={ax({ role: 'control', surface: state.focused ? 'action' : 'ghost', layout: 'center', content: 'icon' })}>
                   {state.focused && <span className="item-indicator--active-rail" />}
-                  <ThemeIcon className={ax({ icon: 'sm' })} />
+                  <ThemeIcon className={ax.raw({ icon: 'sm' })} />
                 </div>
               </Tooltip>
             )

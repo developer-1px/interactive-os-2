@@ -10,7 +10,7 @@ import { ax } from '@styles/ax'
 defineFileRenderer(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp'], {
   source: 'url',
   render: ({ src, filename }: FileRenderProps) => (
-    <div className={ax({ layout: 'center', flex: '1', padding: 'md' })}>
+    <div className={ax({ layout: 'center', flex: '1' })}>
       <img src={src} alt={filename.split('/').pop() ?? ''} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
     </div>
   ),
@@ -43,7 +43,6 @@ export function FilePreview({ content, filename, highlightLines, preset = 'doc',
       filename={filename}
       highlightLines={highlightLines}
       preset={preset}
-      virtualized
     />
   )
 }

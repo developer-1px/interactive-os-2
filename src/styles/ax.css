@@ -47,7 +47,7 @@
 }
 .sf-action:hover { background: var(--_bg-hover, var(--bg-hover)); }
 .sf-action:active { background: var(--_bg-active, var(--bg-active)); }
-.sf-action:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
+.sf-action:focus-visible { outline: var(--focus-ring-outline); outline-offset: var(--focus-ring-offset); }
 .sf-action[aria-disabled="true"],
 .sf-action:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
@@ -62,7 +62,7 @@
 }
 textarea.sf-input { field-sizing: content; }
 .sf-input:focus-within { border-color: var(--focus); }
-.sf-input:focus-visible { outline: none; border-color: var(--focus); box-shadow: var(--focus-ring-shadow); }
+.sf-input:focus-visible { outline: var(--focus-ring-outline); outline-offset: var(--focus-ring-offset); border-color: var(--focus); }
 .sf-input[aria-invalid="true"] { border-color: var(--tone-destructive-base); }
 .sf-input[aria-disabled="true"],
 .sf-input:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
@@ -193,7 +193,7 @@ dialog.sf-overlay[open] {
   color: var(--text-muted);
 }
 .sf-placeholder:hover { border-color: var(--tone-primary-base); color: var(--tone-primary-base); }
-.sf-placeholder:focus-visible { outline: none; border-color: var(--focus); box-shadow: var(--focus-ring-shadow); }
+.sf-placeholder:focus-visible { outline: var(--focus-ring-outline); outline-offset: var(--focus-ring-offset); border-color: var(--focus); }
 .sf-placeholder[aria-disabled="true"] { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
 .sf-ghost {
@@ -206,7 +206,7 @@ dialog.sf-overlay[open] {
 }
 .sf-ghost:hover { background: var(--bg-hover); }
 .sf-ghost:active { background: var(--bg-active); }
-.sf-ghost:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
+.sf-ghost:focus-visible { outline: var(--focus-ring-outline); outline-offset: var(--focus-ring-offset); }
 .sf-ghost[aria-disabled="true"] { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
 } /* @layer state — Surface */
@@ -312,7 +312,7 @@ dialog.sf-overlay[open] {
   font-weight: var(--type-control-weight);
   line-height: var(--type-control-line-height);
   padding-inline: var(--space-md);
-  padding-block: var(--space-sm);
+  padding-block: 6px;
   gap: var(--space-sm);
   border-radius: var(--shape-sm-radius);
   display: inline-flex;
@@ -514,9 +514,12 @@ dialog.sf-overlay[open] {
 :where(.tn-neutral-dim) { color: var(--text-secondary); }
 
 /* ── Role: Control — interactive 상태 ── */
+/* role 프리셋 padding은 pd-* 클래스보다 우선 (specificity 2) */
+.rl-control.rl-control { padding-block: 6px; }
+
 .rl-control:hover { background: var(--_bg-hover, var(--bg-hover)); }
 .rl-control:active { background: var(--_bg-active, var(--bg-active)); }
-.rl-control:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
+.rl-control:focus-visible { outline: var(--focus-ring-outline); outline-offset: var(--focus-ring-offset); }
 .rl-control[aria-disabled="true"],
 .rl-control:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
@@ -553,7 +556,7 @@ dialog.sf-overlay[open] {
 .bd-start   { border-inline-start: var(--border-width) solid var(--border-subtle); }
 .bd-end     { border-inline-end: var(--border-width) solid var(--border-subtle); }
 .bd-ring    { --bd-ring: 0 0 0 1px oklch(from var(--text-primary) l c h / 0.10); box-shadow: var(--bd-ring); }
-.bd-ring:focus-visible { box-shadow: var(--bd-ring), var(--focus-ring-shadow); }
+.bd-ring:focus-visible { box-shadow: var(--bd-ring); outline: var(--focus-ring-outline); outline-offset: var(--focus-ring-offset); }
 
 /* ════════════════════════════════════════════
  * Shape — 비-컨트롤 요소의 border-radius
@@ -568,6 +571,15 @@ dialog.sf-overlay[open] {
 .sh-lg   { border-radius: var(--shape-lg-radius); }  /* 12px */
 .sh-xl   { border-radius: var(--shape-xl-radius); }  /* 16px */
 .sh-pill { border-radius: var(--shape-pill-radius); }
+
+/* island — 떠있는 섬. radius + clip + 자체 elevation 번들 (특별 시멘틱).
+ * 다른 shape(sm/md/lg/xl/pill)은 순수 radius 스케일이지만,
+ * island는 "같은 ground 위에 독립체로 떠오른다"는 의도를 포함.
+ * box-shadow는 state layer에서 선언(surface shadow를 이겨야 하므로). */
+.sh-island {
+  border-radius: var(--shape-island-radius);
+  overflow: clip;
+}
 
 /* ════════════════════════════════════════════
  * Layout — 역할 기반 구조 번들
@@ -955,6 +967,15 @@ textarea::placeholder { color: var(--text-muted); }
   opacity: 0.4;
 }
 
+/* ── treegrid row mode: entire row reads as the active selection target ── */
+[role="row"][data-row-mode][data-focused] {
+  background: var(--selection);
+}
+.ax-interactive:focus-within [role="row"][data-row-mode][data-focused] {
+  background: var(--selection-cursor);
+  color: var(--text-bright);
+}
+
 /* ── ia-item: treeitem expanded redirect ── */
 
 :where(.ia-item[aria-expanded]) {
@@ -1166,3 +1187,20 @@ textarea::placeholder { color: var(--text-muted); }
 }
 
 } /* @layer state — Interactive */
+
+@layer state {
+/* island elevation — surface(state layer)의 shadow를 이겨야 하므로 state 레이어에서 선언.
+ * radius/clip은 shape 본연 속성이라 recipe에 유지. shadow는 "섬의 독립체" 의도. */
+.sh-island {
+  box-shadow: var(--shape-island-shadow);
+}
+
+/* :has() trick — island 내부 자식에 focus-visible이 걸리면 overflow:clip을 해제한다.
+ * 이유: CSS overflow:hidden/clip은 자식의 outline(focus-ring)을 자른다.
+ * focus가 없는 평소에는 clip 유지(자식 background가 radius 모서리까지 mask됨),
+ * focus 시에만 overflow 해제 → outline이 island 경계 밖으로 자연스럽게 펴진다.
+ * 현대 브라우저(Safari 15.4+, Chrome 105+) 모두 지원. */
+.sh-island:has(:focus-visible) {
+  overflow: visible;
+}
+} /* @layer state — Shape island */

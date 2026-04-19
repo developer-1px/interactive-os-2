@@ -1,26 +1,45 @@
+import { useMemo, useState, useCallback } from 'react'
 import { ax } from '@styles/ax'
-import { ScrollArea } from '@os/ui/ScrollArea'
-import { PanelHeader } from '@os/ui/PanelHeader'
-import { loadStories } from './storiesStore'
-import { StoryCard } from './widgets/StoryCard'
+import { FlatLayout } from '@os/ui/FlatLayout'
+import { createWidgetRegistry } from '@os/layout/widgetRegistry'
+import { FOCUS_ID } from '@os/axis/navigate'
+import type { NormalizedData } from '@os/store/types'
+import { loadStories, storiesToNavStore } from './storiesStore'
+import { storiesLayout } from './storiesLayout'
+import { StoriesProvider, type StoriesContextValue } from './storiesContext'
+import { StoriesSidebarWidget, StoriesPreviewWidget } from './storiesWidgets'
 
-const stories = loadStories()
+const entries = loadStories()
+const initialListStore = storiesToNavStore(entries)
+const initialSelected = entries[0]?.path ?? null
+
+const storiesWidgets = createWidgetRegistry({
+  StoriesSidebar: StoriesSidebarWidget,
+  StoriesPreview: StoriesPreviewWidget,
+})
 
 export default function PageStories() {
-  return (
-    <div className={ax({ layout: 'stack', flex: '1' })}>
-      <PanelHeader>
-        <span className={ax({ textStyle: 'label', weight: 'semi' })}>Stories</span>
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{stories.length} stories</span>
-      </PanelHeader>
+  const [listStore, setListStore] = useState<NormalizedData>(initialListStore)
+  const [selectedPath, setSelectedPath] = useState<string | null>(initialSelected)
 
-      <ScrollArea className={ax({ flex: '1' })}>
-        <div className={ax({ layout: 'stack', gap: 'lg', padding: 'lg' })}>
-          {stories.map(entry => (
-            <StoryCard key={entry.path} doc={entry.doc} />
-          ))}
-        </div>
-      </ScrollArea>
-    </div>
+  const onChange = useCallback((next: NormalizedData) => {
+    const focusedId = (next.entities[FOCUS_ID]?.focusedId as string | undefined) ?? null
+    setListStore(next)
+    if (focusedId && next.entities[focusedId]) setSelectedPath(focusedId)
+  }, [])
+
+  const ctx = useMemo<StoriesContextValue>(() => ({
+    entries,
+    listStore,
+    selectedPath,
+    onChange,
+  }), [listStore, selectedPath, onChange])
+
+  return (
+    <StoriesProvider value={ctx}>
+      <div className={ax({ layout: 'row', flex: '1' })}>
+        <FlatLayout data={storiesLayout} registry={storiesWidgets} aria-label="Stories viewer" />
+      </div>
+    </StoriesProvider>
   )
 }

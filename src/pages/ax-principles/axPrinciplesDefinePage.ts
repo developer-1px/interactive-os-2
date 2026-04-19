@@ -8,14 +8,14 @@ export const axPrinciplesLayout = definePage({
       children: ['header', 'body'],
     },
     header: {
-      data: { type: 'widget', widget: 'AxPrinciplesHeader', surface: 'raised' },
+      data: { type: 'widget', widget: 'AxPrinciplesHeader' },
     },
     body: {
       data: { type: 'split', direction: 'horizontal', sizes: [0.3, 'flex'], resizable: true },
       children: ['master', 'detail'],
     },
     master: {
-      data: { type: 'widget', widget: 'AxPrinciplesMaster', surface: 'sunken' },
+      data: { type: 'widget', widget: 'AxPrinciplesMaster' },
     },
     detail: {
       data: { type: 'widget', widget: 'AxPrinciplesDetail' },
