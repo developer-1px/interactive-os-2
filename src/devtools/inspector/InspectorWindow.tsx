@@ -1,4 +1,5 @@
-// ② 2026-04-04-inspector-redesign-prd.md
+// ② 2026-04-04-inspector-redesign-prd.md  ② inspectorDefinePagePanelPrd.md
+// @useState-hatch — devtools: inspector UI owns local view state (selection, tabs, pick-mode)
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import type { InspectResult } from '@os/engine/types'
 import type { AriaActions } from '@os/primitives/ariaRegistry'
@@ -12,12 +13,13 @@ import { copyAriaTree } from './inspectToAscii'
 import { registryToUnifiedTree, findInstanceId } from './inspectorStore'
 import type { InstanceMeta } from './inspectorStore'
 import { InspectorLogTab } from './InspectorLogTab'
+import { InspectorPageTab } from './InspectorPageTab'
 import { ax } from '@styles/ax'
 import './InspectorWindow.css'
 
 const emptyPlugins: Plugin[] = []
 
-type DetailTab = 'interaction' | 'aria' | 'state' | 'log'
+type DetailTab = 'page' | 'interaction' | 'aria' | 'state' | 'log'
 
 function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
   const keyEntries = Object.entries(inspectResult.keyMap)
@@ -56,6 +58,7 @@ function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
 }
 
 function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
+  // @useState-hatch — devtools clipboard transient feedback
   const [copied, setCopied] = useState(false)
   const handleCopy = useCallback(async () => {
     await copyAriaTree(inspectResult)
@@ -159,6 +162,7 @@ function AriaTabContent({ selectedId, inspectResult, actionsMap, metas }: AriaTa
 }
 
 const TAB_LIST: { id: DetailTab; label: string }[] = [
+  { id: 'page', label: 'Page' },
   { id: 'interaction', label: 'Interaction' },
   { id: 'aria', label: 'ARIA' },
   { id: 'state', label: 'State' },
@@ -182,10 +186,15 @@ function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: Detai
 }
 
 export function InspectorWindow() {
+  // @useState-hatch — devtools: registry snapshot polling mirror
   const [actionsMap, setActionsMap] = useState<Map<string, AriaActions>>(new Map())
+  // @useState-hatch — devtools: local inspector selection
   const [selectedId, setSelectedId] = useState('')
+  // @useState-hatch — devtools: SplitPane controlled sizes
   const [sizes, setSizes] = useState<PaneSize[]>([0.3, 'flex'])
+  // @useState-hatch — devtools: local tab selection
   const [activeTab, setActiveTab] = useState<DetailTab>('interaction')
+  // @useState-hatch — devtools: pick-mode toggle
   const [picking, setPicking] = useState(false)
   const prevSnapshotRef = useRef('')
   const prevStateRef = useRef<Map<string, NormalizedData>>(new Map())
@@ -325,7 +334,9 @@ export function InspectorWindow() {
             <div className={ax({ layout: 'stack' })}>
               <TabBar active={activeTab} onChange={setActiveTab} />
 
-              {activeTab === 'log' ? (
+              {activeTab === 'page' ? (
+                <InspectorPageTab />
+              ) : activeTab === 'log' ? (
                 <InspectorLogTab actionsMap={actionsMap} />
               ) : inspectResult ? (
                 <>

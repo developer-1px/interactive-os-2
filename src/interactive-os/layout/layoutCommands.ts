@@ -51,6 +51,12 @@ export const layoutCommands = defineCommands({
     create: (nodeId: string, gap: string) => ({ nodeId, gap }),
     handler: (store, { nodeId, gap }) => updateEntityData(store, nodeId, { gap }),
   },
+  // ② inspectorDefinePagePanelPrd.md — 범용 노드 patch command
+  updateNode: {
+    type: 'layout:updateNode' as const,
+    create: (nodeId: string, patch: Record<string, unknown>) => ({ nodeId, patch }),
+    handler: (store, { nodeId, patch }) => updateEntityData(store, nodeId, patch),
+  },
   setFocus: {
     type: 'layout:setFocus' as const,
     create: (nodeId: string, tabId?: string) => ({ nodeId, tabId }),
