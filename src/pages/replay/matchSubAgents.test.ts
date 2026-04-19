@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import type { SubAgentSession } from './subAgentTypes'
 import { matchSubAgents } from './matchSubAgents'
 

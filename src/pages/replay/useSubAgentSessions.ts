@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import type { SubAgentFile, SubAgentSession } from './subAgentTypes'
 import { buildSubAgentSession } from './buildSubAgentSession'
 

@@ -18,7 +18,7 @@ import { NavLayoutContext } from './NavLayoutContext'
 import { SplitPane } from './SplitPane'
 import { workspaceCommands } from '@os/plugins/workspaceStore'
 import { FlatLayoutContext } from './useFlatLayout'
-import { ViewerTabList } from './ViewerTabList'
+import { WorkspaceTabList } from './WorkspaceTabList'
 import { Button } from './Button'
 
 // ── Surface context ───────────────────────────────────
@@ -259,7 +259,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
 
     // ② cmux-layout-prd — external focus sync.
     // useAria는 data.entities[FOCUS_ID]가 있을 때만 external focus 변경을 전파한다.
-    // activeTabId가 런타임에 바뀌면 내부 ViewerTabList의 focus/selection이 따라가야
+    // activeTabId가 런타임에 바뀌면 내부 WorkspaceTabList의 focus/selection이 따라가야
     // aria-selected가 재그려진다 (⌘T, ⌘⇧] 등).
     const tabBarStore: NormalizedData = {
       entities: {
@@ -280,7 +280,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       >
         <div className={ax({ layout: 'bar', width: 'full' })}>
           <div className={ax({ flex: '1' })}>
-            <ViewerTabList
+            <WorkspaceTabList
               data={tabBarStore}
               initialFocus={activeTabId}
               onActivate={(tabId) => {

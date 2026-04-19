@@ -2,13 +2,13 @@
 // @useState-hatch — fixture docs와 focus 포인터는 OS 축에 없어 로컬 보유
 import { useEffect, useMemo, useState } from 'react'
 import { MillerColumns } from '@os/ui/MillerColumns'
-import { CodeViewer } from '@os/ui/CodeViewer'
+import { CodePreview } from '@os/ui/CodePreview'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID, type NormalizedData, type Entity } from '@os/store/types'
 import { ax } from '@styles/ax'
 import { useActiveSessions } from './useActiveSessions'
-import { connectSession, disconnectSession, useTimeline } from '../viewer/viewerStore'
-import type { TimelineEvent } from '../viewer/groupEvents'
+import { connectSession, disconnectSession, useTimeline } from '../finder/finderStore'
+import type { TimelineEvent } from '../finder/groupEvents'
 
 type JsonValue = unknown
 
@@ -197,7 +197,7 @@ export default function PageReplayInspect() {
           return <div className={ax({ layout: 'center', flex: '1' })}>No data</div>
         }
         const code = JSON.stringify(json, null, 2)
-        return <CodeViewer code={code} filename="entry.json" preset="doc" wrap />
+        return <CodePreview code={code} filename="entry.json" preset="doc" wrap />
       }}
     />
   )

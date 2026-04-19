@@ -8,7 +8,7 @@ import {
 } from "./inspectorUtils";
 import { InspectorOverlay } from "./InspectorOverlay";
 import { MarqueeSelect } from "./MarqueeSelect";
-import { FileViewerModal } from "@os/ui/FileViewerModal";
+import { QuickLookModal } from "@os/ui/QuickLookModal";
 import { useGlobalTrap, type GlobalTrapKeyMap } from "@os/primitives/useGlobalTrap";
 
 const OS_COLORS: Record<string, string> = {
@@ -377,7 +377,7 @@ export function ComponentInspector() {
       )}
 
       {/* Full source viewer */}
-      <FileViewerModal
+      <QuickLookModal
         filePath={sourceModalFile?.path ?? null}
         highlightLines={sourceModalFile ? new Set([sourceModalFile.line]) : undefined}
         onClose={() => setSourceModalFile(null)}

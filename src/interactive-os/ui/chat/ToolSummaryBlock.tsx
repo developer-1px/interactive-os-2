@@ -5,7 +5,7 @@ import {
   Search, Zap, Wrench, Globe, Layers,
 } from 'lucide-react'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
-import { CodeViewer } from '../CodeViewer'
+import { CodePreview } from '../CodePreview'
 import { DiffBlock } from './DiffBlock'
 import { ax } from '@styles/ax'
 import { useChatFeatures } from './chatFeatures'
@@ -181,13 +181,13 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   if (isRead && text) {
     content = (
       <div className={`overflow-auto ${ax({ })} tool-group-code`}>
-        <CodeViewer code={codeText} filename={filename} preset="chat" />
+        <CodePreview code={codeText} filename={filename} preset="chat" />
       </div>
     )
   } else if (isWrite && typeof input.content === 'string') {
     content = (
       <div className={`overflow-auto ${ax({ })} tool-group-code`}>
-        <CodeViewer code={input.content as string} filename={filename} preset="chat" />
+        <CodePreview code={input.content as string} filename={filename} preset="chat" />
       </div>
     )
   } else if (isEdit && typeof input.old_string === 'string' && typeof input.new_string === 'string') {

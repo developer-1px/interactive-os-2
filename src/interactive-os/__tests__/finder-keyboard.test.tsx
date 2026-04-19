@@ -1,5 +1,5 @@
 /**
- * Reproduction: Viewer file tree ArrowUp/ArrowDown not working.
+ * Reproduction: Finder file tree ArrowUp/ArrowDown not working.
  * Reproduces the exact structure from viewer.tsx — store loaded async,
  * onChange callback with useCallback, etc.
  */
@@ -73,7 +73,7 @@ function ViewerTreeExact() {
   )
 }
 
-describe('viewer keyboard reproduction', () => {
+describe('finder keyboard reproduction', () => {
   it('ArrowDown moves focus after async store load', async () => {
     const user = userEvent.setup()
     const { container } = render(<ViewerTreeExact />)

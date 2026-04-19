@@ -8,10 +8,10 @@ import { Combobox } from '@os/ui/Combobox'
 import { Button } from '@os/ui/Button'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
-import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
+import type { FilePlayerHandle, WorkspaceTab } from '@os/ui/workspaceTypes'
 import type { ChatMessage } from '@os/ui/chat/types'
-import { connectSession, disconnectSession, useTimeline } from '../viewer/viewerStore'
-import { timelineToMessages } from '../viewer/timelineTransform'
+import { connectSession, disconnectSession, useTimeline } from '../finder/finderStore'
+import { timelineToMessages } from '../finder/timelineTransform'
 import { createFileState } from './fileState'
 import { processToolEvents } from './toolToCommands'
 import { useActiveSessions } from './useActiveSessions'
@@ -39,7 +39,7 @@ interface SidebarCtxView {
   isRunning: boolean
   startReplay: (() => void) | undefined
   messages: ReplayContextValue['messages']
-  tabs: ViewerTab[]
+  tabs: WorkspaceTab[]
   activeTabId: string | null
   setActiveTab: ((id: string) => void) | undefined
   viewerTabs: ReplayContextValue['viewerTabs'] | undefined
@@ -142,7 +142,7 @@ function buildSessionComboData(sessionEntries: SessionEntry[]): NormalizedData {
 }
 
 function buildFileListData(
-  tabs: ViewerTab[],
+  tabs: WorkspaceTab[],
   viewerTabs: ReplayContextValue['viewerTabs'] | undefined,
 ): NormalizedData {
   const fileTabs = tabs.filter(t => t.type === 'file')
@@ -165,7 +165,7 @@ function appendFileGroup(
   relationships: Record<string, string[]>,
   groupId: string,
   groupLabel: string,
-  files: ViewerTab[],
+  files: WorkspaceTab[],
 ): void {
   if (files.length === 0) return
   entities[groupId] = { id: groupId, data: { label: groupLabel, type: 'group' } }
@@ -223,7 +223,7 @@ export function ReplayStageWidget() {
 function useLiveMessages(
   mode: 'replay' | 'live',
   viewerTabs: { openFile: (path: string, content: string) => void; markEdited: (path: string) => void } | undefined,
-  fileViewerRef: RefObject<FileViewerHandle | null> | undefined,
+  fileViewerRef: RefObject<FilePlayerHandle | null> | undefined,
   forcedSessionId?: string | null,
 ) {
   const activeSessions = useActiveSessions()

@@ -1,5 +1,5 @@
 // ② 2026-04-03-replay-edit-animation-prd.md
-import type { HighlightTone } from '@os/ui/CodeViewer'
+import type { HighlightTone } from '@os/ui/CodePreview'
 
 // --- Types ---
 

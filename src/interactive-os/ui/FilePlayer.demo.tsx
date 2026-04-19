@@ -1,14 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② component-catalog-prd.md
 import { useRef, useEffect } from 'react'
-import { FileViewer } from './FileViewer'
-import type { FileViewerHandle } from './viewerTypes'
+import { FilePlayer } from './FilePlayer'
+import type { FilePlayerHandle } from './workspaceTypes'
 import { ax } from '@styles/ax'
 
 export const meta = {
   slug: 'file-viewer',
   category: 'ui',
-  label: 'FileViewer',
+  label: 'FilePlayer',
 }
 
 const sampleCode = `function fibonacci(n: number): number {
@@ -19,7 +19,7 @@ const sampleCode = `function fibonacci(n: number): number {
 console.log(fibonacci(10))`
 
 export function Demo() {
-  const ref = useRef<FileViewerHandle>(null)
+  const ref = useRef<FilePlayerHandle>(null)
 
   useEffect(() => {
     ref.current?.dispatch({ type: 'open', content: sampleCode })
@@ -27,7 +27,7 @@ export function Demo() {
 
   return (
     <div className={ax({ layout: 'stack' })}>
-      <FileViewer ref={ref} filename="fibonacci.ts" />
+      <FilePlayer ref={ref} filename="fibonacci.ts" />
     </div>
   )
 }

@@ -2,13 +2,13 @@
 // 요구사항:
 // 1. Cmd+Shift+D → 인스펙터 ON (body.debug-mode-active)
 // 2. 요소 클릭 → lock (LOCKED 표시)
-// 3. Cmd+O → FileViewerModal 열림 (dialog[open])
+// 3. Cmd+O → QuickLookModal 열림 (dialog[open])
 // 4. ESC → 모달 닫힘 → ESC → unlock → ESC → 인스펙터 OFF
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, act, waitFor } from '@testing-library/react'
 import { ComponentInspector } from '../devtools/inspector/ComponentInspector'
 
-// FileViewerModal이 /api/fs/file을 호출하므로 fetch mock 필요
+// QuickLookModal이 /api/fs/file을 호출하므로 fetch mock 필요
 const originalFetch = globalThis.fetch
 // happy-dom의 elementFromPoint가 동작하지 않으므로 mock — hover 추적용
 let elementFromPointTarget: HTMLElement | null = null
@@ -49,7 +49,7 @@ function fireClick(target: HTMLElement) {
   target.dispatchEvent(event)
 }
 
-describe('Inspector Cmd+O → FileViewerModal', () => {
+describe('Inspector Cmd+O → QuickLookModal', () => {
   it('Cmd+Shift+D → 인스펙터 ON → body에 debug-mode-active 클래스', () => {
     render(<ComponentInspector />)
 
@@ -76,10 +76,10 @@ describe('Inspector Cmd+O → FileViewerModal', () => {
     act(() => { fireMouseMove(target) })
     act(() => { fireClick(target) })
 
-    // 4. Cmd+O → FileViewerModal 열림
+    // 4. Cmd+O → QuickLookModal 열림
     act(() => { fireKey('o', { metaKey: true }) })
 
-    // FileViewerModal이 filePath를 받으면 dialog.showModal()을 호출
+    // QuickLookModal이 filePath를 받으면 dialog.showModal()을 호출
     await waitFor(() => {
       const dialog = document.querySelector('dialog')
       expect(dialog).not.toBeNull()

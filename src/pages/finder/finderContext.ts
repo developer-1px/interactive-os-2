@@ -1,8 +1,8 @@
 import { createDomainContext } from '@os/layout'
 import type { NormalizedData } from '@os/store/types'
-import type { SortKey, SortDir } from './viewerSort'
+import type { SortKey, SortDir } from './finderSort'
 
-export interface ViewerContextValue {
+export interface FinderContextValue {
   initialStore: NormalizedData
   listStore: NormalizedData | null
   sidebarData: NormalizedData
@@ -19,4 +19,4 @@ export interface ViewerContextValue {
   onChange: (store: NormalizedData) => void
 }
 
-export const [ViewerProvider, useViewer] = createDomainContext<ViewerContextValue>('Viewer')
+export const [FinderProvider, useFinder] = createDomainContext<FinderContextValue>('Finder')

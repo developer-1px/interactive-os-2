@@ -7,13 +7,13 @@ export const baseLayout = defineLayout({
     root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.13, 'flex'] }, children: ['sidebar', 'content'] },
     // defineLayout는 배치 + 스크롤 오너를 소유한다. 각 widget의 surface/재질은 위젯 컴포넌트 자체가 ax()로 소유.
     // scroll은 콘텐츠를 담는 leaf widget에만 선언 — 부모 split/stack은 배치만.
-    sidebar:   { data: { type: 'widget', widget: 'ViewerSidebar', scroll: 'y' } },
+    sidebar:   { data: { type: 'widget', widget: 'FinderSidebar', scroll: 'y' } },
     content:   { data: { type: 'stack' }, children: ['toolbar', 'main', 'miller'] },
-    toolbar:   { data: { type: 'widget', widget: 'ViewerToolbar' } },
+    toolbar:   { data: { type: 'widget', widget: 'FinderToolbar' } },
     main:      { data: { type: 'split', direction: 'horizontal', sizes: [0.35, 'flex'], resizable: true }, children: ['tree-area', 'preview'] },
     // content widgets — 스스로 island가 되어 떠오른다 (raised + shape:island는 control-group 내부에서 주입)
-    'tree-area': { data: { type: 'widget', widget: 'ViewerTreeGrid', hidden: false, scroll: 'y' } },
-    preview:   { data: { type: 'widget', widget: 'ViewerPreview', hidden: false, scroll: 'y' } },
-    miller:    { data: { type: 'widget', widget: 'ViewerMiller', hidden: true, fill: true } },
+    'tree-area': { data: { type: 'widget', widget: 'FinderTreeGrid', hidden: false, scroll: 'y' } },
+    preview:   { data: { type: 'widget', widget: 'FinderPreview', hidden: false, scroll: 'y' } },
+    miller:    { data: { type: 'widget', widget: 'FinderMiller', hidden: true, fill: true } },
   },
 })

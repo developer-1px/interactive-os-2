@@ -2,7 +2,7 @@
 import { useMemo } from 'react'
 import { Info } from 'lucide-react'
 import { defineFileRenderer, type FileRenderProps } from '@os/ui/fileRenderers'
-import { MarkdownViewer, parseFrontmatter } from '@os/ui/MarkdownViewer'
+import { MarkdownPreview, parseFrontmatter } from '@os/ui/MarkdownPreview'
 import { FrontmatterCard } from '@os/ui/FrontmatterCard'
 import { Popover } from '@os/ui/Popover'
 import { Button } from '@os/ui/Button'
@@ -24,7 +24,7 @@ function MdRenderer({ content }: FileRenderProps) {
           </Popover>
         </div>
       )}
-      <MarkdownViewer
+      <MarkdownPreview
         content={content}
         config={showcaseMdConfig}
         className="markdown-file"

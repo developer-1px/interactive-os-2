@@ -2,7 +2,7 @@
  * SubAgent data model (SSOT).
  * @invariant §1 데이터 모델의 TypeScript 실체. 타입 정의만 포함, 로직 금지.
  */
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import type { ParsedSession } from './parseJsonl'
 
 /** subagents/agent-{hash}.meta.json 파싱 결과 */

@@ -3,14 +3,14 @@ import { useCallback, useMemo, useRef } from 'react'
 import type { ReactElement } from 'react'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
-import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
+import type { FilePlayerHandle, WorkspaceTab } from '@os/ui/workspaceTypes'
 import { ax } from '@styles/ax'
 import { ReplayProvider, type ReplayContextValue } from './replayContext'
 import { ReplayStageWidget } from './replayWidgets'
 import { SubAgentProvider } from './subAgentContext'
 import { useViewerTabs } from './useViewerTabs'
 import type { SubAgentMatchKey, SubAgentSession } from './subAgentTypes'
-import { timelineToMessages } from '../viewer/timelineTransform'
+import { timelineToMessages } from '../finder/timelineTransform'
 import { StatusIndicator } from '@os/ui/indicators'
 
 export interface SubAgentStageWidgetProps {
@@ -19,7 +19,7 @@ export interface SubAgentStageWidgetProps {
   parentSessionId: string
 }
 
-function tabLabel(tab: ViewerTab): string {
+function tabLabel(tab: WorkspaceTab): string {
   switch (tab.type) {
     case 'file': {
       const parts = (tab.path ?? 'output').split('/')
@@ -42,7 +42,7 @@ export function SubAgentStageWidget(props: SubAgentStageWidgetProps): ReactEleme
 
   // 자체 viewerTabs/fileViewer — 부모와 독립 (F4)
   const viewerTabs = useViewerTabs()
-  const fileViewerRef = useRef<FileViewerHandle>(null)
+  const fileViewerRef = useRef<FilePlayerHandle>(null)
   const { tabs, activeTab, activeTabId, setActiveTab } = viewerTabs
 
   const viewerTabData: NormalizedData = useMemo(() => {

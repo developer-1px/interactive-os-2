@@ -1,6 +1,6 @@
 // ② flatlayout-pull-transition-prd.md
 import { ChevronLeft, ChevronRight, X, Star, Search, Layers, List } from 'lucide-react'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { MarkdownPreview } from '@os/ui/MarkdownPreview'
 import { showcaseMdConfig } from '../showcase/mdConfig'
 import { TocNavList } from '@os/ui/TocNavList'
 import { SpreadReader } from '@os/ui/SpreadReader'
@@ -70,7 +70,7 @@ function BookReader() {
       onPrevBoundary={onPrevBoundary}
       onSpreadChange={onSpreadChange}
     >
-      {page && <MarkdownViewer content={page.content} linkTransform={linkTransform} config={showcaseMdConfig} />}
+      {page && <MarkdownPreview content={page.content} linkTransform={linkTransform} config={showcaseMdConfig} />}
     </SpreadReader>
   )
 }

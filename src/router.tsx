@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { path: '/', lazy: () => import('./pages/cms/PageCms').then(m => ({ Component: m.default })) },
-      { path: '/viewer/*', lazy: () => import('./pages/viewer/PageViewer').then(m => ({ Component: m.default })) },
+      { path: '/finder/*', lazy: () => import('./pages/finder/PageFinder').then(m => ({ Component: m.default })) },
       {
         path: '/book/*',
         lazy: async () => {

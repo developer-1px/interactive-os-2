@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② component-catalog-prd.md
 import { useState } from 'react'
-import { ViewerTabList } from './ViewerTabList'
+import { WorkspaceTabList } from './WorkspaceTabList'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
@@ -9,7 +9,7 @@ import type { NormalizedData } from '@os/store/types'
 export const meta = {
   slug: 'viewer-tab-list',
   category: 'ui',
-  label: 'ViewerTabList',
+  label: 'WorkspaceTabList',
 }
 
 const initialData: NormalizedData = createStore({
@@ -24,5 +24,5 @@ const initialData: NormalizedData = createStore({
 export function Demo() {
   const [data, setData] = useState<NormalizedData>(initialData)
 
-  return <ViewerTabList data={data} onChange={setData} aria-label="Viewer tabs" />
+  return <WorkspaceTabList data={data} onChange={setData} aria-label="Viewer tabs" />
 }

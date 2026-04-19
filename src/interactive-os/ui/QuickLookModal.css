@@ -1,5 +1,5 @@
 @layer component {
-/* FileViewerModal — dialog and modal styling */
+/* QuickLookModal — dialog and modal styling */
 .fvm-dialog {
   padding: 0;
   max-width: none;

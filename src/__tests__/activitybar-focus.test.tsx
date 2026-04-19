@@ -40,15 +40,15 @@ describe('ActivityBar click navigation', () => {
     const user = userEvent.setup()
     const { container } = renderAtPath('/')
 
-    // Find the "viewer" item by data-node-id
-    const viewerItem = container.querySelector('[data-node-id="viewer"]') as HTMLElement
-    expect(viewerItem).not.toBeNull()
+    // Find the "finder" item by data-node-id
+    const finderItem = container.querySelector('[data-node-id="finder"]') as HTMLElement
+    expect(finderItem).not.toBeNull()
 
-    await user.click(viewerItem)
+    await user.click(finderItem)
 
     // Verify route changed — the user sees a different page
     await waitFor(() => {
-      expect(currentPath).toBe('/viewer')
+      expect(currentPath).toBe('/finder')
     })
   })
 })

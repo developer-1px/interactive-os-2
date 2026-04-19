@@ -9,7 +9,7 @@ import { useWriterChatSync, sendWriterMessage, getSessionForFile } from './write
 import { requestAnalysis, type AnalysisResult } from './writerAnalyze'
 import { writerCommands } from './writerCommands'
 import { writerPlugins, writerItemOptions } from './writerKeys'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { MarkdownPreview } from '@os/ui/MarkdownPreview'
 import { showcaseMdConfig } from '../showcase/mdConfig'
 import WriterFileBrowser from './WriterFileBrowser'
 import { PyramidView, buildPyramids } from './PyramidView'
@@ -31,10 +31,10 @@ import { ax } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
 import './PageWriter.css'
 
-/** Prose preview — reuses the shared MarkdownViewer with storeToMd() */
+/** Prose preview — reuses the shared MarkdownPreview with storeToMd() */
 function ProseView({ data: storeData }: { data: NormalizedData }) {
   const md = useMemo(() => storeToMd(storeData), [storeData])
-  return <MarkdownViewer content={md} config={showcaseMdConfig} />
+  return <MarkdownPreview content={md} config={showcaseMdConfig} />
 }
 
 export default function PageWriter() {

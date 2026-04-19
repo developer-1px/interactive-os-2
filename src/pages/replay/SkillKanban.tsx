@@ -4,9 +4,9 @@
 // @useState-hatch — openCardId: overlay open state, useOverlay가 관리
 // @useState-hatch — below imports use useState for view+interaction state
 import { useState, useEffect, useCallback } from 'react'
-import { subscribeTimeline } from '../viewer/timelineSSE'
+import { subscribeTimeline } from '../finder/timelineSSE'
 import { useActiveSessions } from './useActiveSessions'
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import { ax } from '@styles/ax'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { Kanban } from '@os/ui/Kanban'

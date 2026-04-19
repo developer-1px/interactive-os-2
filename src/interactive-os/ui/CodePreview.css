@@ -1,5 +1,5 @@
 @layer component {
-/* CodeViewer — last-mile: shiki integration, line numbers, chrome, token highlights */
+/* CodePreview — last-mile: shiki integration, line numbers, chrome, token highlights */
 /* ② code-viewer-prd.md */
 
 .code-viewer {

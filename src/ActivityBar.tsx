@@ -65,7 +65,7 @@ const appNavItems: NavItem[] = [
   // --- 완성도 높음 / 자주 사용 ---
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'slides', label: 'Slides', icon: FileStack, path: '/slides' },
-  { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
+  { id: 'finder', label: 'Finder', icon: FolderCode, path: '/finder' },
   { id: 'catalog', label: 'Catalog', icon: Boxes, path: '/catalog' },
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },

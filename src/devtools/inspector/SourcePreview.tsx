@@ -1,7 +1,7 @@
 // ② 2026-04-02-inspector-source-preview-prd.md
 import { useEffect, useMemo, useState } from 'react'
 import { computePlacement } from '../../misc/computePlacement'
-import { CodeViewer } from '@os/ui/CodeViewer'
+import { CodePreview } from '@os/ui/CodePreview'
 
 interface SourcePreviewProps {
   filePath: string | null
@@ -120,7 +120,7 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
             Source not available
           </div>
         ) : snippet ? (
-          <CodeViewer
+          <CodePreview
             code={snippet}
             filename={filename}
             highlightLines={highlightLines}

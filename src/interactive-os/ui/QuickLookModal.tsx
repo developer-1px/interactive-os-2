@@ -6,7 +6,7 @@ import { Breadcrumb } from './Breadcrumb'
 import { PanelHeader } from './PanelHeader'
 import { getFileSource } from './fileRenderers'
 import { ax } from '@styles/ax'
-import './FileViewerModal.css'
+import './QuickLookModal.css'
 
 interface FileViewerModalProps {
   filePath: string | null
@@ -18,7 +18,7 @@ interface FileViewerModalProps {
 
 const DEFAULT_ROOT = '/Users/user/Desktop/aria'
 
-export function FileViewerModal({ filePath, editRanges, highlightLines: highlightLinesProp, root = DEFAULT_ROOT, onClose }: FileViewerModalProps) {
+export function QuickLookModal({ filePath, editRanges, highlightLines: highlightLinesProp, root = DEFAULT_ROOT, onClose }: FileViewerModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [fileContent, setFileContent] = useState('')
   const [error, setError] = useState(false)

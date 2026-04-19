@@ -3,9 +3,9 @@
 import { useState, useCallback, useImperativeHandle, forwardRef, useRef } from 'react'
 import { FilePreview } from './FilePreview'
 import { useAnimationQueue } from './useAnimationQueue'
-import type { HighlightTone } from './CodeViewer'
+import type { HighlightTone } from './CodePreview'
 import { editAnimationFrames, type TimedFrame } from './editAnimation'
-import type { FileViewerCommand, FileViewerHandle } from './viewerTypes'
+import type { FilePlayerCommand, FilePlayerHandle } from './workspaceTypes'
 import { Camera, type CameraHandle } from './Camera'
 import { ax } from '@styles/ax'
 
@@ -13,8 +13,8 @@ interface FileViewerProps {
   filename: string
 }
 
-export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
-  function FileViewer({ filename }, ref) {
+export const FilePlayer = forwardRef<FilePlayerHandle, FileViewerProps>(
+  function FilePlayer({ filename }, ref) {
     const [content, setContent] = useState<string | null>(null)
     const [highlights, setHighlights] = useState<Map<number, HighlightTone> | undefined>(undefined)
     const [cursorLine, setCursorLine] = useState<number | null>(null)
@@ -31,7 +31,7 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
 
     const { enqueueAll, clear: clearQueue } = useAnimationQueue<TimedFrame>({ onRelease, getDelay })
 
-    const dispatch = useCallback((cmd: FileViewerCommand) => {
+    const dispatch = useCallback((cmd: FilePlayerCommand) => {
       switch (cmd.type) {
         case 'open':
           clearQueue()

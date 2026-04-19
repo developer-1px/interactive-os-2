@@ -1,6 +1,6 @@
 // ② replayV2BeatPrd
 import type { ChatMessage, ChatBlock } from '@os/ui/chat/types'
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import type { Beat, BeatSession, CommitBeat, DiffBeat, ReadBeat, TerminalBeat } from './beatTypes'
 import { parseCommitMessage } from './parseCommitMessage'
 

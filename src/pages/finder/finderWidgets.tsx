@@ -6,14 +6,14 @@ import { FinderToolbar } from '@os/ui/FinderToolbar'
 import { EmptyState } from '@os/ui/EmptyState'
 import { ax } from '@styles/ax'
 import { FileTreeGrid } from '@entities/file/ui/FileTreeGrid'
-import { useViewer } from './viewerContext'
+import { useFinder } from './finderContext'
 import { FilePanel } from './widgets/FilePanel'
-import type { SortKey } from './viewerSort'
+import type { SortKey } from './finderSort'
 
 // ── Sidebar ──
 
-export function ViewerSidebarWidget() {
-  const { sidebarData, onSidebarActivate } = useViewer()
+export function FinderSidebarWidget() {
+  const { sidebarData, onSidebarActivate } = useFinder()
   // 사이드바 전체가 하나의 island — control-group.raised preset이 shape:island + padding + gap 자동 주입
   return (
     <div className={ax({ role: 'control-group', surface: 'raised', layout: 'stack', flex: '1' })}>
@@ -24,12 +24,12 @@ export function ViewerSidebarWidget() {
 
 // ── Toolbar ──
 
-export function ViewerToolbarWidget() {
-  const { viewMode, setViewMode, onSearchClick } = useViewer()
+export function FinderToolbarWidget() {
+  const { viewMode, setViewMode, onSearchClick } = useFinder()
   const { pathname } = useLocation()
   const handleBack = useCallback(() => window.history.back(), [])
   const handleForward = useCallback(() => window.history.forward(), [])
-  const path = pathname.replace(/^\/viewer\/?/, '') || '/'
+  const path = pathname.replace(/^\/finder\/?/, '') || '/'
   return (
     <FinderToolbar
       viewMode={viewMode}
@@ -44,8 +44,8 @@ export function ViewerToolbarWidget() {
 
 // ── TreeGrid content (list mode) ──
 
-export function ViewerTreeGridWidget() {
-  const { listStore, onChange, filters, sortKey, sortDir, onSort } = useViewer()
+export function FinderTreeGridWidget() {
+  const { listStore, onChange, filters, sortKey, sortDir, onSort } = useFinder()
 
   if (!listStore || Object.keys(listStore.entities).filter(k => !k.startsWith('__')).length === 0) {
     if (filters.length > 0) {
@@ -71,16 +71,16 @@ export function ViewerTreeGridWidget() {
 
 // ── Preview panel (list mode) ──
 
-export function ViewerPreviewWidget() {
-  const { previewPath } = useViewer()
+export function FinderPreviewWidget() {
+  const { previewPath } = useFinder()
   if (!previewPath) return null
   return <FilePanel path={previewPath} />
 }
 
 // ── MillerColumns content (columns mode) ──
 
-export function ViewerMillerWidget() {
-  const { initialStore, onChange } = useViewer()
+export function FinderMillerWidget() {
+  const { initialStore, onChange } = useFinder()
 
   // knowledge 가상 폴더에서 nodeId는 `${groupId}::${absPath}` 형태이므로
   // entity.data.path 를 우선 사용. 일반 파일 트리는 id === path.

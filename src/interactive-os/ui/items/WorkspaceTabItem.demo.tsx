@@ -3,14 +3,14 @@
 import React from 'react'
 import type { NodeState } from '../../pattern/types'
 import { TabList } from '../TabList'
-import { ViewerTabItem } from './ViewerTabItem'
+import { WorkspaceTabItem } from './WorkspaceTabItem'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 
 export const meta = {
   slug: 'viewer-tab-item',
   category: 'item' as const,
-  label: 'ViewerTabItem',
+  label: 'WorkspaceTabItem',
 }
 
 const data = createStore({
@@ -23,7 +23,7 @@ const data = createStore({
 })
 
 const renderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement =>
-  ViewerTabItem(props, node, state)
+  WorkspaceTabItem(props, node, state)
 
 export function Demo() {
   return <TabList data={data} renderItem={renderItem} aria-label="Viewer tabs" />

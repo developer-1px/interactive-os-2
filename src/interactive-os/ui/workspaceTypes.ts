@@ -1,5 +1,5 @@
 // ② 2026-04-03-viewer-command-prd.md
-import type { HighlightTone } from '@os/ui/CodeViewer'
+import type { HighlightTone } from '@os/ui/CodePreview'
 
 export interface LineRange {
   start: number
@@ -8,7 +8,7 @@ export interface LineRange {
 
 // --- Viewer tab types ---
 
-export type ViewerTab =
+export type WorkspaceTab =
   | FileTab
   | SearchTab
   | TerminalTab
@@ -34,9 +34,9 @@ export interface TerminalTab {
   output: string
 }
 
-// --- FileViewer commands ---
+// --- FilePlayer commands ---
 
-export type FileViewerCommand =
+export type FilePlayerCommand =
   | { type: 'open'; content: string }
   | { type: 'update-content'; content: string }
   | { type: 'highlight'; lines: Map<number, HighlightTone> }
@@ -45,6 +45,6 @@ export type FileViewerCommand =
   | { type: 'zoom-reset' }
   | { type: 'clear' }
 
-export interface FileViewerHandle {
-  dispatch: (command: FileViewerCommand) => void
+export interface FilePlayerHandle {
+  dispatch: (command: FilePlayerCommand) => void
 }

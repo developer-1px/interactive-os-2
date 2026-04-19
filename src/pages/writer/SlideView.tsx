@@ -3,7 +3,7 @@ import { ax } from '@styles/ax'
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { getChildren, getEntity } from '@os/store/createStore'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { MarkdownPreview } from '@os/ui/MarkdownPreview'
 import { showcaseMdConfig } from '../showcase/mdConfig'
 import styles from './SlideView.module.css'
 
@@ -81,7 +81,7 @@ export function SlideView({ data, slideIndex, slideCount }: SlideViewProps) {
         placement: 'viewport', surface: 'base' })}>
       <div className={ax({ layout: 'stack', width: 'prose' })}>
         <h1 className={ax({ textStyle: headingStyle })}>{slide.title}</h1>
-        <MarkdownViewer content={slide.content.join('\n\n')} config={showcaseMdConfig} />
+        <MarkdownPreview content={slide.content.join('\n\n')} config={showcaseMdConfig} />
       </div>
       <div className={`${styles.counter} ${ax({ textStyle: 'caption', placement: 'bottom' })}`}>
         {slideIndex + 1} / {slideCount}

@@ -1,5 +1,5 @@
 // ② replayV2BeatPrd
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import type { SubAgentFile, SubAgentSession } from './subAgentTypes'
 import { parseJsonl } from './parseJsonl'
 import { parseSubAgentMeta } from './parseSubAgentMeta'

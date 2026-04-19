@@ -99,7 +99,7 @@ export function useBookNavigation(input: BookNavigationInput): BookNavigationRes
     if (index != null) goTo(index)
   }, [pageIndexById, goTo])
 
-  // ── Link transform for MarkdownViewer ──
+  // ── Link transform for MarkdownPreview ──
   const linkTransform = useCallback((href: string) => {
     const match = href.match(/^\/?([\w/.-]+?)(?:\.mdx?)?$/)
     if (match && !href.startsWith('http')) {

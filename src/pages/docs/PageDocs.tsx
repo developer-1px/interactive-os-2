@@ -5,9 +5,9 @@ import { SpinnerIndicator } from '@os/ui/indicators'
 import { EmptyState } from '@os/ui/EmptyState'
 import { ax } from '@styles/ax'
 import { scroll } from '@os/plugins/scroll'
-import { fetchTree } from '../viewer/fsClient'
-import { treeToStore } from '../viewer/treeTransform'
-import { DocsPreview } from '../viewer/widgets/DocsPreview'
+import { fetchTree } from '../finder/fsClient'
+import { treeToStore } from '../finder/treeTransform'
+import { DocsPreview } from '../finder/widgets/DocsPreview'
 
 const DOCS_ROOT = '/Users/user/Desktop/aria/docs'
 

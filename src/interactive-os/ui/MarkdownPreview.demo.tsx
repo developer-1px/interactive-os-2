@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② component-catalog-prd.md
-import { MarkdownViewer } from './MarkdownViewer'
+import { MarkdownPreview } from './MarkdownPreview'
 
 export const meta = {
   slug: 'markdown-viewer',
   category: 'ui',
-  label: 'MarkdownViewer',
+  label: 'MarkdownPreview',
 }
 
 const content = `# Heading
@@ -17,5 +17,5 @@ A paragraph with **bold** and *italic* text.
 `
 
 export function Demo() {
-  return <MarkdownViewer content={content} />
+  return <MarkdownPreview content={content} />
 }

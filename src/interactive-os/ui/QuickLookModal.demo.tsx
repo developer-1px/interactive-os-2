@@ -1,13 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② component-catalog-prd.md
 import { useState } from 'react'
-import { FileViewerModal } from './FileViewerModal'
+import { QuickLookModal } from './QuickLookModal'
 import { Button } from './Button'
 
 export const meta = {
   slug: 'file-viewer-modal',
   category: 'ui',
-  label: 'FileViewerModal',
+  label: 'QuickLookModal',
 }
 
 export function Demo() {
@@ -18,7 +18,7 @@ export function Demo() {
       <Button variant="ghost" onClick={() => setPath('/Users/user/Desktop/aria/src/interactive-os/ui/Button.tsx')}>
         Open File Viewer
       </Button>
-      <FileViewerModal filePath={path} onClose={() => setPath(null)} />
+      <QuickLookModal filePath={path} onClose={() => setPath(null)} />
     </>
   )
 }

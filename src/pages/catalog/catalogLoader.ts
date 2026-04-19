@@ -25,7 +25,7 @@ const UI_AXES: Record<string, string[]> = {
   Form: ['navigate', 'value'],
   // Navigation — navigate / tab
   Breadcrumb: ['navigate'], NavList: ['navigate'], TocNavList: ['navigate'],
-  TabList: ['tab'], TabGroup: ['tab'], ViewerTabList: ['tab'],
+  TabList: ['tab'], TabGroup: ['tab'], WorkspaceTabList: ['tab'],
   Menubar: ['navigate', 'popup'], MenuList: ['navigate', 'activate'],
   FileTreeView: ['navigate', 'expand'], MillerColumns: ['navigate', 'select'],
   Toolbar: ['navigate', 'activate'], ButtonToolbar: ['navigate', 'activate'],
@@ -39,7 +39,7 @@ const UI_AXES: Record<string, string[]> = {
   // Overlay — popup / dismiss
   Dialog: ['popup', 'dismiss'], AlertDialog: ['popup', 'dismiss'],
   RouteModal: ['popup', 'dismiss'], Lightbox: ['popup', 'dismiss'],
-  FileViewerModal: ['popup', 'dismiss'], QuickOpen: ['popup', 'value'],
+  QuickLookModal: ['popup', 'dismiss'], QuickOpen: ['popup', 'value'],
   Toaster: ['popup', 'dismiss'], Tooltip: ['popup'],
   // Feedback — display
   Alert: ['display'], Avatar: ['display'], Badge: ['display'], EmptyState: ['display'],
@@ -47,8 +47,8 @@ const UI_AXES: Record<string, string[]> = {
   Spinner: ['display'], TerminalOutput: ['display'], Divider: ['display'],
   PropertyRow: ['display'], GroupHeader: ['display'], PanelHeader: ['display'],
   // Viewer — display / expand
-  CodeViewer: ['display'], FileIcon: ['display'], FilePreview: ['display'],
-  FileViewer: ['display'], MarkdownViewer: ['display'], SpreadReader: ['navigate', 'display'],
+  CodePreview: ['display'], FileIcon: ['display'], FilePreview: ['display'],
+  FilePlayer: ['display'], MarkdownPreview: ['display'], SpreadReader: ['navigate', 'display'],
   Accordion: ['expand'], DisclosureGroup: ['expand'],
   FilterBar: ['value', 'select'], Composer: ['value', 'edit'],
   // Layout — container
@@ -72,7 +72,7 @@ const UI_SUBCATEGORY: Record<string, string> = {
   Breadcrumb: 'Navigation', FileTreeView: 'Navigation', Menubar: 'Navigation',
   MenuList: 'Navigation', MillerColumns: 'Navigation', NavList: 'Navigation',
   TabGroup: 'Navigation', TabList: 'Navigation', TocNavList: 'Navigation',
-  Toolbar: 'Navigation', ButtonToolbar: 'Navigation', ViewerTabList: 'Navigation',
+  Toolbar: 'Navigation', ButtonToolbar: 'Navigation', WorkspaceTabList: 'Navigation',
   // Collection
   ListBox: 'Collection', ListBoxGrouped: 'Collection', MenuActivedescendant: 'Collection',
   Table: 'Collection', TreeGrid: 'Collection', TreeView: 'Collection',
@@ -80,15 +80,15 @@ const UI_SUBCATEGORY: Record<string, string> = {
   StreamFeed: 'Collection', SearchResults: 'Collection', PipelineGrid: 'Collection',
   // Overlay
   Dialog: 'Overlay', AlertDialog: 'Overlay', RouteModal: 'Overlay', Lightbox: 'Overlay',
-  FileViewerModal: 'Overlay', QuickOpen: 'Overlay', Toaster: 'Overlay', Tooltip: 'Overlay',
+  QuickLookModal: 'Overlay', QuickOpen: 'Overlay', Toaster: 'Overlay', Tooltip: 'Overlay',
   // Feedback
   Alert: 'Feedback', Avatar: 'Feedback', Badge: 'Feedback', EmptyState: 'Feedback',
   Kbd: 'Feedback', Meter: 'Feedback', Progress: 'Feedback', Skeleton: 'Feedback',
   Spinner: 'Feedback', TerminalOutput: 'Feedback', Divider: 'Feedback',
   PropertyRow: 'Feedback', GroupHeader: 'Feedback', PanelHeader: 'Feedback',
   // Viewer
-  CodeViewer: 'Viewer', FileIcon: 'Viewer', FilePreview: 'Viewer', FileViewer: 'Viewer',
-  MarkdownViewer: 'Viewer', SpreadReader: 'Viewer', Accordion: 'Viewer',
+  CodePreview: 'Viewer', FileIcon: 'Viewer', FilePreview: 'Viewer', FilePlayer: 'Viewer',
+  MarkdownPreview: 'Viewer', SpreadReader: 'Viewer', Accordion: 'Viewer',
   DisclosureGroup: 'Viewer', FilterBar: 'Viewer', Composer: 'Viewer',
   // Layout
   AriaZone: 'Layout', A2UISurface: 'Layout', Camera: 'Layout', FlatLayout: 'Layout',
@@ -104,7 +104,7 @@ function slugToComponentName(slug: string): string {
 const ITEM_SUBCATEGORY: Record<string, string> = {
   ListItem: 'Generic', TreeItem: 'Generic', MenuItem: 'Generic', MenubarItem: 'Generic',
   TabItem: 'Generic', TocItem: 'Generic', ToolbarItem: 'Generic',
-  ButtonToolbarItem: 'Generic', FileTreeItem: 'Generic', ViewerTabItem: 'Generic',
+  ButtonToolbarItem: 'Generic', FileTreeItem: 'Generic', WorkspaceTabItem: 'Generic',
   EditableListItem: 'Editable', EditableTreeItem: 'Editable', WriterItem: 'Editable',
   IssueRow: 'Specialized',
 }

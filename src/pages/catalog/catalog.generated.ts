@@ -503,9 +503,9 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     },
     {
-      "name": "CodeViewer",
-      "path": "src/interactive-os/ui/CodeViewer.tsx",
-      "demoPath": "src/interactive-os/ui/CodeViewer.demo.tsx",
+      "name": "CodePreview",
+      "path": "src/interactive-os/ui/CodePreview.tsx",
+      "demoPath": "src/interactive-os/ui/CodePreview.demo.tsx",
       "category": "ui",
       "propsSignature": {},
       "gaps": {
@@ -916,9 +916,9 @@ export const catalog: CatalogGenerated = {
       "jsDoc": "TreeView specialized for file/directory nodes.\nUses FileTreeItem (with FileIcon + depth indentation) as default item."
     },
     {
-      "name": "FileViewer",
-      "path": "src/interactive-os/ui/FileViewer.tsx",
-      "demoPath": "src/interactive-os/ui/FileViewer.demo.tsx",
+      "name": "FilePlayer",
+      "path": "src/interactive-os/ui/FilePlayer.tsx",
+      "demoPath": "src/interactive-os/ui/FilePlayer.demo.tsx",
       "category": "ui",
       "propsSignature": {},
       "gaps": {
@@ -946,9 +946,9 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     },
     {
-      "name": "FileViewerModal",
-      "path": "src/interactive-os/ui/FileViewerModal.tsx",
-      "demoPath": "src/interactive-os/ui/FileViewerModal.demo.tsx",
+      "name": "QuickLookModal",
+      "path": "src/interactive-os/ui/QuickLookModal.tsx",
+      "demoPath": "src/interactive-os/ui/QuickLookModal.demo.tsx",
       "category": "ui",
       "propsSignature": {},
       "gaps": {
@@ -1386,9 +1386,9 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     },
     {
-      "name": "MarkdownViewer",
-      "path": "src/interactive-os/ui/MarkdownViewer.tsx",
-      "demoPath": "src/interactive-os/ui/MarkdownViewer.demo.tsx",
+      "name": "MarkdownPreview",
+      "path": "src/interactive-os/ui/MarkdownPreview.tsx",
+      "demoPath": "src/interactive-os/ui/MarkdownPreview.demo.tsx",
       "category": "ui",
       "propsSignature": {},
       "gaps": {
@@ -2909,9 +2909,9 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     },
     {
-      "name": "ViewerTabList",
-      "path": "src/interactive-os/ui/ViewerTabList.tsx",
-      "demoPath": "src/interactive-os/ui/ViewerTabList.demo.tsx",
+      "name": "WorkspaceTabList",
+      "path": "src/interactive-os/ui/WorkspaceTabList.tsx",
+      "demoPath": "src/interactive-os/ui/WorkspaceTabList.demo.tsx",
       "category": "ui",
       "propsSignature": {},
       "gaps": {
@@ -5418,9 +5418,9 @@ export const catalog: CatalogGenerated = {
       "jsDoc": null
     },
     {
-      "name": "ViewerTabItem",
-      "path": "src/interactive-os/ui/items/ViewerTabItem.tsx",
-      "demoPath": "src/interactive-os/ui/items/ViewerTabItem.demo.tsx",
+      "name": "WorkspaceTabItem",
+      "path": "src/interactive-os/ui/items/WorkspaceTabItem.tsx",
+      "demoPath": "src/interactive-os/ui/items/WorkspaceTabItem.demo.tsx",
       "category": "items",
       "propsSignature": {},
       "gaps": {

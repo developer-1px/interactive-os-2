@@ -8,7 +8,7 @@ import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { Panel } from '@os/ui/panels'
 import { FilePreview } from '@os/ui/FilePreview'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { MarkdownPreview } from '@os/ui/MarkdownPreview'
 import { showcaseMdConfig } from '../showcase/mdConfig'
 import { TabList } from '@os/ui/TabList'
 import { NavList } from '@os/ui/NavList'
@@ -51,7 +51,7 @@ function SummaryPreview({ title, body }: { title: string; body: string }) {
   return (
     <div className={ax({ layout: 'stack' })}>
       <span className={ax({ textStyle: 'label' })}>{title}</span>
-      <MarkdownViewer content={body} prose={false} codePreset="chat" config={showcaseMdConfig} />
+      <MarkdownPreview content={body} prose={false} codePreset="chat" config={showcaseMdConfig} />
     </div>
   )
 }

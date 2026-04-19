@@ -1,6 +1,6 @@
 // ② 2026-03-31-chat-perf-prd.md
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { MarkdownViewer } from '../MarkdownViewer'
+import { MarkdownPreview } from '../MarkdownPreview'
 import type { StreamingTextBlock as StreamingTextBlockType } from './types'
 
 const FLUSH_TIMEOUT_MS = 200
@@ -69,5 +69,5 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
 
   if (!displayed) return null
 
-  return <MarkdownViewer content={displayed} prose={false} codePreset="chat" />
+  return <MarkdownPreview content={displayed} prose={false} codePreset="chat" />
 }

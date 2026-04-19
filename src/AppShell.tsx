@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
-import { FileViewerModal } from '@os/ui/FileViewerModal'
+import { QuickLookModal } from '@os/ui/QuickLookModal'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { KeylineOverlay } from './devtools/KeylineOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
@@ -68,7 +68,7 @@ export default function AppShell() {
         <div className={`page-content ${ax({ layout: 'scroll', flex: '1' })}`}>
           <Outlet />
         </div>
-        <FileViewerModal
+        <QuickLookModal
           filePath={previewFile?.path ?? null}
           highlightLines={previewFile?.line ? new Set([previewFile.line]) : undefined}
           onClose={() => setPreviewFile(null)}

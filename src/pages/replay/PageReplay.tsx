@@ -7,14 +7,14 @@ import type { ChatMessage } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
 import { parseJsonl } from './parseJsonl'
 import { useViewerTabs } from './useViewerTabs'
-import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
+import type { FilePlayerHandle, WorkspaceTab } from '@os/ui/workspaceTypes'
 import { ReplayProvider, type ReplayContextValue } from './replayContext'
 import { ReplayStageWidget, ReplaySidebarWidget } from './replayWidgets'
 import { useActiveSessions } from './useActiveSessions'
 import { useSubAgentSessions } from './useSubAgentSessions'
 import { matchSubAgents } from './matchSubAgents'
 import { SubAgentStageWidget } from './SubAgentStageWidget'
-import { useTimeline } from '../viewer/viewerStore'
+import { useTimeline } from '../finder/finderStore'
 import type { SubAgentFile } from './subAgentTypes'
 
 // ── Session loading ──
@@ -41,7 +41,7 @@ const sessionEntries: SessionEntry[] = [
   })),
 ]
 
-function tabLabel(tab: ViewerTab): string {
+function tabLabel(tab: WorkspaceTab): string {
   switch (tab.type) {
     case 'file': {
       const parts = (tab.path ?? 'output').split('/')
@@ -60,7 +60,7 @@ function ReplaySlot({ entry, index, register }: { entry: SessionEntry; index: nu
   const [allMessages, setAllMessages] = useState<ChatMessage[]>([])
 
   const viewerTabs = useViewerTabs()
-  const fileViewerRef = useRef<FileViewerHandle>(null)
+  const fileViewerRef = useRef<FilePlayerHandle>(null)
 
   // Load session data — jsonl/json directly into allMessages, ShortCard renders via toBeats
   useEffect(() => {
@@ -135,7 +135,7 @@ function LiveSlot({ slotIndex, sessionId, parentActive, subagentFiles, register 
   register: RegisterCtx
 }) {
   const viewerTabs = useViewerTabs()
-  const fileViewerRef = useRef<FileViewerHandle>(null)
+  const fileViewerRef = useRef<FilePlayerHandle>(null)
   const { tabs, activeTab, activeTabId, setActiveTab } = viewerTabs
 
   // SubAgent 구독 (Live 모드에서만)

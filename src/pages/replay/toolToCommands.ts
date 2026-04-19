@@ -1,16 +1,16 @@
 // ② 2026-04-03-viewer-command-prd.md
-import type { TimelineEvent } from '../viewer/groupEvents'
-import type { FileViewerHandle } from '@os/ui/viewerTypes'
+import type { TimelineEvent } from '../finder/groupEvents'
+import type { FilePlayerHandle } from '@os/ui/workspaceTypes'
 import type { FileState } from './fileState'
 import { applyRead, applyEdit, applyWrite } from './fileState'
-import { fetchFile } from '../viewer/fsClient'
+import { fetchFile } from '../finder/fsClient'
 import type { UseViewerTabsReturn } from './useViewerTabs'
 
 /**
  * Process a batch of new timeline events:
  * - Update fileState
  * - Dispatch viewer tab opens
- * - Dispatch FileViewer commands
+ * - Dispatch FilePlayer commands
  *
  * Returns a cleanup-safe promise (for async file fetches).
  */
@@ -19,7 +19,7 @@ export function processToolEvents(
   fileState: FileState,
   fetchedFiles: Set<string>,
   viewerTabs: UseViewerTabsReturn,
-  getFileViewerRef: (path: string) => FileViewerHandle | null,
+  getFileViewerRef: (path: string) => FilePlayerHandle | null,
 ): Promise<void> {
   const toFetch = new Set<string>()
   const deferred: (() => void)[] = []

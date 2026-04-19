@@ -1,7 +1,7 @@
 // ② replay-raw-discuss — 세션별 raw JSON을 1초 간격으로 자동 순회 (visual 없음)
 // @useState-hatch — fetch된 docs, 재생 상태(playing/index)는 os 축에 없어 로컬 상태로 보유
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { CodeViewer } from '@os/ui/CodeViewer'
+import { CodePreview } from '@os/ui/CodePreview'
 import { Button } from '@os/ui/Button'
 import { ScrollArea } from '@os/ui/ScrollArea'
 import { DirectionIndicator } from '@os/ui/indicators'
@@ -119,7 +119,7 @@ export default function PageReplayRaw() {
       </div>
 
       <ScrollArea>
-        <CodeViewer code={code} filename={`${sessionId ?? 'entry'}.json`} preset="doc" wrap />
+        <CodePreview code={code} filename={`${sessionId ?? 'entry'}.json`} preset="doc" wrap />
       </ScrollArea>
     </div>
   )

@@ -97,7 +97,7 @@ const PROJECT_KEYWORDS: Record<string, string[]> = {
   // Apps (src/pages)
   cms: ['CMS', 'cms', 'landing', 'paste', 'canvas', 'sidebar', 'detail panel', 'cmsStore', 'cmsSchema'],
   writer: ['Writer', 'writer', 'MD 구조', '산문'],
-  viewer: ['Viewer', 'viewer', 'Quick Open', 'dep graph', 'lightbox', 'ChatFeed 포팅', 'splitByFilePaths', 'usePacedReveal'],
+  finder: ['Finder', 'finder', 'Viewer', 'viewer', 'Quick Open', 'dep graph', 'lightbox', 'ChatFeed 포팅', 'splitByFilePaths', 'usePacedReveal'],
   chat: ['chat', 'Chat', '채팅', 'ChatFeed', 'Composer', 'WebSocket', 'Agent SDK', '채팅 블록', 'MarkdownBlock', 'ProgressStep', 'Terminal', 'DiffView', 'AgentStep', 'StatCard', 'MetricBar', 'ThinkingBlock', 'FileRef', 'Citation', 'ConfirmAction'],
   showcase: ['showcase', 'Showcase', '쇼케이스', 'treegrid 쇼케이스'],
   creator: ['creator', 'Creator', '컴포넌트 생성'],
@@ -189,7 +189,7 @@ export function getProjects(): ProjectInfo[] {
 
   // App projects (src/pages/*)
   const APP_DISPLAY_NAMES: Record<string, string> = {
-    cms: 'CMS', viewer: 'Viewer', writer: 'Writer', chat: 'Chat',
+    cms: 'CMS', finder: 'Finder', writer: 'Writer', chat: 'Chat',
     showcase: 'Showcase', creator: 'Creator', a2ui: 'A2UI',
     storymap: 'Story Map', replay: 'Replay', incident: 'Incident',
     theme: 'Theme', book: 'Book', i18n: 'i18n',
@@ -197,7 +197,7 @@ export function getProjects(): ProjectInfo[] {
   }
 
   const APP_PATHS: Record<string, string> = {
-    cms: '/', viewer: '/viewer', writer: '/writer', chat: '/chat',
+    cms: '/', finder: '/finder', writer: '/writer', chat: '/chat',
     showcase: '/ui', creator: '/creator', a2ui: '/a2ui',
     storymap: '/storymap', replay: '/replay', incident: '/incident',
     theme: '/internals/theme', book: '/book', i18n: '/i18n',

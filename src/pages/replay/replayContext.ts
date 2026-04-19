@@ -2,7 +2,7 @@ import type { RefObject } from 'react'
 import { createDomainContext } from '@os/layout'
 import type { NormalizedData } from '@os/store/types'
 import type { ChatMessage } from '@os/ui/chat/types'
-import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
+import type { FilePlayerHandle, WorkspaceTab } from '@os/ui/workspaceTypes'
 import type { UseViewerTabsReturn } from './useViewerTabs'
 import type { SubAgentSession } from './subAgentTypes'
 import type { SubAgentMatch } from './matchSubAgents'
@@ -18,12 +18,12 @@ export interface ReplayContextValue {
   editingLine: number | null
   mode: 'replay' | 'live'
   liveSessionId?: string | null
-  tabs: ViewerTab[]
-  activeTab: ViewerTab | null
+  tabs: WorkspaceTab[]
+  activeTab: WorkspaceTab | null
   activeTabId: string | null
   setActiveTab: (id: string) => void
   viewerTabData: NormalizedData
-  fileViewerRef: RefObject<FileViewerHandle | null>
+  fileViewerRef: RefObject<FilePlayerHandle | null>
   viewerTabs: UseViewerTabsReturn
   /**
    * Live 모드에서만 채워짐. Replay 모드면 undefined.

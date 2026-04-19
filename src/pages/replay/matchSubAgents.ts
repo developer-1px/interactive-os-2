@@ -1,4 +1,4 @@
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import type { SubAgentMatchKey, SubAgentSession } from './subAgentTypes'
 
 /** 매칭 결과 1건. orphan=true면 parentToolUseId 미결정. */

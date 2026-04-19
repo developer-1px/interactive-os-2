@@ -1,6 +1,6 @@
 /** @catalog 파일 내용 미리보기 — registry 기반 (이미지/코드/마크다운) */
 // ② code-viewer-prd.md
-import { CodeViewer, type HighlightTone, type CodeViewerPreset } from './CodeViewer'
+import { CodePreview, type HighlightTone, type CodeViewerPreset } from './CodePreview'
 import { getFileRenderer, defineFileRenderer, type FileRenderProps } from './fileRenderers'
 import { ax } from '@styles/ax'
 
@@ -38,7 +38,7 @@ export function FilePreview({ content, filename, highlightLines, preset = 'doc',
   }
 
   return (
-    <CodeViewer
+    <CodePreview
       code={content}
       filename={filename}
       highlightLines={highlightLines}

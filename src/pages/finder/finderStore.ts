@@ -42,8 +42,8 @@ interface StoreState {
 // --- HMR-safe initialization ---
 
 function getStore(): StoreState {
-  if (import.meta.hot?.data?.viewerStore) {
-    return import.meta.hot.data.viewerStore as StoreState
+  if (import.meta.hot?.data?.finderStore) {
+    return import.meta.hot.data.finderStore as StoreState
   }
   const state: StoreState = {
     sessions: new Map(),
@@ -52,7 +52,7 @@ function getStore(): StoreState {
     filesSubs: new Set(),
   }
   if (import.meta.hot) {
-    import.meta.hot.data.viewerStore = state
+    import.meta.hot.data.finderStore = state
   }
   return state
 }

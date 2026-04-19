@@ -33,7 +33,7 @@ function makeStore(): NormalizedData {
 }
 
 // @test-harness — regression test: documents broken vs fixed Aria integration pattern
-function BrokenViewer() {
+function BrokenFinder() {
   const [store, setStore] = useState(makeStore)
   const [selected, setSelected] = useState<string | null>(null)
 
@@ -60,7 +60,7 @@ function BrokenViewer() {
 }
 
 // @test-harness
-function FixedViewer() {
+function FixedFinder() {
   const [selected, setSelected] = useState<string | null>(null)
   const [initialStore] = useState(makeStore)
 
@@ -114,9 +114,9 @@ async function expandAndNavigate(container: HTMLElement) {
   return focused?.getAttribute('data-node-id')
 }
 
-describe('viewer focus loss — reproduction', () => {
+describe('finder focus loss — reproduction', () => {
   it('BROKEN: setStore in onChange causes focus loss, ArrowDown fails', async () => {
-    const { container } = render(<BrokenViewer />)
+    const { container } = render(<BrokenFinder />)
     const focusedAfterArrowDown = await expandAndNavigate(container)
 
     // In the broken pattern, ArrowDown may not work because focus was lost
@@ -127,7 +127,7 @@ describe('viewer focus loss — reproduction', () => {
   })
 
   it('FIXED: no setStore in onChange, ArrowDown works correctly', async () => {
-    const { container } = render(<FixedViewer />)
+    const { container } = render(<FixedFinder />)
     const focusedAfterArrowDown = await expandAndNavigate(container)
 
     // In the fixed pattern, ArrowDown must work
@@ -136,7 +136,7 @@ describe('viewer focus loss — reproduction', () => {
 
   it('FIXED: multiple ArrowDown presses navigate through all children', async () => {
     const user = userEvent.setup()
-    const { container } = render(<FixedViewer />)
+    const { container } = render(<FixedFinder />)
 
     await waitFor(() => {
       expect(container.querySelector('[data-node-id="/src"]')).toBeTruthy()
@@ -162,7 +162,7 @@ describe('viewer focus loss — reproduction', () => {
 
   it('FIXED: ArrowUp works after navigating down', async () => {
     const user = userEvent.setup()
-    const { container } = render(<FixedViewer />)
+    const { container } = render(<FixedFinder />)
 
     await waitFor(() => {
       expect(container.querySelector('[data-node-id="/src"]')).toBeTruthy()

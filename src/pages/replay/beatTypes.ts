@@ -24,7 +24,7 @@ export interface TerminalBeat extends BeatBase {
 export interface DiffBeat extends BeatBase {
   kind: 'diff'
   file: string
-  /** Edit 전 파일 콘텐츠 (FileViewer editAnimate 입력). 1차: oldStr fallback */
+  /** Edit 전 파일 콘텐츠 (FilePlayer editAnimate 입력). 1차: oldStr fallback */
   preContent: string
   oldStr: string
   newStr: string

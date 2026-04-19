@@ -476,7 +476,7 @@
   display: block;
 }
 
-/* FileViewer-based Read/Edit beat */
+/* FilePlayer-based Read/Edit beat */
 .beat-fileview {
   background: var(--beat-bg-dark);
 }

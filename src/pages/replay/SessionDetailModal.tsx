@@ -10,14 +10,14 @@ import { useAnimationQueue } from '@os/ui/useAnimationQueue'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
 import type { ChatMessage } from '@os/ui/chat/types'
-import type { FileViewerHandle } from '@os/ui/viewerTypes'
-import type { TimelineEvent } from '../viewer/groupEvents'
-import { timelineToMessages } from '../viewer/timelineTransform'
+import type { FilePlayerHandle } from '@os/ui/workspaceTypes'
+import type { TimelineEvent } from '../finder/groupEvents'
+import { timelineToMessages } from '../finder/timelineTransform'
 import { chatReducer, toReplayDeltas } from './replayDelta'
 import type { TimedDelta } from './replayDelta'
 import { extractToolSteps } from './parseJsonl'
 import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
-import { fetchFile } from '../viewer/fsClient'
+import { fetchFile } from '../finder/fsClient'
 import { editAnimationFrames, readFrames, writeFrames, type TimedFrame } from '@os/ui/editAnimation'
 import { useViewerTabs } from './useViewerTabs'
 import { ReplayProvider, type ReplayContextValue } from './replayContext'
@@ -41,7 +41,7 @@ function SessionReplaySlot({ sessionId }: { sessionId: string }) {
   const hasStartedRef = useRef(false)
 
   const viewerTabs = useViewerTabs()
-  const fileViewerRef = useRef<FileViewerHandle>(null)
+  const fileViewerRef = useRef<FilePlayerHandle>(null)
   const activeFileRef = useRef<string | null>(null)
 
   // Load timeline from API
@@ -89,7 +89,7 @@ function SessionReplaySlot({ sessionId }: { sessionId: string }) {
         }
       }
     }
-    // Highlights & cursor drive Camera directly via FileViewer dispatch.
+    // Highlights & cursor drive Camera directly via FilePlayer dispatch.
     // No flag state-machine — current input conditions fully determine the intent.
     if (f.highlights !== undefined && fileViewerRef.current) {
       if (f.highlights) {

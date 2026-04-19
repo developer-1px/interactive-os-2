@@ -2,7 +2,7 @@
 import { memo } from 'react'
 import { ax } from '@styles/ax'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
-import { MarkdownViewer } from '../MarkdownViewer'
+import { MarkdownPreview } from '../MarkdownPreview'
 import { useChatFeatures } from './chatFeatures'
 import { useDisclosure } from './useDisclosure'
 import type { DataBlock } from './types'
@@ -36,7 +36,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
       </div>
       {expanded && !isLatest && (
         <div className="break-word thinking-content">
-          <MarkdownViewer content={text} prose={false} codePreset="chat" />
+          <MarkdownPreview content={text} prose={false} codePreset="chat" />
         </div>
       )}
     </div>

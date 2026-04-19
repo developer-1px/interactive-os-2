@@ -5,7 +5,7 @@ import type { AxInteractive } from '@styles/ax'
 import { ax } from '@styles/ax'
 import { Button } from '../Button'
 import { Badge } from '../Badge'
-import { MarkdownViewer } from '../MarkdownViewer'
+import { MarkdownPreview } from '../MarkdownPreview'
 
 export type ChatMessageRole = 'user' | 'assistant' | 'system'
 
@@ -142,7 +142,7 @@ export function ChatMessageItem({
         width: 'full',
       })} ${ax.raw({ padding: 'sm', gap: 'xs' })}`}
     >
-      <MarkdownViewer content={content} />
+      <MarkdownPreview content={content} />
     </div>
   )
 }

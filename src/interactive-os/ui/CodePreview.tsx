@@ -5,7 +5,7 @@ import { codeToHtml } from 'shiki'
 import { ax } from '@styles/ax'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme } from './shikiUtils'
 import { CopyButton } from './CopyButton'
-import './CodeViewer.css'
+import './CodePreview.css'
 
 // ② code-viewer-prd.md — HighlightTone: replay/diff의 5 tone 라벨
 export type HighlightTone = 'edited' | 'selected' | 'deleted' | 'inserted' | 'context'
@@ -38,7 +38,7 @@ const PRESET_RECIPES: Record<CodeViewerPreset, PresetRecipe> = {
 }
 
 // ② code-viewer-prd.md
-export function CodeViewer({
+export function CodePreview({
   code,
   filename,
   preset = 'doc',

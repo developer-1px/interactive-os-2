@@ -1,11 +1,11 @@
 // ② 2026-04-03-viewer-command-prd.md
 import { useState, useCallback, useMemo } from 'react'
-import type { ViewerTab, FileTab, SearchTab, TerminalTab } from '@os/ui/viewerTypes'
+import type { WorkspaceTab, FileTab, SearchTab, TerminalTab } from '@os/ui/workspaceTypes'
 
 export interface UseViewerTabsReturn {
-  tabs: ViewerTab[]
+  tabs: WorkspaceTab[]
   activeTabId: string | null
-  activeTab: ViewerTab | null
+  activeTab: WorkspaceTab | null
   setActiveTab: (id: string) => void
   openFile: (path: string, content: string) => FileTab
   openSearch: (query: string, output: string) => SearchTab
@@ -16,7 +16,7 @@ export interface UseViewerTabsReturn {
 }
 
 export function useViewerTabs(): UseViewerTabsReturn {
-  const [tabMap, setTabMap] = useState<Map<string, ViewerTab>>(new Map())
+  const [tabMap, setTabMap] = useState<Map<string, WorkspaceTab>>(new Map())
   const [activeTabId, setActiveTabId] = useState<string | null>(null)
   const [editedPaths, setEditedPaths] = useState<Set<string>>(new Set())
 

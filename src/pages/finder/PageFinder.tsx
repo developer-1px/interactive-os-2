@@ -7,14 +7,14 @@ import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
-import { baseLayout } from './viewerLayout'
+import { baseLayout } from './finderLayout'
 import { updateEntityData } from '@os/store/createStore'
 import { QuickOpen } from '@os/ui/QuickOpen'
 import type { NormalizedData } from '@os/store/types'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import { sortStore, type SortKey, type SortDir } from './viewerSort'
-import { filterStore } from './viewerFilter'
+import { sortStore, type SortKey, type SortDir } from './finderSort'
+import { filterStore } from './finderFilter'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { EXPANDED_ID } from '@os/axis/expand'
 import { DEFAULT_ROOT, type FileNodeData } from './types'
@@ -25,16 +25,16 @@ import { indexToTree, type KnowledgeGroupBy } from './knowledgeTransform'
 import { pathParser } from '@os/plugins/urlParsers'
 import { useUrlSync } from '@os/plugins/useUrlSync'
 import { ax } from '@styles/ax'
-import { ViewerProvider, type ViewerContextValue } from './viewerContext'
+import { FinderProvider, type FinderContextValue } from './finderContext'
 import {
-  ViewerSidebarWidget,
-  ViewerToolbarWidget,
-  ViewerTreeGridWidget,
-  ViewerPreviewWidget,
-  ViewerMillerWidget,
-} from './viewerWidgets'
+  FinderSidebarWidget,
+  FinderToolbarWidget,
+  FinderTreeGridWidget,
+  FinderPreviewWidget,
+  FinderMillerWidget,
+} from './finderWidgets'
 
-const VIEWMODE_KEY = 'viewer-viewmode'
+const VIEWMODE_KEY = 'finder-viewmode'
 
 type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode }
 
@@ -105,12 +105,12 @@ const sidebarData = createStore({
   },
 })
 
-const viewerWidgets = createWidgetRegistry({
-  ViewerSidebar: ViewerSidebarWidget,
-  ViewerToolbar: ViewerToolbarWidget,
-  ViewerTreeGrid: ViewerTreeGridWidget,
-  ViewerPreview: ViewerPreviewWidget,
-  ViewerMiller: ViewerMillerWidget,
+const finderWidgets = createWidgetRegistry({
+  FinderSidebar: FinderSidebarWidget,
+  FinderToolbar: FinderToolbarWidget,
+  FinderTreeGrid: FinderTreeGridWidget,
+  FinderPreview: FinderPreviewWidget,
+  FinderMiller: FinderMillerWidget,
 })
 
 function resolveRoot(key: string): string {
@@ -125,7 +125,7 @@ function detectRootFromPath(id: string): string {
   return SIDEBAR_ROOTS.find((f) => f.id !== 'root' && id.startsWith(f.path + '/'))?.id ?? DEFAULT_FAVORITE_ID
 }
 
-export default function PageViewer() {
+export default function PageFinder() {
   const navigate = useNavigate()
 
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null) // @useState-hatch
@@ -146,7 +146,7 @@ export default function PageViewer() {
   // ── Tree fetch ──
 
   useEffect(() => {
-    const initialFilePath = urlPathToFilePath(window.location.pathname, 'viewer', DEFAULT_ROOT)
+    const initialFilePath = urlPathToFilePath(window.location.pathname, 'finder', DEFAULT_ROOT)
     // mddb-index 먼저 로드하여 md 파일의 frontmatter.title을 tree display name으로 사용
     Promise.all([
       fetchMddbIndex().then((idx) => {
@@ -193,7 +193,7 @@ export default function PageViewer() {
 
   // ── URL sync ──
 
-  const viewerParser = useMemo(() => pathParser({ prefix: 'viewer', root: DEFAULT_ROOT }), [])
+  const finderParser = useMemo(() => pathParser({ prefix: 'finder', root: DEFAULT_ROOT }), [])
   const fetchIdRef = useRef(0)
   const currentRootRef = useRef(currentRoot)
   useEffect(() => { currentRootRef.current = currentRoot }, [currentRoot])
@@ -224,7 +224,7 @@ export default function PageViewer() {
       setInitialStore(store)
     })
   }, [])
-  useUrlSync({ parser: viewerParser, onUrlChange: handleUrlChange })
+  useUrlSync({ parser: finderParser, onUrlChange: handleUrlChange })
 
   // ── Handlers ──
 
@@ -234,7 +234,7 @@ export default function PageViewer() {
     if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
       const path = (entity.data as unknown as FileNodeData).path
       setPreviewPath(path)
-      navigate(filePathToUrlPath(path, 'viewer', DEFAULT_ROOT), { replace: false })
+      navigate(filePathToUrlPath(path, 'finder', DEFAULT_ROOT), { replace: false })
     } else {
       setPreviewPath(null)
     }
@@ -248,7 +248,7 @@ export default function PageViewer() {
       fetchMddbIndex().then((idx) => {
         setInitialStore(indexToTree(idx, groupBy))
       }).catch((err) => {
-        console.error('[viewer] failed to load mddb-index.json', err)
+        console.error('[finder] failed to load mddb-index.json', err)
       })
       return
     }
@@ -300,12 +300,12 @@ export default function PageViewer() {
   useEffect(() => { setQuickOpenVisibleRef.current = setQuickOpenVisible }, [setQuickOpenVisible])
 
   const quickOpenKeyMap = useMemo(() => ({
-    'Meta+p': defineRouteKey('viewer:quick-open', () => setQuickOpenVisibleRef.current(true), 'Viewer'),
+    'Meta+p': defineRouteKey('finder:quick-open', () => setQuickOpenVisibleRef.current(true), 'Finder'),
   }), [])
 
   // ── Context ──
 
-  const viewerCtx = useMemo<ViewerContextValue>(() => ({
+  const finderCtx = useMemo<FinderContextValue>(() => ({
     initialStore: initialStore!,
     listStore,
     sidebarData,
@@ -323,18 +323,18 @@ export default function PageViewer() {
   return (
     <AriaRoute keyMap={quickOpenKeyMap}>
       <div className={ax({ layout: 'row', flex: '1' })}>
-        <ViewerProvider value={viewerCtx}>
-          <FlatLayout data={layoutData} registry={viewerWidgets} aria-label="File viewer" />
-        </ViewerProvider>
+        <FinderProvider value={finderCtx}>
+          <FlatLayout data={layoutData} registry={finderWidgets} aria-label="File finder" />
+        </FinderProvider>
 
         {quickOpenVisible && initialStore && (
           <QuickOpen
             fileStore={initialStore}
             root={DEFAULT_ROOT}
-            persistKey="viewer-quickopen-query"
+            persistKey="finder-quickopen-query"
             onSelect={(filePath) => {
               setPreviewPath(filePath)
-              navigate(filePathToUrlPath(filePath, 'viewer', DEFAULT_ROOT))
+              navigate(filePathToUrlPath(filePath, 'finder', DEFAULT_ROOT))
             }}
             onClose={() => setQuickOpenVisible(false)}
           />

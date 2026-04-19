@@ -29,7 +29,7 @@ function fixtureStore(): NormalizedData {
   })
 }
 
-describe('viewer tree — reproduction tests', () => {
+describe('finder tree — reproduction tests', () => {
   it('renders the file tree with correct structure', () => {
     const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
     const nodes = container.querySelectorAll('[data-node-id]')

@@ -1,4 +1,4 @@
-import type { MarkdownRendererConfig } from '@os/ui/MarkdownViewer'
+import type { MarkdownRendererConfig } from '@os/ui/MarkdownPreview'
 import remarkRender from './remarkRender'
 import { parseJsx } from './parseJsx'
 import { mdComponents } from './mdComponents'

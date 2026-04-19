@@ -8,10 +8,10 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
-import { CodeViewer, type CodeViewerPreset } from './CodeViewer'
+import { CodePreview, type CodeViewerPreset } from './CodePreview'
 import { FrontmatterCard } from './FrontmatterCard'
 import { LightboxProvider, useLightbox } from './Lightbox'
-import './MarkdownViewer.css'
+import './MarkdownPreview.css'
 
 export type CodePreset = CodeViewerPreset
 
@@ -149,11 +149,11 @@ function MarkdownContent({ content, className, codePreset, prose, linkTransform,
           const Mermaid = config.mermaidComponent
           return <Mermaid code={text} onClick={() => lightbox.open({ type: 'mermaid', code: text })} />
         }
-        return <CodeViewer code={text} filename="code.mermaid" preset={codePreset} />
+        return <CodePreview code={text} filename="code.mermaid" preset={codePreset} />
       }
 
       if (lang) {
-        return <CodeViewer code={text} filename={`code.${lang}`} preset={codePreset} />
+        return <CodePreview code={text} filename={`code.${lang}`} preset={codePreset} />
       }
 
       return <code className={className} {...props}>{children}</code>
@@ -178,7 +178,7 @@ function MarkdownContent({ content, className, codePreset, prose, linkTransform,
   )
 }
 
-export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codePreset, prose = true, linkTransform, config, showFrontmatter = true }: { content: string; className?: string; codePreset?: CodePreset; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig; showFrontmatter?: boolean }) {
+export const MarkdownPreview = memo(function MarkdownPreview({ content, className, codePreset, prose = true, linkTransform, config, showFrontmatter = true }: { content: string; className?: string; codePreset?: CodePreset; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig; showFrontmatter?: boolean }) {
   return (
     <LightboxProvider>
       <MarkdownContent content={content} className={className} codePreset={codePreset} prose={prose} linkTransform={linkTransform} config={config} showFrontmatter={showFrontmatter} />

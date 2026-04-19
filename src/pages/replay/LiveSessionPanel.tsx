@@ -1,8 +1,8 @@
 // @useState-hatch — userSelectedId: derived from activeSessions, needs OS select axis migration
 // ② 2026-04-03-viewer-command-prd.md
 import { useState, useEffect, useMemo, useRef, type RefObject } from 'react'
-import { connectSession, disconnectSession, useTimeline, useSessionMeta } from '../viewer/viewerStore'
-import { timelineToMessages } from '../viewer/timelineTransform'
+import { connectSession, disconnectSession, useTimeline, useSessionMeta } from '../finder/finderStore'
+import { timelineToMessages } from '../finder/timelineTransform'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
 import { TabList } from '@os/ui/TabList'
 import { createStore } from '@os/store/createStore'
@@ -13,11 +13,11 @@ import { createFileState } from './fileState'
 import { processToolEvents } from './toolToCommands'
 import { chatRenderers } from './replayRenderers'
 import type { UseViewerTabsReturn } from './useViewerTabs'
-import type { FileViewerHandle } from '@os/ui/viewerTypes'
+import type { FilePlayerHandle } from '@os/ui/workspaceTypes'
 
 interface LiveSessionPanelProps {
   viewerTabs: UseViewerTabsReturn
-  fileViewerRef: RefObject<FileViewerHandle | null>
+  fileViewerRef: RefObject<FilePlayerHandle | null>
 }
 
 export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanelProps) {
@@ -68,7 +68,7 @@ export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanel
 function LiveFeed({ sessionId, viewerTabs, fileViewerRef }: {
   sessionId: string
   viewerTabs: UseViewerTabsReturn
-  fileViewerRef: RefObject<FileViewerHandle | null>
+  fileViewerRef: RefObject<FilePlayerHandle | null>
 }) {
   useEffect(() => {
     connectSession(sessionId, true)

@@ -1,6 +1,6 @@
 /** @catalog 파일 포맷별 프리뷰 렌더러 registry (OCP) */
 import type { ReactNode } from 'react'
-import type { HighlightTone, CodeViewerPreset } from './CodeViewer'
+import type { HighlightTone, CodeViewerPreset } from './CodePreview'
 
 // --- Registry types ---
 

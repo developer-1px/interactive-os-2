@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { groupEvents, type TimelineEvent, type ToolGroup } from '../pages/viewer/groupEvents'
+import { groupEvents, type TimelineEvent, type ToolGroup } from '../pages/finder/groupEvents'
 
 function evt(type: TimelineEvent['type'], tool?: string): TimelineEvent {
   return { type, ts: Date.now().toString(), tool }

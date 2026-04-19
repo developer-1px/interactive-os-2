@@ -87,21 +87,21 @@ describe('searchParser', () => {
 
 describe('pathParser', () => {
   const root = '/Users/user/Desktop/aria'
-  const parser = pathParser({ prefix: 'viewer', root })
+  const parser = pathParser({ prefix: 'finder', root })
 
   it('reads file path from pathname', () => {
-    const loc = makeLocation({ pathname: '/viewer/src/App.tsx' })
+    const loc = makeLocation({ pathname: '/finder/src/App.tsx' })
     expect(parser.read(loc)).toBe(root + '/src/App.tsx')
   })
 
   it('returns null for bare prefix', () => {
-    const loc = makeLocation({ pathname: '/viewer/' })
+    const loc = makeLocation({ pathname: '/finder/' })
     expect(parser.read(loc)).toBeNull()
   })
 
   // V7: nonexistent ID — parser still returns a path, consumer decides
   it('returns path even for nonexistent file', () => {
-    const loc = makeLocation({ pathname: '/viewer/no/such/file.ts' })
+    const loc = makeLocation({ pathname: '/finder/no/such/file.ts' })
     expect(parser.read(loc)).toBe(root + '/no/such/file.ts')
   })
 })

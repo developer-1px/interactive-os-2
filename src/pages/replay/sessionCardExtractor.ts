@@ -1,5 +1,5 @@
 // SSE TimelineEvent → SessionCard 변환 + Kanban NormalizedData 빌드
-import type { TimelineEvent } from '../viewer/groupEvents'
+import type { TimelineEvent } from '../finder/groupEvents'
 import type { ActiveSession } from './useActiveSessions'
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'

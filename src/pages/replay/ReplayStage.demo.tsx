@@ -7,7 +7,7 @@ import { ReplayProvider, type ReplayContextValue } from './replayContext'
 import { ReplayStageWidget } from './replayWidgets'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
-import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
+import type { FilePlayerHandle, WorkspaceTab } from '@os/ui/workspaceTypes'
 import type { ChatMessage } from '@os/ui/chat/types'
 
 export const meta = {
@@ -42,14 +42,14 @@ const SAMPLE_MESSAGES: ChatMessage[] = [
   { id: 'm4', role: 'assistant', blocks: [{ id: 'b4', type: 'text', content: 'CodeStage / TerminalStage / SearchStage / MarkdownStage 네 가지를 한 화면에서 전환할 수 있게 했습니다.' }] },
 ] as unknown as ChatMessage[]
 
-import type { FileTab, SearchTab, TerminalTab } from '@os/ui/viewerTypes'
+import type { FileTab, SearchTab, TerminalTab } from '@os/ui/workspaceTypes'
 const FILE_TAB: FileTab = { type: 'file', id: 'demo/Hello.tsx', path: 'demo/Hello.tsx', content: SAMPLE_CODE }
 const TERMINAL_TAB: TerminalTab = { type: 'terminal', id: 'term-1', command: 'pnpm typecheck', output: '✓ no type errors\n  Time: 2.4s' }
 const SEARCH_TAB: SearchTab = { type: 'search', id: 'search-1', query: 'useLiveMessages', output: SAMPLE_SEARCH_OUTPUT }
 
 function useMockCtx(scenario: Scenario): ReplayContextValue {
-  const fileViewerRef = useRef<FileViewerHandle>(null)
-  const activeTab: ViewerTab | null =
+  const fileViewerRef = useRef<FilePlayerHandle>(null)
+  const activeTab: WorkspaceTab | null =
     scenario === 'code' ? FILE_TAB
     : scenario === 'terminal' ? TERMINAL_TAB
     : scenario === 'search' ? SEARCH_TAB

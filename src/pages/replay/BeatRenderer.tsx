@@ -3,8 +3,8 @@ import { useEffect, useRef } from 'react'
 import type { CSSProperties, JSX, ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { ax } from '@styles/ax'
-import { FileViewer } from '@os/ui/FileViewer'
-import type { FileViewerHandle } from '@os/ui/viewerTypes'
+import { FilePlayer } from '@os/ui/FilePlayer'
+import type { FilePlayerHandle } from '@os/ui/workspaceTypes'
 import type {
   Beat,
   ThinkingBeat,
@@ -123,7 +123,7 @@ function TerminalBeatView({ beat, progress }: { beat: TerminalBeat; progress: nu
 // ─────────────────────────────────────────────
 
 function DiffBeatView({ beat }: { beat: DiffBeat; progress: number }) {
-  const ref = useRef<FileViewerHandle>(null)
+  const ref = useRef<FilePlayerHandle>(null)
   useEffect(() => {
     const handle = ref.current
     if (!handle) return
@@ -143,7 +143,7 @@ function DiffBeatView({ beat }: { beat: DiffBeat; progress: number }) {
         <div className={`beat-fileview__file ${ax({ textStyle: 'code' })}`}>{beat.file}</div>
       </div>
       <div className={`beat-fileview__body ${ax({ flex: '1' })}`}>
-        <FileViewer ref={ref} filename={beat.file} />
+        <FilePlayer ref={ref} filename={beat.file} />
       </div>
     </div>
   )
@@ -154,7 +154,7 @@ function DiffBeatView({ beat }: { beat: DiffBeat; progress: number }) {
 // ─────────────────────────────────────────────
 
 function ReadBeatView({ beat }: { beat: ReadBeat; progress: number }) {
-  const ref = useRef<FileViewerHandle>(null)
+  const ref = useRef<FilePlayerHandle>(null)
   useEffect(() => {
     const handle = ref.current
     if (!handle) return
@@ -167,7 +167,7 @@ function ReadBeatView({ beat }: { beat: ReadBeat; progress: number }) {
         <div className={`beat-fileview__file ${ax({ textStyle: 'code' })}`}>{beat.file}</div>
       </div>
       <div className={`beat-fileview__body ${ax({ flex: '1' })}`}>
-        <FileViewer ref={ref} filename={beat.file} />
+        <FilePlayer ref={ref} filename={beat.file} />
       </div>
     </div>
   )

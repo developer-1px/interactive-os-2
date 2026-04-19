@@ -52,7 +52,7 @@ ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
 | 경로 | 파일 | 역할 |
 |------|------|------|
 | `/` | `src/pages/cms/PageCms.tsx` | Visual CMS (기본 landing) |
-| `/viewer/*` | `src/pages/PageViewer.tsx` | 메타 쇼케이스 + 문서 viewer |
+| `/finder/*` | `src/pages/finder/PageFinder.tsx` | Finder 스타일 메타 쇼케이스 + 파일 탐색기 |
 | `/ui/*` | `src/pages/PageUiShowcase.tsx` | UI 완성품 쇼케이스 |
 | `/agent/*` | `src/pages/PageAgentViewer.tsx` | Agent viewer |
 | `/chat` | `src/pages/chat/PageAgentChat.tsx` | Claude WebSocket 채팅 |
@@ -62,7 +62,7 @@ ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
 - `src/pages/cms/cmsSchema.ts` — Zod 15 노드 타입 SSOT
 - `src/pages/cms/cmsStore.ts` — 단일 store (하나의 앱 = 하나의 store)
 - `src/pages/cms/cmsState.ts` — 파생 상태/셀렉터
-- `src/pages/viewer/viewerStore.ts` — Viewer store
+- `src/pages/finder/finderStore.ts` — Finder store
 
 ### 디자인 시스템
 

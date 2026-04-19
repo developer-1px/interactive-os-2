@@ -16,7 +16,7 @@
    iter 1: /, /ui
    iter 2: /chat, /replay
    iter 3: /ax-principles, /catalog
-   iter 4: /agent, /viewer
+   iter 4: /agent, /finder
    iter 5+: 반복 (디자인 개선 시 이전 라우트 재평가)
 3. 각 URL: navigate → wait 3s → screenshot → scroll down → screenshot
 

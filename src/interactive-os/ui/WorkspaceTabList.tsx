@@ -6,14 +6,14 @@ import type { AriaComponentProps } from './types'
 import { useTabList } from './useTabList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
-import { ViewerTabItem } from './items'
+import { WorkspaceTabItem } from './items'
 import { ax } from '@styles/ax'
 
 interface ViewerTabListProps extends AriaComponentProps {
   initialFocus?: string
 }
 
-export function ViewerTabList({
+export function WorkspaceTabList({
   data,
   plugins,
   onChange,
@@ -43,7 +43,7 @@ export function ViewerTabList({
         if (!entity) return null
         const state = tl.getItemState(id)
         const props = { ...tl.getItemProps(id), key: id } as React.HTMLAttributes<HTMLElement>
-        return ViewerTabItem(props, entity, state)
+        return WorkspaceTabItem(props, entity, state)
       })}
     </div>
   )

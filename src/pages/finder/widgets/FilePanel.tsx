@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 const fileCache = new Map<string, string>()
 import { SpreadReader } from '@os/ui/SpreadReader'
 import { FilePreview } from '@os/ui/FilePreview'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { MarkdownPreview } from '@os/ui/MarkdownPreview'
 import { showcaseMdConfig } from '../../showcase/mdConfig'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
@@ -49,7 +49,7 @@ export function FilePanel({ path }: { path: string }) {
     return (
       <AriaRoute keyMap={keyMap}>
         <SpreadReader resetKey={path}>
-          <MarkdownViewer content={content} config={showcaseMdConfig} />
+          <MarkdownPreview content={content} config={showcaseMdConfig} />
         </SpreadReader>
       </AriaRoute>
     )

@@ -10,7 +10,7 @@ const tabIcons: Record<string, typeof FileText> = {
   terminal: Terminal,
 }
 
-export function ViewerTabItem(
+export function WorkspaceTabItem(
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
