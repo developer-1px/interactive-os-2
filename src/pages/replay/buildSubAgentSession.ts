@@ -1,3 +1,4 @@
+// ② replayV2BeatPrd
 import type { TimelineEvent } from '../viewer/groupEvents'
 import type { SubAgentFile, SubAgentSession } from './subAgentTypes'
 import { parseJsonl } from './parseJsonl'
@@ -21,45 +22,82 @@ function jsonlToSidechainEvents(text: string): { events: TimelineEvent[]; sessio
   const events: TimelineEvent[] = []
   let sessionId = ''
   for (const line of text.split('\n')) {
-    if (!line) continue
-    let raw: RawEntry
-    try {
-      raw = JSON.parse(line)
-    } catch {
-      continue
-    }
-    if (raw.isSidechain !== true) continue
+    const raw = parseSidechainLine(line)
+    if (!raw) continue
     if (!sessionId && typeof raw.sessionId === 'string') sessionId = raw.sessionId
-    const ts = raw.timestamp ?? new Date().toISOString()
-    const role = raw.message?.role
-    const content = raw.message?.content
-
-    if (role === 'user' && typeof content === 'string') {
-      events.push({ type: 'user', ts, text: content })
-      continue
-    }
-    if (role === 'assistant' && Array.isArray(content)) {
-      for (const block of content as Array<Record<string, unknown>>) {
-        const t = block.type
-        if (t === 'text' && typeof block.text === 'string') {
-          events.push({ type: 'assistant', ts, text: block.text })
-        } else if (t === 'tool_use' && typeof block.name === 'string') {
-          const input = (block.input as Record<string, unknown>) ?? {}
-          const filePath = (input.file_path as string) ?? (input.path as string) ?? undefined
-          events.push({ type: 'tool_use', ts, tool: block.name, filePath })
-        }
-      }
-      continue
-    }
-    if (role === 'user' && Array.isArray(content)) {
-      for (const block of content as Array<Record<string, unknown>>) {
-        if (block.type === 'tool_result') {
-          events.push({ type: 'tool_result', ts })
-        }
-      }
-    }
+    appendEntryEvents(raw, events)
   }
   return { events, sessionId }
+}
+
+/** isSidechain=true인 한 줄을 파싱. 비어있거나 JSON 실패/sidechain 아님이면 null. */
+function parseSidechainLine(line: string): RawEntry | null {
+  if (!line) return null
+  try {
+    const raw = JSON.parse(line) as RawEntry
+    return raw.isSidechain === true ? raw : null
+  } catch {
+    return null
+  }
+}
+
+/** 단일 엔트리 → events 누적 (역할별 디스패치). */
+function appendEntryEvents(raw: RawEntry, events: TimelineEvent[]): void {
+  const ts = raw.timestamp ?? new Date().toISOString()
+  const role = raw.message?.role
+  const content = raw.message?.content
+
+  if (role === 'user' && typeof content === 'string') {
+    events.push({ type: 'user', ts, text: content })
+    return
+  }
+  if (role === 'assistant' && Array.isArray(content)) {
+    appendAssistantBlocks(content as Array<Record<string, unknown>>, ts, events)
+    return
+  }
+  if (role === 'user' && Array.isArray(content)) {
+    appendToolResultBlocks(content as Array<Record<string, unknown>>, ts, events)
+  }
+}
+
+/** assistant content blocks (text + tool_use) → events */
+function appendAssistantBlocks(
+  blocks: Array<Record<string, unknown>>,
+  ts: string,
+  events: TimelineEvent[],
+): void {
+  for (const block of blocks) {
+    const t = block.type
+    if (t === 'text' && typeof block.text === 'string') {
+      events.push({ type: 'assistant', ts, text: block.text })
+    } else if (t === 'tool_use' && typeof block.name === 'string') {
+      events.push(toToolUseEvent(block, ts))
+    }
+  }
+}
+
+/** user content blocks (tool_result만 추출) → events */
+function appendToolResultBlocks(
+  blocks: Array<Record<string, unknown>>,
+  ts: string,
+  events: TimelineEvent[],
+): void {
+  for (const block of blocks) {
+    if (block.type !== 'tool_result') continue
+    events.push({
+      type: 'tool_result', ts,
+      result: typeof block.content === 'string' ? block.content : undefined,
+    })
+  }
+}
+
+function toToolUseEvent(block: Record<string, unknown>, ts: string): TimelineEvent {
+  const input = (block.input as Record<string, unknown>) ?? {}
+  const filePath = (input.file_path as string) ?? (input.path as string) ?? undefined
+  return {
+    type: 'tool_use', ts, tool: block.name as string, filePath,
+    input: (block.input as Record<string, unknown>) ?? undefined,
+  }
 }
 
 /**
@@ -80,38 +118,16 @@ export function buildSubAgentSession(input: {
   const { file, jsonlText, metaText, parentEvents, parentActive = false } = input
 
   const meta = parseSubAgentMeta(metaText, file.jsonlPath)
-  // parsed cache (sidechain only)
   const parsed = parseJsonl(jsonlText, { sidechainOnly: true })
   const { events, sessionId: innerSessionId } = jsonlToSidechainEvents(jsonlText)
 
-  // I1: sessionId 일치 검증
-  if (innerSessionId && innerSessionId !== file.parentSessionId) {
-    throw new Error(
-      `buildSubAgentSession: I1 sessionId mismatch — parent=${file.parentSessionId} jsonl=${innerSessionId}`,
-    )
-  }
+  assertSessionIdMatches(innerSessionId, file.parentSessionId)
+  const { startedAt, lastTs } = computeSessionBounds(events, meta.createdAt ?? 0)
+  warnOnTaskOrderViolation(parentEvents, startedAt)
 
-  const tsNums = events.map((e) => new Date(e.ts).getTime()).filter((n) => Number.isFinite(n))
-  const startedAt = tsNums[0] ?? meta.createdAt ?? 0
-  const lastTs = tsNums[tsNums.length - 1] ?? startedAt
   // I5: parent inactive면 endedAt = lastTs 강제, active면 null
   const endedAt = parentActive ? null : lastTs
   const isActive = parentActive && endedAt === null
-
-  // I3 검증: 가장 가까운 이전 부모 Task ts와 비교
-  if (parentEvents && parentEvents.length > 0) {
-    const taskTs = parentEvents
-      .filter((e) => e.type === 'tool_use' && e.tool === 'Task')
-      .map((e) => new Date(e.ts).getTime())
-      .filter((n) => Number.isFinite(n) && n <= startedAt)
-      .sort((a, b) => b - a)[0]
-    if (taskTs !== undefined && taskTs > startedAt) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `buildSubAgentSession: I3 violation — parent Task ts ${taskTs} > sub startedAt ${startedAt}`,
-      )
-    }
-  }
 
   return {
     sessionId: file.parentSessionId,
@@ -126,5 +142,45 @@ export function buildSubAgentSession(input: {
     endedAt,
     lastTs,
     isActive,
+  }
+}
+
+// ── Helpers ──────────────────────────────────────────────
+
+/** I1: sessionId 일치 검증. 불일치 시 throw. */
+function assertSessionIdMatches(innerSessionId: string, parentSessionId: string): void {
+  if (innerSessionId && innerSessionId !== parentSessionId) {
+    throw new Error(
+      `buildSubAgentSession: I1 sessionId mismatch — parent=${parentSessionId} jsonl=${innerSessionId}`,
+    )
+  }
+}
+
+/** events의 타임스탬프 범위 → startedAt/lastTs (이벤트 0건이면 fallback) */
+function computeSessionBounds(
+  events: TimelineEvent[],
+  fallbackStartedAt: number,
+): { startedAt: number; lastTs: number } {
+  const tsNums = events.map((e) => new Date(e.ts).getTime()).filter((n) => Number.isFinite(n))
+  const startedAt = tsNums[0] ?? fallbackStartedAt
+  const lastTs = tsNums[tsNums.length - 1] ?? startedAt
+  return { startedAt, lastTs }
+}
+
+/** I3: 가장 가까운 이전 부모 Task ts > sub startedAt이면 console.warn (throw 아님). */
+function warnOnTaskOrderViolation(
+  parentEvents: TimelineEvent[] | undefined,
+  startedAt: number,
+): void {
+  if (!parentEvents || parentEvents.length === 0) return
+  const taskTs = parentEvents
+    .filter((e) => e.type === 'tool_use' && e.tool === 'Task')
+    .map((e) => new Date(e.ts).getTime())
+    .filter((n) => Number.isFinite(n) && n <= startedAt)
+    .sort((a, b) => b - a)[0]
+  if (taskTs !== undefined && taskTs > startedAt) {
+    console.warn(
+      `buildSubAgentSession: I3 violation — parent Task ts ${taskTs} > sub startedAt ${startedAt}`,
+    )
   }
 }

@@ -1,3 +1,4 @@
+// ② replayV2BeatPrd
 export interface TimelineEvent {
   type: 'user' | 'assistant' | 'tool_use' | 'tool_result'
   ts: string
@@ -11,6 +12,10 @@ export interface TimelineEvent {
   uuid?: string
   parentUuid?: string
   description?: string
+  /** tool_use input (command/pattern/old_string/new_string/content) — sidechain용 신규 (replayV2BeatPrd) */
+  input?: Record<string, unknown>
+  /** tool_result 본문 텍스트 — sidechain용 신규 (replayV2BeatPrd) */
+  result?: string
 }
 
 export interface ToolGroup {

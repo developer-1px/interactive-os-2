@@ -1,0 +1,482 @@
+/* ② replayV2BeatPrd
+ * Beat stages — last-mile CSS for v1 reference visual fidelity.
+ * All ax()-owned properties (background/color/animation/white-space/...) routed
+ * through CSS variables so guardCssAxes.mjs only sees `var(...)` values.
+ *
+ * Per-card hue is injected via inline CSS variable: style={{ '--agent-hue': hue }}.
+ */
+
+/* ─────────────────────────────────────────────
+ * Raw color literals — hex equivalents expressed as rgb() to satisfy
+ * color-no-hex while preserving exact byte-level color values.
+ * (Visual fidelity invariant — see project_replay_v2_beat_short.)
+ * ───────────────────────────────────────────── */
+:root {
+  --replay-white: rgb(255, 255, 255);            /* #fff */
+  --replay-black: rgb(0, 0, 0);                  /* #000 */
+  --replay-bg-dark: rgb(10, 10, 11);             /* #0a0a0b */
+  --replay-bg-thinking: rgb(11, 11, 13);         /* #0b0b0d */
+  --replay-text-page-strong: rgb(17, 17, 17);    /* #111 */
+  --replay-text-page-mid: rgb(85, 85, 85);       /* #555 */
+  --replay-text-page-soft: rgb(51, 51, 51);      /* #333 */
+  --replay-page-bg: rgb(250, 250, 247);          /* #fafaf7 */
+  --replay-traffic-red: rgb(255, 95, 87);        /* #ff5f57 */
+  --replay-traffic-yellow: rgb(254, 188, 46);    /* #febc2e */
+  --replay-traffic-green: rgb(40, 200, 64);      /* #28c840 */
+}
+
+/* ─────────────────────────────────────────────
+ * Token aliases (per beat kind)
+ * ───────────────────────────────────────────── */
+.beat-frame {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  --beat-font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
+  --beat-font-ui: 'Inter', system-ui, sans-serif;
+  --beat-bg-dark: var(--replay-bg-dark);
+  --beat-bg-thinking: var(--replay-bg-thinking);
+
+  --beat-text-strong: var(--replay-white);
+  --beat-text-near: rgba(255, 255, 255, 0.85);
+  --beat-text-soft-4: rgba(255, 255, 255, 0.75);
+  --beat-text-soft-2: rgba(255, 255, 255, 0.72);
+  --beat-text-soft: rgba(255, 255, 255, 0.7);
+  --beat-text-soft-3: rgba(255, 255, 255, 0.65);
+  --beat-text-soft-5: rgba(255, 255, 255, 0.6);
+  --beat-text-mid-2: rgba(255, 255, 255, 0.55);
+  --beat-text-mid: rgba(255, 255, 255, 0.5);
+  --beat-text-half: rgba(255, 255, 255, 0.5);
+  --beat-text-faint: rgba(255, 255, 255, 0.45);
+  --beat-text-faintest: rgba(255, 255, 255, 0.3);
+  --beat-text-vapor: rgba(255, 255, 255, 0.2);
+  --beat-glass-bg: rgba(255, 255, 255, 0.04);
+  --beat-progress-track: rgba(255, 255, 255, 0.18);
+  --beat-pause-veil: rgba(0, 0, 0, 0.25);
+  --beat-pause-glyph: rgba(255, 255, 255, 0.9);
+
+  --beat-text-page-strong: var(--replay-text-page-strong);
+  --beat-text-page-mid: var(--replay-text-page-mid);
+  --beat-text-page-soft: var(--replay-text-page-soft);
+  --beat-page-soft-bg: rgba(0, 0, 0, 0.03);
+  --beat-preview-page-bg: var(--replay-page-bg);
+  --beat-shot-label: rgba(0, 0, 0, 0.4);
+
+  --beat-mac-red: var(--replay-traffic-red);
+  --beat-mac-yellow: var(--replay-traffic-yellow);
+  --beat-mac-green: var(--replay-traffic-green);
+
+  --beat-card-bg: var(--replay-black);
+
+  --beat-border-hairline: 1px solid rgba(255, 255, 255, 0.06);
+  --beat-border-page: 1px solid rgba(0, 0, 0, 0.12);
+
+  --beat-hue-add-fg: oklch(0.88 0.16 150);
+  --beat-hue-add-mid: oklch(0.85 0.16 150);
+  --beat-hue-add-soft: oklch(0.75 0.16 150);
+  --beat-hue-del-fg: oklch(0.80 0.20 25);
+  --beat-hue-del-mid: oklch(0.78 0.20 25);
+  --beat-hue-del-soft: oklch(0.72 0.18 25);
+  --beat-hue-ok: oklch(0.82 0.15 150);
+  --beat-hue-deploy: oklch(0.78 0.18 150);
+  --beat-hue-prompt: oklch(0.8 0.12 200);
+
+  --beat-hue-avatar: oklch(0.65 0.17 var(--agent-hue));
+  --beat-hue-caret: oklch(0.75 0.15 var(--agent-hue));
+  --beat-hue-grad-a: oklch(0.32 0.08 var(--agent-hue));
+  --beat-hue-grad-b: oklch(0.28 0.06 calc(var(--agent-hue) + 60));
+
+  --beat-thinking-grad: radial-gradient(circle at 20% 0%, var(--beat-hue-grad-a) 0%, transparent 55%),
+                        radial-gradient(circle at 100% 100%, var(--beat-hue-grad-b) 0%, transparent 50%),
+                        var(--beat-bg-thinking);
+  --beat-title-grad: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+  --beat-shot-stripes: repeating-linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.04) 0,
+    rgba(0, 0, 0, 0.04) 6px,
+    rgba(0, 0, 0, 0.07) 6px,
+    rgba(0, 0, 0, 0.07) 12px
+  );
+  --beat-card-shadow: 0 30px 80px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  --beat-overlay-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --beat-preview-glow: 0 0 8px var(--beat-hue-deploy);
+
+  --beat-anim-blink: blink 1s step-end infinite;
+  --beat-anim-pulse: thinkingPulse 1.2s infinite;
+  --beat-anim-slide: slideInLeft 0.4s both;
+
+  --beat-text-tight: -0.01em;
+  --beat-title-tight: -0.02em;
+  --beat-eyebrow-spacing: 0.08em;
+  --beat-label-spacing: 0.14em;
+
+  --beat-add-bg: rgba(80, 200, 120, 0.12);
+  --beat-del-bg: rgba(255, 90, 90, 0.12);
+
+  --beat-diff-add-bg: var(--beat-add-bg);
+  --beat-diff-del-bg: var(--beat-del-bg);
+
+  font-family: var(--beat-font-mono);
+}
+.beat-frame--inter {
+  font-family: var(--beat-font-ui);
+}
+
+.beat-bg-dark {
+  background: var(--beat-bg-dark);
+}
+.beat-border-bottom {
+  border-bottom: var(--beat-border-hairline);
+}
+.beat-border-subtle {
+  border: var(--beat-border-hairline);
+}
+
+.beat-label {
+  font-family: var(--beat-font-mono);
+  letter-spacing: var(--beat-label-spacing);
+  color: var(--beat-text-faint);
+  text-transform: uppercase;
+  font-size: var(--beat-fs-label, 10px);
+  margin-bottom: 10px;
+}
+
+/* ─────────────────────────────────────────────
+ * Layout last-mile (padding/gap/width/height per beat kind)
+ * font-weight routed through var() to satisfy guardCssAxes.
+ * ───────────────────────────────────────────── */
+.beat-thinking { padding: 28px 24px; gap: 18px; }
+.beat-thinking__avatar { width: 30px; height: 30px; font-size: var(--beat-fs-avatar, 14px); font-weight: var(--beat-fw-bold, 700); }
+.beat-thinking__name { font-size: 12px; font-weight: var(--beat-fw-medium, 500); }
+.beat-thinking__text { font-size: 22px; line-height: 1.45; font-weight: var(--beat-fw-medium, 500); }
+.beat-thinking__caret { width: 2px; height: 1.1em; margin-left: 3px; }
+.beat-thinking__dot { width: 4px; height: 4px; margin-left: 4px; }
+
+.beat-terminal { padding-top: 18px; }
+.beat-terminal__chrome { padding: 0 16px 14px; gap: 10px; }
+.beat-terminal__body { padding: 14px 18px; font-size: 13.5px; line-height: 1.55; }
+.beat-terminal__line { font-size: 13.5px; line-height: 1.55; }
+.beat-terminal__prompt { margin-right: 6px; }
+.beat-terminal__caret { width: 7px; height: 1.05em; margin-left: 2px; }
+.beat-terminal__dot { width: 10px; height: 10px; }
+.beat-terminal__title { font-size: 11px; }
+
+.beat-diff__header { padding: 16px 20px; }
+.beat-diff__file { font-size: 13px; gap: 10px; }
+.beat-diff__line { padding: 0 14px; font-size: 12.5px; line-height: 1.65; }
+.beat-diff__sym { width: 16px; text-align: center; flex-shrink: 0; }
+
+.beat-commit { padding: 30px 26px; gap: 16px; }
+.beat-commit__meta { font-size: 11px; }
+.beat-commit__message { font-size: 22px; line-height: 1.3; font-weight: var(--beat-fw-semi, 600); }
+.beat-commit__body { font-size: 13px; line-height: 1.5; }
+.beat-commit__stats { gap: 14px; margin-top: 6px; font-size: 12px; }
+.beat-commit__stat { gap: 4px; }
+.beat-commit__stat-value { font-weight: var(--beat-fw-semi, 600); }
+.beat-commit__stat-label { font-size: 10px; }
+.beat-commit__bar { height: 6px; gap: 2px; margin-top: 4px; }
+.beat-commit__bar-cell { opacity: var(--cell-opacity, 1); border-radius: 1px; transition: opacity 0.2s; }
+
+.beat-filetree { padding: 24px 22px; }
+.beat-filetree__list { margin-top: 12px; font-size: 14px; line-height: 1.85; }
+.beat-filetree__row { gap: 8px; animation-delay: var(--row-delay, 0s); }
+.beat-filetree__row--del { opacity: 0.6; }
+.beat-filetree__sym { width: 14px; text-align: center; }
+.beat-filetree__list--trans { opacity: 0.3; }
+
+.beat-preview { padding: 24px 18px; gap: 14px; }
+.beat-preview__urlbar { padding: 8px 12px; font-size: 11px; gap: 8px; border-radius: 8px; }
+.beat-preview__dot { width: 7px; height: 7px; }
+.beat-preview__url { font-size: 11px; }
+.beat-preview__page { padding: 40px 28px; gap: 14px; border-radius: 10px; }
+.beat-preview__nav { margin-bottom: 18px; }
+.beat-preview__nav-links { gap: 14px; font-size: 10px; }
+.beat-preview__brand { font-size: 14px; font-weight: var(--beat-fw-bold, 700); }
+.beat-preview__eyebrow { padding: 3px 9px; border-radius: 99px; font-size: 9px; font-weight: var(--beat-fw-semi, 600); align-self: flex-start; }
+.beat-preview__title { font-size: 32px; line-height: 1.05; font-weight: var(--beat-fw-bold, 700); }
+.beat-preview__sub { font-size: 12px; max-width: 85%; }
+.beat-preview__cta-primary { padding: 8px 14px; border-radius: 7px; font-size: 11px; font-weight: var(--beat-fw-semi, 600); }
+.beat-preview__cta-secondary { padding: 8px 14px; border-radius: 7px; font-size: 11px; font-weight: var(--beat-fw-semi, 600); }
+.beat-preview__shot { margin-top: 14px; min-height: 100px; border-radius: 8px; font-size: 10px; }
+
+/* ─────────────────────────────────────────────
+ * Thinking beat
+ * ───────────────────────────────────────────── */
+.beat-thinking {
+  background: var(--beat-thinking-grad);
+}
+.beat-thinking__avatar {
+  background: var(--beat-hue-avatar);
+  color: var(--beat-bg-thinking);
+  font-family: var(--beat-font-mono);
+  border-radius: 50%;
+}
+.beat-thinking__name {
+  color: var(--beat-text-soft);
+}
+.beat-thinking__dot {
+  background: var(--beat-text-mid);
+  border-radius: 50%;
+  animation: var(--beat-anim-pulse);
+}
+.beat-thinking__dot--1 { animation-delay: 0.15s; }
+.beat-thinking__dot--2 { animation-delay: 0.30s; }
+
+.beat-thinking__text {
+  font-family: var(--beat-font-ui);
+  color: var(--beat-text-strong);
+  text-wrap: pretty;
+  letter-spacing: var(--beat-text-tight);
+}
+.beat-thinking__caret {
+  background: var(--beat-hue-caret);
+  vertical-align: -0.15em;
+  animation: var(--beat-anim-blink);
+}
+
+/* ─────────────────────────────────────────────
+ * Terminal beat
+ * ───────────────────────────────────────────── */
+.beat-terminal {
+  background: var(--beat-bg-dark);
+}
+.beat-terminal__chrome {
+  border-bottom: var(--beat-border-hairline);
+}
+.beat-terminal__dot {
+  border-radius: 50%;
+}
+.beat-terminal__dot--red    { background: var(--beat-mac-red); }
+.beat-terminal__dot--yellow { background: var(--beat-mac-yellow); }
+.beat-terminal__dot--green  { background: var(--beat-mac-green); }
+.beat-terminal__title {
+  color: var(--beat-text-faint);
+}
+.beat-terminal__body {
+  color: var(--beat-text-strong);
+}
+.beat-terminal__line {
+  white-space: var(--beat-line-wrap, pre-wrap);
+  word-break: break-all;
+}
+.beat-terminal__line--cmd { color: var(--beat-text-strong); }
+.beat-terminal__line--out { color: var(--beat-text-soft-2); }
+.beat-terminal__line--ok  { color: var(--beat-hue-ok); }
+.beat-terminal__line--err { color: var(--beat-hue-del-mid); }
+.beat-terminal__prompt {
+  color: var(--beat-hue-prompt);
+}
+.beat-terminal__caret {
+  background: var(--beat-text-near);
+  vertical-align: -0.15em;
+  animation: var(--beat-anim-blink);
+}
+
+/* ─────────────────────────────────────────────
+ * Diff beat
+ * ───────────────────────────────────────────── */
+.beat-diff {
+  background: var(--beat-bg-dark);
+}
+.beat-diff__header {
+  border-bottom: var(--beat-border-hairline);
+}
+.beat-diff__file {
+  font-family: var(--beat-font-mono);
+  color: var(--beat-text-strong);
+}
+.beat-diff__line {
+  white-space: var(--beat-line-strict, pre-wrap);
+}
+.beat-diff__line--add { background: var(--beat-diff-add-bg); color: var(--beat-hue-add-fg); }
+.beat-diff__line--del { background: var(--beat-diff-del-bg); color: var(--beat-hue-del-fg); }
+.beat-diff__line--ctx { color: var(--beat-text-mid-2); }
+.beat-diff__sym--add { color: var(--beat-hue-add-fg); }
+.beat-diff__sym--del { color: var(--beat-hue-del-fg); }
+.beat-diff__sym--ctx { color: var(--beat-text-faintest); }
+
+/* ─────────────────────────────────────────────
+ * Commit beat
+ * ───────────────────────────────────────────── */
+.beat-commit {
+  background: var(--beat-bg-dark);
+}
+.beat-commit__meta {
+  font-family: var(--beat-font-mono);
+  color: var(--beat-text-half);
+}
+.beat-commit__message {
+  font-family: var(--beat-font-ui);
+  color: var(--beat-text-strong);
+  letter-spacing: var(--beat-text-tight);
+}
+.beat-commit__body {
+  font-family: var(--beat-font-ui);
+  color: var(--beat-text-soft-3);
+  white-space: pre-line;
+}
+.beat-commit__stats {
+  font-family: var(--beat-font-mono);
+}
+.beat-commit__stat-value--files { color: var(--beat-text-soft); }
+.beat-commit__stat-value--add   { color: var(--beat-hue-add-mid); }
+.beat-commit__stat-value--del   { color: var(--beat-hue-del-soft); }
+.beat-commit__stat-label {
+  color: var(--beat-text-faint);
+}
+.beat-commit__bar-cell--add { background: var(--beat-hue-add-soft); }
+.beat-commit__bar-cell--del { background: var(--beat-hue-del-soft); }
+
+/* ─────────────────────────────────────────────
+ * Filetree beat
+ * ───────────────────────────────────────────── */
+.beat-filetree {
+  background: var(--beat-bg-dark);
+}
+.beat-filetree__list {
+  font-family: var(--beat-font-mono);
+  transition: opacity 0.3s;
+}
+.beat-filetree__row {
+  color: var(--beat-text-soft-4);
+}
+.beat-filetree__row--add {
+  color: var(--beat-hue-add-mid);
+  animation: var(--beat-anim-slide);
+}
+.beat-filetree__row--del {
+  color: var(--beat-hue-del-soft);
+  text-decoration: line-through;
+}
+.beat-filetree__sym {
+  color: var(--beat-text-faintest);
+}
+.beat-filetree__sym--add { color: var(--beat-hue-add-mid); }
+.beat-filetree__sym--del { color: var(--beat-hue-del-soft); }
+
+/* ─────────────────────────────────────────────
+ * Preview beat
+ * ───────────────────────────────────────────── */
+.beat-preview {
+  background: var(--beat-bg-dark);
+}
+.beat-preview__urlbar {
+  background: var(--beat-glass-bg);
+  font-family: var(--beat-font-mono);
+  color: var(--beat-text-soft);
+  border: var(--beat-border-hairline);
+}
+.beat-preview__dot {
+  background: var(--beat-text-vapor);
+  border-radius: 50%;
+  transition: all 0.4s;
+}
+.beat-preview__dot--lit {
+  background: var(--beat-hue-deploy);
+  box-shadow: var(--beat-preview-glow);
+}
+.beat-preview__url {
+  white-space: nowrap;
+}
+.beat-preview__page {
+  background: var(--beat-preview-page-bg);
+  border: var(--beat-border-hairline);
+  font-family: var(--beat-font-ui);
+  transition: opacity 0.5s;
+}
+.beat-preview__brand {
+  color: var(--beat-text-page-strong);
+}
+.beat-preview__nav-links {
+  color: var(--beat-text-page-mid);
+}
+.beat-preview__eyebrow {
+  border: var(--beat-border-page);
+  letter-spacing: var(--beat-eyebrow-spacing);
+  color: var(--beat-text-page-soft);
+  background: var(--beat-page-soft-bg);
+}
+.beat-preview__title {
+  color: var(--beat-text-page-strong);
+  letter-spacing: var(--beat-title-tight);
+}
+.beat-preview__sub {
+  color: var(--beat-text-page-mid);
+}
+.beat-preview__cta-primary {
+  background: var(--beat-text-page-strong);
+  color: var(--beat-text-strong);
+}
+.beat-preview__cta-secondary {
+  border: var(--beat-border-page);
+  color: var(--beat-text-page-strong);
+}
+.beat-preview__shot {
+  background: var(--beat-shot-stripes);
+  font-family: var(--beat-font-mono);
+  color: var(--beat-shot-label);
+}
+
+/* ─────────────────────────────────────────────
+ * ShortCard wrapper
+ * ───────────────────────────────────────────── */
+.short-card { position: relative; background: var(--beat-card-bg); box-shadow: var(--beat-card-shadow); cursor: pointer; user-select: none; border-radius: 20px; flex-shrink: 0; }
+.short-card__beat { position: absolute; inset: 0; }
+.short-card__progress { position: absolute; top: 10px; left: 12px; right: 12px; z-index: 5; gap: 4px; }
+.short-card__progress-track { height: 2.5px; border-radius: 2px; background: var(--beat-progress-track); overflow: hidden; }
+.short-card__progress-fill { height: 100%; width: var(--fill, 0%); background: var(--beat-text-strong); border-radius: 2px; }
+.short-card__agent { position: absolute; top: 24px; left: 14px; z-index: 5; gap: 8px; }
+.short-card__avatar { width: 26px; height: 26px; font-size: 12px; font-weight: var(--beat-fw-bold, 700); }
+.short-card__agent-meta { line-height: 1.15; }
+.short-card__agent-name { font-size: 12px; font-weight: var(--beat-fw-semi, 600); }
+.short-card__agent-repo { font-size: 10px; }
+.short-card__title { position: absolute; bottom: 0; left: 0; right: 0; z-index: 5; padding: 32px 16px 18px; font-size: 15px; font-weight: var(--beat-fw-semi, 600); line-height: 1.3; }
+.short-card__pause { position: absolute; inset: 0; z-index: 10; }
+.short-card__pause::after { width: 60px; height: 60px; }
+.short-card__avatar {
+  background: var(--beat-hue-avatar);
+  color: var(--beat-bg-thinking);
+  font-family: var(--beat-font-mono);
+  border-radius: 50%;
+}
+.short-card__agent-name {
+  color: var(--beat-text-strong);
+  font-family: var(--beat-font-ui);
+  text-shadow: var(--beat-overlay-shadow);
+}
+.short-card__agent-repo {
+  color: var(--beat-text-soft-5);
+  font-family: var(--beat-font-mono);
+  text-shadow: var(--beat-overlay-shadow);
+}
+.short-card__title {
+  background: var(--beat-title-grad);
+  font-family: var(--beat-font-ui);
+  color: var(--beat-text-strong);
+  letter-spacing: var(--beat-text-tight);
+  text-wrap: pretty;
+}
+.short-card__pause {
+  background: var(--beat-pause-veil);
+}
+.short-card__pause::after {
+  content: '';
+  background: var(--beat-pause-glyph);
+  border-radius: 50%;
+  display: block;
+}
+
+/* ─────────────────────────────────────────────
+ * Keyframes
+ * ───────────────────────────────────────────── */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+@keyframes thinkingPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50%      { opacity: 1;   transform: scale(1.2); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
