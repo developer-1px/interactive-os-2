@@ -91,6 +91,7 @@ const isInspectorOverlay = isDevtools && INSPECTOR_OVERLAY_FILES.some(f => fileP
 const isExempt = isOsInternal || isStyles || isInspectorOverlay
 
 const violations = []
+const warnings = []
 
 // 규칙 1: src/pages/에서 primitives 직접 import (AriaRoute는 허용)
 if (isPages && /from\s+['"].*interactive-os\/primitives(?!\/AriaRoute)/.test(content)) {
@@ -237,11 +238,27 @@ if (isPages && isTsx && /ax\(\{[^}]*layout:\s*['"]fill['"][^}]*surface:|ax\(\{[^
   )
 }
 
-// 규칙 18: src/pages/에서 layout:'scroll' / layout:'scroll-x' 직접 사용 금지 → ScrollArea
+// 규칙 18: src/pages/에서 layout:'scroll' / layout:'scroll-x' 직접 사용 금지
+// scroll 오너십 SSOT = defineLayout 노드의 scroll:'y'|'x' 필드.
+// widget·module.css·ax()에서 overflow 직접 선언하면 scroll 체인이 끊겨
+// "스크롤 누락" 증상이 재발한다.
 if (isPages && isTsx && /layout:\s*['"]scroll(?:-x)?['"]/.test(content)) {
   violations.push(
-    `layout:'scroll' 직접 사용 금지 — ui/ScrollArea를 사용하세요: <ScrollArea> 또는 <ScrollArea orientation="horizontal">`
+    `layout:'scroll' 직접 사용 금지 — defineLayout 노드의 scroll:'y'|'x' 필드를 사용하세요. 예: { type: 'widget', widget: 'X', scroll: 'y' }. 원칙: scroll 오너십 = defineLayout SSOT`
   )
+}
+
+// 규칙 18b: pages/ widget의 .ly-fill wrapper 경고 — scroll 체인 단절 위험
+// widget의 최상위 div가 layout:'fill'이면 overflow:hidden으로 outer scroll을 막는다.
+// scroll:'y' defineLayout 노드 안의 widget은 layout:'stack' 사용을 권장.
+if (isPages && isTsx && /[Ww]idget/.test(filePath)) {
+  // widget 파일 최상위 return의 ax({ layout: 'fill' }) 패턴
+  const fillPattern = /\bax\s*\(\s*\{\s*[^}]*\blayout\s*:\s*['"]fill['"]/
+  if (fillPattern.test(content)) {
+    warnings.push(
+      `widget wrapper의 layout:'fill'은 overflow:hidden으로 outer scroll 체인을 끊을 수 있습니다. defineLayout 노드가 scroll:'y'를 소유한다면 widget은 layout:'stack' 사용을 권장. (원칙: widget은 overflow에 관여하지 않는다)`
+    )
+  }
 }
 
 // 규칙 4: style={{ }} 인라인 리터럴 — CSS module.css, ax() 사용
@@ -521,7 +538,6 @@ if (filePath.endsWith('/src/main.tsx')) {
 }
 
 // ── 경고 (차단 아님) ──
-const warnings = []
 
 // 경고 W1: pages/에서 .map() + raw <div — ui/ 컴포넌트 사용 검토 권유
 if (isPages && isTsx && /\.map\s*\([\s\S]*?=>\s*[\s\S]*?<div[\s>]/.test(content)) {

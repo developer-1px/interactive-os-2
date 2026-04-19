@@ -110,9 +110,12 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const padding = node.padding ?? preset.padding
 
     // ② flatlayout-resizable-split-prd.md — resizable: false → 고정 비율
+    // layout: 'fill'/'row-fill'을 써서 overflow:hidden + flex:1 + min-0으로 자식 panes를
+    // 정확히 부모 높이에 캡. 'stack'/'row'로 두면 .splitPane의 height:100%가 auto-parent에서
+    // 못 풀려 content natural height로 팽창 → 내부 scroll 체인 끊김.
     if (node.resizable === false) {
       return (
-        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'stack', width: 'full', flex: '1', ...(padding ? { padding } : {}) })}>
+        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row-fill' : 'fill', width: 'full', ...(padding ? { padding } : {}) })}>
           {childIds.map((childId, i) => {
             const size = node.sizes[i]
             const isFlex = size === 'flex' || size === undefined
@@ -124,7 +127,9 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
                 : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
 
             return (
-              <div key={childId} className={`${ax({ })} ${isAuto ? '' : styles.splitPane}`} style={style}>
+              // pane 자체가 flex container여야 자식(widget/nested split)의 flex:1이
+              // 부모 높이에 캡된다. layout:'stack' (flex-column)으로 보장.
+              <div key={childId} className={`${ax({ layout: 'stack' })} ${isAuto ? '' : styles.splitPane}`} style={style}>
                 {renderNode(childId, 'split')}
               </div>
             )

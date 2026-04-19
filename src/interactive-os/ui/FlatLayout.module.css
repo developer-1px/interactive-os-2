@@ -1,10 +1,11 @@
 @layer component {
+  /* vertical split에서 height:100%는 auto-parent context에서 content natural height로
+     팽창시켜 scroll 체인을 끊는다. flex/flex-basis로 main-axis 결정, 교차축은 stretch 기본. */
   .splitPane {
     flex: var(--split-flex, 1);
     flex-basis: var(--split-basis, auto);
     min-width: 0;
     min-height: 0;
-    height: 100%;
   }
 
   .splitChild {

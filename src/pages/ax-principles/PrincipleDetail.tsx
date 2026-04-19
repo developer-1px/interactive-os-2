@@ -2,6 +2,7 @@
 import type { NormalizedData } from '@os/store/types'
 import { ax } from '@styles/ax'
 import { Badge } from '@os/ui/Badge'
+import { Panel } from '@os/ui/panels/Panel'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { StatusIndicator } from '@os/ui/indicators/StatusIndicator'
 import type {
@@ -128,9 +129,9 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
   const mappings = selectMappingsByPrinciple(store, principle.id)
   const axes = selectAxesForPrinciple(store, principle.id)
 
+  // Panel이 header 고정 + body scroll을 소유 — pages는 scroll 선언 안 함.
   return (
-    <div className={ax({ layout: 'fill' })}>
-      {/* Header */}
+    <Panel header={
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar' })}>
           <StatusIndicator tone={statusIndicatorTone(principle.status)} />
@@ -148,9 +149,8 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
           ))}
         </span>
       </PanelHeader>
-
-      {/* Scrollable body */}
-      <div className={ax({ layout: 'scroll' })}>
+    }>
+      <>
         {/* Summary + Definition */}
         <DetailSection title="원리 / 정의">
           <Paragraph>{principle.summary}</Paragraph>
@@ -295,7 +295,7 @@ export function PrincipleDetail({ principle, store }: PrincipleDetailProps) {
             )}
           </div>
         </DetailSection>
-      </div>
-    </div>
+      </>
+    </Panel>
   )
 }

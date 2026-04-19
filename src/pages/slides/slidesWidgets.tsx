@@ -312,9 +312,10 @@ function SlideCanvas(): ReactElement {
     )
   }
 
+  // scroll 오너는 defineLayout 노드 `normal` (scroll:'y'). widget은 overflow에 관여 X.
   return (
     <div
-      className={`${ax({ layout: 'scroll', flex: '1', width: 'full' })} ${ax.raw({ padding: 'xl', gap: 'lg' })}`}
+      className={`${ax({ layout: 'stack', flex: '1', width: 'full' })} ${ax.raw({ padding: 'xl', gap: 'lg' })}`}
       style={{ aspectRatio: '16 / 9' } as CSSProperties}
     >
       {blockIds.map((bid) => {
@@ -379,8 +380,9 @@ function OutlineView(): ReactElement {
     return <EmptyState title="No slides" description="Add slides to see an outline." />
   }
 
+  // scroll 오너는 defineLayout 노드 `outline` (scroll:'y'). widget은 overflow에 관여 X.
   return (
-    <div className={`${ax({ layout: 'scroll', flex: '1' })} ${ax.raw({ padding: 'lg' })}`}>
+    <div className={`${ax({ layout: 'stack', flex: '1' })} ${ax.raw({ padding: 'lg' })}`}>
       <DisclosureGroup data={data} aria-label="Outline" />
     </div>
   )

@@ -13,7 +13,8 @@ export const baseLayout = defineLayout({
     main:      { data: { type: 'split', direction: 'horizontal', sizes: [0.35, 'flex'], resizable: true }, children: ['tree-area', 'preview'] },
     // content widgets — 스스로 island가 되어 떠오른다 (raised + shape:island는 control-group 내부에서 주입)
     'tree-area': { data: { type: 'widget', widget: 'FinderTreeGrid', hidden: false, scroll: 'y' } },
-    preview:   { data: { type: 'widget', widget: 'FinderPreview', hidden: false, scroll: 'y' } },
+    // preview는 FilePanel이 내부 ScrollArea로 자체 스크롤 관리 — scroll 생략 (nested scroll 방지).
+    preview:   { data: { type: 'widget', widget: 'FinderPreview', hidden: false } },
     miller:    { data: { type: 'widget', widget: 'FinderMiller', hidden: true, fill: true } },
   },
 })

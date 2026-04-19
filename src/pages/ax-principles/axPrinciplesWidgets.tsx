@@ -7,7 +7,7 @@ import type { NormalizedData } from '@os/store/types'
 import type { NodeState } from '@os/pattern/types'
 import { ListBox } from '@os/ui/ListBox'
 import { EmptyState } from '@os/ui/EmptyState'
-import { PanelHeader } from '@os/ui/PanelHeader'
+import { Panel } from '@os/ui/panels/Panel'
 import { StatusIndicator } from '@os/ui/indicators/StatusIndicator'
 import { useAxPrinciples } from './axPrinciplesContext'
 import { PrincipleDetail } from './PrincipleDetail'
@@ -156,12 +156,10 @@ export function AxPrinciplesMaster() {
     [],
   )
 
+  // Panel이 header 고정 + body scroll을 소유 — pages는 scroll 선언 안 함.
   return (
-    <div className={ax({ layout: 'fill' })}>
-      <PanelHeader>
-        <span>Principles</span>
-      </PanelHeader>
-      <div className={ax({ layout: 'scroll' })}>
+    <Panel header="Principles">
+      <>
         {filtered.length === 0 ? (
           <EmptyState
             title="결과 없음"
@@ -177,8 +175,8 @@ export function AxPrinciplesMaster() {
             autoFocus
           />
         )}
-      </div>
-    </div>
+      </>
+    </Panel>
   )
 }
 

@@ -64,8 +64,9 @@ const slidesLayout = defineLayout({
     'tab-normal':  { data: { type: 'tab', label: 'Normal' },  children: ['normal'] },
     'tab-outline': { data: { type: 'tab', label: 'Outline' }, children: ['outline'] },
     'tab-sorter':  { data: { type: 'tab', label: 'Sorter' },  children: ['sorter'] },
-    normal:  { data: { type: 'widget', widget: 'SlideCanvas', label: 'Normal' } },
-    outline: { data: { type: 'widget', widget: 'OutlineView', label: 'Outline' } },
+    // scroll 오너는 defineLayout 노드 — 콘텐츠형 widget은 전부 scroll:'y'
+    normal:  { data: { type: 'widget', widget: 'SlideCanvas', label: 'Normal', scroll: 'y' } },
+    outline: { data: { type: 'widget', widget: 'OutlineView', label: 'Outline', scroll: 'y' } },
     sorter:  { data: { type: 'widget', widget: 'SlideSorter', label: 'Sorter' } },
     chat: {
       data: { type: 'stack', gap: 'sm' },
