@@ -7,15 +7,14 @@ import { StoryCard } from './widgets/StoryCard'
 
 export function StoriesSidebarWidget() {
   const { listStore, onChange, selectedPath } = useStories()
+  // island 재질은 부모 split(holds:'island')이 SSOT로 선언.
   return (
-    <div className={ax({ role: 'control-group', surface: 'raised', layout: 'stack', flex: '1' })}>
-      <NavList
-        data={listStore}
-        onChange={onChange}
-        initialFocus={selectedPath ?? undefined}
-        aria-label="Stories"
-      />
-    </div>
+    <NavList
+      data={listStore}
+      onChange={onChange}
+      initialFocus={selectedPath ?? undefined}
+      aria-label="Stories"
+    />
   )
 }
 

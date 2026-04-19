@@ -498,6 +498,23 @@ if (isTsx) {
   }
 }
 
+// 규칙 37: pages widget에서 island/glass 재질을 ax()로 수동 선언 금지 (경고)
+// role:'control-group' + surface:'raised'|'overlay' 조합은 재질 의도이므로
+// defineLayout 노드의 holds 축 SSOT로 이관해야 한다.
+// floating dialog/standalone 등 holds 모델이 맞지 않는 경우는 Panel/Dialog ui 사용.
+if (isPages && isTsx) {
+  const islandRe1 = /\bax\s*\(\s*\{[^}]*\brole\s*:\s*['"]control-group['"][^}]*\bsurface\s*:\s*['"](raised|overlay)['"]/
+  const islandRe2 = /\bax\s*\(\s*\{[^}]*\bsurface\s*:\s*['"](raised|overlay)['"][^}]*\brole\s*:\s*['"]control-group['"]/
+  if (islandRe1.test(content) || islandRe2.test(content)) {
+    warnings.push(
+      "ax({ role: 'control-group', surface: 'raised'|'overlay' }) 수동 선언 지양 — " +
+      "재질 의도는 defineLayout 노드의 holds 축(SSOT)으로 이관하세요. " +
+      "부모 split/stack에 `holds: 'island'` 선언하면 widget slot에 shape/surface 자동 주입. " +
+      "floating dialog/standalone은 Panel/Dialog ui primitive 사용."
+    )
+  }
+}
+
 // 규칙 36: ax({ role: 'control-group', ... }) 변수 추출 금지 — "group을 영역으로 나누기" 안티패턴
 // const cluster = ax(...) → 여러 <div>에 재사용하면 시각적 cluster 분리(영역 나누기)로 이어짐
 if (isTsx) {
