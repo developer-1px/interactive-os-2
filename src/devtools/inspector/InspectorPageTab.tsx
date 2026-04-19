@@ -130,6 +130,15 @@ export function InspectorPageTab() {
 
   const rawSource = useMemo(() => store ? serializeToDefineLayout(store) : '', [store])
 
+  // Live Wireframe Overlay: activeId의 FlatLayout 노드 경계를 main window에 그림.
+  // 탭 언마운트 시 null 발행으로 overlay 꺼짐.
+  React.useEffect(() => {
+    window.dispatchEvent(new CustomEvent('flatlayout:overlay-activate', { detail: { instanceId: activeId } }))
+    return () => {
+      window.dispatchEvent(new CustomEvent('flatlayout:overlay-activate', { detail: { instanceId: null } }))
+    }
+  }, [activeId])
+
   const handleCopy = useCallback(async () => {
     if (!store) return
     await navigator.clipboard.writeText(serializeToDefineLayout(store))

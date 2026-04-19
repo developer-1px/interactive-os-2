@@ -7,6 +7,7 @@ import { QuickLookModal } from '@os/ui/QuickLookModal'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { KeylineOverlay } from './devtools/KeylineOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
+import { FlatLayoutOverlay } from './devtools/inspector/FlatLayoutOverlay'
 import { openInspectorWindow } from './devtools/inspector/openInspectorWindow'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { ax } from '@styles/ax'
@@ -74,6 +75,7 @@ export default function AppShell() {
           onClose={() => setPreviewFile(null)}
         />
         <ComponentInspector />
+        <FlatLayoutOverlay />
       </div>
     </AriaRoute>
   )
