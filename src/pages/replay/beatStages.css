@@ -418,9 +418,9 @@
 }
 
 /* ─────────────────────────────────────────────
- * ShortCard wrapper
+ * ShortCard wrapper — 9:16, stage 영역에 fit. layout/scroll/placement는 JSX ax()로 처리
  * ───────────────────────────────────────────── */
-.short-card { position: relative; background: var(--beat-card-bg); box-shadow: var(--beat-card-shadow); cursor: pointer; user-select: none; border-radius: 20px; flex-shrink: 0; }
+.short-card { background: var(--replay-black); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08); cursor: pointer; user-select: none; border-radius: 20px; flex-shrink: 0; aspect-ratio: 9 / 16; height: 100%; width: auto; max-width: 100%; contain: layout; isolation: isolate; }
 .short-card__beat { position: absolute; inset: 0; }
 .short-card__progress { position: absolute; top: 10px; left: 12px; right: 12px; z-index: 5; gap: 4px; }
 .short-card__progress-track { height: 2.5px; border-radius: 2px; background: var(--beat-progress-track); overflow: hidden; }

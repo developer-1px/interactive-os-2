@@ -31,7 +31,7 @@ export function ShortCard({ session, active, autoplay, onComplete }: ShortCardPr
 
   return (
     <div
-      className={`short-card ${ax({ width: 'full', layout: 'fill' })}`}
+      className="short-card"
       onClick={togglePause}
       style={cardVar}
     >
