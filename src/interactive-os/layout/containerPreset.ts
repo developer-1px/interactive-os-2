@@ -49,8 +49,8 @@ export const containerPresetTable: Partial<Record<ContainerPresetKey, ContainerP
   // 기본: 외부 padding 없음 — pane 경계가 그대로 자리잡음.
   'split.root':          {},
   'split.nested':        {},
-  // holds:'island' — 자식이 island로 떠있음. 바깥 ground 여백(sm) 필수.
-  'split.root.island':   { padding: 'sm' },
+  // holds:'island' — 자식이 island로 떠있음. ground 여백 = inner inset 대칭(md).
+  'split.root.island':   { padding: 'md' },
   // holds:'glass' — overlay glass blur clearance (lg).
   'split.root.glass':    { padding: 'lg' },
   // holds:'dense' — 여백 없음 (기본과 동일).
@@ -78,9 +78,10 @@ export const containerPresetTable: Partial<Record<ContainerPresetKey, ContainerP
   // 기본값 없음 — 위젯 내부가 자체 padding 소유. wrapper padding 없음.
   'widget':        {},
   'widget.overlay': {},
-  // holds로 island 슬롯 래핑 시 내부 inset — 아이템이 island 경계에 닿지 않도록.
-  'widget.island':  { padding: 'xs' },
-  'widget.glass':   { padding: 'sm' },
+  // holds로 island 슬롯 래핑 시 내부 inset — ground padding(split.root.island)과
+  // 같은 크기(md)로 대칭. 라벨/아이템이 island 경계에 닿지 않고 숨 쉴 공간 확보.
+  'widget.island':  { padding: 'md' },
+  'widget.glass':   { padding: 'md' },
 
   // ── Miller ──
   'miller.root':   { gap: 'sm' },
