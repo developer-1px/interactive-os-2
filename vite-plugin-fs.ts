@@ -88,6 +88,11 @@ function handleFile(url: URL, res: ServerResponse): void {
     json(res, { error: 'File not found' })
     return
   }
+  if (fs.statSync(filePath).isDirectory()) {
+    res.statusCode = 400
+    json(res, { error: 'Path is a directory' })
+    return
+  }
   const fileExt = path.extname(filePath).toLowerCase()
   if (IMAGE_MIME[fileExt]) {
     const buf = fs.readFileSync(filePath)
