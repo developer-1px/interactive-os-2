@@ -76,7 +76,6 @@ export function BaselineFinderApp({ app }: { app: AppDefinition }) {
       <TabList
         data={viewModesStore}
         onActivate={(id) => setViewModeId(id)}
-        initialFocus={viewModeId}
         aria-label="View mode"
       />
       {hidePreview || !previewPath ? (
