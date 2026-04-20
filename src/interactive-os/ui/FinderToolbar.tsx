@@ -105,15 +105,15 @@ export function FinderToolbar({
   return (
     <div className={`finder-toolbar ${ax({ role: 'control-group', surface: 'base', layout: 'bar' })}`}>
       {(onBack || onForward) && (
-        <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', pd: 'sm' })}>
+        <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
           <Toolbar data={navData} onActivate={handleNav} renderItem={renderItem} aria-label="Navigation" />
         </div>
       )}
-      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', pd: 'sm' })}>
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
         <Toolbar data={viewData} onActivate={handleView} renderItem={renderItem} aria-label="View mode" />
       </div>
       {showSort && (
-        <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', pd: 'sm' })} role="group" aria-label="Sort">
+        <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })} role="group" aria-label="Sort">
           {SORT_KEYS.map((key) => {
             const isActive = sortKey === key
             return (
@@ -142,7 +142,7 @@ export function FinderToolbar({
         </div>
       )}
       {showKindFilter && (
-        <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', pd: 'sm' })} role="group" aria-label="Filter by kind">
+        <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })} role="group" aria-label="Filter by kind">
           {KIND_KEYS.map((kind) => {
             const isActive = kindFilters!.includes(kind)
             return (
@@ -164,7 +164,7 @@ export function FinderToolbar({
           {path}
         </div>
       )}
-      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', pd: 'sm' })}>
+      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar' })}>
         <Toolbar data={searchData} onActivate={handleSearch} renderItem={renderItem} aria-label="Search" />
       </div>
     </div>
