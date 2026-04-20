@@ -215,7 +215,7 @@ function useSnapFeed() {
     // Capture phase: stop wheel from reaching inner ScrollArea,
     // but do NOT preventDefault — let the browser natively scroll+snap the feed
     const onWheel = (e: WheelEvent) => {
-      // eslint-disable-next-line no-restricted-syntax
+       
       e.stopPropagation()
     }
     el.addEventListener('wheel', onWheel, { capture: true })

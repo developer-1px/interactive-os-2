@@ -13,7 +13,7 @@
  *    defineLayout slideRail 노드에 scroll 오너십 이관 필요.
  *  - SlideSorter / ChatFeed / DeckSettings — os 위반 해소 완료.
  */
-/* eslint-disable react-refresh/only-export-components */
+ 
 import React, { useMemo, useRef, useCallback } from 'react'
 import type { ReactElement } from 'react'
 import { ax } from '@styles/ax'

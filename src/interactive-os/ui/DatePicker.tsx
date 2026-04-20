@@ -77,9 +77,9 @@ export function DatePicker({
     const y = t.getFullYear()
     const m = t.getMonth()
     const idx = findDayIndex(y, m, t)
-    setYearMonth({ year: y, month: m }) // eslint-disable-line react-hooks/set-state-in-effect
-    setFocusDayIndex(idx) // eslint-disable-line react-hooks/set-state-in-effect
-    setIsOpen(true) // eslint-disable-line react-hooks/set-state-in-effect
+    setYearMonth({ year: y, month: m })  
+    setFocusDayIndex(idx)  
+    setIsOpen(true)  
     engine.dispatch(calendarCommands.open(idx))
   }, [engine, value, today])
 

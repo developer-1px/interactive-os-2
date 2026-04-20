@@ -91,7 +91,7 @@ export function cellDragSelect() {
     name: 'cellDragSelect',
     middleware,
     useEffect: (ctx) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+       
       useEffect(() => {
         const container = ctx.containerRef.current
         if (!container) return

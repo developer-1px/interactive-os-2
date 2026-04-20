@@ -223,7 +223,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
     <aside className={`cms-sidebar ${ax({
         role: 'control-group',
         flex: 'none', layout: 'stack', surface: 'sunken' })}`} aria-label="Sections" style={style}>
-      {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
+      { }
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
       <div className={`ax-interactive cms-sidebar__list ${ax({ flex: '1', layout: 'stack' })}`} role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText, ariaLabel }) => {

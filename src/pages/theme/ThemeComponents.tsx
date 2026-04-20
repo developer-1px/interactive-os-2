@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+ 
 import type React from 'react'
 import { ax } from '@styles/ax'
 
