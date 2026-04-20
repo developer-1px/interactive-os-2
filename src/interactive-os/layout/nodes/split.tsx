@@ -54,7 +54,7 @@ defineLayoutNode('split', {
 
     return (
       <ContainerIntentContext.Provider value={{ holds: node.holds }}>
-        <div ref={refCallback(nodeId)} {...holdsAttr} className={ax({ flex: '1', layout: 'fill', ...(padding ? { padding } : {}) })}>
+        <div ref={refCallback(nodeId)} {...holdsAttr} className={ax({ flex: '1', layout: 'fill' })}>
           <SplitPane direction={node.direction} sizes={node.sizes} onResize={handleResize}>
             {childIds.map((childId) => renderNode(childId, 'split'))}
           </SplitPane>
