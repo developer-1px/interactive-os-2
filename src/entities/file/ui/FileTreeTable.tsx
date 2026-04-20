@@ -3,6 +3,7 @@ import React from 'react'
 import type { NormalizedData } from '@os/store/types'
 import { TreeTable } from '@os/ui/TreeTable'
 import { FileIcon } from '@os/ui/FileIcon'
+import { SymlinkIndicator } from '@os/ui/indicators'
 import { ax } from '@styles/ax'
 
 export type FileTableSortKey = 'name' | 'kind' | 'date' | 'loc'
@@ -49,12 +50,15 @@ const renderCell = (
 ): React.ReactNode => {
   const name = (data?.name as string) ?? ''
   const type = (data?.type as string) ?? 'file'
+  const symlink = Boolean(data?.symlink)
+  const target = data?.target as string | undefined
   switch (col.key) {
     case 'name':
       return (
         <>
           <FileIcon name={name} type={type} expanded={state.expanded} />
           <span className={ax({ clamp: '1' })}>{name}</span>
+          {symlink && <SymlinkIndicator target={target} className={dimCell} />}
         </>
       )
     case 'kind':
