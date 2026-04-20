@@ -5,4 +5,6 @@ export type FileNodeData = {
   type: 'file' | 'directory'
   path: string
   mtime?: number
+  symlink?: boolean
+  target?: string
 }

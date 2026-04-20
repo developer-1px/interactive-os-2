@@ -4,6 +4,8 @@ export interface TreeNode {
   type: 'file' | 'directory'
   loc?: number
   mtime?: number
+  symlink?: boolean
+  target?: string
   children?: TreeNode[]
 }
 
