@@ -1,0 +1,10 @@
+/* Low-fi fidelity theme — only properties that have no ax axis. */
+
+.page {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.regionLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
