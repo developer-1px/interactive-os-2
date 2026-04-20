@@ -123,7 +123,8 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
 
   const lastEmitted = useRef<T>(value)
   const dataRef = useRef<NormalizedData>(data)
-  useEffect(() => { dataRef.current = data }, [data])
+  // eslint-disable-next-line react-hooks/refs -- keyboard handler needs same-tick access; useEffect lags one commit
+  dataRef.current = data
 
   // External value sync: if caller swaps `value` with something we didn't emit,
   // rebuild the store from scratch (identity reset is acceptable for a genuine

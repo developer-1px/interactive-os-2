@@ -16,7 +16,7 @@ describe('defineApp required check', () => {
 
   it('dataSource 1개 이상이면 통과 (FinderApp)', () => {
     expect(FinderApp.baseline.id).toBe('finder')
-    expect(FinderApp.features).toHaveLength(4)
+    expect(FinderApp.features).toHaveLength(5)
   })
 })
 
@@ -30,7 +30,7 @@ describe('buildRegistry', () => {
 
   it('keymap priority desc 정렬', () => {
     const reg = buildRegistry(FinderApp)
-    expect(reg.keymaps[0].priority).toBe(10) // Book keymap
+    expect(reg.keymaps[0].priority).toBe(100) // QuickOpen keymap (Meta+p)
   })
 })
 
@@ -55,7 +55,7 @@ describe('featureRegistryToPlugin', () => {
     const reg = buildRegistry(FinderApp)
     const plugin = featureRegistryToPlugin(reg, () => ({ viewMode: 'book' }))
     expect(plugin.keyMap).toBeDefined()
-    expect(Object.keys(plugin.keyMap!).sort()).toEqual(['ArrowLeft', 'ArrowRight'])
+    expect(Object.keys(plugin.keyMap!).sort()).toEqual(['ArrowLeft', 'ArrowRight', 'Meta+p'])
     expect(plugin.keyMap!.ArrowLeft.commands).toContain('book:turnPagePrev')
   })
 
