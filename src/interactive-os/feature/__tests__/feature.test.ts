@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { defineApp } from '../defineFeature'
 import { buildRegistry, resolveActiveKeymap } from '../featureRegistry'
+import { featureRegistryToPlugin } from '../featureToPlugin'
 import { BaselineFinder } from '../../../baselines/finder/BaselineFinder'
 import { FinderApp } from '../../../baselines/finder/FinderApp'
 import { MillerFeature } from '../../../features/miller/MillerFeature'
@@ -46,5 +47,33 @@ describe('resolveActiveKeymap', () => {
     const km = resolveActiveKeymap(reg, { viewMode: 'list' })
     expect(km.ArrowLeft).toBeUndefined()
     expect(km.ArrowRight).toBeUndefined()
+  })
+})
+
+describe('featureRegistryToPlugin', () => {
+  it('engine Plugin keyMap union + commands 메타데이터', () => {
+    const reg = buildRegistry(FinderApp)
+    const plugin = featureRegistryToPlugin(reg, () => ({ viewMode: 'book' }))
+    expect(plugin.keyMap).toBeDefined()
+    expect(Object.keys(plugin.keyMap!).sort()).toEqual(['ArrowLeft', 'ArrowRight'])
+    expect(plugin.keyMap!.ArrowLeft.commands).toContain('book:turnPagePrev')
+  })
+
+  it('book 모드에서 ArrowLeft 핸들러가 book command 호출', () => {
+    let called = ''
+    const reg = buildRegistry(FinderApp)
+    reg.commands['book:turnPagePrev'] = () => { called = 'prev' }
+    const plugin = featureRegistryToPlugin(reg, () => ({ viewMode: 'book' }))
+    plugin.keyMap!.ArrowLeft({} as never)
+    expect(called).toBe('prev')
+  })
+
+  it('list 모드에서 ArrowLeft 핸들러는 scope false로 무동작', () => {
+    let called = false
+    const reg = buildRegistry(FinderApp)
+    reg.commands['book:turnPagePrev'] = () => { called = true }
+    const plugin = featureRegistryToPlugin(reg, () => ({ viewMode: 'list' }))
+    plugin.keyMap!.ArrowLeft({} as never)
+    expect(called).toBe(false)
   })
 })
