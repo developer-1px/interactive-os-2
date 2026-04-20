@@ -1,7 +1,7 @@
 // ② cmux-layout-prd.md
 import { useMemo } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import type { FocusStateData } from '@os/layout/layoutCommands'
 import {

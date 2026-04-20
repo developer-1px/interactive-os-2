@@ -2,7 +2,7 @@
 // FlatLayout Pull model — IncidentProvider + useFlatLayout shared state
 import { useCallback, useMemo, useRef, useEffect } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { useStreamFeed } from '@os/ui/useStreamFeed'
 import { incidentPlugin } from './incidentPlugin'

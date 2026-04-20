@@ -25,7 +25,7 @@ import { childRules, nodeSchemas, getEditableFields, expandEntitySlots } from '.
 import { zodSchema } from '@os/plugins/zodSchema'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { CmsProvider } from './cmsContext'
 import { cmsWidgets } from './cmsWidgets'
