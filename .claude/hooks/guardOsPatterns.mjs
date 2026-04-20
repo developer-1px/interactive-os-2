@@ -578,6 +578,88 @@ if (filePath.endsWith('/src/main.tsx')) {
   }
 }
 
+// 규칙 39: 커스텀 훅이 반환하는 함수는 useCallback으로 고정 필수
+// src/hooks/use*.ts(x) 파일에서 반환되는 함수가 useCallback 없이 매 렌더마다 새 참조를
+// 뱉으면, 소비자의 useMemo/useEffect deps가 매번 무효화되어 하위 트리가 remount된다.
+// (AppShell createWidgetRegistry가 useTheme.toggle을 dep로 받아 전체 앱이 remount된 사례)
+if (/\/src\/hooks\/use[A-Z]\w*\.tsx?$/.test(filePath)) {
+  // 1) hook이 반환하는 식별자들 수집 — return { a, b, c } 또는 return [a, b]
+  const returnedNames = new Set()
+  for (const m of content.matchAll(/\breturn\s*\{([\s\S]*?)\}\s*(?:as\s+const\s*)?[;\n]/g)) {
+    const body = m[1]
+    for (const nameMatch of body.matchAll(/\b(\w+)\s*(?:[:,}]|$)/g)) {
+      returnedNames.add(nameMatch[1])
+    }
+  }
+  for (const m of content.matchAll(/\breturn\s*\[([\s\S]*?)\][;\n]/g)) {
+    for (const nameMatch of m[1].matchAll(/\b(\w+)\b/g)) returnedNames.add(nameMatch[1])
+  }
+
+  // 2) const name = (...) => ... 선언 찾고 useCallback 미사용 + 반환되는 이름이면 위반
+  for (const m of content.matchAll(/\bconst\s+(\w+)\s*=\s*(async\s+)?(\([^)]*\)|[A-Za-z_$]\w*)\s*=>/g)) {
+    const name = m[1]
+    if (!returnedNames.has(name)) continue
+    const startIdx = m.index ?? 0
+    const lineStart = content.lastIndexOf('\n', startIdx) + 1
+    const declLine = content.slice(lineStart, content.indexOf('\n', startIdx) === -1 ? content.length : content.indexOf('\n', startIdx))
+    if (/\buseCallback\b/.test(declLine)) continue
+    violations.push(
+      `커스텀 훅이 반환하는 함수 \`${name}\`가 useCallback으로 고정되지 않았습니다 — ` +
+      '소비자의 useMemo/useEffect deps를 매 렌더마다 무효화하여 하위 트리 remount가 일어납니다 ' +
+      '(예: AppShell createWidgetRegistry가 이 함수를 dep로 받으면 전체 앱이 remount). ' +
+      `수정: \`const ${name} = useCallback((...) => ..., [deps])\`.`
+    )
+  }
+}
+
+// 규칙 40: OS store 우회 — 페이지/훅에서 useSyncExternalStore 직접 호출 또는
+// 수동 listener Set으로 pub/sub 구현 금지.
+// OS는 createCommandEngine + useEngineStore/useEngineSelector를 제공한다.
+// 전역 앱 상태(theme, i18n, auth 등)는 OS store를 경유해야 하네스(devtools inspector,
+// command log, undo/redo, middleware)가 자동으로 붙고, 소비자 함수 참조 안정성도
+// 모듈-스코프 engine으로 보장된다. 수동 구현은 매번 같은 버그(unstable callback →
+// 소비자 useMemo 무효화)를 재생산한다.
+if (!isExempt && isTsx) {
+  if (/\buseSyncExternalStore\b/.test(content)) {
+    violations.push(
+      'useSyncExternalStore 직접 호출 금지 — OS의 useEngineStore/useEngineSelector(또는 useAria) 경유. ' +
+      '전역 상태라면 src/interactive-os/engine/createCommandEngine으로 모듈-스코프 engine을 만들고 ' +
+      '컴포넌트는 useEngineSelector로 구독하세요. 같은 engine을 쓰면 dispatch 함수도 ' +
+      '자동 stable reference라 AppShell useMemo deps 무효화 같은 remount 버그가 원천 차단됩니다.'
+    )
+  }
+  // 수동 pub/sub 패턴: `const listeners = new Set<() => void>()` + notify loop
+  if (
+    /\blisteners\s*=\s*new\s+Set\s*<\s*\(\s*\)\s*=>\s*void\s*>/.test(content) &&
+    /listeners\.forEach\s*\(/.test(content)
+  ) {
+    violations.push(
+      '수동 listener Set + forEach 패턴 — OS store 우회입니다. ' +
+      'createCommandEngine은 subscribeStore/notifyStoreSubscribers를 이미 제공합니다. ' +
+      '모듈-스코프 engine을 만들어 컴포넌트는 useEngineSelector로 구독하세요.'
+    )
+  }
+}
+
+// 규칙 41: hooks/ 파일에서 useState + localStorage 조합 — shared persisted state는
+// createModuleStore로 가야 한다. 훅은 소비자마다 별도 useState 인스턴스를 만들므로
+// 여러 컴포넌트가 같은 훅을 써도 상태를 공유하지 않고, localStorage를 통해서만 다음
+// 마운트 때 겨우 동기화된다. "전역에서 공유돼야 하는 값을 컴포넌트 수명에 묶어놓은"
+// 구조적 불일치이며, 동기화 누락·중복 렌더·callback 참조 불안정을 유발한다.
+if (/\/src\/hooks\/use[A-Z]\w*\.tsx?$/.test(filePath)) {
+  const hasUseState = /\buseState\s*[<(]/.test(content)
+  const hasLocalStorage = /\blocalStorage\.(get|set)Item\s*\(/.test(content)
+  if (hasUseState && hasLocalStorage) {
+    violations.push(
+      'hooks/ 파일에서 useState + localStorage 조합 금지 — 여러 컴포넌트가 같은 훅을 써도 ' +
+      'useState 인스턴스는 각자 별도라 상태가 공유되지 않습니다. localStorage를 통한 ' +
+      '간접 동기화는 마운트 때만 반영되어 불일치·stale 렌더를 만듭니다. ' +
+      '대안: `createModuleStore<T>({ initial, storageKey })` — 모듈-스코프 싱글톤으로 ' +
+      '모든 소비자가 동일 state를 구독(useSyncExternalStore 자동)하고 persist도 자동입니다.'
+    )
+  }
+}
+
 // ── 경고 (차단 아님) ──
 
 // 경고 W1: pages/에서 .map() + raw <div — ui/ 컴포넌트 사용 검토 권유

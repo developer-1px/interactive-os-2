@@ -23,7 +23,6 @@ export function FilePanel({ path }: { path: string }) {
   const isMarkdown = filename.endsWith('.md')
 
   useEffect(() => {
-    bodyRef.current?.scrollTo(0, 0)
     if (source !== 'text') return
     const cached = fileCache.get(path)
     if (cached !== undefined) {
@@ -31,8 +30,6 @@ export function FilePanel({ path }: { path: string }) {
       setContent(cached)
       return
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setContent('')
     let cancelled = false
     fetchFile(path).then((text) => {
       fileCache.set(path, text)
@@ -40,6 +37,10 @@ export function FilePanel({ path }: { path: string }) {
     })
     return () => { cancelled = true }
   }, [path, source])
+
+  useEffect(() => {
+    bodyRef.current?.scrollTo(0, 0)
+  }, [path])
 
   const keyMap = useMemo(() => ({
     'Meta+b': defineRouteKey('file-panel:toggle-spread', () => { if (isMarkdown) setSpreadMode(s => !s) }, 'FilePanel'),

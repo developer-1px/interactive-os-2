@@ -1,25 +1,11 @@
-import { useSyncExternalStore } from 'react'
+import { createModuleStore } from '@os/store/createModuleStore'
 import { cmsStore } from './cmsStore'
 import type { NormalizedData } from '@os/store/types'
 
-let _data: NormalizedData = cmsStore
-const _listeners = new Set<() => void>()
-
-function notify() { _listeners.forEach(fn => fn()) }
-
-const cmsState = {
-  getData: () => _data,
-  setData: (next: NormalizedData) => { _data = next; notify() },
-  subscribe: (fn: () => void) => { _listeners.add(fn); return () => { _listeners.delete(fn) } },
-}
+const store = createModuleStore<NormalizedData>({ initial: cmsStore })
 
 export function useCmsData(): [NormalizedData, (d: NormalizedData) => void] {
-  const data = useSyncExternalStore(cmsState.subscribe, cmsState.getData)
-  return [data, cmsState.setData]
+  return [store.use(), store.set]
 }
 
-/** Reset module-level CMS data to initial store — for test isolation */
-export function resetCmsData() {
-  _data = cmsStore
-  notify()
-}
+export function resetCmsData() { store.set(cmsStore) }
