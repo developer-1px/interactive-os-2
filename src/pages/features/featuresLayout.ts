@@ -1,5 +1,5 @@
 // ② feature-mgmt-view-prd.md — FlatLayout defineLayout 선언
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 
 export const featuresLayout = defineLayout({
   entities: {

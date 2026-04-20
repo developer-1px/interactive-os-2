@@ -12,7 +12,7 @@
  *   multi   — 6 tabs, 긴 레이블 포함 (overflow 테스트)
  *   empty   — 세션 선택 없음 (본문 전체 EmptyState)
  */
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import type { NormalizedData } from '@os/schema'
 import type { CmuxPreviewContextValue } from './cmuxPreviewContext'
 
