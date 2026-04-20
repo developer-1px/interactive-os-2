@@ -616,6 +616,15 @@ dialog.sf-overlay[open] {
 :where(.tn-warning-dim) { color: var(--tone-warning-hover); }
 :where(.tn-neutral-dim) { color: var(--text-secondary); }
 
+/* ── Tone muted — 텍스트 위계 3단(primary/secondary/muted) 중 가장 연함 ── */
+.tn-neutral-muted {
+  --_bg: transparent;
+  --_fg: var(--text-muted);
+  --_bg-hover: var(--bg-hover);
+  --_bg-active: var(--bg-active);
+}
+:where(.tn-neutral-muted) { color: var(--text-muted); }
+
 /* ── Role: Control — interactive 상태 ── */
 /* ② ax-textstyle-ssot-prd (W2): .rl-control.rl-control padding-block 특수 규칙 제거
  *    — var(--cs-py)로 단일화. textStyle 4-tuple이 공급. */
@@ -703,7 +712,8 @@ dialog.sf-overlay[open] {
 /* clip — D2: 'scroll:hidden' 대체. overflow:clip (스크롤/포커스 잠금 + 자식이 밖으로 못 나옴) */
 .ly-clip     { overflow: clip; }
 /* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
-.ly-fill     { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+/* overflow:clip + clip-margin — 자식 island의 soft shadow bloom(32px)이 부모 경계 밖으로 새어나오도록 허용 (overflow:hidden은 shadow도 잘라냄) */
+.ly-fill     { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: clip; overflow-clip-margin: 40px; }
 .ly-row-fill { display: flex; flex-direction: row; flex: 1; min-width: 0; min-height: 0; }
 .ly-wrap     { display: inline-flex; flex-wrap: wrap; align-items: center; }
 /* ── Grid — equal-column 그리드 ── */

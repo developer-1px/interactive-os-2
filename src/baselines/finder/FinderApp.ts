@@ -9,6 +9,7 @@ import { FsFeature } from '../../features/fs/FsFeature'
 import { MillerFeature } from '../../features/miller/MillerFeature'
 import { BookFeature } from '../../features/book/BookFeature'
 import { FavoritesFeature } from '../../features/favorites/FavoritesFeature'
+import { QuickOpenFeature } from '../../features/quickOpen/QuickOpenFeature'
 
 export const FinderApp = defineApp({
   baseline: BaselineFinder,
@@ -17,5 +18,6 @@ export const FinderApp = defineApp({
     MillerFeature,    // viewMode: columns
     BookFeature,      // viewMode: book + scoped keymap
     FavoritesFeature, // sidebar: 즐겨찾기·최근
+    QuickOpenFeature, // overlay: Meta+P 전역 검색
   ],
 })

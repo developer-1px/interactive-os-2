@@ -12,6 +12,7 @@
 export type AxTone =
   | 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
   | 'accent-dim' | 'danger-dim' | 'success-dim' | 'warning-dim' | 'neutral-dim'
+  | 'neutral-muted'
 
 export type AxTextStyle =
   | 'hero' | 'display' | 'page' | 'section' | 'label'

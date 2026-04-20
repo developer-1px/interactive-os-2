@@ -103,6 +103,12 @@ export interface CommandPaletteContribution {
   scope?: FeatureScope
 }
 
+export interface OverlayContribution {
+  id: string
+  /** 전면 오버레이 렌더러. host는 open 상태를 관리하고 onClose를 전달. */
+  render: ComponentType<{ data: NormalizedData; onClose: () => void }>
+}
+
 export interface KeymapContribution {
   id: string
   bindings: Record<string, string> // 'ArrowLeft' → commandId
@@ -133,6 +139,7 @@ export interface FeatureDefinition {
   previewRenderer?: PreviewRendererContribution[]
   commandPalette?: CommandPaletteContribution[]
   keymap?: KeymapContribution[]
+  overlay?: OverlayContribution[]
 
   // 저층 리소스 (선택)
   schema?: FeatureSchema

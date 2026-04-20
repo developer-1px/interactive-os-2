@@ -17,7 +17,32 @@ import { readFileSync } from 'fs'
 import { execSync } from 'child_process'
 
 const input = JSON.parse(readFileSync('/dev/stdin', 'utf8'))
-const cmd = (input.tool_input?.command ?? '').trim()
+const rawCmd = (input.tool_input?.command ?? '').trim()
+
+/**
+ * Strip string literals and heredoc bodies so that pattern matching only sees
+ * actual shell tokens (commands/args/operators), not text inside quotes/heredocs.
+ *
+ * Motivation: `gh pr create --body "... git stash ..."` should NOT trigger the
+ * git stash guard because the string is a PR description, not a command. The
+ * previous implementation substring-matched the whole command line.
+ *
+ * This is intentionally conservative: if someone obfuscates by concatenating
+ * ('gi' + 't stash') we risk a false negative, which is acceptable for a
+ * defense-in-depth guard (other layers still exist).
+ */
+function stripLiterals(src) {
+  let s = src
+  // heredocs: <<EOF ... EOF, <<'EOF' ... EOF, <<-EOF ... EOF etc.
+  s = s.replace(/<<-?\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\1[\s\S]*?\n\2\b/g, '<<HEREDOC_STRIPPED>>')
+  // single-quoted strings (no escapes in POSIX single quotes)
+  s = s.replace(/'[^']*'/g, "''")
+  // double-quoted strings (allow backslash escapes)
+  s = s.replace(/"(?:[^"\\]|\\.)*"/g, '""')
+  return s
+}
+
+const cmd = stripLiterals(rawCmd)
 
 const isMainBranch = () => {
   try {

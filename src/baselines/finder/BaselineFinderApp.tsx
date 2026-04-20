@@ -5,8 +5,10 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Settings } from 'lucide-react'
-import type { AppDefinition, ViewModeContribution, SidebarContribution } from '@os/feature/defineFeature'
-import { buildRegistry } from '@os/feature/featureRegistry'
+import type { AppDefinition, FeatureContext, ViewModeContribution, SidebarContribution } from '@os/feature/defineFeature'
+import { buildRegistry, resolveActiveKeymap } from '@os/feature/featureRegistry'
+import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey, type RouteKeyMap } from '@os/primitives/defineRouteKey'
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { createStore } from '@os/store/createStore'
@@ -103,6 +105,9 @@ export function BaselineFinderApp({ app }: { app: AppDefinition }) {
 
   const activeView = allViewModes.find(v => v.id === viewModeId) ?? DEFAULT_LIST_MODE
 
+  // @useState-hatch — 현재 열린 overlay id 집합. overlay:open:* / overlay:close:* window event로 변경.
+  const [openOverlays, setOpenOverlays] = useState<Set<string>>(() => new Set())
+
   useEffect(() => {
     const source = registry.dataSources[0]
     if (!source) return
@@ -110,6 +115,28 @@ export function BaselineFinderApp({ app }: { app: AppDefinition }) {
     source.load({ rootPath }).then(d => { if (!cancelled) setData(d) })
     return () => { cancelled = true }
   }, [registry, rootPath])
+
+  useEffect(() => {
+    const handlers: Array<[string, EventListener]> = []
+    for (const o of registry.overlays) {
+      const onOpen = () => setOpenOverlays(prev => { const next = new Set(prev); next.add(o.id); return next })
+      const onClose = () => setOpenOverlays(prev => { const next = new Set(prev); next.delete(o.id); return next })
+      window.addEventListener(`overlay:open:${o.id}`, onOpen)
+      window.addEventListener(`overlay:close:${o.id}`, onClose)
+      handlers.push([`overlay:open:${o.id}`, onOpen], [`overlay:close:${o.id}`, onClose])
+    }
+    return () => { for (const [t, h] of handlers) window.removeEventListener(t, h) }
+  }, [registry])
+
+  useEffect(() => {
+    const onFocus = (e: Event) => {
+      const id = (e as CustomEvent<{ id: string }>).detail?.id
+      if (!id) return
+      setData(prev => prev ? { ...prev, entities: { ...prev.entities, [FOCUS_ID]: { id: FOCUS_ID, focusedId: id } } } : prev)
+    }
+    window.addEventListener('feature-finder:focus', onFocus)
+    return () => window.removeEventListener('feature-finder:focus', onFocus)
+  }, [])
 
   const handleFeaturesChange = (next: NormalizedData) => {
     const nextIds = (next.entities[CHECKED_ID]?.checkedIds as string[] | undefined) ?? []
@@ -132,6 +159,18 @@ export function BaselineFinderApp({ app }: { app: AppDefinition }) {
   const ViewRender = activeView.render
   const view = data ? <ViewRender data={data} onChange={setData} /> : null
 
+  // Feature keymap → AriaRoute 주입. 현재 viewMode scope에 해당하는 키만 활성.
+  const featureKeyMap = useMemo<RouteKeyMap>(() => {
+    const ctx: FeatureContext = { viewMode: viewModeId }
+    const resolved = resolveActiveKeymap(registry, ctx)
+    const map: RouteKeyMap = {}
+    for (const [k, cmdId] of Object.entries(resolved)) {
+      const handler = registry.commands[cmdId]
+      if (handler) map[k] = defineRouteKey(cmdId, () => { void handler(ctx) }, 'feature-finder')
+    }
+    return map
+  }, [registry, viewModeId])
+
   const mainArea = !hasDataSource ? (
     <div className={ax({ role: 'control-group', surface: 'sunken', layout: 'stack' })}>
       <div className={ax({ textStyle: 'section' })}>No data source installed</div>
@@ -151,6 +190,7 @@ export function BaselineFinderApp({ app }: { app: AppDefinition }) {
   )
 
   return (
+    <AriaRoute keyMap={featureKeyMap} label="feature-finder">
     <div className={ax({ layout: 'stack', flex: '1' })}>
       <div className={ax({ role: 'control-group', surface: 'base', layout: 'row' })}>
         <div className={ax({ flex: '1' })}>
@@ -187,6 +227,13 @@ export function BaselineFinderApp({ app }: { app: AppDefinition }) {
       ) : (
         mainArea
       )}
+
+      {data && registry.overlays.filter(o => openOverlays.has(o.id)).map(o => {
+        const Render = o.render
+        const close = () => window.dispatchEvent(new Event(`overlay:close:${o.id}`))
+        return <Render key={o.id} data={data} onClose={close} />
+      })}
     </div>
+    </AriaRoute>
   )
 }

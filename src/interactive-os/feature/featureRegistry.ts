@@ -12,6 +12,7 @@ import type {
   DataSourceContribution,
   CommandPaletteContribution,
   KeymapContribution,
+  OverlayContribution,
   FeatureCommandHandler,
 } from './defineFeature'
 
@@ -23,6 +24,7 @@ export interface FeatureRegistry {
   previewRenderers: PreviewRendererContribution[] // priority desc 정렬됨
   commandPalette: CommandPaletteContribution[]
   keymaps: KeymapContribution[] // priority desc 정렬됨
+  overlays: OverlayContribution[]
   commands: Record<string, FeatureCommandHandler>
 }
 
@@ -35,6 +37,7 @@ export function buildRegistry(app: AppDefinition): FeatureRegistry {
     previewRenderers: [],
     commandPalette: [],
     keymaps: [],
+    overlays: [],
     commands: {},
   }
 
@@ -46,6 +49,7 @@ export function buildRegistry(app: AppDefinition): FeatureRegistry {
     if (f.previewRenderer) reg.previewRenderers.push(...f.previewRenderer)
     if (f.commandPalette) reg.commandPalette.push(...f.commandPalette)
     if (f.keymap) reg.keymaps.push(...f.keymap)
+    if (f.overlay) reg.overlays.push(...f.overlay)
     if (f.commands) Object.assign(reg.commands, f.commands)
   }
 

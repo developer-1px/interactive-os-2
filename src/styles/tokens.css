@@ -232,11 +232,15 @@
   --shape-xl-radius:  calc(var(--radius-seed) * 2);     /* 16px */
   --shape-pill-radius: 9999px;                           /* 시드 무관 */
   --shape-island-radius: 10px;                           /* island: xl과 lg 사이, macOS Monterey 사이드바 톤 */
-  /* island ring — 같은 ground 위에 떠오른 독립체의 경계. 1px hairline ring만 (drop-shadow 없음).
-   * island는 pane 전체를 채우므로 외부 shadow는 의미 없음 — ring으로 subtle하게 경계만 표시.
-   * overflow:clip과 호환 (spread 0이라 clip 무관). */
+  /* island shadow — 은은하고 크게 퍼지는 soft shadow (2026 trend: Linear/Arc/Raycast 계열).
+   * 3-layer: hairline ring(경계) + tight contact(1px) + wide ambient(24px bloom).
+   * 색은 oklch(0% 0 0) 고정 — 다크/라이트 모두 어둠으로 깊이감 표현 (text-primary 기반은 다크에서 흰 그림자 → 안 보임).
+   * 다크 모드는 하단 override에서 alpha 강도 조정.
+   * overflow:clip 호환 (spread 0). */
   --shape-island-shadow:
-    0 0 0 1px oklch(from var(--text-primary) l c h / 0.10);
+    0 0 0 1px oklch(0% 0 0 / 0.20),
+    0 1px 2px oklch(0% 0 0 / 0.18),
+    0 12px 32px -8px oklch(0% 0 0 / 0.40);
 
   /* ── Shape bundle: padding-y + padding-x (claude.ai 실측)
      radius는 seed에서 파생. padding은 비례 관계. ── */
@@ -348,6 +352,12 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
   --shadow-md: 0 2px 8px rgba(0,0,0,0.03), 0 0 1px rgba(0,0,0,0.02);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.03);
+
+  /* island shadow (light) — 흰 배경에선 alpha 낮춰 은은하게 */
+  --shape-island-shadow:
+    0 0 0 1px oklch(0% 0 0 / 0.06),
+    0 1px 2px oklch(0% 0 0 / 0.04),
+    0 12px 32px -8px oklch(0% 0 0 / 0.10);
 
   /* ── Text ── */
   --text-bright:    var(--stone-950);

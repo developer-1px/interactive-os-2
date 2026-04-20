@@ -23,7 +23,7 @@ const COLUMNS = [
   { key: 'loc', header: 'LOC', width: '80px' },
 ]
 
-const dimCell = ax({ role: 'badge', surface: 'ghost', textStyle: 'caption', tone: 'neutral-dim' })
+const dimCell = ax({ role: 'badge', surface: 'ghost', textStyle: 'caption', tone: 'neutral-muted' })
 
 function formatDate(mtime: number | undefined): string {
   if (mtime == null) return ''

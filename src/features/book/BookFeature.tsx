@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 // BookFeature — 2페이지 펼침 + 자체 페이지 view-state.
 //
-// MVP: 페이지 넘김은 버튼으로. Feature.keymap 선언은 마켓플레이스 메타데이터로 보존
-// (featureRegistryToPlugin 어댑터가 소비·테스트됨). ←/→ 키 동작은 engine 통합 단계에서
-// BaselineFinderApp이 activeView keymap을 useEngine plugin으로 주입하면 자동 활성.
+// Feature.keymap은 BaselineFinderApp이 AriaRoute로 주입. ←/→ 활성 (scope: viewMode==='book').
+// commands 핸들러는 window event로 BookSpread 내부 state에 도달한다 — view-state plugin 미구현 시의 다리.
 
 import { useMemo, useState } from 'react'
+import { useEffect } from 'react'
 import { BookOpen, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
@@ -23,6 +23,17 @@ function BookSpread({ data }: { data: NormalizedData; onChange: (next: Normalize
 
   const prev = () => setPage(p => Math.max(0, p - 1))
   const next = () => setPage(p => Math.min(totalPages - 1, p + 1))
+
+  useEffect(() => {
+    const onNext = () => setPage(p => Math.min(totalPages - 1, p + 1))
+    const onPrev = () => setPage(p => Math.max(0, p - 1))
+    window.addEventListener('book:turnPageNext', onNext)
+    window.addEventListener('book:turnPagePrev', onPrev)
+    return () => {
+      window.removeEventListener('book:turnPageNext', onNext)
+      window.removeEventListener('book:turnPagePrev', onPrev)
+    }
+  }, [totalPages])
 
   return (
     <div className={ax({ layout: 'stack', flex: '1' })}>
@@ -62,8 +73,8 @@ export const BookFeature = defineFeature({
     layout: { hidePreview: true, hideSidebar: true },
   },
   commands: {
-    'book:turnPageNext': () => {},
-    'book:turnPagePrev': () => {},
+    'book:turnPageNext': () => { window.dispatchEvent(new Event('book:turnPageNext')) },
+    'book:turnPagePrev': () => { window.dispatchEvent(new Event('book:turnPagePrev')) },
   },
   keymap: [
     {
