@@ -23,7 +23,7 @@ export function buildTree(dirPath: string, visited: Set<string> = new Set()): Tr
     if (IGNORE.has(entry.name)) continue
     const fullPath = path.join(dirPath, entry.name)
     const isSymlink = entry.isSymbolicLink()
-    let resolvedType: 'file' | 'directory' | null = null
+    let resolvedType: 'file' | 'directory'
     let target: string | undefined
     let realPath: string | undefined
     if (isSymlink) {
