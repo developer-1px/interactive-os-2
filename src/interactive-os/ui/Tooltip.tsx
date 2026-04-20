@@ -61,7 +61,6 @@ export function Tooltip({ content, placement = 'bottom', children }: TooltipProp
     <>
       {cloneElement(child as ReactElement<Record<string, unknown>>, {
         ref: triggerRef,
-        interestfor: id,
         'aria-describedby': id,
         onMouseEnter: show,
         onMouseLeave: hide,

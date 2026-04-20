@@ -14,6 +14,9 @@ import { ax } from '@styles/ax'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { useTheme } from './hooks/useTheme'
 import { ActivityBar } from './ActivityBar'
+import { FlatLayout } from '@os/ui/FlatLayout'
+import { defineLayout } from '@os/layout'
+import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 
 import './styles/layers.css'        // L0: Layer order declaration (must be first)
 import './styles/palette.css'       // L0: OKLCH color palette
@@ -29,6 +32,20 @@ import './styles/inspect.css'      // Keyline inspector (?inspect)
 import './pages/showcase/registerMdRenderer'  // .md 파일 렌더러 등록 (CSS 후 import 해야 @layer 순서 유지)
 
 const MOBILE_ROUTES = ['/todo']
+
+const shellLayoutWithBar = defineLayout({
+  entities: {
+    root:        { data: { type: 'split', direction: 'horizontal', sizes: ['auto', 'flex'], resizable: false }, children: ['activitybar', 'content'] },
+    activitybar: { data: { type: 'widget', widget: 'ShellActivityBar' } },
+    content:     { data: { type: 'widget', widget: 'ShellContent' } },
+  },
+})
+
+const shellLayoutMobile = defineLayout({
+  entities: {
+    root:    { data: { type: 'widget', widget: 'ShellContent' } },
+  },
+})
 
 export default function AppShell() {
   const { theme, toggle: toggleTheme } = useTheme()
@@ -60,15 +77,23 @@ export default function AppShell() {
     'Mod+Shift+I': defineRouteKey('shell:open-inspector', () => openInspectorWindow(), 'Shell'),
   }), [])
 
+  const registry = useMemo(() => createWidgetRegistry({
+    ShellActivityBar: () => <ActivityBar theme={theme} onThemeToggle={toggleTheme} />,
+    ShellContent: () => (
+      <div className={`page-content ${ax({ layout: 'scroll', flex: '1' })}`}>
+        <Outlet />
+      </div>
+    ),
+  }), [theme, toggleTheme])
+
+  const layout = isMobileRoute ? shellLayoutMobile : shellLayoutWithBar
+
   return (
     <AriaRoute keyMap={shellKeyMap} label="Shell">
-      <div className={`page ${ax({ layout: 'row' })}`}>
+      <div className="page">
         <ReproRecorderOverlay />
         <KeylineOverlay />
-        {!isMobileRoute && <ActivityBar theme={theme} onThemeToggle={toggleTheme} />}
-        <div className={`page-content ${ax({ layout: 'scroll', flex: '1' })}`}>
-          <Outlet />
-        </div>
+        <FlatLayout data={layout} registry={registry} aria-label="Shell" />
         <QuickLookModal
           filePath={previewFile?.path ?? null}
           highlightLines={previewFile?.line ? new Set([previewFile.line]) : undefined}

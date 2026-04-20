@@ -37,12 +37,15 @@
  * 번들: cursor + border + background + color + 상태 정책
  * ════════════════════════════════════════════ */
 
+/* bg fallback이 transparent이므로 fg fallback도 tone에 종속되면 안 된다.
+   tone 주입 시: --_fg = --tone-primary-foreground (tn-* 블록)
+   tone 미주입 시: --text-primary — 배경이 투명이므로 primary 텍스트. */
 .sf-action {
   cursor: pointer;
   user-select: none;
   border: none;
   background: var(--_bg, transparent);
-  color: var(--_fg, var(--text-on-action));
+  color: var(--_fg, var(--text-primary));
   transition: color 150ms, background-color 150ms, box-shadow 150ms;
 }
 .sf-action:hover { background: var(--_bg-hover, var(--bg-hover)); }
@@ -502,6 +505,29 @@ dialog.sf-overlay[open] {
   background: var(--_bg, var(--surface-sunken));
 }
 
+/* ════════════════════════════════════════════
+ * Role: Tip — 툴팁 pill의 크기 정체성
+ * caption band 가정 (fallback 24/12/3/6 = badge와 동일). surface가 색·shadow,
+ * role은 padding/font/radius. role.surface CSS가 있어야 ts-caption의 cs 공급이
+ * 도달한다 (구독자 없으면 padding 0 — rolePreset.ts 주석 페어링).
+ * ════════════════════════════════════════════ */
+
+/* display/width는 :popover-open에서만 — UA의
+   [popover]:not(:popover-open) { display:none }을 덮지 않도록. */
+.rl-tip {
+  font-size:  var(--font-size, 12px);
+  font-weight: var(--type-caption-weight, 400);
+  line-height: 1.4;
+  padding-block:  var(--cs-py, 3px);
+  padding-inline: calc(var(--cs-py, 3px) * var(--pd-ratio, 2));
+  border-radius: var(--shape-sm-radius);
+  white-space: normal;
+}
+.rl-tip:popover-open {
+  display: inline-block;
+  width: max-content;
+}
+
 } /* @layer recipe — Recipe, Control Size, Text Style */
 
 @layer state {
@@ -703,6 +729,29 @@ dialog.sf-overlay[open] {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
+  /* 내부 셀이 자체 padding/gap을 가지므로 행은 grid row 역할만 — .rl-item의
+     padding/gap/border-radius(list-item용)를 grid 맥락에서 reset. */
+  padding: 0;
+  gap: 0;
+  border-radius: 0;
+  min-height: 0;
+  align-items: center;
+}
+.ly-table [role="row"] > [role="gridcell"],
+.ly-table [role="row"] > [role="cell"] {
+  min-height: var(--cs-h, 28px);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--cs-px, 8px);
+}
+/* 편집 모드 pill(.sf-input)은 바깥 cell 높이를 꽉 채움 —
+   AriaEditable 인라인 paddingBlock:0을 flex-center로 상쇄해 텍스트가 수직 중앙. */
+.ly-table [role="row"] > [role="cell"] .sf-input,
+.ly-table [role="row"] > [role="gridcell"] .sf-input {
+  min-height: var(--cs-h, 28px);
+  display: inline-flex;
+  align-items: center;
+  flex: 1;
 }
 .ly-table > [role="row"]:not(.ax-interactive [role="row"]),
 .ly-table > [role="rowgroup"] {

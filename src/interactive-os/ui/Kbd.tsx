@@ -1,8 +1,9 @@
-/** @catalog 키보드 단축키 표시 */
+/** @catalog 키보드 단축키 표시 — keycap */
+import type { ReactNode } from 'react'
 import { ax } from '@styles/ax'
 
 interface KbdProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function Kbd({ children }: KbdProps) {
@@ -12,7 +13,7 @@ export function Kbd({ children }: KbdProps) {
         role: 'badge',
         surface: 'overlay',
         textStyle: 'code',
-        content: 'text'
+        content: 'text',
       })}
     >
       {children}
