@@ -20,7 +20,7 @@ import { ScrollArea } from '@os/ui/ScrollArea'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { findDemo } from '../creator/demoRegistry'
 import { PLAYGROUND_CATALOG, groupCatalog, type CatalogEntry } from './playgroundCatalog'
-import { PICKER_STATE_ID, type PickerStateData } from './playgroundDefaults'
+import { PICKER_STATE_ID, type PickerStateData } from './studioLayout'
 import { PlaygroundComposerWidget, PlaygroundSubtitleWidget, PlaygroundChatLogWidget } from './playgroundChatWidgets'
 
 // ── Lazy demo loader ──────────────────────────────────

@@ -2,7 +2,7 @@ import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Layers, Presentation, Component, FolderCode, Palette, ShieldAlert, Languages,
-  MessageSquare, BookText, Play, Cable, PenLine, Kanban, GitBranch,
+  MessageSquare, BookText, Play, PenLine, Kanban, GitBranch,
   Mail, ListTree, Boxes, Braces, FileStack, TerminalSquare, BookMarked, Ruler, Compass,
   ListChecks, FlaskConical,
 } from 'lucide-react'
@@ -80,13 +80,12 @@ const appNavItems: NavItem[] = [
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
   { id: 'stories', label: 'Stories', icon: BookMarked, path: '/stories' },
-  { id: 'playground', label: 'Playground', icon: FlaskConical, path: '/playground' },
+  { id: 'studio', label: 'Studio', icon: FlaskConical, path: '/studio' },
   { id: 'todo', label: 'Todo', icon: ListChecks, path: '/todo' },
   { id: 'cmux-preview', label: 'cmux Preview', icon: TerminalSquare, path: '/cmux/preview' },
   { id: 'keyline-test', label: 'Keyline Test', icon: Ruler, path: '/test/keyline' },
   // --- 미완성 / 데모 미생성 ---
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
-  { id: 'a2ui', label: 'A2UI', icon: Cable, path: '/a2ui' },
   { id: 'writer', label: 'Writer', icon: PenLine, path: '/writer' },
 ]
 

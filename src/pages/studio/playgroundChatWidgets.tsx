@@ -11,7 +11,7 @@ import { ensureSession, sendMessage, useChatSession, type ChatSession } from '..
 import { getFlatLayoutActions } from '@os/primitives/flatLayoutRegistry'
 import { parseFlatLayoutBlocks } from './parseFlatLayoutBlocks'
 import { dispatchToolCall } from './layoutTools'
-import { PLAYGROUND_CANVAS_ID } from './playgroundDefaults'
+import { STUDIO_CANVAS_ID as PLAYGROUND_CANVAS_ID } from './studioLayout'
 import styles from './playgroundChatWidgets.module.css'
 
 function usePlaygroundSession(): ChatSession | null {

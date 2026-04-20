@@ -1,10 +1,12 @@
-// /playground 초기 레이아웃 — cmux 구조(tabgroup + surface widget) + __focus + __picker.
-// __picker: targetTabId가 null이 아니면 PickerRoot가 PickerDialog 렌더.
-//           EmptySlot의 +버튼과 ⌘P 단축키가 둘 다 이 state를 set하는 단일 진입점.
+// studioLayout — Studio 초기 FlatLayout. playground 기본 구조 + ExampleSidebar 2분할.
+// PICKER_STATE_ID / PickerStateData는 여기 SSOT. layoutTools/playgroundWidgets가 import.
 import { defineLayout } from '@os/layout/flatLayout'
 import type { FocusStateData } from '@os/layout/layoutCommands'
 import { FOCUS_STATE_ID } from '@os/layout/layoutCommands'
 
+export const STUDIO_CANVAS_ID = 'studio-canvas'
+
+/** 구 playground defaults의 PICKER_STATE_ID 승계. EmptySlot + ⌘P 단일 진입점. */
 export const PICKER_STATE_ID = '__picker'
 
 export interface PickerStateData extends Record<string, unknown> {
@@ -12,9 +14,11 @@ export interface PickerStateData extends Record<string, unknown> {
   targetTabId: string | null
 }
 
-export const PLAYGROUND_INITIAL = defineLayout({
+export const STUDIO_INITIAL = defineLayout({
   entities: {
-    root:      { data: { type: 'tabgroup', activeTabId: 't1' }, children: ['t1'] },
+    root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex'], resizable: true }, children: ['sidebar', 'canvas'] },
+    sidebar:   { data: { type: 'widget', widget: 'ExampleSidebar' } },
+    canvas:    { data: { type: 'tabgroup', activeTabId: 't1' }, children: ['t1'] },
     t1:        { data: { type: 'tab', label: 'Untitled', contentType: 'widget', contentRef: '' }, children: ['t1-body'] },
     't1-body': { data: { type: 'widget', widget: 'PlaygroundSurface' } },
 
@@ -23,14 +27,12 @@ export const PLAYGROUND_INITIAL = defineLayout({
     'composer-widget':   { data: { type: 'widget', widget: 'PlaygroundComposer' } },
     'subtitle-float':    { data: { type: 'floating', anchor: 'float-top-center' }, children: ['subtitle-widget'] },
     'subtitle-widget':   { data: { type: 'widget', widget: 'PlaygroundSubtitle' } },
-    // Chat log — Mod+L 로 hidden 토글. 평소엔 숨김, 필요 시 좌상단 팝업.
     'chatlog-float':     { data: { type: 'floating', anchor: 'float-top-start', hidden: true }, children: ['chatlog-widget'] },
     'chatlog-widget':    { data: { type: 'widget', widget: 'PlaygroundChatLog' } },
+    'stream-ctrl':       { data: { type: 'floating', anchor: 'float-top-center' }, children: ['stream-ctrl-w'] },
+    'stream-ctrl-w':     { data: { type: 'widget', widget: 'StreamControl' } },
 
-    [FOCUS_STATE_ID]:  { data: { type: 'state', focusedTabgroupId: 'root', focusedTabId: 't1' } satisfies FocusStateData },
+    [FOCUS_STATE_ID]:  { data: { type: 'state', focusedTabgroupId: 'canvas', focusedTabId: 't1' } satisfies FocusStateData },
     [PICKER_STATE_ID]: { data: { type: 'state', targetTabId: null } satisfies PickerStateData },
   },
 })
-
-/** FlatLayout 인스턴스 id — flatLayoutRegistry 에서 외부 dispatch 시 사용 (LLM tool bridge). */
-export const PLAYGROUND_CANVAS_ID = 'playground-canvas'

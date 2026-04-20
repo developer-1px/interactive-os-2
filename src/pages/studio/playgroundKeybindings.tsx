@@ -14,7 +14,7 @@ import {
   type FocusStateData,
   type FocusDir,
 } from '@os/layout/layoutCommands'
-import { PICKER_STATE_ID } from './playgroundDefaults'
+import { PICKER_STATE_ID } from './studioLayout'
 
 const FOCUS_DIRS: Record<string, FocusDir> = {
   'Mod+Alt+ArrowLeft':  'left',

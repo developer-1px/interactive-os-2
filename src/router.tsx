@@ -37,7 +37,7 @@ export const router = createBrowserRouter([
       { path: '/internals/theme', lazy: () => import('./pages/theme/PageThemeCreator').then(m => ({ Component: m.default })) },
       { path: '/creator/*', lazy: () => import('./pages/creator/PageComponentCreator').then(m => ({ Component: m.default })) },
       { path: '/json-editor', lazy: () => import('./pages/jsonEditor/PageJsonEditor').then(m => ({ Component: m.default })) },
-      { path: '/a2ui', lazy: () => import('./pages/a2ui/PageA2UI').then(m => ({ Component: m.default })) },
+      { path: '/studio', lazy: () => import('./pages/studio/PageStudio').then(m => ({ Component: m.default })) },
 
       {
         path: '/internals/*',
@@ -54,7 +54,6 @@ export const router = createBrowserRouter([
       { path: '/test/keyline', lazy: () => import('./pages/keyline/PageKeylineTest').then(m => ({ Component: m.default })) },
       { path: '/ax-principles', lazy: () => import('./pages/ax-principles/PageAxPrinciples').then(m => ({ Component: m.default })) },
       { path: '/todo', lazy: () => import('./pages/todo/PageTodo').then(m => ({ Component: m.default })) },
-      { path: '/playground', lazy: () => import('./pages/playground/PagePlayground').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
