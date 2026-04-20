@@ -1,5 +1,7 @@
 /** @catalog 검색+액션 실행 팔레트 */
-import { useState, useEffect, useCallback, useRef, useMemo, type Ref } from 'react'
+import { useEffect, useCallback, useRef, useMemo, type Ref } from 'react'
+// ② persistPluginPrd.md
+import { usePersistedState } from '../primitives/usePersistedState'
 import Fuse from 'fuse.js'
 import { Search } from 'lucide-react'
 import { useAria } from '../primitives/useAria'
@@ -282,11 +284,11 @@ function QuickOpenManaged({
 // --- File mode: original Fuse.js-based search ---
 
 function QuickOpenFile({ fileStore, root, onSelect, onClose, persistKey }: FileMode) {
-  // @useState-hatch — view preference mirrored to localStorage (matches VIEWMODE_KEY pattern)
-  const [query, setQuery] = useState(() => (persistKey && localStorage.getItem(persistKey)) || '')
-  useEffect(() => {
-    if (persistKey) localStorage.setItem(persistKey, query)
-  }, [persistKey, query])
+  const [query, setQuery] = usePersistedState<string>(
+    persistKey ?? '',
+    '',
+    { parse: (raw) => raw, serialize: (v) => v },
+  )
 
   const files = useMemo(() => flattenFiles(fileStore, root), [fileStore, root])
   const fuse = useMemo(() => new Fuse(files, {

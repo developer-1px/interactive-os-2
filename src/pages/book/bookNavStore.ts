@@ -1,5 +1,7 @@
+// ② persistPluginPrd.md
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
+import { createModuleStore } from '@os/store/createModuleStore'
 import { FOCUS_ID } from '@os/core'
 import { SELECTION_ID } from '@os/axis/select'
 import type { NormalizedData } from '@os/store/types'
@@ -23,119 +25,93 @@ interface BookNavState {
 const STORAGE_KEY = 'book-nav'
 const MAX_RECENT = 20
 
-let S: BookNavState = { favorites: [], recent: [], layers: [] }
-
-// ── Persistence ──
-
-function load(): BookNavState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { favorites: [], recent: [], layers: [] }
-    const parsed = JSON.parse(raw) as Partial<BookNavState>
-    return {
-      favorites: Array.isArray(parsed.favorites) ? parsed.favorites : [],
-      recent: Array.isArray(parsed.recent) ? parsed.recent : [],
-      layers: Array.isArray(parsed.layers) ? parsed.layers : [],
+const navStore = createModuleStore<BookNavState>({
+  initial: { favorites: [], recent: [], layers: [] },
+  storageKey: STORAGE_KEY,
+  parse: (raw) => {
+    try {
+      const parsed = JSON.parse(raw) as Partial<BookNavState>
+      return {
+        favorites: Array.isArray(parsed.favorites) ? parsed.favorites : [],
+        recent: Array.isArray(parsed.recent) ? parsed.recent : [],
+        layers: Array.isArray(parsed.layers) ? parsed.layers : [],
+      }
+    } catch {
+      return { favorites: [], recent: [], layers: [] }
     }
-  } catch {
-    return { favorites: [], recent: [], layers: [] }
-  }
-}
-
-let persistTimer: ReturnType<typeof setTimeout> | null = null
-
-function persist() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(S))
-  } catch { /* quota exceeded */ }
-}
-
-function debouncedPersist() {
-  if (persistTimer) return
-  persistTimer = setTimeout(() => { persistTimer = null; persist() }, 1000)
-}
-
-// Init
-S = load()
+  },
+})
 
 // ── Getters ──
 
-export function getNavState(): BookNavState { return S }
-export function isFavorite(pageId: string): boolean { return S.favorites.includes(pageId) }
-export function getRecent(): string[] { return S.recent }
-export function getFavorites(): string[] { return S.favorites }
-export function getLayers(): BookLayer[] { return S.layers }
+export function getNavState(): BookNavState { return navStore.get() }
+export function isFavorite(pageId: string): boolean { return navStore.get().favorites.includes(pageId) }
+export function getRecent(): string[] { return navStore.get().recent }
+export function getFavorites(): string[] { return navStore.get().favorites }
+export function getLayers(): BookLayer[] { return navStore.get().layers }
 
 // ── Mutations ──
 
 export function addRecent(pageId: string) {
-  S = {
+  navStore.set(S => ({
     ...S,
     recent: [pageId, ...S.recent.filter(id => id !== pageId)].slice(0, MAX_RECENT),
-  }
-  debouncedPersist()
+  }))
 }
 
 export function toggleFavorite(pageId: string) {
-  S = {
+  navStore.set(S => ({
     ...S,
     favorites: S.favorites.includes(pageId)
       ? S.favorites.filter(id => id !== pageId)
       : [...S.favorites, pageId],
-  }
-  debouncedPersist()
+  }))
 }
 
 export function createLayer(name: string): string {
   const id = `layer-${Date.now()}`
-  S = { ...S, layers: [...S.layers, { id, name, pageIds: [] }] }
-  debouncedPersist()
+  navStore.set(S => ({ ...S, layers: [...S.layers, { id, name, pageIds: [] }] }))
   return id
 }
 
 export function deleteLayer(layerId: string) {
-  S = { ...S, layers: S.layers.filter(l => l.id !== layerId) }
-  debouncedPersist()
+  navStore.set(S => ({ ...S, layers: S.layers.filter(l => l.id !== layerId) }))
 }
 
 export function renameLayer(layerId: string, name: string) {
-  S = {
+  navStore.set(S => ({
     ...S,
     layers: S.layers.map(l => l.id === layerId ? { ...l, name } : l),
-  }
-  debouncedPersist()
+  }))
 }
 
 export function addToLayer(layerId: string, pageId: string) {
-  S = {
+  navStore.set(S => ({
     ...S,
     layers: S.layers.map(l =>
       l.id === layerId && !l.pageIds.includes(pageId)
         ? { ...l, pageIds: [...l.pageIds, pageId] }
         : l,
     ),
-  }
-  debouncedPersist()
+  }))
 }
 
 export function removeFromLayer(layerId: string, pageId: string) {
-  S = {
+  navStore.set(S => ({
     ...S,
     layers: S.layers.map(l =>
       l.id === layerId
         ? { ...l, pageIds: l.pageIds.filter(id => id !== pageId) }
         : l,
     ),
-  }
-  debouncedPersist()
+  }))
 }
 
 export function reorderLayerPages(layerId: string, pageIds: string[]) {
-  S = {
+  navStore.set(S => ({
     ...S,
     layers: S.layers.map(l => l.id === layerId ? { ...l, pageIds } : l),
-  }
-  debouncedPersist()
+  }))
 }
 
 // ── Add to Layer store builder ──
@@ -143,6 +119,7 @@ export function reorderLayerPages(layerId: string, pageIds: string[]) {
 export function buildAddToLayerStore(pageId: string): NormalizedData {
   const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
   const rootChildren: string[] = []
+  const S = navStore.get()
 
   for (const layer of S.layers) {
     const isInLayer = layer.pageIds.includes(pageId)
@@ -228,6 +205,7 @@ function buildFilteredStore(acc: StoreAccumulator, allPages: PageInfo[], filterT
 }
 
 function buildBrowseStore(acc: StoreAccumulator, allPages: PageInfo[]) {
+  const S = navStore.get()
   addGroup(acc, allPages, 'group:recent', 'Recent', S.recent)
   addGroup(acc, allPages, 'group:favorites', 'Favorites', S.favorites)
   for (const layer of S.layers) {

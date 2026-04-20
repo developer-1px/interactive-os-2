@@ -1,29 +1,25 @@
 // ② 2026-04-04-writer-chat-prd.md
+// ② persistPluginPrd.md
 import { useEffect, useRef } from 'react'
+import { createModuleStore } from '@os/store/createModuleStore'
 import { writerState } from './writerStore'
 import { useChatSession, createSession, sendMessage as chatSendMessage, hasSession } from '../cmux/chatStore'
 import { extractAnalysis, type AnalysisResult } from './writerAnalyze'
 
 const WRITER_SESSIONS_KEY = 'writer-chat-sessions'
 
-function loadSessionMap(): Record<string, string> {
-  try {
-    return JSON.parse(localStorage.getItem(WRITER_SESSIONS_KEY) ?? '{}')
-  } catch { return {} }
-}
-
-function saveSessionMap(map: Record<string, string>) {
-  localStorage.setItem(WRITER_SESSIONS_KEY, JSON.stringify(map))
-}
+const sessionMapStore = createModuleStore<Record<string, string>>({
+  initial: {},
+  storageKey: WRITER_SESSIONS_KEY,
+})
 
 /** Get or create a persistent chat session for a specific file (or 'default' for no-file). */
 export function getSessionForFile(filePath: string | undefined): string {
   const key = filePath ?? '__default__'
-  const map = loadSessionMap()
+  const map = sessionMapStore.get()
   if (map[key] && hasSession(map[key])) return map[key]
   const id = createSession()
-  map[key] = id
-  saveSessionMap(map)
+  sessionMapStore.set({ ...map, [key]: id })
   return id
 }
 

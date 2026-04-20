@@ -3,6 +3,8 @@ import { useMemo, useCallback } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { defineLayout } from '@os/layout'
 import type { NormalizedData } from '@os/store/types'
+import { loadPersisted } from '@os/plugins/persist'
+import { usePersistedState } from '@os/primitives/usePersistedState'
 import { creatorWidgets } from './creatorWidgets'
 
 const creatorLayout = defineLayout({
@@ -16,20 +18,26 @@ const creatorLayout = defineLayout({
 
 const STORAGE_KEY = 'creator:layout'
 
-function loadLayout(): NormalizedData {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) return JSON.parse(saved) as NormalizedData
-  } catch { /* fallback */ }
-  return creatorLayout
-}
-
 export default function PageComponentCreator() {
-  const initialData = useMemo(() => loadLayout(), [])
+  const initialData = useMemo(
+    () =>
+      loadPersisted<NormalizedData>({
+        key: STORAGE_KEY,
+        version: 0,
+        parse: (raw) => JSON.parse(raw) as NormalizedData,
+      }) ?? creatorLayout,
+    [],
+  )
+
+  const [, setPersistedLayout] = usePersistedState<NormalizedData | null>(
+    STORAGE_KEY,
+    null,
+    { parse: (raw) => JSON.parse(raw) as NormalizedData, serialize: (v) => JSON.stringify(v) },
+  )
 
   const handleChange = useCallback((data: NormalizedData) => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch { /* quota */ }
-  }, [])
+    setPersistedLayout(data)
+  }, [setPersistedLayout])
 
   return (
     <FlatLayout

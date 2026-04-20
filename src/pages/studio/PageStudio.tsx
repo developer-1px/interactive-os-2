@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import type { NormalizedData } from '@os/schema'
 import { getFlatLayoutActions, subscribeFlatLayoutRegistry } from '@os/primitives/flatLayoutRegistry'
+import { loadPersisted } from '@os/plugins/persist'
+import { usePersistedState } from '@os/primitives/usePersistedState'
 import { STUDIO_INITIAL, STUDIO_CANVAS_ID } from './studioLayout'
 import { studioWidgets, StudioProvider } from './studioWidgets'
 import { PlaygroundKeybindingsWidget } from './playgroundKeybindings'
@@ -13,19 +15,26 @@ import { PickerRootWidget } from './playgroundWidgets'
 
 const STUDIO_LAYOUT_KEY = 'studio-layout'
 
-function loadPersistedLayout(): NormalizedData {
-  try {
-    const raw = localStorage.getItem(STUDIO_LAYOUT_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw) as NormalizedData
-      if (parsed?.entities && parsed?.relationships) return parsed
-    }
-  } catch { /* ignore corrupt */ }
-  return STUDIO_INITIAL
+function parseLayout(raw: string): NormalizedData | undefined {
+  const parsed = JSON.parse(raw) as NormalizedData
+  if (parsed?.entities && parsed?.relationships) return parsed
+  return undefined
 }
 
 export default function PageStudio() {
-  const [initialData] = useState(loadPersistedLayout)
+  // @useState-hatch — FlatLayout initial data 1회 로드, 이후 FlatLayout store가 SSOT
+  const [initialData] = useState<NormalizedData>(() =>
+    loadPersisted<NormalizedData>({
+      key: STUDIO_LAYOUT_KEY,
+      version: 0,
+      parse: parseLayout,
+    }) ?? STUDIO_INITIAL,
+  )
+  const [, setPersistedLayout] = usePersistedState<NormalizedData | null>(
+    STUDIO_LAYOUT_KEY,
+    null,
+    { parse: (raw) => parseLayout(raw) ?? null, serialize: (v) => JSON.stringify(v) },
+  )
 
   useEffect(() => {
     let innerUnsub: (() => void) | null = null
@@ -33,8 +42,7 @@ export default function PageStudio() {
     const persist = () => {
       const actions = getFlatLayoutActions(STUDIO_CANVAS_ID)
       if (!actions) return
-      try { localStorage.setItem(STUDIO_LAYOUT_KEY, JSON.stringify(actions.getStore())) }
-      catch { /* quota / JSON cycle — skip */ }
+      setPersistedLayout(actions.getStore())
     }
     const attach = () => {
       if (innerUnsub) return

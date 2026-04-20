@@ -86,6 +86,16 @@ BadgeCell, CodeCell, DocLinkCell, EditableCell, PhaseCell, SearchableCell, Summa
 
 ## plugins
 
-autoscroll, cellDragSelect, cellEdit, clipboard, combobox, crud, dnd, dragResize, edit, focusHistory, focusRecovery, form, history, rename, scope, scroll, search, spatial, typeahead, urlSync, useUrlSync, useSpatialNav, workspaceStore, zodSchema
+autoscroll, cellDragSelect, cellEdit, clipboard, combobox, crud, dnd, dragResize, edit, focusHistory, focusRecovery, form, history, persist, rename, scope, scroll, search, spatial, typeahead, urlSync, useUrlSync, useSpatialNav, workspaceStore, zodSchema
 
 `plugins/{name}.ts`
+
+## Persistence 3층 경계
+
+| 스코프 | API | 언제 |
+|---|---|---|
+| 모듈 전역 단일값 | `store/createModuleStore({ storageKey })` | theme·locale·currentUser 같은 앱 전역 primitive |
+| 컴포넌트 로컬값 | `primitives/usePersistedState(key, default)` | 페이지·컴포넌트 안에서만 쓰는 view 선호(viewMode, sort, filter, 쿼리) |
+| engine NormalizedData | `plugins/persist`: `loadPersisted()` → `createCommandEngine(initial, [persist()])` | command 엔진이 관리하는 CRUD·FlatLayout·세션 데이터. load는 engine 생성 이전 동기 호출, writer plugin은 post-command debounced write. urlSync 3조각 선례와 대칭. |
+
+**금지**: pages·hooks가 `localStorage.*`를 직접 호출. 새 케이스는 위 3층 중 하나로 흡수.

@@ -2,6 +2,8 @@
 // @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; currentRoot: sidebar selection; previewPath: follow-focus file preview
 import { useState, useEffect, useCallback, useRef, useMemo, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
+// ② persistPluginPrd.md
+import { usePersistedState } from '@os/primitives/usePersistedState'
 import { Folder, Code2, BookText, Image, Boxes, CalendarDays, CalendarClock, Hash, Tag, Activity, Component } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
@@ -135,34 +137,39 @@ export default function PageFinder() {
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null) // @useState-hatch
   const titleMapRef = useRef<Map<string, string>>(new Map())
   const [quickOpenVisible, setQuickOpenVisible] = useState(false) // @useState-hatch
-  const [viewMode, setViewMode] = useState<'list' | 'columns'>(() => {
-    const saved = localStorage.getItem(VIEWMODE_KEY)
-    return saved === 'columns' ? 'columns' : 'list'
-  })
+  const [viewMode, setViewMode] = usePersistedState<'list' | 'columns'>(
+    VIEWMODE_KEY,
+    'list',
+    { parse: (raw) => (raw === 'columns' ? 'columns' : 'list'), serialize: (v) => v },
+  )
   const [previewPath, setPreviewPath] = useState<string | null>(null) // @useState-hatch
   const [currentRoot, setCurrentRoot] = useState(() => detectRootFromSeg(window.location.pathname.split('/')[2]))
-  const [sortKey, setSortKey] = useState<SortKey | null>(() => {
-    const saved = localStorage.getItem(SORT_KEY)
-    return saved && ['name', 'kind', 'date', 'loc'].includes(saved) ? saved as SortKey : null
-  })
-  const [sortDir, setSortDir] = useState<SortDir>(() => {
-    const saved = localStorage.getItem(SORT_DIR_KEY)
-    return saved === 'desc' ? 'desc' : 'asc'
-  })
+  const [sortKey, setSortKey] = usePersistedState<SortKey | null>(
+    SORT_KEY,
+    null,
+    {
+      parse: (raw) => (['name', 'kind', 'date', 'loc'].includes(raw) ? raw as SortKey : null),
+      serialize: (v) => v ?? '',
+    },
+  )
+  const [sortDir, setSortDir] = usePersistedState<SortDir>(
+    SORT_DIR_KEY,
+    'asc',
+    { parse: (raw) => (raw === 'desc' ? 'desc' : 'asc'), serialize: (v) => v },
+  )
   const [filters, setFilters] = useState<string[]>([]) // @useState-hatch
-  const [kindFilters, setKindFilters] = useState<KindGroup[]>(() => {
-    const saved = localStorage.getItem(KIND_FILTERS_KEY)
-    if (!saved) return []
-    try {
-      const parsed = JSON.parse(saved)
-      return Array.isArray(parsed) ? parsed.filter(k => KIND_GROUPS.includes(k)) : []
-    } catch { return [] }
-  })
-
-  useEffect(() => { localStorage.setItem(VIEWMODE_KEY, viewMode) }, [viewMode])
-  useEffect(() => { if (sortKey) localStorage.setItem(SORT_KEY, sortKey); else localStorage.removeItem(SORT_KEY) }, [sortKey])
-  useEffect(() => { localStorage.setItem(SORT_DIR_KEY, sortDir) }, [sortDir])
-  useEffect(() => { localStorage.setItem(KIND_FILTERS_KEY, JSON.stringify(kindFilters)) }, [kindFilters])
+  const [kindFilters, setKindFilters] = usePersistedState<KindGroup[]>(
+    KIND_FILTERS_KEY,
+    [],
+    {
+      parse: (raw) => {
+        try {
+          const parsed = JSON.parse(raw)
+          return Array.isArray(parsed) ? parsed.filter(k => KIND_GROUPS.includes(k)) : []
+        } catch { return [] }
+      },
+    },
+  )
 
   // ── Tree fetch ──
 
