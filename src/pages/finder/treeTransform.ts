@@ -15,7 +15,7 @@ export function treeToStore(nodes: TreeNode[], titleMap?: Map<string, string>): 
       const ext = isFile && node.name.includes('.') ? node.name.split('.').pop() ?? '' : ''
       const displayName = titleMap?.get(node.id) ?? node.name
       const cells: unknown[] = [{ name: displayName, type: node.type }, ext, isFile ? (node.loc ?? '') : '']
-      entities[node.id] = { id: node.id, data: { name: displayName, type: node.type, path: node.id, ...(node.loc != null && { loc: node.loc }), ...(node.mtime != null && { mtime: node.mtime }), cells } }
+      entities[node.id] = { id: node.id, data: { name: displayName, type: node.type, path: node.id, ...(node.loc != null && { loc: node.loc }), ...(node.mtime != null && { mtime: node.mtime }), ...(node.symlink && { symlink: true, target: node.target }), cells } }
       if (!relationships[parentId]) relationships[parentId] = []
       relationships[parentId].push(node.id)
       if (node.children && node.children.length > 0) {
