@@ -115,6 +115,7 @@ function A2UIStreamSurface() {
   const { selected, streamPayload } = useStudio()
   const [fallbackPayload, setFallbackPayload] = useState<A2UIPayload | null>(null)
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (selected && selected.kind === 'a2ui-stream') {
       setFallbackPayload(envelopeToPayload(selected.data as A2UIv09Envelope))
@@ -122,6 +123,7 @@ function A2UIStreamSurface() {
       setFallbackPayload(null)
     }
   }, [selected])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const payload = streamPayload ?? fallbackPayload
   if (!payload) {

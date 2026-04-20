@@ -21,7 +21,7 @@ export function KeyHintBar({ hints, 'aria-label': ariaLabel }: KeyHintBarProps):
       className={ax({ role: 'control-group', surface: 'sunken', layout: 'bar', width: 'full' })}
     >
       {hints.map((hint) => (
-        <span key={hint.label} className={ax({ layout: 'row', textStyle: 'caption', tone: 'neutral-dim' })}>
+        <span key={hint.label} className={ax({ role: 'item', layout: 'row', textStyle: 'caption', tone: 'neutral-muted' })}>
           {hint.keys.map((k) => <Kbd key={k}>{k}</Kbd>)}
           <span>{hint.label}</span>
         </span>

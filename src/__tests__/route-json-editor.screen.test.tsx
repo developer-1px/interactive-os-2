@@ -13,7 +13,7 @@ function rawJson(_?: unknown): unknown {
   // The JSON output panel lives outside the grid; always read from document.
   const pres = Array.from(document.querySelectorAll('pre')) as HTMLElement[]
   for (const p of pres) {
-    try { return JSON.parse(p.textContent ?? '') } catch {}
+    try { return JSON.parse(p.textContent ?? '') } catch { /* try next <pre> */ }
   }
   throw new Error('JSON output pre not found')
 }

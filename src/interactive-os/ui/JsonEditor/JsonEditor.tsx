@@ -123,7 +123,7 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
 
   const lastEmitted = useRef<T>(value)
   const dataRef = useRef<NormalizedData>(data)
-  dataRef.current = data
+  useEffect(() => { dataRef.current = data }, [data])
 
   // External value sync: if caller swaps `value` with something we didn't emit,
   // rebuild the store from scratch (identity reset is acceptable for a genuine
