@@ -16,7 +16,7 @@ describe('defineApp required check', () => {
 
   it('dataSource 1개 이상이면 통과 (FinderApp)', () => {
     expect(FinderApp.baseline.id).toBe('finder')
-    expect(FinderApp.features).toHaveLength(3)
+    expect(FinderApp.features).toHaveLength(4)
   })
 })
 

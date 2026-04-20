@@ -49,11 +49,19 @@ export interface DataSourceContribution {
   subscribe?: (args: { onPatch: (patch: Partial<NormalizedData>) => void }) => () => void
 }
 
+export interface SidebarItem {
+  id: string
+  label: string
+  icon?: ReactNode
+  /** 활성화 시 dataSource 재로드에 쓰이는 rootPath */
+  rootPath: string
+}
+
 export interface SidebarContribution {
   id: string
   section: 'favorites' | 'recent' | 'custom'
   order?: number
-  render: () => ReactNode
+  items: SidebarItem[]
 }
 
 export interface ToolbarContribution {
