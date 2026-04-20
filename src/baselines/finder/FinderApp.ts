@@ -8,12 +8,14 @@ import { BaselineFinder } from './BaselineFinder'
 import { FsFeature } from '../../features/fs/FsFeature'
 import { MillerFeature } from '../../features/miller/MillerFeature'
 import { BookFeature } from '../../features/book/BookFeature'
+import { FavoritesFeature } from '../../features/favorites/FavoritesFeature'
 
 export const FinderApp = defineApp({
   baseline: BaselineFinder,
   features: [
-    FsFeature,      // dataSource (required 충족)
-    MillerFeature,  // viewMode: columns
-    BookFeature,    // viewMode: book + scoped keymap
+    FsFeature,        // dataSource (required 충족)
+    MillerFeature,    // viewMode: columns
+    BookFeature,      // viewMode: book + scoped keymap
+    FavoritesFeature, // sidebar: 즐겨찾기·최근
   ],
 })
