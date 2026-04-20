@@ -2,7 +2,7 @@ import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Layers, Presentation, Component, FolderCode, Palette, ShieldAlert, Languages,
-  MessageSquare, BookText, Play, Cable, PenLine, Kanban, SquareKanban, GitBranch,
+  MessageSquare, BookText, Play, Cable, PenLine, Kanban, GitBranch,
   Mail, ListTree, Boxes, Braces, FileStack, TerminalSquare, BookMarked, Ruler, Compass,
   ListChecks, FlaskConical,
 } from 'lucide-react'
@@ -66,9 +66,10 @@ const appNavItems: NavItem[] = [
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'slides', label: 'Slides', icon: FileStack, path: '/slides' },
   { id: 'finder', label: 'Finder', icon: FolderCode, path: '/finder' },
+  { id: 'book', label: 'Book', icon: BookText, path: '/book' },
+  { id: 'project', label: 'Project', icon: Kanban, path: '/project' },
   { id: 'catalog', label: 'Catalog', icon: Boxes, path: '/catalog' },
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
-  { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },
   { id: 'features', label: 'Features', icon: ListTree, path: '/features' },
   { id: 'ax-principles', label: 'AX Principles', icon: Compass, path: '/ax-principles' },
@@ -85,9 +86,7 @@ const appNavItems: NavItem[] = [
   { id: 'keyline-test', label: 'Keyline Test', icon: Ruler, path: '/test/keyline' },
   // --- 미완성 / 데모 미생성 ---
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
-  { id: 'kanban', label: 'Kanban', icon: SquareKanban, path: '/kanban' },
   { id: 'a2ui', label: 'A2UI', icon: Cable, path: '/a2ui' },
-  { id: 'project', label: 'Project', icon: Kanban, path: '/project' },
   { id: 'writer', label: 'Writer', icon: PenLine, path: '/writer' },
 ]
 
