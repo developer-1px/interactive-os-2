@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // BookFeature — 2페이지 펼침 + 자체 페이지 view-state.
 //
 // MVP: 페이지 넘김은 버튼으로. Feature.keymap 선언은 마켓플레이스 메타데이터로 보존

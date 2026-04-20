@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // MillerFeature — context 의존 없이 props-first.
 
 import { Columns3 } from 'lucide-react'

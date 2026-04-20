@@ -105,7 +105,7 @@ export function BaselineFinderApp({ app }: { app: AppDefinition }) {
 
   useEffect(() => {
     const source = registry.dataSources[0]
-    if (!source) { setData(null); return }
+    if (!source) return
     let cancelled = false
     source.load({ rootPath }).then(d => { if (!cancelled) setData(d) })
     return () => { cancelled = true }
