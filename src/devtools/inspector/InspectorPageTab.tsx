@@ -11,7 +11,7 @@ import {
   subscribeFlatLayoutRegistry,
   type FlatLayoutActions,
 } from '@os/primitives/flatLayoutRegistry'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { serializeToDefineLayout } from './serializeToDefineLayout'

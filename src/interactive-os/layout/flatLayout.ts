@@ -1,8 +1,7 @@
 // ② flat-layout-engine-prd.md
 // ② cmux-layout-prd.md
-import type { NormalizedData, PaneSize } from '../store/types'
-import { ROOT_ID } from '../store/types'
-import { createStore } from '../store/createStore'
+// 순수 타입 파일 — defineLayout 팩토리는 ./defineLayout.ts로 분리.
+import type { PaneSize } from '../store/types'
 
 // ── Layout node types ─────────────────────────────────
 
@@ -100,47 +99,3 @@ export interface StateNode extends LayoutBase {
 }
 
 export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabgroupNode | TabNode | SectionNode | FloatingNode | StateNode
-
-// ── defineLayout factory ────────────────────────────────
-
-interface PageEntityConfig {
-  data: LayoutNode
-  children?: string[]
-}
-
-export function defineLayout(config: { entities: Record<string, PageEntityConfig> }): NormalizedData {
-  const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
-  const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
-
-  const childSet = new Set<string>()
-
-  // First pass: collect all children to determine root entities
-  for (const [, cfg] of Object.entries(config.entities)) {
-    if (cfg.children) {
-      for (const childId of cfg.children) {
-        childSet.add(childId)
-      }
-    }
-  }
-
-  // Second pass: build entities and relationships
-  for (const [id, cfg] of Object.entries(config.entities)) {
-    // 사용자가 cfg.data.label을 선언했으면 그걸 보존 (TabNode.label 등).
-    // 없을 때만 자동 생성(widget 이름 또는 `${type}: ${id}`).
-    const rawLabel = (cfg.data as Record<string, unknown>).label
-    const label = typeof rawLabel === 'string'
-      ? rawLabel
-      : cfg.data.type === 'widget'
-        ? (cfg.data as WidgetNode).widget
-        : `${cfg.data.type}: ${id}`
-    entities[id] = { id, data: { ...cfg.data, label } }
-    if (cfg.children) {
-      relationships[id] = cfg.children
-    }
-    if (!childSet.has(id)) {
-      relationships[ROOT_ID]!.push(id)
-    }
-  }
-
-  return createStore({ entities, relationships })
-}

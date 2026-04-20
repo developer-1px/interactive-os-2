@@ -1,5 +1,5 @@
 // Stage 4 — FlatLayout defineLayout: header + list + composer.
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 
 export const todoLayout = defineLayout({
   entities: {

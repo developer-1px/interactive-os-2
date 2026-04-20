@@ -1,5 +1,5 @@
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import {
   TopBarWidget,

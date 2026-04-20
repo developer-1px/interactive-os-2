@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'

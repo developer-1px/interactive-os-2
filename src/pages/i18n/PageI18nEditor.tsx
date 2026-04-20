@@ -2,7 +2,7 @@
 // @useState-hatch — missingOnly는 view-only ephemeral toggle (OS 축에 해당 없음)
 import { useMemo, useState, useCallback, useRef } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { useStore } from '@os/store/useStore'
 import type { NormalizedData } from '@os/store/types'
