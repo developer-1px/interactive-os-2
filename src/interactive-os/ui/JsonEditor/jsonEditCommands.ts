@@ -2,9 +2,9 @@ import type { Command, Middleware } from '../../engine/types'
 import type { NormalizedData } from '../../store/types'
 import type { ZodTypeAny } from 'zod'
 import { defineCommand } from '../../engine/defineCommand'
-import { updateEntityData, getEntity } from '../../store/createStore'
+import { updateEntityData, getEntity, getChildren, addEntity, getParent } from '../../store/createStore'
 import { definePlugin } from '../../plugins/definePlugin'
-import { cellsFor, type JsonNodeCore, type JsonType, type JsonValue } from './jsonToNormalized'
+import { cellsFor, type JsonNodeCore, type JsonPathSegment, type JsonType, type JsonValue } from './jsonToNormalized'
 import { resolveSchemaAt } from './zodToAxis'
 
 /**
@@ -43,6 +43,110 @@ export const setJsonType = defineCommand('jsonEditor:setType', {
     const isStructure = type === 'object' || type === 'array'
     const nextValue = isStructure ? undefined : (value ?? coerceDefault(type))
     return patchNode(store, nodeId, { type, value: nextValue })
+  },
+})
+
+/**
+ * Add a new string child to a container. For objects, generates a fresh key
+ * (newKey, newKey_2, ...). For arrays, appends at the end. Returns new id so
+ * the UI can focus + start rename.
+ *
+ * When `targetId` refers to a leaf, we add a sibling under its parent instead.
+ */
+function uniqueKey(existing: string[], base = 'newKey'): string {
+  if (!existing.includes(base)) return base
+  let i = 2
+  while (existing.includes(`${base}_${i}`)) i += 1
+  return `${base}_${i}`
+}
+
+function makeChildId(parentId: string, key: string | number): string {
+  return typeof key === 'number'
+    ? `${parentId}[${key}]`
+    : parentId === '$' || parentId.endsWith('$')
+      ? `$.${key}`
+      : `${parentId}.${key}`
+}
+
+export const addJsonChild = defineCommand('jsonEditor:addChild', {
+  create: (targetId: string) => ({ targetId }),
+  handler: (store, { targetId }) => {
+    const target = getEntity(store, targetId)?.data as JsonNodeCore | undefined
+    if (!target) return store
+
+    // Resolve parent: container → self; leaf → parent.
+    let parentId = targetId
+    let parent = target
+    if (target.type !== 'object' && target.type !== 'array') {
+      const pid = getParent(store, targetId)
+      if (!pid) return store
+      const pdata = getEntity(store, pid)?.data as JsonNodeCore | undefined
+      if (!pdata || (pdata.type !== 'object' && pdata.type !== 'array')) return store
+      parentId = pid
+      parent = pdata
+    }
+
+    const children = getChildren(store, parentId)
+    if (parent.type === 'array') {
+      const index = children.length
+      const id = makeChildId(parentId, index)
+      const core: JsonNodeCore = {
+        type: 'string', value: '', path: [...parent.path, index],
+      }
+      return addEntity(store, { id, data: { ...core, cells: cellsFor(core) } }, parentId)
+    }
+
+    // object
+    const existingKeys = children
+      .map((cid) => (getEntity(store, cid)?.data as JsonNodeCore | undefined)?.key ?? '')
+      .filter((k) => k.length > 0)
+    const key = uniqueKey(existingKeys)
+    const id = makeChildId(parentId, key)
+    const core: JsonNodeCore = {
+      type: 'string', key, value: '', path: [...parent.path, key],
+    }
+    return addEntity(store, { id, data: { ...core, cells: cellsFor(core) } }, parentId)
+  },
+})
+
+/** Resolve the future child id that addJsonChild would create — so the UI can
+ *  focus + start rename on the new row right after dispatch. Uses PatternContext
+ *  accessors so callers don't need a raw store reference. */
+export interface NodeAccessors {
+  getEntity: (id: string) => { id: string; data?: unknown } | undefined
+  getChildren: (id: string) => string[]
+  getParent: (id: string) => string | undefined
+}
+
+export function predictNewChildId(ctx: NodeAccessors, targetId: string): string | null {
+  const target = ctx.getEntity(targetId)?.data as JsonNodeCore | undefined
+  if (!target) return null
+  let parentId = targetId
+  let parent = target
+  if (target.type !== 'object' && target.type !== 'array') {
+    const pid = ctx.getParent(targetId)
+    if (!pid) return null
+    const pdata = ctx.getEntity(pid)?.data as JsonNodeCore | undefined
+    if (!pdata || (pdata.type !== 'object' && pdata.type !== 'array')) return null
+    parentId = pid
+    parent = pdata
+  }
+  const children = ctx.getChildren(parentId)
+  if (parent.type === 'array') return makeChildId(parentId, children.length)
+  const existingKeys = children
+    .map((cid) => (ctx.getEntity(cid)?.data as JsonNodeCore | undefined)?.key ?? '')
+    .filter((k) => k.length > 0)
+  return makeChildId(parentId, uniqueKey(existingKeys))
+}
+
+export const reindexArrayChild = defineCommand('jsonEditor:reindexArrayChild', {
+  create: (nodeId: string, path: JsonPathSegment[]) => ({ nodeId, path }),
+  handler: (store, { nodeId, path }) => {
+    const entity = getEntity(store, nodeId)
+    if (!entity) return store
+    const existing = entity.data as unknown as JsonNodeCore
+    const nextCore: JsonNodeCore = { ...existing, path }
+    return updateEntityData(store, nodeId, { path, cells: cellsFor(nextCore) })
   },
 })
 
@@ -102,9 +206,48 @@ export interface JsonEditPluginOptions {
  * clipboard:clearCellValue) into typed JSON commands. data.* is SSOT; cells[] re-derived.
  * Paste/rename honor zod schema when provided.
  */
+/**
+ * After any structural change (paste/cut/duplicate/delete/rearrange) that can
+ * affect array ordering, re-derive cells[0] and path[last] for all children of
+ * every array in the store so index labels stay consistent with position.
+ *
+ * Cheap compared to a full re-normalize, and safe: only touches array children
+ * whose position-derived index no longer matches their stored path/cells.
+ */
+function reindexArrays(next: (c: Command) => void, getStore: () => NormalizedData): void {
+  const store = getStore()
+  for (const id of Object.keys(store.entities)) {
+    const data = store.entities[id]?.data as JsonNodeCore | undefined
+    if (data?.type !== 'array') continue
+    const children = getChildren(store, id)
+    children.forEach((childId, i) => {
+      const child = getEntity(store, childId)?.data as JsonNodeCore | undefined
+      if (!child) return
+      const last = child.path[child.path.length - 1]
+      if (last === i) return
+      const nextPath: JsonPathSegment[] = [...child.path.slice(0, -1), i]
+      next(reindexArrayChild(childId, nextPath))
+    })
+  }
+}
+
 function jsonEditorMiddleware(opts: JsonEditPluginOptions): Middleware {
   const { schema, getRootValue } = opts
   return (next, getStore) => (command: Command) => {
+    // Intercept structural mutations to realign array child indices afterwards.
+    const isStructural =
+      command.type === 'clipboard:paste'
+      || command.type === 'clipboard:cut'
+      || command.type === 'clipboard:duplicateAfter'
+      || command.type === 'crud:delete'
+      || command.type === 'crud:remove'
+      || command.type === 'core:remove'
+    if (isStructural) {
+      next(command)
+      reindexArrays(next, getStore)
+      return
+    }
+
     if (command.type === 'rename:confirm') {
       const { nodeId, field, newValue } = command.payload as RenamePayload
       const data = getEntity(getStore(), nodeId)?.data as JsonNodeCore | undefined
@@ -123,7 +266,11 @@ function jsonEditorMiddleware(opts: JsonEditPluginOptions): Middleware {
       }
     }
 
-    if (command.type === 'clipboard:pasteCellValue' || command.type === 'clipboard:clearCellValue') {
+    if (
+      command.type === 'clipboard:pasteCellValue'
+      || command.type === 'clipboard:clearCellValue'
+      || command.type === 'clipboard:cutCellValue'
+    ) {
       next(command) // writes cells[colIndex] first
       const { nodeId, colIndex } = command.payload as ClipboardCellPayload
       const data = getEntity(getStore(), nodeId)?.data as (JsonNodeCore & { cells?: string[] }) | undefined
@@ -153,6 +300,8 @@ export function jsonEditPlugin(options: JsonEditPluginOptions = {}) {
       setType: setJsonType,
       setKey: setJsonKey,
       toggleBoolean: toggleJsonBoolean,
+      addChild: addJsonChild,
+      reindexArrayChild,
     },
     middleware: jsonEditorMiddleware(options),
   })

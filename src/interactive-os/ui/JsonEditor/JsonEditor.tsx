@@ -1,7 +1,9 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactElement } from 'react'
 import type { ZodType } from 'zod'
+import { ax } from '../../../styles/ax'
 import { TreeGrid } from '../TreeGrid'
+import { KeyHintBar, type KeyHint } from '../KeyHintBar'
 import { history } from '../../plugins/history'
 import { crud } from '../../plugins/crud'
 import { clipboard, clipboardCommands } from '../../plugins/clipboard'
@@ -10,7 +12,7 @@ import { focusRecovery } from '../../plugins/focusRecovery'
 import { zodSchema } from '../../plugins/zodSchema'
 import type { ZodSchema } from '../../plugins/zodSchema'
 import { key } from '../../axis/types'
-import { GRID_COL_ID } from '../../axis/navigate'
+import { focusCommands, GRID_COL_ID } from '../../axis/navigate'
 import type { NormalizedData } from '../../store/types'
 import { EditableCell, EnumCell, SearchableCell, ToggleCell } from '../cells'
 import { BadgeCell } from '../cells/BadgeCell'
@@ -23,8 +25,10 @@ import {
 import { normalizedToJson } from './normalizedToJson'
 import { resolveSchemaAt, zodToAxis, type FieldAxis } from './zodToAxis'
 import {
+  addJsonChild,
   jsonEditPlugin,
   nextJsonType,
+  predictNewChildId,
   setJsonType,
   setJsonValue,
   toggleJsonBoolean,
@@ -85,7 +89,11 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
   schema,
   'aria-label': ariaLabel = 'JSON editor',
 }: JsonEditorProps<T>): ReactElement {
-  const data = useMemo(() => jsonToNormalized(value), [value])
+  // NormalizedData is the internal SSOT — engine owns entity identity (focus, -copy-N ids,
+  // undo history). `value` prop is a sync signal: we resync only on external changes
+  // (echo-skip via lastEmitted). Re-normalizing every render would regenerate path-based
+  // ids and destroy focus/undo state after every command.
+  const [data, setData] = useState<NormalizedData>(() => jsonToNormalized(value))
 
   const rootValueRef = useRef<T>(value)
   // eslint-disable-next-line react-hooks/refs -- ref write is idempotent; tracks latest prop for event-time reads
@@ -114,13 +122,19 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
   }, [schema])
 
   const lastEmitted = useRef<T>(value)
-  // dataRef tracks the LIVE engine store (with GRID_COL_ID, RENAME_ID, etc.) — updated
-  // only via onChange. Do NOT overwrite with prop-derived `data` on every render; that
-  // would erase the axis entities the engine adds.
   const dataRef = useRef<NormalizedData>(data)
+  dataRef.current = data
+
+  // External value sync: if caller swaps `value` with something we didn't emit,
+  // rebuild the store from scratch (identity reset is acceptable for a genuine
+  // external change). If it matches our last emit, it's an echo — ignore.
+  useEffect(() => {
+    if (value === lastEmitted.current) return
+    setData(jsonToNormalized(value))
+  }, [value])
 
   const handleChange = (next: NormalizedData) => {
-    dataRef.current = next
+    setData(next)
     const json = normalizedToJson(next) as T
     if (json !== lastEmitted.current) {
       lastEmitted.current = json
@@ -182,9 +196,33 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
       if (col < 0) return clipboardCommands.paste(ctx.focused)
       return clipboardCommands.pasteCellValue(ctx.focused, col)
     }),
+    // ── Add child/sibling: Mod+Enter (canonical) + '+' (alias).
+    // Resolves parent (container→self, leaf→parent), creates a default string
+    // property, focuses its key cell, starts rename for immediate edit.
+    'Mod+Enter': key(
+      ['jsonEditor:addChild', 'core:focus', 'rename:start'],
+      (ctx) => {
+        const newId = predictNewChildId(ctx, ctx.focused)
+        if (!newId) return
+        ctx.dispatch(addJsonChild(ctx.focused))
+        ctx.dispatch(focusCommands.setFocus(newId))
+        return renameCommands.startRename(newId)
+      },
+    ),
+    '+': key(
+      ['jsonEditor:addChild', 'core:focus', 'rename:start'],
+      (ctx) => {
+        const newId = predictNewChildId(ctx, ctx.focused)
+        if (!newId) return
+        ctx.dispatch(addJsonChild(ctx.focused))
+        ctx.dispatch(focusCommands.setFocus(newId))
+        return renameCommands.startRename(newId)
+      },
+    ),
   }), [schema])
 
   return (
+    <div className={ax({ layout: 'stack', width: 'full' })} data-full-height>
     <TreeGrid
       data={data}
       columns={COLUMNS as unknown as { key: string; header: string; width?: string }[]}
@@ -229,5 +267,16 @@ export function JsonEditor<T extends JsonValue = JsonValue>({
         return <SearchableCell>{core.cells[2]}</SearchableCell>
       }}
     />
+      <KeyHintBar hints={JSON_EDITOR_HINTS} aria-label="JSON editor shortcuts" />
+    </div>
   )
 }
+
+const JSON_EDITOR_HINTS: readonly KeyHint[] = [
+  { keys: ['↑↓'], label: 'Navigate' },
+  { keys: ['←→'], label: 'Collapse / Expand' },
+  { keys: ['Enter'], label: 'Edit' },
+  { keys: ['+'], label: 'Add child' },
+  { keys: ['Delete'], label: 'Remove' },
+  { keys: ['Esc'], label: 'Cancel' },
+]

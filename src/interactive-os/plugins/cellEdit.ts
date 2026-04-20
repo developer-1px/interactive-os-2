@@ -8,10 +8,28 @@ export function cellEdit(): Plugin {
   return definePlugin({
     name: 'cellEdit',
     keyMap: {
-      'Delete': key(['clipboard:clearCellValue'], (ctx) => clipboardCommands.clearCellValue(ctx.focused, ctx.grid?.colIndex ?? 0)),
-      'Mod+X': key(['clipboard:cutCellValue'], (ctx) => clipboardCommands.cutCellValue(ctx.focused, ctx.grid?.colIndex ?? 0)),
-      'Mod+C': key(['clipboard:copyCellValue'], (ctx) => clipboardCommands.copyCellValue(ctx.focused, ctx.grid?.colIndex ?? 0)),
-      'Mod+V': key(['clipboard:pasteCellValue'], (ctx) => clipboardCommands.pasteCellValue(ctx.focused, ctx.grid?.colIndex ?? 0)),
+      // Cell-mode only (colIndex >= 0). Row-mode falls through to earlier plugin bindings
+      // (crud:Delete, clipboard row-level copy/cut/paste) via the original() chain.
+      'Delete': key(['clipboard:clearCellValue'], (ctx, original) => {
+        const col = ctx.grid?.colIndex ?? -1
+        if (col < 0) return original?.()
+        return clipboardCommands.clearCellValue(ctx.focused, col)
+      }),
+      'Mod+X': key(['clipboard:cutCellValue'], (ctx, original) => {
+        const col = ctx.grid?.colIndex ?? -1
+        if (col < 0) return original?.()
+        return clipboardCommands.cutCellValue(ctx.focused, col)
+      }),
+      'Mod+C': key(['clipboard:copyCellValue'], (ctx, original) => {
+        const col = ctx.grid?.colIndex ?? -1
+        if (col < 0) return original?.()
+        return clipboardCommands.copyCellValue(ctx.focused, col)
+      }),
+      'Mod+V': key(['clipboard:pasteCellValue'], (ctx, original) => {
+        const col = ctx.grid?.colIndex ?? -1
+        if (col < 0) return original?.()
+        return clipboardCommands.pasteCellValue(ctx.focused, col)
+      }),
       'Enter': key(['core:focus'], (ctx) => ctx.focusNext()),
       'Shift+Enter': key(['core:focus'], (ctx) => ctx.focusPrev()),
     },
