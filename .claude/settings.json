@@ -27,12 +27,14 @@
     "PreToolUse": [
       {
         "matcher": "Skill",
-        "hooks": [{
-          "type": "command",
-          "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/skillEvent.mjs start",
-          "timeout": 3000,
-          "async": true
-        }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/skillEvent.mjs start",
+            "timeout": 3000,
+            "async": true
+          }
+        ]
       },
       {
         "matcher": "Bash",
@@ -97,17 +99,40 @@
             "timeout": 3000
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/requireWorktree.mjs",
+            "timeout": 2000
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/sessionStartWorktree.mjs",
+            "timeout": 2000
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Skill",
-        "hooks": [{
-          "type": "command",
-          "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/skillEvent.mjs end",
-          "timeout": 3000,
-          "async": true
-        }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/skillEvent.mjs end",
+            "timeout": 3000,
+            "async": true
+          }
+        ]
       },
       {
         "matcher": "Edit|Write|Bash",
@@ -228,6 +253,16 @@
             "type": "command",
             "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/stopTestGate.mjs",
             "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/stopRequireCommit.mjs",
+            "timeout": 2000
           }
         ]
       }
