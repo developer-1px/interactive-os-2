@@ -29,7 +29,7 @@ try {
   const repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim()
   const gitCommonDir = execSync('git rev-parse --git-common-dir', { encoding: 'utf8' }).trim()
   const mainRoot = path.resolve(path.dirname(gitCommonDir) || repoRoot)
-  spawn('node', [path.join(mainRoot, 'scripts/wtCaddy.mjs'), '--reload'], { cwd: mainRoot, detached: true, stdio: 'ignore' }).unref()
+  spawn('node', [path.join(mainRoot, 'scripts/wtStart.mjs')], { cwd: mainRoot, detached: true, stdio: 'ignore' }).unref()
 } catch {}
 
 const msg = entry

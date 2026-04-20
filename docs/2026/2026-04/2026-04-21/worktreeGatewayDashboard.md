@@ -25,18 +25,18 @@ tags: [worktree, caddy, dashboard, parallel-session, gateway]
 # 1회 설치
 brew install caddy
 
-# 게이트웨이(다른 터미널)
-pnpm wt:gateway          # :4100 에서 *.localhost 라우팅
+# 기동 (Caddyfile 생성 + 대시보드 + caddy 동시 기동, idempotent)
+pnpm wt:start
+pnpm wt:stop
 
-# 대시보드(다른 터미널)
-pnpm wt:dash             # :4000 — http://wt.localhost:4100 으로도 접근
-
-# 수동 재생성
+# 내부 (보통 직접 호출할 일 없음)
 pnpm wt:caddy            # Caddyfile 재생성
 pnpm wt:caddy:reload     # 재생성 + caddy reload
+pnpm wt:gateway          # caddy foreground 실행
+pnpm wt:dash             # 대시보드 foreground 실행
 ```
 
-세션 시작 hook(`sessionStartWorktree.mjs`)이 `wt:caddy --reload`를 detached로 실행하므로 worktree 등록 시 자동 반영.
+**자동 기동**: 세션 시작 hook(`sessionStartWorktree.mjs`)이 `wtStart`를 detached로 실행. 첫 세션에서 Caddy/대시보드가 없으면 올리고, 이후 세션은 reload만.
 
 ## 라우팅
 

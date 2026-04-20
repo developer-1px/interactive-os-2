@@ -85,6 +85,8 @@
     "mddb:index": "tsx scripts/mddb/cli.ts index",
     "wt:list": "node scripts/wtList.mjs",
     "wt:prune": "node scripts/wtList.mjs --prune",
+    "wt:start": "node scripts/wtStart.mjs",
+    "wt:stop": "node scripts/wtStop.mjs",
     "wt:caddy": "node scripts/wtCaddy.mjs",
     "wt:caddy:reload": "node scripts/wtCaddy.mjs --reload",
     "wt:gateway": "caddy run --config .claude/Caddyfile --adapter caddyfile",
