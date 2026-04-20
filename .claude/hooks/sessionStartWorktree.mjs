@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { readFileSync } from 'fs'
 import { execSync } from 'child_process'
+import { spawn } from 'child_process'
+import path from 'path'
 import { findCurrent, upsert, cleanStale } from './worktreeRegistry.mjs'
 import { allocPort } from './allocWorktreePort.mjs'
 
@@ -17,11 +19,18 @@ const branch = (() => {
 if (!entry && branch !== 'main' && branch !== 'master') {
   const toplevel = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim()
   const name = toplevel.split('/').pop()
-  entry = { name, branch, path: toplevel, port: allocPort(), session_id: sessionId, dev_pid: null, started_at: new Date().toISOString() }
+  entry = { name, branch, path: toplevel, port: allocPort(branch), session_id: sessionId, dev_pid: null, started_at: new Date().toISOString() }
   upsert(entry)
 } else if (entry) {
   upsert({ ...entry, session_id: sessionId })
 }
+
+try {
+  const repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim()
+  const gitCommonDir = execSync('git rev-parse --git-common-dir', { encoding: 'utf8' }).trim()
+  const mainRoot = path.resolve(path.dirname(gitCommonDir) || repoRoot)
+  spawn('node', [path.join(mainRoot, 'scripts/wtCaddy.mjs'), '--reload'], { cwd: mainRoot, detached: true, stdio: 'ignore' }).unref()
+} catch {}
 
 const msg = entry
   ? `worktree: ${entry.name} | branch: ${entry.branch} | dev port: ${entry.port}`
