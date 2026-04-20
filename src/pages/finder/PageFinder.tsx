@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef, useMemo, type ReactNode } fro
 import { useNavigate } from 'react-router-dom'
 // ② persistPluginPrd.md
 import { usePersistedState } from '@os/primitives/usePersistedState'
-import { Folder, Code2, BookText, Image, Boxes, CalendarDays, CalendarClock, Hash, Tag, Activity, Component } from 'lucide-react'
+import { Folder, Code2, BookText, Image, Boxes, CalendarDays, CalendarClock, Hash, Tag, Activity, Component, Sparkles } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { FlatLayout } from '@os/ui/FlatLayout'
@@ -71,6 +71,7 @@ const FAVORITES: FavoriteRoot[] = [
   { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} /> },
   { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} /> },
   { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs`,             icon: <BookText size={ICON_SIZE} /> },
+  { id: 'claude',      name: '.claude',     path: `${DEFAULT_ROOT}/.claude`,          icon: <Sparkles size={ICON_SIZE} /> },
   { id: 'ui',          name: 'UI Showcase', path: `${DEFAULT_ROOT}/contents/ui`,      icon: <Component size={ICON_SIZE} /> },
   { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} /> },
 ]
