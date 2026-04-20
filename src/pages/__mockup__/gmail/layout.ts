@@ -2,7 +2,7 @@
 // The split structure (topbar + 3-pane) is decided ONCE at Phase 3 and reused
 // by Mid-fi and Hi-fi. Only the widget registry changes per fidelity.
 
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 
 export const gmailMockupLayout = defineLayout({
   entities: {

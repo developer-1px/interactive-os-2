@@ -1,5 +1,5 @@
 // ⑦ /do UI — FlatLayout defineLayout for ax Principles page
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 
 export const axPrinciplesLayout = defineLayout({
   entities: {

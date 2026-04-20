@@ -1,4 +1,4 @@
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 
 export const baseLayout = defineLayout({
   entities: {

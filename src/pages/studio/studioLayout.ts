@@ -1,6 +1,6 @@
 // studioLayout — Studio 초기 FlatLayout. playground 기본 구조 + ExampleSidebar 2분할.
 // PICKER_STATE_ID / PickerStateData는 여기 SSOT. layoutTools/playgroundWidgets가 import.
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import type { FocusStateData } from '@os/layout/layoutCommands'
 import { FOCUS_STATE_ID } from '@os/layout/layoutCommands'
 

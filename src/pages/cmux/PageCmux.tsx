@@ -2,7 +2,7 @@
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { FlatLayout } from '@os/ui/FlatLayout'
-import { defineLayout } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import type { FocusStateData } from '@os/layout/layoutCommands'
 import {

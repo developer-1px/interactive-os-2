@@ -9,7 +9,8 @@ import { ROOT_ID } from '@os/store/types'
 import { getEntityData, getChildren } from '@os/store/createStore'
 import { layoutCommands, FOCUS_STATE_ID, type FocusStateData } from '@os/layout/layoutCommands'
 import { workspaceCommands, type TabGroupData, type TabData } from '@os/plugins/workspaceStore'
-import { defineLayout, type LayoutNode } from '@os/layout/flatLayout'
+import { defineLayout } from '@os/layout/defineLayout'
+import { type LayoutNode } from '@os/layout/flatLayout'
 import { PICKER_STATE_ID } from './studioLayout'
 
 /** layout_init 시 사라지면 안 되는 노드들 — floating overlay(composer/subtitle/chatlog) + state 노드. */
