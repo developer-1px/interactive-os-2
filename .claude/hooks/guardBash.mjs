@@ -60,10 +60,11 @@ const BLOCKED = [
   { pattern: /\bgit\s+checkout\s+(\.|--\s*\.\s*$)/, reason: 'git checkout . 금지 — git checkout -- [파일명]으로 개별 파일만 원복하세요' },
   { pattern: /\bgit\s+restore\s+\.\s*$/, reason: 'git restore . 금지 — git restore [파일명]으로 개별 파일만 원복하세요' },
   { pattern: /\bgit\s+clean\s+-[a-zA-Z]*f/, reason: 'git clean -f 금지 — rm [파일명]으로 개별 삭제하세요' },
-  { pattern: /\bgit\s+reset\s+--hard\b/, reason: 'git reset --hard 금지 — git reset --soft 또는 git revert [커밋]을 사용하세요' },
-  { pattern: /\bgit\s+push\s+[^|]*--force\b/, reason: 'git push --force 금지 — git push --force-with-lease를 사용하세요 (그래도 위험, 확인 필요)' },
-  { pattern: /\bgit\s+push\s+[^|]*-f\b/, reason: 'git push -f 금지 — git push --force-with-lease를 사용하세요 (그래도 위험, 확인 필요)' },
-  { pattern: /\bgit\s+branch\s+-D\b/, reason: 'git branch -D 금지 — git branch -d (소문자)를 사용하세요' },
+  // 파괴적 명령은 main에서만 차단, feature branch/worktree에서는 허용 (복구용)
+  { pattern: /\bgit\s+reset\s+--hard\b/, reason: 'git reset --hard 금지 (main 브랜치) — feature branch/worktree에서는 허용', onlyMain: true },
+  { pattern: /\bgit\s+push\s+[^|]*--force(?!-with-lease)\b/, reason: 'git push --force 금지 — git push --force-with-lease를 사용하세요' },
+  { pattern: /\bgit\s+push\s+[^|]*\s-f\b/, reason: 'git push -f 금지 — git push --force-with-lease를 사용하세요' },
+  { pattern: /\bgit\s+branch\s+-D\b/, reason: 'git branch -D 금지 (main 브랜치) — feature branch에서는 허용', onlyMain: true },
   // main = PR-only. 쓰기 연산 전부 worktree에서 수행 후 PR 경로로만 main에 도달.
   { pattern: /\bgit\s+commit\b/, reason: 'main 브랜치 commit 금지 — worktree에서 작업 (git worktree add .claude/worktrees/<slug> -b feat/<slug>)', onlyMain: true },
   { pattern: /\bgit\s+push\b/, reason: 'main 브랜치 push 금지 — PR 경로만 허용', onlyMain: true },
