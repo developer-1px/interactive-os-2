@@ -37,11 +37,15 @@ export function filterStore(
   const kept = new Set<string>()
 
   function matches(entity: Entity): boolean {
-    const name = (entity.data as Record<string, unknown> | undefined)?.name as string | undefined
-    if (!name) return false
-    const ext = getExt(name)
+    const data = entity.data as Record<string, unknown> | undefined
+    // path는 mddb title 치환 전의 원본 파일명이라 확장자 추출에 안전하다.
+    // name은 treeToStore에서 frontmatter.title로 대체될 수 있어 확장자가 사라질 수 있다.
+    const source = (data?.path as string | undefined) ?? (data?.name as string | undefined)
+    if (!source) return false
+    const basename = source.includes('/') ? source.slice(source.lastIndexOf('/') + 1) : source
+    const ext = getExt(basename)
     if (hasKinds && allowedExts.has(ext)) return true
-    if (hasExts && extensions!.some(e => name.endsWith(e))) return true
+    if (hasExts && extensions!.some(e => basename.endsWith(e))) return true
     return false
   }
 
