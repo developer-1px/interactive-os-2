@@ -1,5 +1,6 @@
-// ② cmux-layout-prd.md
+// ② cmuxPrd.md — /chat + /chat/entities + /cmux/preview → /cmux 통합
 import { useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { defineLayout } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
@@ -12,13 +13,16 @@ import type { ChatMessage } from '@os/ui/chat/types'
 import { ChatProvider, type ChatContextValue, type WorkspaceMeta } from './chatContext'
 import { WorkspaceSidebarWidget, SurfaceLeafWidget } from './chatWidgets'
 import { ChatKeybindingsWidget } from './chatKeybindings'
-import './PageAgentChat.css'
+import { parsePreviewQuery, getScenario } from './cmuxPreviewLoader'
+import { cmuxPreviewWidgets } from './cmuxPreviewWidgets'
+import { CmuxPreviewProvider } from './cmuxPreviewContext'
+import { EntitiesInspectorWidget } from './EntitiesInspectorWidget'
+import './PageCmux.css'
 
-// ── Layout (cmux 초기 상태) ─────────────────────────────
+// ── Default cmux layout ────────────────────────────────
 // root = split(sidebar | main)
 // main = tabgroup(t1) → tab → SurfaceLeaf widget (activeSession 기반 Chat pane)
 // __focus = FOCUS_STATE_ID state node — layoutCommands.setFocus/splitHere/closeHere가 읽어 dispatch
-// ChatKeybindings는 FlatLayout children slot으로 mount (DOM 비점유 side-effect widget).
 
 const chatBaseLayout = defineLayout({
   entities: {
@@ -31,9 +35,21 @@ const chatBaseLayout = defineLayout({
   },
 })
 
-const chatWidgets = createWidgetRegistry({
+const entitiesLayout = defineLayout({
+  entities: {
+    root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
+    sidebar:   { data: { type: 'widget', widget: 'WorkspaceSidebar' } },
+    main:      { data: { type: 'tabgroup', activeTabId: 't1' }, children: ['t1'] },
+    t1:        { data: { type: 'tab', label: 'Entities', contentType: 'widget', contentRef: '' }, children: ['t1-body'] },
+    't1-body': { data: { type: 'widget', widget: 'EntitiesInspector' } },
+    '__focus': { data: { type: 'state', focusedTabgroupId: 'main', focusedTabId: 't1' } satisfies FocusStateData },
+  },
+})
+
+const cmuxWidgets = createWidgetRegistry({
   WorkspaceSidebar: WorkspaceSidebarWidget,
   SurfaceLeaf: SurfaceLeafWidget,
+  EntitiesInspector: EntitiesInspectorWidget,
 })
 
 // ── File extraction ────────────────────────────────────
@@ -54,9 +70,27 @@ function extractModifiedFiles(messages: ChatMessage[]): string[] {
   return [...files]
 }
 
-// ── Page ───────────────────────────────────────────────
+// ── Mode components — hook 순서 안정화 ──────────────────
+// preview 모드는 chat store hooks를 사용하지 않는다. React rules of hooks 준수를 위해
+// 분기마다 별도 컴포넌트로 분리하여 같은 컴포넌트 안에서 조건부 hook 호출이 없게 만든다.
 
-export default function PageAgentChat() {
+function PreviewMode({ scenarioId }: { scenarioId: string }) {
+  const scenario = getScenario(scenarioId)
+  if (!scenario) {
+    return <div>{`Unknown cmux preview scenario: ${scenarioId}`}</div>
+  }
+  return (
+    <CmuxPreviewProvider value={scenario.context}>
+      <FlatLayout
+        data={scenario.page}
+        registry={cmuxPreviewWidgets}
+        aria-label={`cmux preview — ${scenario.label}`}
+      />
+    </CmuxPreviewProvider>
+  )
+}
+
+function ChatMode({ view }: { view: string | null }) {
   const sessions = useChatSessions()
   const activeSession = useActiveSession()
   const activeSessionId = activeSession?.id ?? null
@@ -84,15 +118,27 @@ export default function PageAgentChat() {
     activeWorkspaceId: 'ws-1',
   }), [sessions, activeSessionId, modifiedFiles, workspaces])
 
+  const layout = view === 'entities' ? entitiesLayout : chatBaseLayout
+
   return (
     <ChatProvider value={chatCtx}>
       <FlatLayout
-        data={chatBaseLayout}
-        registry={chatWidgets}
-        aria-label="Agent IDE (cmux)"
+        data={layout}
+        registry={cmuxWidgets}
+        aria-label="cmux"
       >
         <ChatKeybindingsWidget />
       </FlatLayout>
     </ChatProvider>
   )
+}
+
+// ── Page ───────────────────────────────────────────────
+
+export default function PageCmux() {
+  const { search } = useLocation()
+  const previewId = parsePreviewQuery(search)
+  if (previewId) return <PreviewMode scenarioId={previewId} />
+  const view = new URLSearchParams(search).get('view')
+  return <ChatMode view={view} />
 }

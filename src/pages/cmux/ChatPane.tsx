@@ -12,7 +12,7 @@ import { sendMessage, clearSession, interruptSession, useChatSession } from './c
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
 import { Button } from '@os/ui/Button'
-import './PageAgentChat.css'
+import './PageCmux.css'
 
 const chatRenderers: BlockRendererMap = {
   thinking: ThinkingBlock,

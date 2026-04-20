@@ -80,17 +80,15 @@ export const layoutCommands = defineCommands({
       const tg = getEntityData<TabGroupData>(store, tgId)
       const srcTabId = tg?.activeTabId
       const srcTabData = srcTabId ? getEntityData<TabData>(store, srcTabId) : undefined
-      // active tab도 없고 seed도 없으면 (빈 tg) 그냥 빈 split만 생성
-      if (!srcTabData && !seed) {
-        return workspaceCommands.splitPane.handler(store, { paneId: tgId, direction })
-      }
+      // cmux 기본 fill 정책: active tab 복제 > seed > chat(SurfaceLeaf) 기본값.
+      // 빈 placeholder 대신 항상 chat 탭을 띄워 "다음 뭐 꽂지" 고민 제거.
       const newId = `t-${Date.now().toString(36)}`
       const newTab: Entity = {
         id: newId,
         data: {
           type: 'tab',
-          label:       seed?.label       ?? srcTabData?.label       ?? 'Untitled',
-          contentType: seed?.contentType ?? srcTabData?.contentType ?? '',
+          label:       seed?.label       ?? srcTabData?.label       ?? 'Chat',
+          contentType: seed?.contentType ?? srcTabData?.contentType ?? 'chat',
           contentRef:  seed?.contentRef  ?? srcTabData?.contentRef  ?? '',
         } as TabData,
       }

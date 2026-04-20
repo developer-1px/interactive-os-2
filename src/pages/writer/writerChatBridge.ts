@@ -1,7 +1,7 @@
 // ② 2026-04-04-writer-chat-prd.md
 import { useEffect, useRef } from 'react'
 import { writerState } from './writerStore'
-import { useChatSession, createSession, sendMessage as chatSendMessage, hasSession } from '../chat/chatStore'
+import { useChatSession, createSession, sendMessage as chatSendMessage, hasSession } from '../cmux/chatStore'
 import { extractAnalysis, type AnalysisResult } from './writerAnalyze'
 
 const WRITER_SESSIONS_KEY = 'writer-chat-sessions'

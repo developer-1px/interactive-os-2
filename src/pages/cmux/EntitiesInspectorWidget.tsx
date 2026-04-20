@@ -1,5 +1,6 @@
 /**
- * /chat/entities — entities/chat 엔티티 시각화 디버그 뷰어 (split 2단):
+ * EntitiesInspectorWidget — entities/chat 엔티티 시각화 디버그 뷰어 (split 2단).
+ * /cmux?view=entities 로 진입 시 cmux 캔버스의 tab content 로 주입된다.
  *   왼쪽:  Schema · Value · Commands  (메타 정보)
  *   오른쪽: Components                   (entities/chat fixture → 실제 UI 렌더)
  */
@@ -104,7 +105,7 @@ function ComponentPreview({ name, source, children }: { name: string; source: st
   )
 }
 
-export default function PageChatEntities() {
+export function EntitiesInspectorWidget() {
   const sessions = useChatSessions()
   const active = useActiveSession()
 

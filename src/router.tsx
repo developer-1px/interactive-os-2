@@ -25,9 +25,11 @@ export const router = createBrowserRouter([
           return { Component: m.default, loader: m.loader }
         },
       },
-      { path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
-      { path: '/chat/entities', lazy: () => import('./pages/chat/PageChatEntities').then(m => ({ Component: m.default })) },
-      { path: '/cmux/preview', lazy: () => import('./pages/cmux-preview/PageCmuxPreview').then(m => ({ Component: m.default })) },
+      { path: '/cmux', lazy: () => import('./pages/cmux/PageCmux').then(m => ({ Component: m.default })) },
+      // cmuxPrd §W5 — 구 라우트는 /cmux로 redirect
+      { path: '/chat', element: <Navigate to="/cmux" replace /> },
+      { path: '/chat/entities', element: <Navigate to="/cmux?view=entities" replace /> },
+      { path: '/cmux/preview', element: <Navigate to="/cmux" replace /> },
       { path: '/replay/raw', lazy: () => import('./pages/replay/PageReplayRaw').then(m => ({ Component: m.default })) },
       { path: '/replay/inspect', lazy: () => import('./pages/replay/PageReplayInspect').then(m => ({ Component: m.default })) },
       { path: '/replay', lazy: () => import('./pages/replay/PageReplay').then(m => ({ Component: m.default })) },

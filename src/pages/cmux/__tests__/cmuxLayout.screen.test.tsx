@@ -2,7 +2,7 @@
 //
 // Seo's product-level screen test for cmux layout (Wave A~D1 통합 검증).
 //
-// 검증 범위 — PageAgentChat이 실제 브라우저에서 보여주는 DOM/ARIA 변화로만 판정.
+// 검증 범위 — PageCmux이 실제 브라우저에서 보여주는 DOM/ARIA 변화로만 판정.
 //   1) 마운트 직후 cmux 초기 레이아웃 (sidebar + 1 tabgroup + 1 tab) 이 보인다
 //   2) ⌘D 로 현재 tabgroup이 split 된다 (separator 개수 증가)
 //   3) ⌘T 로 focused tabgroup에 새 tab이 추가되고 그 tab이 active 된다
@@ -15,7 +15,8 @@
 
 import { describe, it, expect } from 'vitest'
 import { render, act } from '@testing-library/react'
-import PageAgentChat from '../PageAgentChat'
+import { MemoryRouter } from 'react-router-dom'
+import PageCmux from '../PageCmux'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -57,7 +58,7 @@ function fireKey(key: string, mods: Modifiers = {}) {
 
 describe('cmux screen: 마운트', () => {
   it('사이드바 + 1 tabgroup + 1 탭이 active 상태로 렌더된다', () => {
-    const { container } = render(<PageAgentChat />)
+    const { container } = render(<MemoryRouter><PageCmux /></MemoryRouter>)
 
     // 1-a. tablist 1개
     const tablists = getTablists(container)
@@ -87,7 +88,7 @@ describe('cmux screen: 마운트', () => {
 
 describe('cmux screen: ⌘D split', () => {
   it('focused tabgroup이 horizontal split으로 분기되어 separator가 추가된다', () => {
-    const { container } = render(<PageAgentChat />)
+    const { container } = render(<MemoryRouter><PageCmux /></MemoryRouter>)
 
     const separatorsBefore = getSeparators(container).length
 
@@ -108,7 +109,7 @@ describe('cmux screen: ⌘D split', () => {
 
 describe('cmux screen: ⌘T new tab', () => {
   it('focused tabgroup의 role=tab 개수가 +1 되고 새 tab이 aria-selected=true', () => {
-    const { container } = render(<PageAgentChat />)
+    const { container } = render(<MemoryRouter><PageCmux /></MemoryRouter>)
 
     const before = getTabs(container)
     expect(before).toHaveLength(1)
@@ -136,7 +137,7 @@ describe('cmux screen: ⌘T new tab', () => {
 
 describe('cmux screen: ⌘⇧] next tab', () => {
   it('2개 탭 상태에서 active tab이 다음으로 순환한다 (aria-selected 이동)', () => {
-    const { container } = render(<PageAgentChat />)
+    const { container } = render(<MemoryRouter><PageCmux /></MemoryRouter>)
 
     // 먼저 탭 하나 더 추가 → 2개
     act(() => { fireKey('t', { metaKey: true }) })
@@ -168,7 +169,7 @@ describe('cmux screen: ⌥⌘→ spatial focus', () => {
   // skip 하고 이유를 남긴다. `computeFocusDirTarget`의 단위 테스트(순수 함수 입력 rect 배열)
   // 는 별도 엔진-레벨 테스트에서 이미 커버된다.
   it.skip('⌘D 후 ⌥⌘→ 로 포커스가 우측 tabgroup으로 이동한다 — [jsdom layout=none]', () => {
-    const { container } = render(<PageAgentChat />)
+    const { container } = render(<MemoryRouter><PageCmux /></MemoryRouter>)
     act(() => { fireKey('d', { metaKey: true }) })
     act(() => { fireKey('ArrowRight', { metaKey: true, altKey: true }) })
     // 실제 브라우저: 우측 tg가 focused → 후속 ⌘T의 타겟이 바뀜. jsdom에선 검증 불가.
@@ -182,7 +183,7 @@ describe('cmux screen: ⌥⌘→ spatial focus', () => {
 
 describe('cmux screen: ⌘W close tab', () => {
   it('2개 탭 상태에서 ⌘W로 active tab이 제거되어 1개로 줄어든다', () => {
-    const { container } = render(<PageAgentChat />)
+    const { container } = render(<MemoryRouter><PageCmux /></MemoryRouter>)
 
     // 2 tab 상태 세팅
     act(() => { fireKey('t', { metaKey: true }) })

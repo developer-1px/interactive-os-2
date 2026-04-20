@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Layers, Presentation, Component, FolderCode, Palette, ShieldAlert, Languages,
   MessageSquare, BookText, Play, PenLine, Kanban, GitBranch,
-  Mail, ListTree, Boxes, Braces, FileStack, TerminalSquare, BookMarked, Ruler, Compass,
+  Mail, ListTree, Boxes, Braces, FileStack, BookMarked, Ruler, Compass,
   ListChecks, FlaskConical,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -69,7 +69,7 @@ const appNavItems: NavItem[] = [
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'project', label: 'Project', icon: Kanban, path: '/project' },
   { id: 'catalog', label: 'Catalog', icon: Boxes, path: '/catalog' },
-  { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
+  { id: 'cmux', label: 'cmux', icon: MessageSquare, path: '/cmux' },
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },
   { id: 'features', label: 'Features', icon: ListTree, path: '/features' },
   { id: 'ax-principles', label: 'AX Principles', icon: Compass, path: '/ax-principles' },
@@ -82,7 +82,6 @@ const appNavItems: NavItem[] = [
   { id: 'stories', label: 'Stories', icon: BookMarked, path: '/stories' },
   { id: 'studio', label: 'Studio', icon: FlaskConical, path: '/studio' },
   { id: 'todo', label: 'Todo', icon: ListChecks, path: '/todo' },
-  { id: 'cmux-preview', label: 'cmux Preview', icon: TerminalSquare, path: '/cmux/preview' },
   { id: 'keyline-test', label: 'Keyline Test', icon: Ruler, path: '/test/keyline' },
   // --- 미완성 / 데모 미생성 ---
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },

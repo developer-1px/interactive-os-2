@@ -8,7 +8,7 @@ import { createStore, ROOT_ID } from '@os/schema'
 import { SessionCard, type SessionCardModel, type SessionUiState } from '@entities/chat'
 import { useChat, type WorkspaceMeta } from './chatContext'
 import { ChatPane } from './ChatPane'
-import PageChatEntities from './PageChatEntities'
+import { EntitiesInspectorWidget } from './EntitiesInspectorWidget'
 
 // ── 워크스페이스 → SessionCardModel 어댑터 ──
 // SessionCard는 SessionCardModel을 기대. 워크스페이스 최소 메타(label/status/unread)를 카드 모델로 승격.
@@ -71,7 +71,7 @@ export function SurfaceLeafWidget() {
     return <ChatPane sessionId={contentRef} />
   }
   if (contentType === 'entities') {
-    return <PageChatEntities />
+    return <EntitiesInspectorWidget />
   }
   // 'files' 같은 미래 타입 — 지금은 EmptyState.
   return <EmptyState title={tabData?.label ?? 'Unknown surface'} />
