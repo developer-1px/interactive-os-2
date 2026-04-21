@@ -6,9 +6,15 @@ import { agentOpsPlugin } from './vite-plugin-agent-ops'
 import { inspectorPlugin } from './vite-plugin-inspector'
 import { browserTestPlugin } from './src/devtools/testRunner/browserTestPlugin'
 import writerPlugin from './writerFilePlugin'
+// @ts-expect-error — .mjs without type declarations
+import { findCurrent } from './.claude/hooks/worktreeRegistry.mjs'
+
+const currentWorktree = findCurrent()
+const devPort = currentWorktree?.port ?? 5173
 
 export default defineConfig({
   base: process.env.GITHUB_PAGES === 'true' ? '/interactive-os-2/' : '/',
+  server: { port: devPort, strictPort: true },
   plugins: [
     react(),
     inspectorPlugin(),

@@ -32,7 +32,9 @@ test-results
 .superpowers/
 .claude/agent-ops/
 .claude/worktrees/
+.claude/worktrees.json
 .claude/launch.json
+.claude/Caddyfile
 scripts/dom-compare.txt
 scripts/dom-dump.txt
 scripts/dom-dump.json
