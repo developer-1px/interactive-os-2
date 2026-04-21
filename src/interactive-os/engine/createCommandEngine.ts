@@ -21,7 +21,15 @@ export function createCommandEngine(
 
   // --- subscribers ---
   const subscribers = new Set<(event: EngineEvent) => void>()
+  const storeSubscribers = new Set<() => void>()
   let seq = 0
+
+  const notifyStoreSubscribers = () => {
+    const snapshot = Array.from(storeSubscribers)
+    for (const listener of snapshot) {
+      try { listener() } catch (e) { console.error('[engine] store subscriber threw:', e) }
+    }
+  }
 
   /** Tracks the original command dispatched before middleware chain (stack for reentrant dispatch) */
   const _pendingOriginalStack: Command[] = []
@@ -204,6 +212,7 @@ export function createCommandEngine(
     }
     if (store !== prev) {
       onStoreChange(store)
+      notifyStoreSubscribers()
     }
     _lastResult = { ok: true, store }
   }
@@ -257,7 +266,9 @@ export function createCommandEngine(
     },
     getStore,
     syncStore: (newStore: NormalizedData) => {
+      if (newStore === store) return
       store = newStore
+      notifyStoreSubscribers()
     },
     inspect,
     setInspectKeyMap: (desc: Record<string, import('./types').KeyMapEntry>) => { inspectKeyMap = desc },
@@ -266,6 +277,10 @@ export function createCommandEngine(
     subscribe: (listener: (event: EngineEvent) => void) => {
       subscribers.add(listener)
       return () => { subscribers.delete(listener) }
+    },
+    subscribeStore: (listener: () => void) => {
+      storeSubscribers.add(listener)
+      return () => { storeSubscribers.delete(listener) }
     },
     emitUnhandledKey: (event: KeyboardEvent) => {
       if (subscribers.size === 0) return
