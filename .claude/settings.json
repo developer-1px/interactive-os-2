@@ -97,6 +97,27 @@
             "timeout": 3000
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/requireWorktree.mjs",
+            "timeout": 2000
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/sessionStartWorktree.mjs",
+            "timeout": 2000
+          }
+        ]
       }
     ],
     "PostToolUse": [
