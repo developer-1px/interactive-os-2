@@ -181,7 +181,7 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
   }, [navigate, onThemeToggle])
 
   return (
-    <nav className={ax({ layout: 'scroll' }) + ' ' + ax.raw({ padding: 'xs' })}>
+    <nav className={ax({ layout: 'stack' }) + ' ' + ax.raw({ padding: 'xs' })}>
       <div className={ax({ role: 'control', surface: 'ghost', layout: 'center' })}>
         <div className="logo-mark" />
       </div>
