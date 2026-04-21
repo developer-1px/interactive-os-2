@@ -64,14 +64,17 @@ const BLOCKED = [
   { pattern: /\bgit\s+push\s+[^|]*--force\b/, reason: 'git push --force 금지 — git push --force-with-lease를 사용하세요 (그래도 위험, 확인 필요)' },
   { pattern: /\bgit\s+push\s+[^|]*-f\b/, reason: 'git push -f 금지 — git push --force-with-lease를 사용하세요 (그래도 위험, 확인 필요)' },
   { pattern: /\bgit\s+branch\s+-D\b/, reason: 'git branch -D 금지 — git branch -d (소문자)를 사용하세요' },
-  { pattern: /\bgit\s+commit\b/, reason: 'main 브랜치 commit 금지 — worktree에서 작업 (git worktree add .claude/worktrees/<slug> -b feat/<slug>)', onlyMain: true, envOverride: 'ALLOW_MAIN' },
-  { pattern: /\bgit\s+push\b/, reason: 'main 브랜치 push 금지 — PR 경로만 허용', onlyMain: true, envOverride: 'ALLOW_MAIN' },
+  // main = PR-only. 쓰기 연산 전부 worktree에서 수행 후 PR 경로로만 main에 도달.
+  { pattern: /\bgit\s+commit\b/, reason: 'main 브랜치 commit 금지 — worktree에서 작업 (git worktree add .claude/worktrees/<slug> -b feat/<slug>)', onlyMain: true },
+  { pattern: /\bgit\s+push\b/, reason: 'main 브랜치 push 금지 — PR 경로만 허용', onlyMain: true },
+  { pattern: /\bgit\s+merge\b/, reason: 'main 브랜치 로컬 merge 금지 — worktree에서 머지 후 PR로 main 갱신', onlyMain: true },
+  { pattern: /\bgit\s+rebase\b/, reason: 'main 브랜치 rebase 금지 — main은 PR-only', onlyMain: true },
+  { pattern: /\bgit\s+cherry-pick\b/, reason: 'main 브랜치 cherry-pick 금지 — worktree에서 작업 후 PR', onlyMain: true },
 ]
 
-for (const { pattern, reason, onlyMain, envOverride } of BLOCKED) {
+for (const { pattern, reason, onlyMain } of BLOCKED) {
   if (pattern.test(cmd)) {
     if (onlyMain && !isMainBranch()) continue
-    if (envOverride && process.env[envOverride] === '1') continue
     const output = JSON.stringify({ decision: 'block', reason })
     process.stdout.write(output)
     process.exit(0)
