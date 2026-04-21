@@ -81,6 +81,11 @@ export interface CommandEngine {
   setInspectPattern(info: InspectPatternInfo): void
   /** Subscribe to engine events (dispatch, error, etc.) */
   subscribe(listener: (event: EngineEvent) => void): Unsubscribe
+  /**
+   * Subscribe to store-reference changes only (stable-ref signature for useSyncExternalStore).
+   * Fires when store is replaced via dispatch or syncStore. Does not fire on rejections.
+   */
+  subscribeStore(listener: () => void): Unsubscribe
   /** Emit an unhandled key event — called by view layer when keyMap has no match */
   emitUnhandledKey(event: KeyboardEvent): void
 }

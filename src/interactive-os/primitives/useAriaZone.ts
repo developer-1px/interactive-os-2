@@ -221,6 +221,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
       setInspectRole: (role, childRole) => { engine.setInspectRole(role, childRole) },
       setInspectPattern: (info) => { engine.setInspectPattern(info) },
       subscribe: (listener) => engine.subscribe(listener),
+      subscribeStore: (listener) => engine.subscribeStore(listener),
       emitUnhandledKey: (event) => { engine.emitUnhandledKey(event) },
     }
 
